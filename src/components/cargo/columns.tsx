@@ -102,15 +102,29 @@ export const columns: ColumnDef<UpcomingCargo>[] = [
   {
     accessorKey: "flag",
     header: () => <div className="text-center">Flag</div>,
-    cell: () => {
-      const [flagged, setFlagged] = useState(false)
+    cell: ({ row }) => {
+      // Initialize flagged state from the row data; fallback to false if undefined.
+      const [flagged, setFlagged] = useState<boolean>(row.original.flag || false)
+
+      // Function to handle flag toggling.
+      const handleFlagToggle = async () => {
+        const newFlag = !flagged
+        // Optimistically update the UI.
+        setFlagged(newFlag)
+        try {
+          // Call the Amplify update method for the flag.
+          const { data: updatedContainerStatus } = await client.models.Container.update({
+            containerID: row.original.containerID,
+            flag: newFlag,
+          })
+          console.log("Updated flag:", updatedContainerStatus)
+        } catch (error) {
+          console.error("Error updating flag:", error);
+        }
+      }
 
       return (
-        <Button
-          variant="ghost"
-          onClick={() => setFlagged((prev) => !prev)}
-          className="p-2"
-        >
+        <Button variant="ghost" onClick={handleFlagToggle} className="p-2">
           <Flag className={flagged ? "text-red-600" : "text-gray-400"} />
         </Button>
       )
