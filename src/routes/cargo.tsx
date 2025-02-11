@@ -6,7 +6,12 @@ import { useEffect, useState } from "react"
 //Imports for Amplify Data 
 import { SelectionSet, generateClient } from 'aws-amplify/data';
 import { type Schema } from '../../amplify/data/resource';
+import { Amplify } from 'aws-amplify';
+import outputs from '../../amplify_outputs.json';
+
+Amplify.configure(outputs);
 const client = generateClient<Schema>();
+
 
 export const Route = createFileRoute('/cargo')({
   component: Cargo,
@@ -29,10 +34,7 @@ export default function Cargo() {
   }
 
   useEffect(() => {
-    async function fetchData() {
-      fetchContainers();
-    }
-    fetchData()
+    fetchContainers();
   }, [])
 
 
