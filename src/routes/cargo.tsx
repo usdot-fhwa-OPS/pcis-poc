@@ -5,7 +5,7 @@ import { useEffect, useState } from "react"
 
 //Imports for Amplify Data 
 import { SelectionSet, generateClient } from 'aws-amplify/data';
-import { type Schema } from '../../amplify/data/resource';
+import type { Schema } from '../../amplify/data/resource';
 import { Amplify } from 'aws-amplify';
 import outputs from '../../amplify_outputs.json';
 
