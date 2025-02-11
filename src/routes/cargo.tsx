@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { columns } from "../components/cargo/columns"
-import { DataTable } from "../components/cargo/cargo-table"
-import { useEffect, useState } from "react"
+// import { columns } from "../components/cargo/columns"
+// import { DataTable } from "../components/cargo/cargo-table"
+import { useEffect } from "react"
 
 //Imports for Amplify Data 
 import { generateClient } from 'aws-amplify/data';
