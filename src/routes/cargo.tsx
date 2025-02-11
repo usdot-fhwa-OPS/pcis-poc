@@ -4,12 +4,9 @@ import { DataTable } from "../components/cargo/cargo-table"
 import { useEffect, useState } from "react"
 
 //Imports for Amplify Data 
-import { SelectionSet, generateClient } from 'aws-amplify/data';
+import { generateClient } from 'aws-amplify/data';
 import type { Schema } from '../../amplify/data/resource';
-import { Amplify } from 'aws-amplify';
-import outputs from '../../amplify_outputs.json';
 
-Amplify.configure(outputs);
 const client = generateClient<Schema>();
 
 
@@ -18,19 +15,18 @@ export const Route = createFileRoute('/cargo')({
 })
 
 //Define the selection of data that will be used for the table
-const selectionSet = ['vesselID', 'containerID', 'origin', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail', 'assignmentStatus', 'flag'] as const;
+//const selectionSet = ['vesselID', 'containerID', 'origin', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail', 'assignmentStatus', 'flag'] as const;
 
 //Create a type based on your selectionSet that will be later used for the columns.tsx file of the able
-export type UpcomingCargo = SelectionSet<Schema['Container']['type'], typeof selectionSet>
+//export type UpcomingCargo = SelectionSet<Schema['Container']['type'], typeof selectionSet>
 
 export default function Cargo() {
   //Will hold the data after the query call, according to the Cargo Type declared above.
-  const [data, setData] = useState<UpcomingCargo[]>([])
+  //const [data, setData] = useState<UpcomingCargo[]>([])
 
   const fetchContainers = async () => {
     const { data: cargo } = await client.models.Container.list();
     console.log(cargo);
-    setData(cargo);
   }
 
   useEffect(() => {
@@ -43,7 +39,7 @@ export default function Cargo() {
     <div>
       <h1 className="text-2xl font-bold text-center">Upcoming Cargo</h1>
       <div>
-        <DataTable columns={columns} data={data} />
+        {/* <DataTable columns={columns} data={data} /> */}
       </div>
     </div>
   )
