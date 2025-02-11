@@ -9,6 +9,7 @@ import {
   getCoreRowModel,
   getFilteredRowModel,
   useReactTable,
+  TableOptions
 } from "@tanstack/react-table"
 
 import {
@@ -21,6 +22,18 @@ import {
 } from "../ui/table"
 
 import { Input } from "../ui/input"
+import { type Cargo } from "./columns"
+
+export interface CargoTableMeta {
+  updateCargo: (containerID: string, newName: string, newEmail: string) => void
+}
+
+interface CargoTableOptions extends TableOptions<Cargo> {
+  
+  Row: Cargo
+
+  mata?: CargoTableMeta
+}
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -33,7 +46,7 @@ interface DataTableProps<TData, TValue> {
 export function DataTable<TData, TValue>({
   columns,
   data,
-  meta
+  meta,
 }: DataTableProps<TData, TValue>) {
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []

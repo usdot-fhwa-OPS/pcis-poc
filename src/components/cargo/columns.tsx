@@ -76,7 +76,7 @@ export const columns : ColumnDef<Cargo>[] = [
     
         function handleSubmit() {
           // Use the parent's updateCargo method:
-          table.options.meta.updateCargo(cargo.containerID, tempName, tempEmail)
+          table.options.meta?.updateCargo?.(cargo.containerID, tempName, tempEmail)
           setOpen(false)
         }
     
@@ -138,7 +138,7 @@ export const columns : ColumnDef<Cargo>[] = [
         const isMissing = !cargo.operator?.trim() || !cargo.operator_email?.trim()
     
         function handleSubmit() {
-          table.options.meta.updateCargo(cargo.containerID, tempName, tempEmail)
+          table.options.meta?.updateCargo(cargo.containerID, tempName, tempEmail)
           setOpen(false)
         }
     
