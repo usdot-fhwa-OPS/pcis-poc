@@ -23,9 +23,7 @@ export default function Cargo() {
   const [data, setData] = useState<UpcomingCargo[]>([])
 
   const fetchContainers = async () => {
-    const { data: cargo } = await client.models.Container.list({
-      selectionSet,
-    });
+    const { data: cargo } = await client.models.Container.list();
     console.log(cargo);
     setData(cargo);
   }
