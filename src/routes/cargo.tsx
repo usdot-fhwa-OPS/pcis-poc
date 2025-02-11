@@ -27,6 +27,7 @@ export default function Cargo() {
     const { data: cargo } = await client.models.Container.list({
       selectionSet,
     });
+    console.log(data);
     setData(cargo);
   }
 
@@ -39,6 +40,7 @@ export default function Cargo() {
   }, [])
 
   if (loading) {
+    
     return <div>Loading...</div>
   }
 
