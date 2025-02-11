@@ -25,11 +25,15 @@ import { Input } from "../ui/input"
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
+  meta?: {
+    updateCargo?: (containerID: string, newName: string, newEmail: string) => void
+  }
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  meta
 }: DataTableProps<TData, TValue>) {
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -40,6 +44,7 @@ export function DataTable<TData, TValue>({
   const table = useReactTable({
     data,
     columns,
+    meta,
     getCoreRowModel: getCoreRowModel(),
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
@@ -47,7 +52,7 @@ export function DataTable<TData, TValue>({
     state: {
         columnFilters,
         rowSelection,
-    }
+    },
   })
 
   return (
