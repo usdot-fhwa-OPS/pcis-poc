@@ -25,7 +25,7 @@ export default function Cargo() {
   //const [data, setData] = useState<UpcomingCargo[]>([])
 
   const fetchContainers = async () => {
-    const { data: cargo } = await client.models.Container.list();
+    const { data: cargo } = await client.models.Container.list({authMode: 'apiKey'});
     console.log(cargo);
   }
 

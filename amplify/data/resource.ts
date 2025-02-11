@@ -30,7 +30,7 @@ const schema = a.schema({
       flag: a.boolean().default(false),
     })
     .identifier(['containerID'])
-    .authorization((allow) => [allow.guest()]),
+    .authorization((allow) => [allow.publicApiKey(),]),
 });
 
 export type Schema = ClientSchema<typeof schema>;
@@ -38,7 +38,7 @@ export type Schema = ClientSchema<typeof schema>;
 export const data = defineData({
   schema,
   authorizationModes: {
-    defaultAuthorizationMode: 'iam',
+    defaultAuthorizationMode: 'apiKey',
   },
 });
 
