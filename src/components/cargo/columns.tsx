@@ -63,7 +63,7 @@ export const columns : ColumnDef<UpcomingCargo>[] = [
         accessorKey: "assignmentStatus",
         header: () => <div className="text-center">Cargo Status</div>,
         cell: ({ row }) => { 
-            const [cargoStatus, setStatus] = useState<"On-Ship" | "On-Dock">(row.original.status)
+            const [cargoStatus, setStatus] = useState<"On-Ship" | "On-Dock">(row.original.assignmentStatus as "On-Ship" | "On-Dock")
 
             return (
                 <DropdownMenu>
@@ -73,7 +73,7 @@ export const columns : ColumnDef<UpcomingCargo>[] = [
                   <DropdownMenuContent className="w-56">
                     <DropdownMenuLabel>Cargo Status</DropdownMenuLabel>
                     <DropdownMenuSeparator />
-                    <DropdownMenuRadioGroup value={cargoStatus} onValueChange={(val: string) => setStatus(val as "On Ship" | "On Dock")}>
+                    <DropdownMenuRadioGroup value={cargoStatus} onValueChange={(val: string) => setStatus(val as "On-Ship" | "On-Dock")}>
                       <DropdownMenuRadioItem value="On Ship">On Ship</DropdownMenuRadioItem>
                       <DropdownMenuRadioItem value="On Dock">On Dock</DropdownMenuRadioItem>
                     </DropdownMenuRadioGroup>
@@ -104,7 +104,7 @@ export const columns : ColumnDef<UpcomingCargo>[] = [
         id: "contact",
         header: () => <div className="text-center">Contact</div>,
         cell: ({ row }) => {
-          const email = row.original.bco_email
+          const email = row.original.bcoEmail
       
           // Option A: Anchor tag wrapping a Button
           return (
