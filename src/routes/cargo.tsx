@@ -3,7 +3,7 @@ import { columns } from "../components/cargo/columns"
 import { DataTable } from "../components/cargo/cargo-table"
 import { useEffect, useState } from "react"
 
-//Imports for Amplify Data 
+//Three Imports needed for Amplify Data Queries and CRUD methods
 import { generateClient, SelectionSet } from 'aws-amplify/data';
 import type { Schema } from '../../amplify/data/resource';
 
@@ -24,7 +24,9 @@ export default function Cargo() {
   //Will hold the data after the query call, according to the Cargo Type declared above.
   const [data, setData] = useState<UpcomingCargo[]>([])
 
+  //Fetch the data from the database
   const fetchContainers = async () => {
+    //Query the data from the database with selection set and auth mode (always apiKey)
     const { data: cargo } = await client.models.Container.list({
       selectionSet,
       authMode: 'apiKey'
@@ -32,6 +34,7 @@ export default function Cargo() {
     setData(cargo);
   }
 
+  //Fetch the data on the first render
   useEffect(() => {
     fetchContainers();
   }, [])
@@ -47,73 +50,3 @@ export default function Cargo() {
     </div>
   )
 }
-
-
-
-
-// async function getData(): Promise<Cargo[]> {
-//   // Replace with API Calls
-//   return [
-//     {
-//       vesselID: 456,
-//       containerID: "HM-7829",
-//       origin: "Boston",
-//       bco: "John Doe",
-//       bco_email: "johndoe@leidos.com",
-//       operator: "Person1",
-//       operator_email: "person1@shipping.com",
-//       status: "On Ship",
-//       flag : false,
-//       //contact: "" // Can be removed once contact button is moved to proper place
-//     },
-//     {
-//       vesselID: 1236,
-//       containerID: "US-198",
-//       origin: "Shanghai",
-//       bco: "Bob Smith",
-//       bco_email: "bobsmith@transport.com",
-//       operator: "Bob Smith",
-//       operator_email: "bobsmith@transport.com",
-//       status: "On Dock",
-//       flag : false,
-//       //contact : ""
-//     },
-//     {
-//       vesselID: 88,
-//       containerID: "123456",
-//       origin: "Los Angeles",
-//       bco: "John Doe",
-//       bco_email: "johndoe@leidos.com",
-//       operator: "John Doe",
-//       operator_email: "johndoe@leidos.com",
-//       status: "On Dock",
-//       flag : false,
-//       //contact: ""
-//     },
-//     {
-//       vesselID: 1,
-//       containerID: "GM-267",
-//       origin: "Amsterdam",
-//       bco: "Peter Parker",
-//       bco_email: "peterparker@leidos.com",
-//       operator: "Allison Smith",
-//       operator_email: "allisonsmith@leidos.com",
-//       status: "On Ship",
-//       flag : false,
-//       //contact: ""
-//     },
-//     {
-//       vesselID: 346,
-//       containerID: "HM-11",
-//       origin: "Houston",
-//       bco: "Jane Doe", 
-//       bco_email: "janedoe@leidos.com",
-//       operator: "Jane Doe",
-//       operator_email: "janedoe@leidos.com",
-//       status: "On Ship",
-//       flag : false,
-//       //contact: ""
-//     },
-
-//   ]
-// }

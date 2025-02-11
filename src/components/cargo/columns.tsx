@@ -5,7 +5,7 @@ import { Flag } from "lucide-react"
 import { useState } from "react"
 import { Button } from "../ui/button"
 
-import { UpcomingCargo } from "../../routes/cargo"
+
 
 import {
   DropdownMenu,
@@ -17,17 +17,17 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu"
 
-//Imports for Amplify Data 
+//Four Imports needed for Amplify Data Queries and CRUD methods
+
 import { generateClient } from 'aws-amplify/data';
 import type { Schema } from '../../../amplify/data/resource';
+import { UpcomingCargo } from "../../routes/cargo"
 
 const client = generateClient<Schema>();
 
-// Ensure that your Amplify client is imported/available.
-// For example:
-// import { client } from '../../lib/aws-client'
-
+//Define the selection of data that will be used for the table (type exported from cargo.tsx in this case)
 export const columns: ColumnDef<UpcomingCargo>[] = [
+  // Define the columns for the table based on the database items (refer to resources.ts for schema names)
   {
     accessorKey: "vesselID",
     header: () => <div className="text-center">Vessel ID</div>,
@@ -79,7 +79,7 @@ export const columns: ColumnDef<UpcomingCargo>[] = [
                 // Update the UI immediately.
                 setStatus(val as "On Ship" | "On Dock")
                 try {
-                  // Call the Amplify update method.
+                  // Call the Amplify update method (must always contain containerID)
                   const { data: updatedContainerStatus } = await client.models.Container.update({
                     containerID: row.original.containerID,
                     containerStatus: val,
@@ -87,7 +87,6 @@ export const columns: ColumnDef<UpcomingCargo>[] = [
                   console.log("Updated container status:", updatedContainerStatus)
                 } catch (error) {
                   console.error("Error updating container status:", error)
-                  // Optionally, you might want to revert the status change if the update fails.
                 }
               }}
             >
@@ -112,7 +111,7 @@ export const columns: ColumnDef<UpcomingCargo>[] = [
         // Optimistically update the UI.
         setFlagged(newFlag)
         try {
-          // Call the Amplify update method for the flag.
+          // Call the Amplify update method for the flag (again must always contain containerID)
           const { data: updatedContainerStatus } = await client.models.Container.update({
             containerID: row.original.containerID,
             flag: newFlag,
