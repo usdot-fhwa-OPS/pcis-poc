@@ -5,6 +5,8 @@ import { Flag } from "lucide-react"
 import { useState } from "react"
 import { Button } from "../ui/button"
 
+import { UpcomingCargo } from "../../routes/cargo"
+
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -15,20 +17,20 @@ import {
     DropdownMenuTrigger,
   } from "../ui/dropdown-menu"
 
-export type Cargo = {
-    vesselID : number
-    containerID : string
-    origin: string
-    bco: string
-    bco_email: string
-    operator: string
-    operator_email: string
-    status: "On Ship" | "On Dock"
-    flag: boolean
-    contact: string // Temporarily putting this here to add contact button
-}
+// export type Cargo = {
+//     vesselID : number
+//     containerID : string
+//     origin: string
+//     bco: string
+//     bco_email: string
+//     operator: string
+//     operator_email: string
+//     status: "On Ship" | "On Dock"
+//     flag: boolean
+//     //contact: string // Temporarily putting this here to add contact button
+// }
 
-export const columns : ColumnDef<Cargo>[] = [
+export const columns : ColumnDef<UpcomingCargo>[] = [
     {
         accessorKey: "vesselID",
         header: () => <div className="text-center">Vessel ID</div>,
@@ -42,26 +44,26 @@ export const columns : ColumnDef<Cargo>[] = [
         header: () => <div className="text-center">Origin</div>,
     },
     {
-        accessorKey: "bco",
+        accessorKey: "bcoName",
         header: () => <div className="text-center">BCO</div>,
     },
     {
-        accessorKey: "bco_email",
+        accessorKey: "bcoEmail",
         header: () => <div className="text-center">BCO Email</div>,
     },
     {
-        accessorKey: "operator",
+        accessorKey: "transopName",
         header: () => <div className="text-center">Transportation Operator</div>,
     },
     {
-        accessorKey: "operator_email",
+        accessorKey: "transopEmail",
         header: () => <div className="text-center">Transportation Operator Email</div>,
     },
     {
-        accessorKey: "status",
+        accessorKey: "assignmentStatus",
         header: () => <div className="text-center">Cargo Status</div>,
         cell: ({ row }) => { 
-            const [cargoStatus, setStatus] = useState<"On Ship" | "On Dock">(row.original.status)
+            const [cargoStatus, setStatus] = useState<"On-Ship" | "On-Dock">(row.original.status)
 
             return (
                 <DropdownMenu>
