@@ -15,7 +15,7 @@ export const Route = createFileRoute('/cargo')({
 })
 
 //Define the selection of data that will be used for the table
-const selectionSet = ['vesselID', 'containerID', 'origin', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail', 'assignmentStatus', 'flag'] as const;
+const selectionSet = ['vesselID', 'containerID', 'origin', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail', 'containerStatus', 'flag'] as const;
 
 //Create a type based on your selectionSet that will be later used for the columns.tsx file of the able
 export type UpcomingCargo = SelectionSet<Schema['Container']['type'], typeof selectionSet>
@@ -25,7 +25,10 @@ export default function Cargo() {
   const [data, setData] = useState<UpcomingCargo[]>([])
 
   const fetchContainers = async () => {
-    const { data: cargo } = await client.models.Container.list({authMode: 'apiKey'});
+    const { data: cargo } = await client.models.Container.list({
+      selectionSet,
+      authMode: 'apiKey'
+    });
     setData(cargo);
   }
 

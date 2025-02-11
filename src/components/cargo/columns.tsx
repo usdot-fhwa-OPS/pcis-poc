@@ -60,10 +60,10 @@ export const columns : ColumnDef<UpcomingCargo>[] = [
         header: () => <div className="text-center">Transportation Operator Email</div>,
     },
     {
-        accessorKey: "assignmentStatus",
+        accessorKey: "containerStatus",
         header: () => <div className="text-center">Cargo Status</div>,
         cell: ({ row }) => { 
-            const [cargoStatus, setStatus] = useState<"On-Ship" | "On-Dock">(row.original.assignmentStatus as "On-Ship" | "On-Dock")
+            const [cargoStatus, setStatus] = useState<"On-Ship" | "On-Dock">(row.original.containerStatus as "On-Ship" | "On-Dock")
 
             return (
                 <DropdownMenu>
