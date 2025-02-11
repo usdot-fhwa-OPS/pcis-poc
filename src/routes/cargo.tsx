@@ -21,7 +21,6 @@ export type UpcomingCargo = SelectionSet<Schema['Container']['type'], typeof sel
 export default function Cargo() {
   //Will hold the data after the query call, according to the Cargo Type declared above.
   const [data, setData] = useState<UpcomingCargo[]>([])
-  const [loading, setLoading] = useState(true)
 
   const fetchContainers = async () => {
     const { data: cargo } = await client.models.Container.list({
@@ -33,16 +32,12 @@ export default function Cargo() {
 
   useEffect(() => {
     async function fetchData() {
-      await fetchContainers();
-      setLoading(false)
+      fetchContainers();
     }
     fetchData()
   }, [])
 
-  if (loading) {
-    
-    return <div>Loading...</div>
-  }
+
 
   return (
     <div>
