@@ -27,8 +27,8 @@ export default function Cargo() {
     const { data: cargo } = await client.models.Container.list({
       selectionSet,
     });
-    console.log(data);
     setData(cargo);
+    console.log(data);
   }
 
   useEffect(() => {
