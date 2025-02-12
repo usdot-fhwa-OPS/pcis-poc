@@ -82,17 +82,17 @@ const Transportation_CompletedData = [
   { vesselId: "3", containerId: "M-35", origin: "Mexico", bco: "WB", bco_email: "wb@gmail.com", operator: "Sarah", operator_email: "emma@gmail.com", date_init: "22 March 2024", date_approved: "23 March 2024", status: "Picked Up", date_picked: "24 March 2024", time: "1:00pm" },
   { vesselId: "4", containerId: "CH-44", origin: "China", bco: "LK", bco_email: "lk@gmail.com", operator: "Emma", operator_email: "james@gmail.com", date_init: "2 March 2024", date_approved: "23 March 2024", status: "Picked Up", date_picked: "23 March 2024", time: "11:30am" }
 ];
-const BCO_UpcomingData = [
-  { port:"NORfolk", terminalId:"M-10", vesselId: "1", containerId: "HM-263", origin: "Canada", bco: "WB", bco_email: "jd@gmail.com", operator: "Emma", operator_email: "james@gmail.com", date: "23 March 2024", time: "1:00pm", status: "On-Ship", eda:"24 March 2024" },
-  { port:"NORfolk", terminalId:"M-10", vesselId: "3", containerId: "HM-749", origin: "China", bco: "SM", bco_email: "sm@gmail.com", operator: "Emma", operator_email: "daniel@gmail.com", date: "21 March 2024", time: "3:45pm", status: "On-Ship", eda:"24 March 2024"  },
-  { port:"NORfolk", terminalId:"M-10", vesselId: "4", containerId: "HM-569", origin: "China", bco: "LK", bco_email: "jd@gmail.com", operator: "Michael", operator_email: "daniel@gmail.com", date: "21 March 2024", time: "1:00pm", status: "On-Ship", eda:"24 March 2024"  },
-  { port:"NORfolk", terminalId:"M-10", vesselId: "5", containerId: "HM-663", origin: "Mexico", bco: "WB", bco_email: "rt@gmail.com", operator: "Emma", operator_email: "emma@gmail.com", date: "24 March 2024", time: "10:00am", status: "On-Dock", eda:"24 March 2024" },
-  { port:"NORfolk", terminalId:"M-10", vesselId: "6", containerId: "HM-360", origin: "Canada", bco: "RT", bco_email: "wb@gmail.com", operator: "Emma", operator_email: "daniel@gmail.com", date: "23 March 2024", time: "11:30am", status: "On-Ship", eda:"24 March 2024"  },
-  { port:"NORfolk", terminalId:"M-10", vesselId: "7", containerId: "HM-704", origin: "Mexico", bco: "RT", bco_email: "sm@gmail.com", operator: "Emma", operator_email: "daniel@gmail.com", date: "22 March 2024", time: "1:00pm", status: "On-Ship" , eda:"24 March 2024" },
-  { port:"NORfolk", terminalId:"M-10", vesselId: "8", containerId: "HM-657", origin: "USA", bco: "SM", bco_email: "lk@gmail.com", operator: "Michael", operator_email: "emma@gmail.com", date: "23 March 2024", time: "3:45pm", status: "On-Dock" , eda:"24 March 2024" },
-  { port:"NORfolk", terminalId:"M-10", vesselId: "9", containerId: "HM-694", origin: "Canada", bco: "LK", bco_email: "wb@gmail.com", operator: "Michael", operator_email: "james@gmail.com", date: "23 March 2024", time: "10:00am", status: "On-Ship", eda:"24 March 2024"  },
-  { port:"NORfolk", terminalId:"M-10", vesselId: "10", containerId: "HM-279", origin: "Germany", bco: "LK", bco_email: "rt@gmail.com", operator: "Emma", operator_email: "james@gmail.com", date: "24 March 2024", time: "1:00pm", status: "On-Dock", eda:"24 March 2024"  }
-];
+// const BCO_UpcomingData = [
+//   { port:"NORfolk", terminalId:"M-10", vesselId: "1", containerId: "HM-263", origin: "Canada", bco: "WB", bco_email: "jd@gmail.com", operator: "Emma", operator_email: "james@gmail.com", date: "23 March 2024", time: "1:00pm", status: "On-Ship", eda:"24 March 2024" },
+//   { port:"NORfolk", terminalId:"M-10", vesselId: "3", containerId: "HM-749", origin: "China", bco: "SM", bco_email: "sm@gmail.com", operator: "Emma", operator_email: "daniel@gmail.com", date: "21 March 2024", time: "3:45pm", status: "On-Ship", eda:"24 March 2024"  },
+//   { port:"NORfolk", terminalId:"M-10", vesselId: "4", containerId: "HM-569", origin: "China", bco: "LK", bco_email: "jd@gmail.com", operator: "Michael", operator_email: "daniel@gmail.com", date: "21 March 2024", time: "1:00pm", status: "On-Ship", eda:"24 March 2024"  },
+//   { port:"NORfolk", terminalId:"M-10", vesselId: "5", containerId: "HM-663", origin: "Mexico", bco: "WB", bco_email: "rt@gmail.com", operator: "Emma", operator_email: "emma@gmail.com", date: "24 March 2024", time: "10:00am", status: "On-Dock", eda:"24 March 2024" },
+//   { port:"NORfolk", terminalId:"M-10", vesselId: "6", containerId: "HM-360", origin: "Canada", bco: "RT", bco_email: "wb@gmail.com", operator: "Emma", operator_email: "daniel@gmail.com", date: "23 March 2024", time: "11:30am", status: "On-Ship", eda:"24 March 2024"  },
+//   { port:"NORfolk", terminalId:"M-10", vesselId: "7", containerId: "HM-704", origin: "Mexico", bco: "RT", bco_email: "sm@gmail.com", operator: "Emma", operator_email: "daniel@gmail.com", date: "22 March 2024", time: "1:00pm", status: "On-Ship" , eda:"24 March 2024" },
+//   { port:"NORfolk", terminalId:"M-10", vesselId: "8", containerId: "HM-657", origin: "USA", bco: "SM", bco_email: "lk@gmail.com", operator: "Michael", operator_email: "emma@gmail.com", date: "23 March 2024", time: "3:45pm", status: "On-Dock" , eda:"24 March 2024" },
+//   { port:"NORfolk", terminalId:"M-10", vesselId: "9", containerId: "HM-694", origin: "Canada", bco: "LK", bco_email: "wb@gmail.com", operator: "Michael", operator_email: "james@gmail.com", date: "23 March 2024", time: "10:00am", status: "On-Ship", eda:"24 March 2024"  },
+//   { port:"NORfolk", terminalId:"M-10", vesselId: "10", containerId: "HM-279", origin: "Germany", bco: "LK", bco_email: "rt@gmail.com", operator: "Emma", operator_email: "james@gmail.com", date: "24 March 2024", time: "1:00pm", status: "On-Dock", eda:"24 March 2024"  }
+// ];
 
 const BCO_OngoingData = [
   { port:"NORfolk", terminalId:"N-10", vesselId: "1", terminal_op:"James Vince", containerId: "HMO-22", origin: "Canada", bco: "WB", bco_email: "wb@gmail.com", operator: "James", operator_email: "sarah@gmail.com", date_init: "22 March 2024", date_approved: "24 March 2024", status: "Pending Appointment", date_picked: "23 March 2024", time: "10:00am" },
@@ -142,6 +142,9 @@ function RouteComponent(){
   useEffect(() => {
     async function fetchContainers() {
       const { data: cargo } = await client.models.Container.list({
+        filter: {
+          bcoEmail: { eq: userAttributes.email },
+        },
         selectionSet: selectionSetBCOUpcomingBookings,
         authMode: "apiKey",
       });
