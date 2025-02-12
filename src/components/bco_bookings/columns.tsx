@@ -2,25 +2,24 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "../ui/button.tsx";
 import { useState } from "react";
 import { Flag } from "lucide-react";
-
+import { BCOUpcomingBookings } from "../../routes/booking.tsx";
 
 
 export const columns = (): ColumnDef<any>[] => {
-  const baseColumns: ColumnDef<any>[] = [
-    {accessorKey: "port", header: "Port" },
-    { accessorKey: "terminalId", header: "Terminal ID" },
+  const baseColumns: ColumnDef<BCOUpcomingBookings>[] = [
     { accessorKey: "vesselId", header: "Vessel ID" },
     { accessorKey: "containerId", header: "Container ID" },
     { accessorKey: "origin", header: "Origin" },
-    { accessorKey: "bco", header: "BCO" },
-     { accessorKey: "bco_email", header: "BCO Email" },
-    { accessorKey: "operator", header: "Transportation  Operator" },
-    { accessorKey: "operator_email", header: "Transportation Operator Email" },
+    { accessorKey: "destination", header: "Destination" },
+    { accessorKey: "bcoName", header: "BCO" },
+    { accessorKey: "bcoEmail", header: "BCO Email" },
+    { accessorKey: "transopName", header: "Transportation  Operator" },
+    { accessorKey: "transopEmail", header: "Transportation Operator Email" },
     {
-      accessorKey: "status",
+      accessorKey: "containerStatus",
       header: "Booking Status",
       cell: ({ row }) => {
-        const status = row.original.status; // Get status value
+        const status = row.original.containerStatus; // Get status value
         const isOnShip = status === "On-Ship"; // Check if status is "Late"
 
         return (
@@ -32,7 +31,7 @@ export const columns = (): ColumnDef<any>[] => {
 
       }
     },
-    { accessorKey: "eda", header: "Estimated Day of Arrival" },
+    { accessorKey: "arrivalDate", header: "Estimated Day of Arrival" },
     {
       accessorKey: "contact_bco",
       header: "Assign",
@@ -40,7 +39,7 @@ export const columns = (): ColumnDef<any>[] => {
         <Button
           variant="outline"
           className="bg-blue-600 text-white hover:bg-blue-700"
-          onClick={() => alert(`Contacting ${row.original.bco} at ${row.original.bco_email}`)}
+          onClick={() => alert(`Contacting ${row.original.bcoName} at ${row.original.bcoEmail}`)}
         >
           Assign
         </Button>
@@ -68,7 +67,7 @@ baseColumns.push({
   header: () => <div style={{ minWidth: "200px", textAlign: "center" }}>Flag</div>,
   cell: ({ row }) => (
     <div style={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100%" }}>
-      <FlagComponent initialFlagged={row.original.flagged} />
+      <FlagComponent initialFlagged={row.original.flag ?? false} />
     </div>
   ),
 });

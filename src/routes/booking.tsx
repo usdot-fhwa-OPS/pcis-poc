@@ -8,10 +8,20 @@ import { fetchUserAttributes } from 'aws-amplify/auth';
 import { useEffect, useState } from "react";
 import { useAuthenticator } from "@aws-amplify/ui-react";
 
+//Three Imports needed for Amplify Data Queries and CRUD methods
+import { generateClient, SelectionSet } from 'aws-amplify/data';
+import type { Schema } from '../../amplify/data/resource';
+
+const client = generateClient<Schema>();
+
 export const Route = createFileRoute('/booking')({
   component: RouteComponent,
 })
 
+//Define the selection of data that will be used for the table
+const selectionSetBCOUpcomingBookings = ['vesselID', 'containerID', 'origin', 'destination', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail', 'containerStatus', 'flag'] as const;
+//Create a type based on your selectionSet that will be later used for the columns.tsx file of the able
+export type BCOUpcomingBookings = SelectionSet<Schema['Container']['type'], typeof selectionSetBCOUpcomingBookings>
 
 const Terminal_RequestedData = [
   { vesselId: "1", containerId: "HM-263", origin: "Canada", bco: "WB", bco_email: "jd@gmail.com", operator: "Emma", operator_email: "james@gmail.com", date: "23 March 2024", time: "1:00pm", status: "Scheduled for Pickup" },
@@ -101,32 +111,50 @@ const BCO_CompletedData = [
 
 
 function RouteComponent(){
-    const { user} = useAuthenticator();
+  const { user } = useAuthenticator();
 
-   const [role, setRole] = useState<{ role: string }>({ role: '' });
+  const [userAttributes, setUserAttributes] = useState<{ role: string, email: string }>({ role: '', email: '' });
   
-    useEffect(() => {
-      async function getRole() {
-        if (user) {
-          try {
-            // fetchUserAttributes returns an array of objects with Name and Value properties.
-            const attributes = await fetchUserAttributes();
-            const roleAttribute = attributes['custom:role'] ?? 'No role assigned';
-            setRole({ role: roleAttribute });
-          } catch (error) {
-            console.error("Error fetching user attributes", error);
-          }
+  useEffect(() => {
+    async function getUserAttributes() {
+      if (user) {
+        try {
+          // fetchUserAttributes returns an array of objects with Name and Value properties.
+          const attributes = await fetchUserAttributes();
+          const roleAttribute = attributes['custom:role'] ?? 'No role assigned';
+          setUserAttributes({ 
+            role: roleAttribute,
+            email: attributes.email ?? 'No email found'
+          });
+        } catch (error) {
+          console.error("Error fetching user attributes", error);
         }
       }
-  
-      getRole();
-    }, [user, fetchUserAttributes]);
+    }
 
-  // return (
+    getUserAttributes();
+  }, [user, fetchUserAttributes]);
 
-  // );
+  //Will hold the data after the query call, according to the Cargo Type declared above.
+  const [bcoUpcomingBookings, setBcoUpcomingBookings] = useState<BCOUpcomingBookings[]>([])
+
+  // Conditionally fetch containers if the user is a Beneficiary Cargo Owner
+  useEffect(() => {
+    async function fetchContainers() {
+      const { data: cargo } = await client.models.Container.list({
+        selectionSet: selectionSetBCOUpcomingBookings,
+        authMode: "apiKey",
+      });
+      setBcoUpcomingBookings(cargo);
+    }
+
+    if (userAttributes.role === "Beneficiary Cargo Owner") {
+      fetchContainers();
+    }
+  }, [userAttributes.role]);
+
   // Separate return statements for each role
-  if (role.role === "Terminal Operator") {
+  if (userAttributes.role === "Terminal Operator") {
     return (
       <div className="w-full">
       <Tabs defaultValue="requested" className="">
@@ -153,7 +181,7 @@ function RouteComponent(){
     );
   }
 
-  if (role.role === "Transportation Operator") {
+  if (userAttributes.role === "Transportation Operator") {
     return (
     <div className="w-full">
     
@@ -192,7 +220,7 @@ function RouteComponent(){
   }
 
   // Default return for General Role or Unknown Role
-  if (role.role==="Beneficiary Cargo Owner")
+  if (userAttributes.role==="Beneficiary Cargo Owner")
   {
     return (
       <div className="w-full">
@@ -206,7 +234,7 @@ function RouteComponent(){
   
         <TabsContent value="upcoming">
           <BcoBookingsTableUpcoming
-            data={BCO_UpcomingData}
+            data={bcoUpcomingBookings}
           
             status="Upcoming"
           />
