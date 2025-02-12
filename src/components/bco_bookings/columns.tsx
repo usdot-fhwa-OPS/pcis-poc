@@ -7,8 +7,8 @@ import { BCOUpcomingBookings } from "../../routes/booking.tsx";
 
 export const columns = (): ColumnDef<any>[] => {
   const baseColumns: ColumnDef<BCOUpcomingBookings>[] = [
-    { accessorKey: "vesselId", header: "Vessel ID" },
-    { accessorKey: "containerId", header: "Container ID" },
+    { accessorKey: "vesselID", header: "Vessel ID" },
+    { accessorKey: "containerID", header: "Container ID" },
     { accessorKey: "origin", header: "Origin" },
     { accessorKey: "destination", header: "Destination" },
     { accessorKey: "bcoName", header: "BCO" },
