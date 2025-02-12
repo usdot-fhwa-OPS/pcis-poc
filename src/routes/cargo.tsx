@@ -39,13 +39,27 @@ export default function Cargo() {
     fetchContainers();
   }, [])
 
-
+  // The function that updates a row’s operator name/email.
+  function updateCargo(containerID: string, newName: string, newEmail: string) {
+    setData((prev) =>
+      prev.map((cargo) =>
+        cargo.containerID === containerID
+          ? { ...cargo, operator: newName, operator_email: newEmail }
+          : cargo
+      )
+    )
+  }
 
   return (
     <div>
       <h1 className="text-2xl font-bold text-center">Upcoming Cargo</h1>
       <div>
-        <DataTable columns={columns} data={data} />
+        <DataTable
+          columns={columns}
+          data={data}
+          // Pass the function in as meta so columns can call it
+          meta={{ updateCargo }}
+        />
       </div>
     </div>
   )

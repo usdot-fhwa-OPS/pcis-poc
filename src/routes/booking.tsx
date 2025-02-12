@@ -1,6 +1,8 @@
 import { createFileRoute } from '@tanstack/react-router'
 import {TerminalBookingsTable,TerminalBookingsCompleted} from "../components/terminal-bookings/terminal-bookings-table.tsx"
 import {TransportationBookingsTableUpcoming,  TransportationBookingsTableCompleted,TransportationBookingsTableOngoing} from "../components/transportation_bookings/transportation-bookings-table.tsx"
+import {BcoBookingsTableUpcoming,  BcoBookingsTableCompleted,BcoBookingsTableOngoing} from "../components/bco_bookings/bco-bookings-table.tsx"
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs.tsx"
 import { fetchUserAttributes } from 'aws-amplify/auth';
 import { useEffect, useState } from "react";
@@ -41,7 +43,7 @@ const Terminal_CompletedData = [
   { vesselId: "4", containerId: "CH-44", origin: "China", bco: "LK", bco_email: "lk@gmail.com", operator: "Emma", operator_email: "james@gmail.com", date_init: "2 March 2024", date_approved: "23 March 2024", status: "Picked Up", date_picked: "23 March 2024", time: "11:30am" }
 ];
 
-const Transportation_RequestedData = [
+const Transportation_UpcomingData = [
   { vesselId: "1", containerId: "HM-263", origin: "Canada", bco: "WB", bco_email: "jd@gmail.com", operator: "Emma", operator_email: "james@gmail.com", date: "23 March 2024", time: "1:00pm", status: "Scheduled for Pickup" },
   { vesselId: "2", containerId: "HM-155", origin: "Germany", bco: "WB", bco_email: "sm@gmail.com", operator: "James", operator_email: "sarah@gmail.com", date: "21 March 2024", time: "10:00am", status: "Late" },
   { vesselId: "3", containerId: "HM-749", origin: "China", bco: "SM", bco_email: "sm@gmail.com", operator: "Emma", operator_email: "daniel@gmail.com", date: "21 March 2024", time: "3:45pm", status: "Scheduled for Pickup" },
@@ -69,6 +71,32 @@ const Transportation_CompletedData = [
   { vesselId: "2", containerId: "US-45", origin: "USA", bco: "RT", bco_email: "wb@gmail.com", operator: "James", operator_email: "daniel@gmail.com", date_init: "23 March 2024", date_approved: "23 March 2024", status: "Picked Up", date_picked: "24 March 2024", time: "3:45pm" },
   { vesselId: "3", containerId: "M-35", origin: "Mexico", bco: "WB", bco_email: "wb@gmail.com", operator: "Sarah", operator_email: "emma@gmail.com", date_init: "22 March 2024", date_approved: "23 March 2024", status: "Picked Up", date_picked: "24 March 2024", time: "1:00pm" },
   { vesselId: "4", containerId: "CH-44", origin: "China", bco: "LK", bco_email: "lk@gmail.com", operator: "Emma", operator_email: "james@gmail.com", date_init: "2 March 2024", date_approved: "23 March 2024", status: "Picked Up", date_picked: "23 March 2024", time: "11:30am" }
+];
+const BCO_UpcomingData = [
+  { port:"NORfolk", terminalId:"M-10", vesselId: "1", containerId: "HM-263", origin: "Canada", bco: "WB", bco_email: "jd@gmail.com", operator: "Emma", operator_email: "james@gmail.com", date: "23 March 2024", time: "1:00pm", status: "On-Ship", eda:"24 March 2024" },
+  { port:"NORfolk", terminalId:"M-10", vesselId: "3", containerId: "HM-749", origin: "China", bco: "SM", bco_email: "sm@gmail.com", operator: "Emma", operator_email: "daniel@gmail.com", date: "21 March 2024", time: "3:45pm", status: "On-Ship", eda:"24 March 2024"  },
+  { port:"NORfolk", terminalId:"M-10", vesselId: "4", containerId: "HM-569", origin: "China", bco: "LK", bco_email: "jd@gmail.com", operator: "Michael", operator_email: "daniel@gmail.com", date: "21 March 2024", time: "1:00pm", status: "On-Ship", eda:"24 March 2024"  },
+  { port:"NORfolk", terminalId:"M-10", vesselId: "5", containerId: "HM-663", origin: "Mexico", bco: "WB", bco_email: "rt@gmail.com", operator: "Emma", operator_email: "emma@gmail.com", date: "24 March 2024", time: "10:00am", status: "On-Dock", eda:"24 March 2024" },
+  { port:"NORfolk", terminalId:"M-10", vesselId: "6", containerId: "HM-360", origin: "Canada", bco: "RT", bco_email: "wb@gmail.com", operator: "Emma", operator_email: "daniel@gmail.com", date: "23 March 2024", time: "11:30am", status: "On-Ship", eda:"24 March 2024"  },
+  { port:"NORfolk", terminalId:"M-10", vesselId: "7", containerId: "HM-704", origin: "Mexico", bco: "RT", bco_email: "sm@gmail.com", operator: "Emma", operator_email: "daniel@gmail.com", date: "22 March 2024", time: "1:00pm", status: "On-Ship" , eda:"24 March 2024" },
+  { port:"NORfolk", terminalId:"M-10", vesselId: "8", containerId: "HM-657", origin: "USA", bco: "SM", bco_email: "lk@gmail.com", operator: "Michael", operator_email: "emma@gmail.com", date: "23 March 2024", time: "3:45pm", status: "On-Dock" , eda:"24 March 2024" },
+  { port:"NORfolk", terminalId:"M-10", vesselId: "9", containerId: "HM-694", origin: "Canada", bco: "LK", bco_email: "wb@gmail.com", operator: "Michael", operator_email: "james@gmail.com", date: "23 March 2024", time: "10:00am", status: "On-Ship", eda:"24 March 2024"  },
+  { port:"NORfolk", terminalId:"M-10", vesselId: "10", containerId: "HM-279", origin: "Germany", bco: "LK", bco_email: "rt@gmail.com", operator: "Emma", operator_email: "james@gmail.com", date: "24 March 2024", time: "1:00pm", status: "On-Dock", eda:"24 March 2024"  }
+];
+
+const BCO_OngoingData = [
+  { port:"NORfolk", terminalId:"N-10", vesselId: "1", terminal_op:"James Vince", containerId: "HMO-22", origin: "Canada", bco: "WB", bco_email: "wb@gmail.com", operator: "James", operator_email: "sarah@gmail.com", date_init: "22 March 2024", date_approved: "24 March 2024", status: "Pending Appointment", date_picked: "23 March 2024", time: "10:00am" },
+  { port:"Los Angeles", terminalId:"L-22", vesselId: "2", terminal_op:"Michael Scott", containerId: "US-45", origin: "USA", bco: "RT", bco_email: "rt@gmail.com", operator: "Daniel", operator_email: "daniel@gmail.com", date_init: "23 March 2024", date_approved: "23 March 2024", status: "Pending Pick Up", date_picked: "24 March 2024", time: "3:45pm" },
+  { port:"Mexico City", terminalId:"M-14", vesselId: "3", terminal_op:"Sarah Doe", containerId: "M-35", origin: "Mexico", bco: "WB", bco_email: "wb@gmail.com", operator: "Emma", operator_email: "emma@gmail.com", date_init: "22 March 2024", date_approved: "23 March 2024", status: "Pending Approval", date_picked: "24 March 2024", time: "1:00pm" },
+  { port:"Shanghai", terminalId:"S-33", vesselId: "4", terminal_op:"Liam Wong", containerId: "CH-44", origin: "China", bco: "LK", bco_email: "lk@gmail.com", operator: "Sophia", operator_email: "sophia@gmail.com", date_init: "2 March 2024", date_approved: "23 March 2024", status: "Pening Approval", date_picked: "23 March 2024", time: "11:30am" }
+];
+
+
+const BCO_CompletedData = [
+  { port:"NORfolk", terminalId:"N-10", vesselId: "1", terminal_op:"James Vince", containerId: "HMO-22", origin: "Canada", bco: "WB", bco_email: "wb@gmail.com", operator: "James", operator_email: "sarah@gmail.com", date_init: "22 March 2024", date_approved: "24 March 2024", status: "Picked Up", date_picked: "23 March 2024", time: "10:00am" },
+  { port:"Los Angeles", terminalId:"L-22", vesselId: "2", terminal_op:"Michael Scott", containerId: "US-45", origin: "USA", bco: "RT", bco_email: "rt@gmail.com", operator: "Daniel", operator_email: "daniel@gmail.com", date_init: "23 March 2024", date_approved: "23 March 2024", status: "Picked Up", date_picked: "24 March 2024", time: "3:45pm" },
+  { port:"Mexico City", terminalId:"M-14", vesselId: "3", terminal_op:"Sarah Doe", containerId: "M-35", origin: "Mexico", bco: "WB", bco_email: "wb@gmail.com", operator: "Emma", operator_email: "emma@gmail.com", date_init: "22 March 2024", date_approved: "23 March 2024", status: "Picked Up", date_picked: "24 March 2024", time: "1:00pm" },
+  { port:"Shanghai", terminalId:"S-33", vesselId: "4", terminal_op:"Liam Wong", containerId: "CH-44", origin: "China", bco: "LK", bco_email: "lk@gmail.com", operator: "Sophia", operator_email: "sophia@gmail.com", date_init: "2 March 2024", date_approved: "23 March 2024", status: "Picked Up", date_picked: "23 March 2024", time: "11:30am" }
 ];
 
 
@@ -138,7 +166,7 @@ function RouteComponent(){
 
       <TabsContent value="upcoming">
         <TransportationBookingsTableUpcoming
-          data={Transportation_RequestedData}
+          data={Transportation_UpcomingData}
         
           status="Upcoming"
         />
@@ -166,35 +194,36 @@ function RouteComponent(){
   // Default return for General Role or Unknown Role
   if (role.role==="Beneficiary Cargo Owner")
   {
-  return (
-    <div className="w-full">
+    return (
+      <div className="w-full">
+      
       <Tabs defaultValue="upcoming">
         <TabsList className="mb-4 flex w-full justify-start gap-x-4">
-          <TabsTrigger value="upcoming ">Upcoming</TabsTrigger>
+          <TabsTrigger value="upcoming">Upcoming</TabsTrigger>
           <TabsTrigger value="ongoing">Ongoing</TabsTrigger>
           <TabsTrigger value="completed">Completed</TabsTrigger>
         </TabsList>
-
+  
         <TabsContent value="upcoming">
-          <TransportationBookingsTableUpcoming
-            data={Terminal_RequestedData}
+          <BcoBookingsTableUpcoming
+            data={BCO_UpcomingData}
           
             status="Upcoming"
           />
         </TabsContent>
-
+  
         <TabsContent value="ongoing">
-          <TransportationBookingsTableOngoing
-            data={ Terminal_OngoingData}
+          <BcoBookingsTableOngoing
+            data={ BCO_OngoingData}
         
             status="Ongoing"
           />
         </TabsContent>
-
+  
         <TabsContent value="completed">
-        <TransportationBookingsTableCompleted
-            data={ Terminal_OngoingData}
-            status="completed"
+        <BcoBookingsTableCompleted
+            data={ BCO_CompletedData}
+            status='completed'
           />
         </TabsContent>
       </Tabs>
