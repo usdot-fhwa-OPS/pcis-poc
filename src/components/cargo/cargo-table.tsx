@@ -22,14 +22,20 @@ import {
 
 import { Input } from "../ui/input"
 
+export interface CargoTableMeta {
+  updateCargo: (containerID: string, newName: string, newEmail: string) => void
+}
+
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
+  meta?: CargoTableMeta
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  meta,
 }: DataTableProps<TData, TValue>) {
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -40,6 +46,7 @@ export function DataTable<TData, TValue>({
   const table = useReactTable({
     data,
     columns,
+    meta: meta as CargoTableMeta,
     getCoreRowModel: getCoreRowModel(),
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
@@ -47,7 +54,7 @@ export function DataTable<TData, TValue>({
     state: {
         columnFilters,
         rowSelection,
-    }
+    },
   })
 
   return (

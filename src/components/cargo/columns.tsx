@@ -4,6 +4,9 @@ import { ColumnDef } from "@tanstack/react-table"
 import { Flag } from "lucide-react"
 import { useState } from "react"
 import { Button } from "../ui/button"
+import { Label } from "../ui/label"
+import { Input } from "../ui/input"
+import { CargoTableMeta } from "./cargo-table"
 
 import {
     DropdownMenu,
@@ -14,6 +17,16 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
   } from "../ui/dropdown-menu"
+
+  import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+    DialogFooter,
+  } from "../ui/dialog"  
 
 export type Cargo = {
     vesselID : number
@@ -50,13 +63,134 @@ export const columns : ColumnDef<Cargo>[] = [
         header: () => <div className="text-center">BCO Email</div>,
     },
     {
-        accessorKey: "operator",
-        header: () => <div className="text-center">Transportation Operator</div>,
+      accessorKey: "operator",
+      header: () => <div className="text-center">Transportation Operator</div>,
+      cell: ({ row, table }) => {
+        const cargo = row.original
+    
+        const [open, setOpen] = useState(false)
+        const [tempName, setTempName] = useState("")
+        const [tempEmail, setTempEmail] = useState("")
+    
+        // If either operator OR email is missing, show "Book" button
+        const isMissing = !cargo.operator?.trim() || !cargo.operator_email?.trim()
+    
+        function handleSubmit() {
+          // Use the parent's updateCargo method:
+          (table.options.meta as CargoTableMeta)?.updateCargo(cargo.containerID, tempName, tempEmail)
+          setOpen(false)
+        }
+    
+        if (isMissing) {
+          return (
+            <Dialog open={open} onOpenChange={setOpen}>
+              <DialogTrigger asChild>
+                <Button variant="outline">Book</Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Book Transportation Operator</DialogTitle>
+                  <DialogDescription>
+                    Enter a name and email to assign this cargo.
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="space-y-2 py-2">
+                  <div>
+                    <Label>Operator Name</Label>
+                    <Input
+                      value={tempName}
+                      onChange={(e) => setTempName(e.target.value)}
+                    />
+                  </div>
+                  <div>
+                    <Label>Operator Email</Label>
+                    <Input
+                      value={tempEmail}
+                      onChange={(e) => setTempEmail(e.target.value)}
+                    />
+                  </div>
+                </div>
+                <DialogFooter>
+                  <Button variant="outline" onClick={() => setOpen(false)}>
+                    Cancel
+                  </Button>
+                  <Button onClick={handleSubmit} disabled={!tempName.trim() || !tempEmail.trim()}>
+                    Submit
+                    </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+          )
+        }
+    
+        // If both operator and email are already filled, just display operator's name
+        return <span>{cargo.operator}</span>
+      },
     },
     {
-        accessorKey: "operator_email",
-        header: () => <div className="text-center">Transportation Operator Email</div>,
-    },
+      accessorKey: "operator_email",
+      header: () => <div className="text-center">Transportation Operator Email</div>,
+      cell: ({ row, table }) => {
+        const cargo = row.original
+    
+        const [open, setOpen] = useState(false)
+        const [tempName, setTempName] = useState("")
+        const [tempEmail, setTempEmail] = useState("")
+    
+        // If either operator OR email is missing, show "Book" button
+        const isMissing = !cargo.operator?.trim() || !cargo.operator_email?.trim()
+    
+        function handleSubmit() {
+          (table.options.meta as CargoTableMeta)?.updateCargo(cargo.containerID, tempName, tempEmail)
+          setOpen(false)
+        }
+    
+        if (isMissing) {
+          return (
+            <Dialog open={open} onOpenChange={setOpen}>
+              <DialogTrigger asChild>
+                <Button variant="outline">Book</Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Book Transportation Operator</DialogTitle>
+                  <DialogDescription>
+                    Enter a name and email to assign this cargo.
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="space-y-2 py-2">
+                  <div>
+                    <Label>Operator Name</Label>
+                    <Input
+                      value={tempName}
+                      onChange={(e) => setTempName(e.target.value)}
+                    />
+                  </div>
+                  <div>
+                    <Label>Operator Email</Label>
+                    <Input
+                      value={tempEmail}
+                      onChange={(e) => setTempEmail(e.target.value)}
+                    />
+                  </div>
+                </div>
+                <DialogFooter>
+                  <Button variant="outline" onClick={() => setOpen(false)}>
+                    Cancel
+                  </Button>
+                  <Button onClick={handleSubmit} disabled={!tempName.trim() || !tempEmail.trim()}>
+                    Submit
+                    </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+          )
+        }
+    
+        // If both fields are already set, show the email
+        return <span>{cargo.operator_email}</span>
+      },
+    },     
     {
         accessorKey: "status",
         header: () => <div className="text-center">Cargo Status</div>,
@@ -104,7 +238,6 @@ export const columns : ColumnDef<Cargo>[] = [
         cell: ({ row }) => {
           const email = row.original.bco_email
       
-          // Option A: Anchor tag wrapping a Button
           return (
             <a
               href={`mailto:${email}?subject=Inquiry%20About%20Cargo&body=Hello%20${row.original.bco},`}
@@ -113,5 +246,6 @@ export const columns : ColumnDef<Cargo>[] = [
             </a>
           )
         },
-      }
+      },
+
 ]

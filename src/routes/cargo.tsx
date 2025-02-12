@@ -21,6 +21,17 @@ export default function Cargo() {
     fetchData()
   }, [])
 
+  // The function that updates a row’s operator name/email.
+  function updateCargo(containerID: string, newName: string, newEmail: string) {
+    setData((prev) =>
+      prev.map((cargo) =>
+        cargo.containerID === containerID
+          ? { ...cargo, operator: newName, operator_email: newEmail }
+          : cargo
+      )
+    )
+  }
+
   if (loading) {
     return <div>Loading...</div>
   }
@@ -29,11 +40,17 @@ export default function Cargo() {
     <div>
       <h1 className="text-2xl font-bold text-center">Upcoming Cargo</h1>
       <div>
-        <DataTable columns={columns} data={data} />
+        <DataTable
+          columns={columns}
+          data={data}
+          // Pass the function in as meta so columns can call it
+          meta={{ updateCargo }}
+        />
       </div>
     </div>
   )
 }
+
 
 
 async function getData(): Promise<Cargo[]> {
@@ -45,8 +62,8 @@ async function getData(): Promise<Cargo[]> {
       origin: "Boston",
       bco: "John Doe",
       bco_email: "johndoe@leidos.com",
-      operator: "Person1",
-      operator_email: "person1@shipping.com",
+      operator: "",
+      operator_email: "",
       status: "On Ship",
       flag : false,
       contact: "" // Can be removed once contact button is moved to proper place
@@ -101,4 +118,5 @@ async function getData(): Promise<Cargo[]> {
     },
 
   ]
+  
 }
