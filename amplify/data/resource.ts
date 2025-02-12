@@ -10,7 +10,7 @@ const schema = a.schema({
   Container: a
     .model({
       vesselID: a.string(),
-      containerID: a.string(),
+      containerID: a.string().required(),
       bcoName: a.string(),
       bcoEmail: a.string(),
       origin: a.string(),
@@ -29,7 +29,8 @@ const schema = a.schema({
       bookingPickupDate: a.string(),
       flag: a.boolean().default(false),
     })
-    .authorization((allow) => [allow.guest()]),
+    .identifier(['containerID'])
+    .authorization((allow) => [allow.publicApiKey(),]),
 });
 
 export type Schema = ClientSchema<typeof schema>;
@@ -37,7 +38,7 @@ export type Schema = ClientSchema<typeof schema>;
 export const data = defineData({
   schema,
   authorizationModes: {
-    defaultAuthorizationMode: 'iam',
+    defaultAuthorizationMode: 'apiKey',
   },
 });
 
