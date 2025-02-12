@@ -114,7 +114,9 @@ export const columns : ColumnDef<Cargo>[] = [
                   <Button variant="outline" onClick={() => setOpen(false)}>
                     Cancel
                   </Button>
-                  <Button onClick={handleSubmit}>Submit</Button>
+                  <Button onClick={handleSubmit} disabled={!tempName.trim() || !tempEmail.trim()}>
+                    Submit
+                    </Button>
                 </DialogFooter>
               </DialogContent>
             </Dialog>
@@ -176,7 +178,9 @@ export const columns : ColumnDef<Cargo>[] = [
                   <Button variant="outline" onClick={() => setOpen(false)}>
                     Cancel
                   </Button>
-                  <Button onClick={handleSubmit}>Submit</Button>
+                  <Button onClick={handleSubmit} disabled={!tempName.trim() || !tempEmail.trim()}>
+                    Submit
+                    </Button>
                 </DialogFooter>
               </DialogContent>
             </Dialog>
