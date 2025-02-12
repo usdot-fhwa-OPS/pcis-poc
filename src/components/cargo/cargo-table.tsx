@@ -9,7 +9,6 @@ import {
   getCoreRowModel,
   getFilteredRowModel,
   useReactTable,
-  TableOptions
 } from "@tanstack/react-table"
 
 import {
