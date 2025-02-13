@@ -151,7 +151,7 @@ function RouteComponent() {
                 bcoEmail: { eq: userAttributes.email }
               },
               {
-                assignmentStatus: { eq: 'unassigned' }
+                bookingStatus: { eq: 'unassigned' }
               }
             ]
           },
@@ -177,7 +177,7 @@ function RouteComponent() {
         containerID: containerID,
         transopName: newName,
         transopEmail: newEmail,
-        assignmentStatus: assignmentStatus,
+        bookingStatus: assignmentStatus,
       });
       console.log('Updated container status:', assignTransportationOp);
       // Refetch containers after updating
