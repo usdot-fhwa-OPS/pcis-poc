@@ -2,30 +2,22 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "../ui/button.tsx";
 import { useState } from "react";
 import { Flag } from "lucide-react";
-import { put } from 'aws-amplify/api';
+import { generateClient } from 'aws-amplify/data';
+import type { Schema } from '../../../amplify/data/resource';
+
+
+const client = generateClient<Schema>();
 
 async function updateBooking(id:string, status:string, transopName = "", transopEmail = "") {
   try {
-    const bookingUpdate = {
-      bookingStatus: status,
-      transopName,
-      transopEmail,
-    };
-
-    const restOperation = put({
-      apiName: 'terminalopChangestatus', // Replace with your actual API name
-      path: `terminalopChangestatus/${id}`, // Adjust the path as needed
-      options: { body: bookingUpdate },
-    });
-
-    const response = await restOperation.response;
-    console.log('Update successful:', response);
-  } catch (e: unknown) {
-    if (e instanceof Error) {
-      console.error('Update failed:', e.message);
-    } else {
-      console.error('An unknown error occurred:', e);
-    }
+    // Call the Amplify update method for the flag (again must always contain containerID)
+    const { data: updatedContainerStatus } = await client.models.Container.update({
+      containerID: id,
+       bookingStatus: status
+    })
+    console.log("Updated flag:", updatedContainerStatus)
+  } catch (error) {
+    console.error("Error updating flag:", error);
   }
 
 }

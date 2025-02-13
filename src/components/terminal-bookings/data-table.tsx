@@ -19,17 +19,24 @@ import {
   TableRow,
 } from "../ui/table.tsx"
 
+//Adding interface for setting Booking status
+export interface TerminalOperatorDataTableMeta {
+  assignTransOp: (containerID: string, newName: string, newEmail: string, assignmentStatus: string) => void
+}
+
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
+  meta?: TerminalOperatorDataTableMeta
 }
 
-export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData, TValue>) {
+export function DataTable<TData, TValue>({ columns, data ,meta}: DataTableProps<TData, TValue>) {
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
 
   const table = useReactTable({
     data,
     columns,
+    meta: meta as TerminalOperatorDataTableMeta,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     onColumnFiltersChange: setColumnFilters,
