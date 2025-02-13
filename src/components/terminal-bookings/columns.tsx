@@ -14,8 +14,8 @@ export const columns = (status: string): ColumnDef<any>[] => {
     { accessorKey: "bcoEmail", header: "BCO Email" },
     { accessorKey: "transopName", header: "Transportation Operator" },
     { accessorKey: "transopEmail", header: "Transportation Operator Email" },
-    { accessorKey: "date", header: "Date Requested" },
-    { accessorKey: "time", header: "Time Requested" },
+    { accessorKey: "bookingDate", header: "Date Requested" },
+    { accessorKey: "bookingTime", header: "Time Requested" },
 
   ];
 
@@ -92,13 +92,13 @@ baseColumns.push({
 
 export const CompletedColumn = (): ColumnDef<any>[] => {
   const baseColumns1: ColumnDef<any>[] = [
-    { accessorKey: "vesselId", header: "Vessel ID" },
-    { accessorKey: "containerId", header: "Container ID" },
+    { accessorKey: "vesselID", header: "Vessel ID" },
+    { accessorKey: "containerID", header: "Container ID" },
     { accessorKey: "origin", header: "Origin" },
-    { accessorKey: "bco", header: "BCO" },
-    { accessorKey: "bco_email", header: "BCO Email" },
-    { accessorKey: "operator", header: "Transportation Operator" },
-    { accessorKey: "operator_email", header: "Transportation Operator Email" },
+    { accessorKey: "bcoName", header: "BCO" },
+    { accessorKey: "bcoEmail", header: "BCO Email" },
+    { accessorKey: "transopName", header: "Transportation Operator" },
+    { accessorKey: "transopEmail", header: "Transportation Operator Email" },
     { accessorKey: "date_init", header: "Date Initiated" },
     { accessorKey: "date_approved", header: "Date Approved" },
     { accessorKey: "date_picked", header: "Date Picked Up" },
