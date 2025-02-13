@@ -8,7 +8,10 @@ import { routeTree } from './routeTree.gen'
 import Auth from './components/authenticator/authenticator.tsx'
 import './index.css'
 
+import { Amplify } from 'aws-amplify';
+import outputs from '../amplify_outputs.json';
 
+Amplify.configure(outputs);
 
 
 // Create a new router instance
