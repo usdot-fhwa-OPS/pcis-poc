@@ -7,13 +7,13 @@ import { Flag } from "lucide-react";
 export const columns = (status: string): ColumnDef<any>[] => {
   const baseColumns: ColumnDef<any>[] = [
 
-    { accessorKey: "vesselId", header: "Vessel ID" },
-    { accessorKey: "containerId", header: "Container ID" },
+    { accessorKey: "vesselID", header: "Vessel ID" },
+    { accessorKey: "containerID", header: "Container ID" },
     { accessorKey: "origin", header: "Origin" },
-    { accessorKey: "bco", header: "BCO" },
-    { accessorKey: "bco_email", header: "BCO Email" },
-    { accessorKey: "operator", header: "Transportation Operator" },
-    { accessorKey: "operator_email", header: "Transportation Operator Email" },
+    { accessorKey: "bcoName", header: "BCO" },
+    { accessorKey: "bcoEmail", header: "BCO Email" },
+    { accessorKey: "transopName", header: "Transportation Operator" },
+    { accessorKey: "transopEmail", header: "Transportation Operator Email" },
     { accessorKey: "date", header: "Date Requested" },
     { accessorKey: "time", header: "Time Requested" },
 

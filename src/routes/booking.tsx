@@ -146,7 +146,12 @@ function RouteComponent(){
     //Query the data from the database with selection set and auth mode (always apiKey)
     const { data: cargo } = await client.models.Container.list({
       selectionSet,
-      authMode: 'apiKey'
+      authMode: 'apiKey',
+      filter: {
+        bookingStatus: {
+          eq: 'Pending Booking Approval'
+        }
+      }
     });
     setData(cargo);
   }
