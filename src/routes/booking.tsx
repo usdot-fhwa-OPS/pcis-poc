@@ -7,10 +7,21 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs.
 import { fetchUserAttributes } from 'aws-amplify/auth';
 import { useEffect, useState } from "react";
 import { useAuthenticator } from "@aws-amplify/ui-react";
+import { generateClient, SelectionSet } from 'aws-amplify/data';
+import type { Schema } from '../../amplify/data/resource';
+
+const client = generateClient<Schema>();
 
 export const Route = createFileRoute('/booking')({
   component: RouteComponent,
 })
+
+const selectionSet = ['vesselID', 'containerID', 'origin', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail','bookingDate','bookingTime','bookingStatus', 'flag'] as const;
+
+//Create a type based on your selectionSet that will be later used for the columns.tsx file of the able
+export type UpcomingCargo = SelectionSet<Schema['Container']['type'], typeof selectionSet>
+
+
 
 
 const Terminal_RequestedData = [
@@ -126,6 +137,25 @@ function RouteComponent(){
 
   // );
   // Separate return statements for each role
+
+  //getting Data
+  const [terminal_Data, setData] = useState<UpcomingCargo[]>([])
+
+  //Fetch the data from the database
+  const fetchContainers = async () => {
+    //Query the data from the database with selection set and auth mode (always apiKey)
+    const { data: cargo } = await client.models.Container.list({
+      selectionSet,
+      authMode: 'apiKey'
+    });
+    setData(cargo);
+  }
+
+  //Fetch the data on the first render
+  useEffect(() => {
+    fetchContainers();
+  }, [])
+
   if (role.role === "Terminal Operator") {
     return (
       <div className="w-full">
@@ -139,7 +169,7 @@ function RouteComponent(){
         </div>
         <div>
         <TabsContent value="requested">
-          <TerminalBookingsTable data={Terminal_RequestedData} status="Requested" />
+          <TerminalBookingsTable data={terminal_Data} status="Requested" />
         </TabsContent>
         <TabsContent value="ongoing">
           <TerminalBookingsTable data={Terminal_OngoingData} status="Ongoing" />
