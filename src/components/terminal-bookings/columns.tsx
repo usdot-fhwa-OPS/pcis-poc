@@ -1,39 +1,58 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "../ui/button.tsx";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Flag } from "lucide-react";
-import { generateClient } from 'aws-amplify/data';
-import type { Schema } from '../../../amplify/data/resource';
-
+import { generateClient } from "aws-amplify/data";
+import type { Schema } from "../../../amplify/data/resource";
 
 const client = generateClient<Schema>();
 
-async function updateBooking(id: string, status: string, transopName = "", transopEmail = "") {
+// Fetch Data Function
+const fetchData = async (setData: (data: any[]) => void) => {
+  try {
+    const response = await client.models.Container.list();
+    setData(response.data); // Update table data
+  } catch (error) {
+    console.error("Error fetching data:", error);
+  }
+};
+
+// Update Booking Function with Refresh Capability
+async function updateBooking(id: string, status: string, setData: (data: any[]) => void, transopName = "", transopEmail = "") {
   try {
     if (status === "unassigned") {
-      const { data: updatedContainerStatus } = await client.models.Container.update({
+      await client.models.Container.update({
         containerID: id,
         bookingStatus: status,
         transopName,
-        transopEmail
+        transopEmail,
       });
-      console.log("Updated flag with transop details:", updatedContainerStatus);
     } else {
-      const { data: updatedContainerStatus } = await client.models.Container.update({
+      await client.models.Container.update({
         containerID: id,
-        bookingStatus: status
+        bookingStatus: status,
       });
-      console.log("Updated flag:", updatedContainerStatus);
     }
+
+    console.log(`Updated booking ${id} to status: ${status}`);
+
+    // Refresh Data After Update
+    fetchData(setData);
   } catch (error) {
     console.error("Error updating flag:", error);
   }
 }
 
+// Column Definitions with State & Refresh Handling
+export const columns = (): ColumnDef<any>[] => {
+  const [data, setData] = useState<any[]>([]);
 
-export const columns = (status: string): ColumnDef<any>[] => {
+  // Fetch data when component mounts
+  useEffect(() => {
+    fetchData(setData);
+  }, []);
+
   const baseColumns: ColumnDef<any>[] = [
-
     { accessorKey: "vesselID", header: "Vessel ID" },
     { accessorKey: "containerID", header: "Container ID" },
     { accessorKey: "origin", header: "Origin" },
@@ -43,55 +62,34 @@ export const columns = (status: string): ColumnDef<any>[] => {
     { accessorKey: "transopEmail", header: "Transportation Operator Email" },
     { accessorKey: "bookingDate", header: "Date Requested" },
     { accessorKey: "bookingTime", header: "Time Requested" },
-
   ];
 
+  baseColumns.push({
+    accessorKey: "status",
+    header: () => <div className="text-center min-w-[200px]">Status</div>,
+    cell: ({ row }) => (
+      <div className="flex space-x-4 justify-center">
+        {/* Approve Button */}
+        <Button
+          variant="outline"
+          className="text-green-700"
+          onClick={() => updateBooking(row.original.containerID, "Pending Pick Up", setData)}
+        >
+          Approve
+        </Button>
 
+        {/* Deny Button */}
+        <Button
+          variant="destructive"
+          onClick={() => updateBooking(row.original.containerID, "unassigned", setData)}
+        >
+          Deny
+        </Button>
+      </div>
+    ),
+  });
 
-  if (status === "Requested") {
-    baseColumns.push({
-      accessorKey: "status",
-      header: () => <div className="text-center min-w-[200px]">Status</div>,
-      cell: ({ row }) => (
-        <div className="flex space-x-4 justify-center">
-          {/* Approve Button */}
-          <Button
-            variant="outline"
-            className="text-green-700"
-            onClick={() => updateBooking(row.original.containerID, "Pending Pick Up")}
-          >
-            Approve
-          </Button>
-
-          {/* Deny Button */}
-          <Button
-            variant="destructive"
-            onClick={() => updateBooking(row.original.containerID, "unassigned", "", "")}
-          >
-            Deny
-          </Button>
-        </div>
-      ),
-    });
-  }
-
-  if (status === "Ongoing") {
-    baseColumns.push({
-      accessorKey: "status",
-      header: " Status",
-      cell: ({ row }) => {
-        const status = row.original.status; // Get status value
-        const isLate = status === "Late"; // Check if status is "Late"
-
-        return (
-          <span className={`px-2 py-1 rounded-md ${isLate ? "bg-red-500 text-white" : "bg-gray-200"}`}>
-            {status}
-          </span>
-        );
-      },
-    },);
-
-  }
+  
 
 
 
