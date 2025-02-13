@@ -8,19 +8,28 @@ import type { Schema } from '../../../amplify/data/resource';
 
 const client = generateClient<Schema>();
 
-async function updateBooking(id:string, status:string, transopName = "", transopEmail = "") {
+async function updateBooking(id: string, status: string, transopName = "", transopEmail = "") {
   try {
-    // Call the Amplify update method for the flag (again must always contain containerID)
-    const { data: updatedContainerStatus } = await client.models.Container.update({
-      containerID: id,
-       bookingStatus: status
-    })
-    console.log("Updated flag:", updatedContainerStatus)
+    if (status === "unassigned") {
+      const { data: updatedContainerStatus } = await client.models.Container.update({
+        containerID: id,
+        bookingStatus: status,
+        transopName,
+        transopEmail
+      });
+      console.log("Updated flag with transop details:", updatedContainerStatus);
+    } else {
+      const { data: updatedContainerStatus } = await client.models.Container.update({
+        containerID: id,
+        bookingStatus: status
+      });
+      console.log("Updated flag:", updatedContainerStatus);
+    }
   } catch (error) {
     console.error("Error updating flag:", error);
   }
-
 }
+
 
 export const columns = (status: string): ColumnDef<any>[] => {
   const baseColumns: ColumnDef<any>[] = [
