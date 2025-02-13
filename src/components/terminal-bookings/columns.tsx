@@ -58,7 +58,7 @@ export const columns = (status: string): ColumnDef<any>[] => {
           <Button
             variant="outline"
             className="text-green-700"
-            onClick={() => updateBooking(row.original.id, "Pending Pick Up")}
+            onClick={() => updateBooking(row.original.containerID, "Pending Pick Up")}
           >
             Approve
           </Button>
@@ -66,7 +66,7 @@ export const columns = (status: string): ColumnDef<any>[] => {
           {/* Deny Button */}
           <Button
             variant="destructive"
-            onClick={() => updateBooking(row.original.id, "unassigned", "", "")}
+            onClick={() => updateBooking(row.original.containerID, "unassigned", "", "")}
           >
             Deny
           </Button>
