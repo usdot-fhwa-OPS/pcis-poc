@@ -142,7 +142,7 @@ function RouteComponent(){
   const [terminal_Data, setData] = useState<UpcomingCargo[]>([])
 
   //Fetch the data from the database
-  const fetchContainers = async () => {
+  const fetchterminal_operator_requested = async () => {
     //Query the data from the database with selection set and auth mode (always apiKey)
     const { data: cargo } = await client.models.Container.list({
       selectionSet,
@@ -158,8 +158,34 @@ function RouteComponent(){
 
   //Fetch the data on the first render
   useEffect(() => {
-    fetchContainers();
+    fetchterminal_operator_requested();
   }, [])
+
+async function updateBooking(id: string, status: string) {
+  try {
+    if (status === "unassigned") {
+      const { data: updatedContainerStatus } = await client.models.Container.update({
+        containerID: id,
+        bookingStatus: status,
+        transopName:"",
+        transopEmail:""
+      });
+      console.log("Updated flag with transop details:", updatedContainerStatus);
+      await fetchterminal_operator_requested();
+    } else {
+      const { data: updatedContainerStatus } = await client.models.Container.update({
+        containerID: id,
+        bookingStatus: status
+      });
+      console.log("Updated flag:", updatedContainerStatus);
+      await fetchterminal_operator_requested();
+    }
+  } catch (error) {
+    console.error("Error updating flag:", error);
+  }
+}
+
+
 
   if (role.role === "Terminal Operator") {
     return (
@@ -174,13 +200,13 @@ function RouteComponent(){
         </div>
         <div>
         <TabsContent value="requested">
-          <TerminalBookingsTable data={terminal_Data} status="Requested" />
+          <TerminalBookingsTable data={terminal_Data} status="Requested" meta={{updateBooking}} />
         </TabsContent>
         <TabsContent value="ongoing">
-          <TerminalBookingsTable data={Terminal_OngoingData} status="Ongoing" />
+          <TerminalBookingsTable data={Terminal_OngoingData} status="Ongoing" meta={{updateBooking}} />
         </TabsContent>
         <TabsContent value="completed">
-          < TerminalBookingsCompleted data={Terminal_CompletedData} status="Completed"/>
+          < TerminalBookingsCompleted data={Terminal_CompletedData} status="Completed" meta={{updateBooking}}/>
         </TabsContent>
         </div>
       </Tabs>

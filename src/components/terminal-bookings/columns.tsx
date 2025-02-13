@@ -2,36 +2,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "../ui/button.tsx";
 import { useState } from "react";
 import { Flag } from "lucide-react";
-import { generateClient } from 'aws-amplify/data';
-import type { Schema } from '../../../amplify/data/resource';
-
-
-const client = generateClient<Schema>();
-
-async function updateBooking(id: string, status: string, transopName = "", transopEmail = "") {
-  try {
-    if (status === "unassigned") {
-      const { data: updatedContainerStatus } = await client.models.Container.update({
-        containerID: id,
-        bookingStatus: status,
-        transopName,
-        transopEmail
-      });
-      console.log("Updated flag with transop details:", updatedContainerStatus);
-      window.location.reload();
-    } else {
-      const { data: updatedContainerStatus } = await client.models.Container.update({
-        containerID: id,
-        bookingStatus: status
-      });
-      console.log("Updated flag:", updatedContainerStatus);
-      window.location.reload();
-    }
-  } catch (error) {
-    console.error("Error updating flag:", error);
-  }
-}
-
+import {TerminalOperatorDataTableMeta} from './data-table.tsx'
 
 export const columns = (status: string): ColumnDef<any>[] => {
   const baseColumns: ColumnDef<any>[] = [
@@ -54,13 +25,13 @@ export const columns = (status: string): ColumnDef<any>[] => {
     baseColumns.push({
       accessorKey: "status",
       header: () => <div className="text-center min-w-[200px]">Status</div>,
-      cell: ({ row }) => (
+      cell: ({ row,table }) => (
         <div className="flex space-x-4 justify-center">
           {/* Approve Button */}
           <Button
             variant="outline"
             className="text-green-700"
-            onClick={() => updateBooking(row.original.containerID, "Pending Pick Up")}
+            onClick={() =>  (table.options.meta as TerminalOperatorDataTableMeta)?.updateBooking(row.original.containerID, "Pending Pick Up")}
           >
             Approve
           </Button>
@@ -68,7 +39,7 @@ export const columns = (status: string): ColumnDef<any>[] => {
           {/* Deny Button */}
           <Button
             variant="destructive"
-            onClick={() => updateBooking(row.original.containerID, "unassigned", "", "")}
+            onClick={() => (table.options.meta as TerminalOperatorDataTableMeta)?.updateBooking(row.original.containerID, "unassigned")}
           >
             Deny
           </Button>
