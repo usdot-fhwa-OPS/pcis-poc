@@ -146,7 +146,14 @@ function RouteComponent() {
       try {
         const { data: cargo } = await client.models.Container.list({
           filter: {
-            bcoEmail: { eq: userAttributes.email },
+            and: [
+              {
+                bcoEmail: { eq: userAttributes.email }
+              },
+              {
+                assignmentStatus: { eq: 'unassigned' }
+              }
+            ]
           },
           selectionSet: selectionSetBCOUpcomingBookings,
           authMode: 'apiKey',
@@ -164,12 +171,13 @@ function RouteComponent() {
   }, [userAttributes.role]);
 
   // Update container then refetch containers
-  async function assignTransOp(containerID: string, newName: string, newEmail: string) {
+  async function assignTransOp(containerID: string, newName: string, newEmail: string, assignmentStatus: string) {
     try {
       const { data: assignTransportationOp } = await client.models.Container.update({
         containerID: containerID,
         transopName: newName,
         transopEmail: newEmail,
+        assignmentStatus: assignmentStatus,
       });
       console.log('Updated container status:', assignTransportationOp);
       // Refetch containers after updating

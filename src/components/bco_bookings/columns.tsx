@@ -39,7 +39,7 @@ export const columns = (): ColumnDef<any>[] => {
 
         function handleSubmit() {
           // Use the parent's updateCargo method:
-          (table.options.meta as BCODataTableMeta)?.assignTransOp(row.original.containerID, tempName, tempEmail)
+          (table.options.meta as BCODataTableMeta)?.assignTransOp(row.original.containerID, tempName, tempEmail, "pending")
           setOpen(false)
         }
 
