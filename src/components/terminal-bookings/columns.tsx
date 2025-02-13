@@ -25,7 +25,7 @@ async function updateBooking(id: string, status: string, transopName = "", trans
         bookingStatus: status
       });
       console.log("Updated flag:", updatedContainerStatus);
-      window.location.reload();s
+      window.location.reload();
     }
   } catch (error) {
     console.error("Error updating flag:", error);
