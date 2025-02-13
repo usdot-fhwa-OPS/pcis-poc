@@ -2,7 +2,33 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "../ui/button.tsx";
 import { useState } from "react";
 import { Flag } from "lucide-react";
+import { put } from 'aws-amplify/api';
 
+async function updateBooking(id:string, status:string, transopName = "", transopEmail = "") {
+  try {
+    const bookingUpdate = {
+      bookingStatus: status,
+      transopName,
+      transopEmail,
+    };
+
+    const restOperation = put({
+      apiName: 'terminalopChangestatus', // Replace with your actual API name
+      path: `terminalopChangestatus/${id}`, // Adjust the path as needed
+      options: { body: bookingUpdate },
+    });
+
+    const response = await restOperation.response;
+    console.log('Update successful:', response);
+  } catch (e: unknown) {
+    if (e instanceof Error) {
+      console.error('Update failed:', e.message);
+    } else {
+      console.error('An unknown error occurred:', e);
+    }
+  }
+
+}
 
 export const columns = (status: string): ColumnDef<any>[] => {
   const baseColumns: ColumnDef<any>[] = [
@@ -24,19 +50,28 @@ export const columns = (status: string): ColumnDef<any>[] => {
   if (status === "Requested") {
     baseColumns.push({
       accessorKey: "status",
-      header: () => <div style={{ minWidth: "200px", textAlign: "center" }}>Status</div>,
-      cell: () => (
-        <div className="flex space-x-8 ">
-          <Button variant="outline" className="text-green-700">
-  Approve
-</Button>
+      header: () => <div className="text-center min-w-[200px]">Status</div>,
+      cell: ({ row }) => (
+        <div className="flex space-x-4 justify-center">
+          {/* Approve Button */}
+          <Button
+            variant="outline"
+            className="text-green-700"
+            onClick={() => updateBooking(row.original.id, "Pending Pick Up")}
+          >
+            Approve
+          </Button>
 
-          <Button variant="destructive">Deny</Button>
+          {/* Deny Button */}
+          <Button
+            variant="destructive"
+            onClick={() => updateBooking(row.original.id, "unassigned", "", "")}
+          >
+            Deny
+          </Button>
         </div>
       ),
-      
     });
-    
   }
 
   if (status === "Ongoing") {
