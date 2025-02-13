@@ -3,7 +3,19 @@ import { Button } from "../ui/button.tsx";
 import { useState } from "react";
 import { Flag } from "lucide-react";
 import { BCOUpcomingBookings } from "../../routes/booking.tsx";
+import { Label } from "../ui/label"
+import { Input } from "../ui/input"
+import { BCODataTableMeta } from "./data-table.tsx";
 
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogFooter,
+} from "../ui/dialog"  
 
 export const columns = (): ColumnDef<any>[] => {
   const baseColumns: ColumnDef<BCOUpcomingBookings>[] = [
@@ -13,7 +25,71 @@ export const columns = (): ColumnDef<any>[] => {
     { accessorKey: "destination", header: "Destination" },
     { accessorKey: "bcoName", header: "BCO" },
     { accessorKey: "bcoEmail", header: "BCO Email" },
-    { accessorKey: "transopName", header: "Transportation  Operator" },
+    { 
+      accessorKey: "transopName", 
+      header: "Transportation  Operator",
+      cell: ({ row, table }) => {
+        const cargo = row.original
+
+        const [open, setOpen] = useState(false)
+        const [tempName, setTempName] = useState("")
+        const [tempEmail, setTempEmail] = useState("")
+
+        // If either operator OR email is missing, show "Book" button
+        const isMissing = !row.original.transopName?.trim() || !row.original.transopEmail?.trim()
+
+        function handleSubmit() {
+          // Use the parent's updateCargo method:
+          (table.options.meta as BCODataTableMeta)?.assignTransOp(row.original.containerID, tempName, tempEmail)
+          setOpen(false)
+        }
+
+        if (isMissing) {
+          return (
+            <Dialog open={open} onOpenChange={setOpen}>
+              <DialogTrigger asChild>
+                <Button variant="outline">Book</Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Book Transportation Operator</DialogTitle>
+                  <DialogDescription>
+                    Enter a name and email to assign this cargo.
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="space-y-2 py-2">
+                  <div>
+                    <Label>Operator Name</Label>
+                    <Input
+                      value={tempName}
+                      onChange={(e) => setTempName(e.target.value)}
+                    />
+                  </div>
+                  <div>
+                    <Label>Operator Email</Label>
+                    <Input
+                      value={tempEmail}
+                      onChange={(e) => setTempEmail(e.target.value)}
+                    />
+                  </div>
+                </div>
+                <DialogFooter>
+                  <Button variant="outline" onClick={() => setOpen(false)}>
+                    Cancel
+                  </Button>
+                  <Button onClick={handleSubmit} disabled={!tempName.trim() || !tempEmail.trim()}>
+                    Submit
+                    </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+          )
+        }
+
+        // If both operator and email are already filled, just display operator's name
+        return <span>{row.original.transopName}</span>
+      },
+    },
     { accessorKey: "transopEmail", header: "Transportation Operator Email" },
     {
       accessorKey: "containerStatus",

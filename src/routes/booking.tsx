@@ -110,51 +110,74 @@ const BCO_CompletedData = [
 ];
 
 
-function RouteComponent(){
+function RouteComponent() {
   const { user } = useAuthenticator();
 
-  const [userAttributes, setUserAttributes] = useState<{ role: string, email: string }>({ role: '', email: '' });
-  
+  const [userAttributes, setUserAttributes] = useState<{ role: string; email: string }>({
+    role: '',
+    email: '',
+  });
+
   useEffect(() => {
     async function getUserAttributes() {
       if (user) {
         try {
-          // fetchUserAttributes returns an array of objects with Name and Value properties.
           const attributes = await fetchUserAttributes();
           const roleAttribute = attributes['custom:role'] ?? 'No role assigned';
-          setUserAttributes({ 
+          setUserAttributes({
             role: roleAttribute,
-            email: attributes.email ?? 'No email found'
+            email: attributes.email ?? 'No email found',
           });
         } catch (error) {
-          console.error("Error fetching user attributes", error);
+          console.error('Error fetching user attributes', error);
         }
       }
     }
 
     getUserAttributes();
-  }, [user, fetchUserAttributes]);
+  }, [user]);
 
-  //Will hold the data after the query call, according to the Cargo Type declared above.
-  const [bcoUpcomingBookings, setBcoUpcomingBookings] = useState<BCOUpcomingBookings[]>([])
+  // State for BCO upcoming bookings
+  const [bcoUpcomingBookings, setBcoUpcomingBookings] = useState<BCOUpcomingBookings[]>([]);
 
-  // Conditionally fetch containers if the user is a Beneficiary Cargo Owner
+  // Move fetchContainers outside of useEffect so it can be reused
+  async function fetchContainers() {
+    if (userAttributes.role === 'Beneficiary Cargo Owner') {
+      try {
+        const { data: cargo } = await client.models.Container.list({
+          filter: {
+            bcoEmail: { eq: userAttributes.email },
+          },
+          selectionSet: selectionSetBCOUpcomingBookings,
+          authMode: 'apiKey',
+        });
+        setBcoUpcomingBookings(cargo);
+      } catch (error) {
+        console.error('Error fetching containers:', error);
+      }
+    }
+  }
+
+  // Fetch containers on initial mount and when role/email changes
   useEffect(() => {
-    async function fetchContainers() {
-      const { data: cargo } = await client.models.Container.list({
-        filter: {
-          bcoEmail: { eq: userAttributes.email },
-        },
-        selectionSet: selectionSetBCOUpcomingBookings,
-        authMode: "apiKey",
-      });
-      setBcoUpcomingBookings(cargo);
-    }
-
-    if (userAttributes.role === "Beneficiary Cargo Owner") {
-      fetchContainers();
-    }
+    fetchContainers();
   }, [userAttributes.role]);
+
+  // Update container then refetch containers
+  async function assignTransOp(containerID: string, newName: string, newEmail: string) {
+    try {
+      const { data: assignTransportationOp } = await client.models.Container.update({
+        containerID: containerID,
+        transopName: newName,
+        transopEmail: newEmail,
+      });
+      console.log('Updated container status:', assignTransportationOp);
+      // Refetch containers after updating
+      await fetchContainers();
+    } catch (error) {
+      console.error('Error updating container status:', error);
+    }
+  }
 
   // Separate return statements for each role
   if (userAttributes.role === "Terminal Operator") {
@@ -238,15 +261,15 @@ function RouteComponent(){
         <TabsContent value="upcoming">
           <BcoBookingsTableUpcoming
             data={bcoUpcomingBookings}
-          
             status="Upcoming"
+            meta={{ assignTransOp }}
           />
         </TabsContent>
   
         <TabsContent value="ongoing">
           <BcoBookingsTableOngoing
             data={ BCO_OngoingData}
-        
+            meta={null}
             status="Ongoing"
           />
         </TabsContent>
@@ -254,6 +277,7 @@ function RouteComponent(){
         <TabsContent value="completed">
         <BcoBookingsTableCompleted
             data={ BCO_CompletedData}
+            meta={null}
             status='completed'
           />
         </TabsContent>
