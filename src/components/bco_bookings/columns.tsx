@@ -29,7 +29,6 @@ export const columns = (): ColumnDef<any>[] => {
       accessorKey: "transopName", 
       header: "Transportation  Operator",
       cell: ({ row, table }) => {
-        const cargo = row.original
 
         const [open, setOpen] = useState(false)
         const [tempName, setTempName] = useState("")
