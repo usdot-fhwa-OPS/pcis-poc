@@ -3,7 +3,10 @@ import { Button } from "../ui/button.tsx";
 import { useState } from "react";
 import { Flag } from "lucide-react";
 import {TerminalOperatorDataTableMeta} from './data-table.tsx'
+import { generateClient } from 'aws-amplify/data';
+import type { Schema } from '../../../amplify/data/resource';
 
+const client = generateClient<Schema>();
 export const columns = (status: string): ColumnDef<any>[] => {
   const baseColumns: ColumnDef<any>[] = [
 
@@ -66,34 +69,38 @@ export const columns = (status: string): ColumnDef<any>[] => {
 
   }
 
+  baseColumns.push({
+    accessorKey: "flag",
+    header: () => <div style={{ minWidth: "200px", textAlign: "center" }}>Flag</div>,
+    cell: ({ row }) => {
+      // Initialize flagged state from the row data; fallback to false if undefined.
+            const [flagged, setFlagged] = useState<boolean>(row.original.flag || false)
+      
+            // Function to handle flag toggling.
+            const handleFlagToggle = async () => {
+              const newFlag = !flagged
+              // Optimistically update the UI.
+              setFlagged(newFlag)
+              try {
+                // Call the Amplify update method for the flag (again must always contain containerID)
+                const { data: updatedContainerStatus } = await client.models.Container.update({
+                  containerID: row.original.containerID,
+                  flag: newFlag,
+                })
+                console.log("Updated flag:", updatedContainerStatus)
+              } catch (error) {
+                console.error("Error updating flag:", error);
+              }
+            }
+      
+            return (
+              <Button variant="ghost" onClick={handleFlagToggle} className="p-2">
+                <Flag className={flagged ? "text-red-600" : "text-gray-400"} />
+              </Button>
+            )
+    },
+  });
 
-
-
-
-// Clickable Flag Component
-const FlagComponent = ({ initialFlagged = false }) => {
-  const [flagged, setFlagged] = useState(initialFlagged);
-
-  return (
-    <Button
-      onClick={() => setFlagged(!flagged)}
-      variant="ghost"
-      className={`flex items-center space-x-2 ${flagged ? "text-red-500" : "text-gray-500"}`}
-    >
-      <Flag className={`w-5 h-5 ${flagged ? "fill-red-500 stroke-red-500" : "stroke-gray-500"}`} />
-    </Button>
-  );
-};
-
-baseColumns.push({
-  accessorKey: "flag",
-  header: () => <div style={{ minWidth: "200px", textAlign: "center" }}>Flag</div>,
-  cell: ({ row }) => (
-    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100%" }}>
-      <FlagComponent initialFlagged={row.original.flagged} />
-    </div>
-  ),
-});
   return baseColumns;
 };
 
