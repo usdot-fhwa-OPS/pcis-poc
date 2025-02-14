@@ -53,7 +53,7 @@ export const columns = (status: string): ColumnDef<any>[] => {
 
   if (status === "Ongoing") {
     baseColumns.push({
-      accessorKey: "status",
+      accessorKey: "bookingStatus",
       header: " Status",
       cell: ({ row }) => {
         const status = row.original.status; // Get status value

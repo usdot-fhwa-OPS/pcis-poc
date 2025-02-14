@@ -26,11 +26,14 @@ const selectionSetTerminalOPUpcoming = ['vesselID', 'containerID', 'origin', 'bc
 //Define the selection of data that will be used for the table
 const selectionSetBCOUpcomingBookings = ['vesselID', 'containerID', 'origin', 'destination', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail', 'containerStatus','arrivalDate', 'flag'] as const;
 //Create a type based on your selectionSet that will be later used for the columns.tsx file of the able
+
+const selectionSetTerminalOPOngoing = ['vesselID', 'containerID', 'origin', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail','bookingDate','bookingTime','bookingStatus', 'flag'] as const;
 export type BCOUpcomingBookings = SelectionSet<Schema['Container']['type'], typeof selectionSetBCOUpcomingBookings>
 
 //Create a type based on your selectionSet that will be later used for the columns.tsx file of the able
 export type TerminalOPUpcomingBookings= SelectionSet<Schema['Container']['type'], typeof selectionSetTerminalOPUpcoming>
 
+export type TerminalOPOngoingBookings= SelectionSet<Schema['Container']['type'], typeof selectionSetTerminalOPOngoing >
 
 
 
@@ -191,7 +194,7 @@ function RouteComponent() {
   // Separate return statements for each role
 
   //getting Data
-  const [terminalopBookings, setData] = useState<TerminalOPUpcomingBookings[]>([])
+  const [terminalopBookingsupcoming, setData] = useState<TerminalOPOngoingBookings[]>([])
 
   //Fetch the data from the database
   const fetchterminal_operator_requested = async () => {
@@ -212,6 +215,37 @@ function RouteComponent() {
   useEffect(() => {
     fetchterminal_operator_requested();
   }, [])
+
+
+  //Fetch Ongoing Terminal Operator data
+    //Fetch the data from the database
+    const [terminalopBookingongoing, set_terminal_ongoing] = useState<TerminalOPOngoingBookings[]>([])
+    const fetchterminal_operator_ongoing = async () => {
+      //Query the data from the database with selection set and auth mode (always apiKey)
+      const { data: cargo } = await client.models.Container.list({
+        selectionSet:selectionSetTerminalOPOngoing ,
+        authMode: 'apiKey',
+       
+        filter: {
+          or: [
+            {
+              bookingStatus: { eq: 'Pending Pick Up' }
+            },
+            {
+              bookingStatus: { eq: 'Late' }
+            }
+          ]
+        }
+      });
+      set_terminal_ongoing(cargo);
+    }
+  
+    //Fetch the data on the first render
+    useEffect(() => {
+      fetchterminal_operator_ongoing();
+    }, [])
+
+    //Update Terminal Operator Booking
 
 async function updateBooking(id: string, status: string) {
   try {
@@ -253,10 +287,10 @@ async function updateBooking(id: string, status: string) {
         </div>
         <div>
         <TabsContent value="requested">
-          <TerminalBookingsTable data={terminalopBookings} status="Requested" meta={{updateBooking}} />
+          <TerminalBookingsTable data={terminalopBookingsupcoming} status="Requested" meta={{updateBooking}} />
         </TabsContent>
         <TabsContent value="ongoing">
-          <TerminalBookingsTable data={Terminal_OngoingData} status="Ongoing" meta={{updateBooking}} />
+          <TerminalBookingsTable data={terminalopBookingongoing} status="Ongoing" meta={{updateBooking}} />
         </TabsContent>
         <TabsContent value="completed">
           < TerminalBookingsCompleted data={Terminal_CompletedData} status="Completed" meta={{updateBooking}}/>
