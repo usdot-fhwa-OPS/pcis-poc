@@ -54,20 +54,21 @@ export const columns = (status: string): ColumnDef<any>[] => {
   if (status === "Ongoing") {
     baseColumns.push({
       accessorKey: "bookingStatus",
-      header: " Status",
+      header: "Status",
+      size: 200, // Adjust width as needed
       cell: ({ row }) => {
         const status = row.original.bookingStatus; // Get status value
         const isLate = status === "Late"; // Check if status is "Late"
-
+  
         return (
-          <span className={`px-2 py-1 rounded-md ${isLate ? "bg-red-500 text-white" : "bg-gray-200"}`}>
+          <span className={`px-4 py-2 rounded-md ${isLate ? "bg-red-500 text-white" : "bg-gray-600 text-white"}`}>
             {status}
           </span>
         );
       },
-    },);
-
+    });
   }
+  
 
   baseColumns.push({
     accessorKey: "flag",
