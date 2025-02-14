@@ -3,29 +3,32 @@ import { Button } from "../ui/button.tsx";
 import { useState } from "react";
 import { Flag } from "lucide-react";
 import { Checkbox } from "../ui/checkbox.tsx"
+import { TransOpUpcomingBookings } from "../../routes/booking.tsx";
+//Four Imports needed for Amplify Data Queries and CRUD methods
 
+import { generateClient } from 'aws-amplify/data';
+import type { Schema } from '../../../amplify/data/resource';
 
-
+const client = generateClient<Schema>();
 export const columns = (): ColumnDef<any>[] => {
-  const baseColumns: ColumnDef<any>[] = [
+  const baseColumns: ColumnDef<TransOpUpcomingBookings>[] = [
 
-    { accessorKey: "vesselId", header: "Vessel ID" },
-    { accessorKey: "containerId", header: "Container ID" },
+    { accessorKey: "vesselID", header: "Vessel ID" },
+    { accessorKey: "containerID", header: "Container ID" },
     { accessorKey: "origin", header: "Origin" },
-    { accessorKey: "bco", header: "BCO" },
-     { accessorKey: "bco_email", header: "BCO Email" },
-    { accessorKey: "operator", header: "Terminal  Operator" },
-    { accessorKey: "operator_email", header: "Transportation Operator Email" },
-    { accessorKey: "date", header: "Date Requested" },
-    { accessorKey: "time", header: "Time Requested" },
+    { accessorKey: "bcoName", header: "BCO" },
+    { accessorKey: "bcoEmail", header: "BCO Email" },
+    { accessorKey: "transopName", header: "Terminal  Operator" },
+    { accessorKey: "transopEmail", header: "Transportation Operator Email" },
+    { accessorKey: "assignmentDate", header: "Date Requested" },
     {
       accessorKey: "status",
       header: () => <div style={{ minWidth: "200px", textAlign: "center" }}>Status</div>,
       cell: () => (
         <div className="flex space-x-8 ">
           <Button variant="outline" className="text-green-700">
-  Approve
-</Button>
+            Approve
+          </Button>
 
           <Button variant="destructive">Deny</Button>
         </div>
@@ -39,7 +42,7 @@ export const columns = (): ColumnDef<any>[] => {
         <Button
           variant="outline"
           className="bg-blue-600 text-white hover:bg-blue-700"
-          onClick={() => alert(`Contacting ${row.original.bco} at ${row.original.bco_email}`)}
+          onClick={() => alert(`Contacting ${row.original.bcoName} at ${row.original.bcoEmail}`)}
         >
           Contact
         </Button>
@@ -65,12 +68,34 @@ const FlagComponent = ({ initialFlagged = false }) => {
 baseColumns.push({
   accessorKey: "flag",
   header: () => <div style={{ minWidth: "200px", textAlign: "center" }}>Flag</div>,
-  cell: ({ row }) => (
-    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100%" }}>
-      <FlagComponent initialFlagged={row.original.flagged} />
-    </div>
-  ),
-});
+  cell: ({ row }) => {
+    // Initialize flagged state from the row data; fallback to false if undefined.
+      const [flagged, setFlagged] = useState<boolean>(row.original.flag || false)
+
+      // Function to handle flag toggling.
+      const handleFlagToggle = async () => {
+        const newFlag = !flagged
+        // Optimistically update the UI.
+        setFlagged(newFlag)
+        try {
+          // Call the Amplify update method for the flag (again must always contain containerID)
+          const { data: updatedContainerStatus } = await client.models.Container.update({
+            containerID: row.original.containerID,
+            flag: newFlag,
+          })
+          console.log("Updated flag:", updatedContainerStatus)
+        } catch (error) {
+          console.error("Error updating flag:", error);
+        }
+      }
+
+      return (
+        <Button variant="ghost" onClick={handleFlagToggle} className="p-2">
+          <Flag className={flagged ? "text-red-600" : "text-gray-400"} />
+        </Button>
+      )
+    },
+  });
   return baseColumns;
 };
 

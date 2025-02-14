@@ -50,18 +50,6 @@ const Terminal_CompletedData = [
   { vesselId: "4", containerId: "CH-44", origin: "China", bco: "LK", bco_email: "lk@gmail.com", operator: "Emma", operator_email: "james@gmail.com", date_init: "2 March 2024", date_approved: "23 March 2024", status: "Picked Up", date_picked: "23 March 2024", time: "11:30am" }
 ];
 
-const Transportation_UpcomingData = [
-  { vesselId: "1", containerId: "HM-263", origin: "Canada", bco: "WB", bco_email: "jd@gmail.com", operator: "Emma", operator_email: "james@gmail.com", date: "23 March 2024", time: "1:00pm", status: "Scheduled for Pickup" },
-  { vesselId: "2", containerId: "HM-155", origin: "Germany", bco: "WB", bco_email: "sm@gmail.com", operator: "James", operator_email: "sarah@gmail.com", date: "21 March 2024", time: "10:00am", status: "Late" },
-  { vesselId: "3", containerId: "HM-749", origin: "China", bco: "SM", bco_email: "sm@gmail.com", operator: "Emma", operator_email: "daniel@gmail.com", date: "21 March 2024", time: "3:45pm", status: "Scheduled for Pickup" },
-  { vesselId: "4", containerId: "HM-569", origin: "China", bco: "LK", bco_email: "jd@gmail.com", operator: "Michael", operator_email: "daniel@gmail.com", date: "21 March 2024", time: "1:00pm", status: "Scheduled for Pickup" },
-  { vesselId: "5", containerId: "HM-663", origin: "Mexico", bco: "WB", bco_email: "rt@gmail.com", operator: "Emma", operator_email: "emma@gmail.com", date: "24 March 2024", time: "10:00am", status: "Scheduled for Pickup" },
-  { vesselId: "6", containerId: "HM-360", origin: "Canada", bco: "RT", bco_email: "wb@gmail.com", operator: "Emma", operator_email: "daniel@gmail.com", date: "23 March 2024", time: "11:30am", status: "Scheduled for Pickup" },
-  { vesselId: "7", containerId: "HM-704", origin: "Mexico", bco: "RT", bco_email: "sm@gmail.com", operator: "Emma", operator_email: "daniel@gmail.com", date: "22 March 2024", time: "1:00pm", status: "Scheduled for Pickup" },
-  { vesselId: "8", containerId: "HM-657", origin: "USA", bco: "SM", bco_email: "lk@gmail.com", operator: "Michael", operator_email: "emma@gmail.com", date: "23 March 2024", time: "3:45pm", status: "Late" },
-  { vesselId: "9", containerId: "HM-694", origin: "Canada", bco: "LK", bco_email: "wb@gmail.com", operator: "Michael", operator_email: "james@gmail.com", date: "23 March 2024", time: "10:00am", status: "Scheduled for Pickup" },
-  { vesselId: "10", containerId: "HM-279", origin: "Germany", bco: "LK", bco_email: "rt@gmail.com", operator: "Emma", operator_email: "james@gmail.com", date: "24 March 2024", time: "1:00pm", status: "Scheduled for Pickup" }
-];
 
 const Transportation_OngoingData = [
   { vesselId: "1", containerId: "HM-266", origin: "Canada", bco: "WB", bco_email: "sm@gmail.com", operator: "Sarah", operator_email: "michael@gmail.com", date: "23 March 2024", time: "3:45pm", status: "Late",date_init: "22 March 2024", date_updated: "24 March 2024"},
@@ -154,6 +142,36 @@ function RouteComponent() {
   // Fetch containers on initial mount and when role/email changes
   useEffect(() => {
     fetchContainers();
+  }, [userAttributes.role]);
+
+  const [transOpUpcomingBookings, setTransOpUpcomingBookings] = useState<TransOpUpcomingBookings[]>([]);
+
+  async function fetchTransOpUpcoming() {
+    if (userAttributes.role === 'Transportation Operator') {
+      try {
+        const { data: cargo } = await client.models.Container.list({
+          filter: {
+            and: [
+              {
+                transopEmail: { eq: userAttributes.email }
+              },
+              {
+                bookingStatus: { eq: 'Pending Transportation Operator Approval' }
+              }
+            ]
+          },
+          selectionSet: selectionSetTransOpUpcomingBookings,
+          authMode: 'apiKey',
+        });
+        setTransOpUpcomingBookings(cargo);
+      } catch (error) {
+        console.error('Error fetching containers:', error);
+      }
+    }
+  }
+
+  useEffect(() => {
+    fetchTransOpUpcoming();
   }, [userAttributes.role]);
 
   // Update container then refetch containers
@@ -266,7 +284,7 @@ async function updateBooking(id: string, status: string) {
 
       <TabsContent value="upcoming">
         <TransportationBookingsTableUpcoming
-          data={Transportation_UpcomingData}     
+          data={transOpUpcomingBookings}     
           status="Upcoming"
           meta={null}
         />
