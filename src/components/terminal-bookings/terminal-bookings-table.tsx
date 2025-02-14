@@ -4,12 +4,13 @@ import { columns,CompletedColumn } from "./columns";
 interface TerminalBookingsTableProps {
   data: any[];
   status: string;
+  meta: any;
 }
 
-export function TerminalBookingsTable({ data, status }: TerminalBookingsTableProps) {
+export function TerminalBookingsTable({ data, status,meta }: TerminalBookingsTableProps) {
   return (
     <div className="container mx-auto p-10">
-      <DataTable columns={columns(status)} data={data} />
+      <DataTable columns={columns(status)} data={data} meta={meta} />
     </div>
   );
 }

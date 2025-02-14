@@ -19,23 +19,40 @@ import {
   TableRow,
 } from "../ui/table.tsx"
 
+<<<<<<< HEAD
 export interface TransOpBookingDataTableMeta{
   updateBooking: (containerID: string, bookingStatus: string) => void
+=======
+//Adding interface for setting Booking status
+export interface TerminalOperatorDataTableMeta {
+  updateBooking: (id: string, status: string)  => void
+>>>>>>> 2dbaf0de53eb987247153bdf75a3065e8f202903
 }
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
+<<<<<<< HEAD
   meta?: TransOpBookingDataTableMeta
 }
 
 export function DataTable<TData, TValue>({ columns, data, meta }: DataTableProps<TData, TValue>) {
+=======
+  meta?: TerminalOperatorDataTableMeta
+}
+
+export function DataTable<TData, TValue>({ columns, data ,meta}: DataTableProps<TData, TValue>) {
+>>>>>>> 2dbaf0de53eb987247153bdf75a3065e8f202903
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
 
   const table = useReactTable({
     data,
     columns,
+<<<<<<< HEAD
     meta: meta as TransOpBookingDataTableMeta,
+=======
+    meta: meta as TerminalOperatorDataTableMeta,
+>>>>>>> 2dbaf0de53eb987247153bdf75a3065e8f202903
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     onColumnFiltersChange: setColumnFilters,
@@ -47,9 +64,9 @@ export function DataTable<TData, TValue>({ columns, data, meta }: DataTableProps
           <div className="mb-4 w-full px-3 py-2 border rounded-md">
         <Input
           placeholder="Filter by Container ID"
-          value={(table.getColumn("containerId")?.getFilterValue() as string) ?? ""}
+          value={(table.getColumn("containerID")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
-            table.getColumn("containerId")?.setFilterValue(event.target.value)
+            table.getColumn("containerID")?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />
