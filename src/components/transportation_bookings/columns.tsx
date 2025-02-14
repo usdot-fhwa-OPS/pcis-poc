@@ -50,20 +50,6 @@ export const columns = (): ColumnDef<any>[] => {
     },
 
   ];
-// Clickable Flag Component
-const FlagComponent = ({ initialFlagged = false }) => {
-  const [flagged, setFlagged] = useState(initialFlagged);
-
-  return (
-    <Button
-      onClick={() => setFlagged(!flagged)}
-      variant="ghost"
-      className={`flex items-center space-x-2 ${flagged ? "text-red-500" : "text-gray-500"}`}
-    >
-      <Flag className={`w-5 h-5 ${flagged ? "fill-red-500 stroke-red-500" : "stroke-gray-500"}`} />
-    </Button>
-  );
-};
 
 baseColumns.push({
   accessorKey: "flag",
@@ -96,6 +82,7 @@ baseColumns.push({
       )
     },
   });
+  
   return baseColumns;
 };
 
