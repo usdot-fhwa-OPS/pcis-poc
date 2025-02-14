@@ -217,6 +217,30 @@ function RouteComponent() {
     fetchterminal_operator_requested();
   }, [])
 
+async function updateTransOpBooking(id: string, status: string) {
+  try {
+    if (status === "unassigned") {
+      const { data: updatedContainerStatus } = await client.models.Container.update({
+        containerID: id,
+        bookingStatus: status,
+        transopName:"",
+        transopEmail:""
+      });
+      console.log("Updated flag with transop details:", updatedContainerStatus);
+      await fetchTransOpUpcoming();
+    } else {
+      const { data: updatedContainerStatus } = await client.models.Container.update({
+        containerID: id,
+        bookingStatus: status
+      });
+      console.log("Updated flag:", updatedContainerStatus);
+      await fetchTransOpUpcoming();
+    }
+  } catch (error) {
+    console.error("Error updating flag:", error);
+  }
+}
+
 async function updateBooking(id: string, status: string) {
   try {
     if (status === "unassigned") {
@@ -286,7 +310,7 @@ async function updateBooking(id: string, status: string) {
         <TransportationBookingsTableUpcoming
           data={transOpUpcomingBookings}     
           status="Upcoming"
-          meta={null}
+          meta={{updateTransOpBooking}}
         />
       </TabsContent>
 

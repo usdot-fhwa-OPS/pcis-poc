@@ -8,6 +8,7 @@ import { TransOpUpcomingBookings } from "../../routes/booking.tsx";
 
 import { generateClient } from 'aws-amplify/data';
 import type { Schema } from '../../../amplify/data/resource';
+import { TransOpDataTableMeta } from "./data-table.tsx";
 
 const client = generateClient<Schema>();
 export const columns = (): ColumnDef<any>[] => {
@@ -24,13 +25,22 @@ export const columns = (): ColumnDef<any>[] => {
     {
       accessorKey: "status",
       header: () => <div style={{ minWidth: "200px", textAlign: "center" }}>Status</div>,
-      cell: () => (
+      cell: ({ row, table }) => (
         <div className="flex space-x-8 ">
-          <Button variant="outline" className="text-green-700">
+          <Button 
+            variant="outline" 
+            className="text-green-700"
+            onClick={() => (table.options.meta as TransOpDataTableMeta)?.updateBooking(row.original.containerID, "Pending Booking")}
+          >
             Approve
           </Button>
 
-          <Button variant="destructive">Deny</Button>
+          <Button 
+            variant="destructive"
+            onClick={() => (table.options.meta as TransOpDataTableMeta)?.updateBooking(row.original.containerID, "unassigned")}
+          >
+              Deny
+          </Button>
         </div>
       ),
       
