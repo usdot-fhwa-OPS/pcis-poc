@@ -8,10 +8,20 @@ import { fetchUserAttributes } from 'aws-amplify/auth';
 import { useEffect, useState } from "react";
 import { useAuthenticator } from "@aws-amplify/ui-react";
 
+//Three Imports needed for Amplify Data Queries and CRUD methods
+import { generateClient, SelectionSet } from 'aws-amplify/data';
+import type { Schema } from '../../amplify/data/resource';
+
+const client = generateClient<Schema>();
+
 export const Route = createFileRoute('/booking')({
   component: RouteComponent,
 })
 
+//Define the selection of data that will be used for the table
+const selectionSetTransOpUpcomingBookings = ['vesselID', 'containerID', 'origin', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail', 'arrivalDate', 'bookingStatus','flag'] as const;
+//Create a type based on your selectionSet that will be later used for the columns.tsx file of the able
+export type TransOpUpcomingBookings = SelectionSet<Schema['Container']['type'], typeof selectionSetTransOpUpcomingBookings>
 
 const Terminal_RequestedData = [
   { vesselId: "1", containerId: "HM-263", origin: "Canada", bco: "WB", bco_email: "jd@gmail.com", operator: "Emma", operator_email: "james@gmail.com", date: "23 March 2024", time: "1:00pm", status: "Scheduled for Pickup" },
@@ -166,17 +176,17 @@ function RouteComponent(){
 
       <TabsContent value="upcoming">
         <TransportationBookingsTableUpcoming
-          data={Transportation_UpcomingData}
-        
+          data={Transportation_UpcomingData}     
           status="Upcoming"
+          meta={null}
         />
       </TabsContent>
 
       <TabsContent value="ongoing">
         <TransportationBookingsTableOngoing
           data={ Transportation_OngoingData}
-      
           status="Ongoing"
+          meta={null}
         />
       </TabsContent>
 
@@ -184,6 +194,7 @@ function RouteComponent(){
       <TransportationBookingsTableCompleted
           data={ Transportation_CompletedData}
           status='completed'
+          meta={null}
         />
       </TabsContent>
     </Tabs>

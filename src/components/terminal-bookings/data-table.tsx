@@ -19,17 +19,23 @@ import {
   TableRow,
 } from "../ui/table.tsx"
 
+export interface TransOpBookingDataTableMeta{
+  updateBooking: (containerID: string, bookingStatus: string) => void
+}
+
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
+  meta?: TransOpBookingDataTableMeta
 }
 
-export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData, TValue>) {
+export function DataTable<TData, TValue>({ columns, data, meta }: DataTableProps<TData, TValue>) {
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
 
   const table = useReactTable({
     data,
     columns,
+    meta: meta as TransOpBookingDataTableMeta,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     onColumnFiltersChange: setColumnFilters,
