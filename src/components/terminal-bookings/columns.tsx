@@ -55,13 +55,13 @@ export const columns = (status: string): ColumnDef<any>[] => {
     baseColumns.push({
       accessorKey: "bookingStatus",
       header: () => <div className="text-center min-w-[200px]">Status</div>,
-      size: 200, // Adjust width as needed
+      size: 400, // Adjust width as needed
       cell: ({ row }) => {
         const status = row.original.bookingStatus; // Get status value
         const isLate = status === "Late"; // Check if status is "Late"
   
         return (
-          <span className={`px-4 py-2 rounded-md ${isLate ? "bg-red-500 text-white" : "bg-gray-600 text-white"}`}>
+          <span className={`flex justify-center items-center px-4 py-2 rounded-md ${isLate ? "bg-red-500 text-white" : "bg-gray-600 text-white"}`}>
             {status}
           </span>
         );
@@ -96,7 +96,7 @@ export const columns = (status: string): ColumnDef<any>[] => {
       
             return (
               <Button variant="ghost" onClick={handleFlagToggle} className="p-2">
-                <Flag className={flagged ? "text-red-600" : "text-gray-400"} />
+                <Flag className={flagged ? "flex justify-center items-centert ext-red-600" : "flex justify-center items-center text-gray-400"} />
               </Button>
             )
     },
