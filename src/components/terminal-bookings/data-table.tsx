@@ -19,17 +19,24 @@ import {
   TableRow,
 } from "../ui/table.tsx"
 
+//Adding interface for setting Booking status
+export interface TerminalOperatorDataTableMeta {
+  updateBooking: (id: string, status: string)  => void
+}
+
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
+  meta?: TerminalOperatorDataTableMeta
 }
 
-export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData, TValue>) {
+export function DataTable<TData, TValue>({ columns, data ,meta}: DataTableProps<TData, TValue>) {
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
 
   const table = useReactTable({
     data,
     columns,
+    meta: meta as TerminalOperatorDataTableMeta,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     onColumnFiltersChange: setColumnFilters,
@@ -41,9 +48,9 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
           <div className="mb-4 w-full px-3 py-2 border rounded-md">
         <Input
           placeholder="Filter by Container ID"
-          value={(table.getColumn("containerId")?.getFilterValue() as string) ?? ""}
+          value={(table.getColumn("containerID")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
-            table.getColumn("containerId")?.setFilterValue(event.target.value)
+            table.getColumn("containerID")?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />
