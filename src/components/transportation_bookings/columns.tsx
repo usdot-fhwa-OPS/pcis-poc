@@ -30,14 +30,14 @@ export const columns = (): ColumnDef<any>[] => {
           <Button 
             variant="outline" 
             className="text-green-700"
-            onClick={() => (table.options.meta as TransOpDataTableMeta)?.updateBooking(row.original.containerID, "Pending Booking")}
+            onClick={() => (table.options.meta as TransOpDataTableMeta)?.updateTransOpBooking(row.original.containerID, "Pending Booking")}
           >
             Approve
           </Button>
 
           <Button 
             variant="destructive"
-            onClick={() => (table.options.meta as TransOpDataTableMeta)?.updateBooking(row.original.containerID, "unassigned")}
+            onClick={() => (table.options.meta as TransOpDataTableMeta)?.updateTransOpBooking(row.original.containerID, "unassigned")}
           >
               Deny
           </Button>
