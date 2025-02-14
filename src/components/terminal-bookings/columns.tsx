@@ -56,7 +56,7 @@ export const columns = (status: string): ColumnDef<any>[] => {
       accessorKey: "bookingStatus",
       header: " Status",
       cell: ({ row }) => {
-        const status = row.original.status; // Get status value
+        const status = row.original.bookingStatus; // Get status value
         const isLate = status === "Late"; // Check if status is "Late"
 
         return (
