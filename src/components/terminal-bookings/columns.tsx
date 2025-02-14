@@ -55,7 +55,7 @@ export const columns = (status: string): ColumnDef<any>[] => {
     baseColumns.push({
       accessorKey: "bookingStatus",
       header: () => <div className="text-center min-w-[200px]">Status</div>,
-      size: 400, // Adjust width as needed
+     // Adjust width as needed
       cell: ({ row }) => {
         const status = row.original.bookingStatus; // Get status value
         const isLate = status === "Late"; // Check if status is "Late"
@@ -74,6 +74,9 @@ export const columns = (status: string): ColumnDef<any>[] => {
     accessorKey: "flag",
     header: () => <div style={{ minWidth: "200px", textAlign: "center" }}>Flag</div>,
     cell: ({ row }) => {
+      
+
+     
       // Initialize flagged state from the row data; fallback to false if undefined.
             const [flagged, setFlagged] = useState<boolean>(row.original.flag || false)
       
@@ -95,9 +98,11 @@ export const columns = (status: string): ColumnDef<any>[] => {
             }
       
             return (
+              <div className="flex space-x-4 justify-center">
               <Button variant="ghost" onClick={handleFlagToggle} className="p-2">
-                <Flag className={flagged ? "flex justify-center items-centert ext-red-600" : "flex justify-center items-center text-gray-400"} />
+                <Flag className={flagged ? "text-red-600" : "text-gray-400"} />
               </Button>
+              </div>
             )
     },
   });
