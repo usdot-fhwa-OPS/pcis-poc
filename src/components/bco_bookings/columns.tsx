@@ -220,17 +220,17 @@ export const CompletedColumn = (): ColumnDef<any>[] => {
   const baseColumns: ColumnDef<any>[] = [
     { accessorKey: "port", header: "Port" },
     { accessorKey: "terminalId", header: "Terminal ID" },
-    { accessorKey: "vesselId", header: "Vessel ID" },
-    { accessorKey: "containerId", header: "Container ID" },
+    { accessorKey: "vesselID", header: "Vessel ID" },
+    { accessorKey: "containerID", header: "Container ID" },
     { accessorKey: "origin", header: "Origin" },
-    { accessorKey: "bco", header: "BCO" },
-    { accessorKey: "bco_email", header: "BCO Email" },
-    { accessorKey: "operator", header: "Assigned Transportation  Operator" },
-    { accessorKey: "terminal_op", header: "Assigned Terminal Operator" },
-    { accessorKey: "operator_email", header: "Transportation Operator Email" },
+    { accessorKey: "bcoName", header: "BCO" },
+    { accessorKey: "bcoEmail", header: "BCO Email" },
+    { accessorKey: "termopName", header: "Assigned Terminal Operator" },
+    { accessorKey: "transopName", header: "Assigned Transportation Operator" },
+    { accessorKey: "transopEmail", header: "Transportation Operator Email" },
     {
       accessorKey: "to_status",
-      header: "Booking Status",
+      header: "bookingStatus",
       cell: ({ row }) => {
         const status = row.original.status; // Get status value
     
@@ -242,9 +242,9 @@ export const CompletedColumn = (): ColumnDef<any>[] => {
       }
     },
     
-    { accessorKey: "date_init", header: "Date Initiated" },
-    { accessorKey: "date_approved", header: "Date Approved" },
-    { accessorKey: "date_picked", header: "Date Picked Up" },
+    { accessorKey: "bookingDate", header: "Date Initiated" },
+    { accessorKey: "bookingApprovedDate", header: "Date Approved" },
+    { accessorKey: "bookingPickupDate", header: "Date Picked Up" },
   ]
   return baseColumns;
 };
