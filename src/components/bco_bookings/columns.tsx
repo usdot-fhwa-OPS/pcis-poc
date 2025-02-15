@@ -243,7 +243,7 @@ export const CompletedColumn = (): ColumnDef<any>[] => {
     },
     
     { accessorKey: "bookingDate", header: "Date Initiated" },
-    { accessorKey: "bookingApprovedDate", header: "Date Approved" },
+    { accessorKey: "bookingApprovalDate", header: "Date Approved" },
     { accessorKey: "bookingPickupDate", header: "Date Picked Up" },
   ]
   return baseColumns;
