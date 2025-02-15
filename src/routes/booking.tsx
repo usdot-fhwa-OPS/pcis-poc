@@ -170,38 +170,33 @@ function RouteComponent() {
 
   //fetch complted BCOBokkings
 
-  const [bcocompletedBookings, setBcoCompltedBookings] = useState<BCOUpcomingBookings[]>([]);
+  const [bcocompletedBookings, setBcoCompletedBookings] = useState<BCOCompletedBooking[]>([]);
 
   // Move fetchContainers outside of useEffect so it can be reused
   async function fetch_bco_completed() {
     if (userAttributes.role === 'Beneficiary Cargo Owner') {
-      try {
-        const { data: cargo } = await client.models.Container.list({
-          filter: {
-            and: [
-              {
-                bcoEmail: { eq: userAttributes.email }
-              },
-              {
-                bookingStatus: { eq: 'Picked Up' }
-              }
-            ]
-          },
-          selectionSet: selectionSetBCOUpcomingBookings,
-          authMode: 'apiKey',
-        });
-        setBcoCompltedBookings(cargo);
-      } catch (error) {
-        console.error('Error fetching containers:', error);
-      }
+      const { data: cargo } = await client.models.Container.list({
+        selectionSet:selectionSetBCOCompleted ,
+        authMode: 'apiKey',
+        filter: {
+          bookingStatus: {
+            eq: 'Picked Up'
+          }
+        }
+      });
+      setBcoCompletedBookings(cargo);
     }
-  }
+  
+    //Fetch the data on the first render
 
+  }
+  useEffect(() => {
+    fetch_bco_completed();
+  }, [])
 
   // Fetch containers on initial mount and when role/email changes
   useEffect(() => {
     fetchContainers();
-    fetch_bco_completed();
   }, [userAttributes.role]);
 
   // Update container then refetch containers
