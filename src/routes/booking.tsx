@@ -174,7 +174,8 @@ function RouteComponent() {
 
   // Move fetchContainers outside of useEffect so it can be reused
   async function fetch_bco_completed() {
-    if (userAttributes.role === 'Beneficiary Cargo Owner') {
+   
+      try{
       const { data: cargo } = await client.models.Container.list({
         selectionSet:selectionSetBCOCompleted ,
         authMode: 'apiKey',
@@ -186,17 +187,22 @@ function RouteComponent() {
       });
       setBcoCompletedBookings(cargo);
     }
+    catch(error )
+    {console.error('Error fetching BCO Completed:', error);
+
+    }
+    
   
     //Fetch the data on the first render
 
   }
-  useEffect(() => {
-    fetch_bco_completed();
-  }, [])
+
 
   // Fetch containers on initial mount and when role/email changes
   useEffect(() => {
     fetchContainers();
+    fetch_bco_completed();
+    fetchterminal_operator_requested();
   }, [userAttributes.role]);
 
   // Update container then refetch containers
@@ -238,9 +244,6 @@ function RouteComponent() {
   }
 
   //Fetch the data on the first render
-  useEffect(() => {
-    fetchterminal_operator_requested();
-  }, [])
 
 async function updateBooking(id: string, status: string) {
   try {
