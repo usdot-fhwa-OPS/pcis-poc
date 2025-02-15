@@ -232,7 +232,7 @@ export const CompletedColumn = (): ColumnDef<any>[] => {
       accessorKey: "to_status",
       header: "bookingStatus",
       cell: ({ row }) => {
-        const status = row.original.status; // Get status value
+        const status = row.original.bookingStatus; // Get status value
     
         return (
           <span className="px-2 py-1 rounded-md bg-gray-300 text-black font-bold text-center block">
