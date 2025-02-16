@@ -2,7 +2,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "../ui/button.tsx";
 import { useState } from "react";
 import { Flag } from "lucide-react";
-import { Checkbox } from "../ui/checkbox.tsx"
+//import { Checkbox } from "../ui/checkbox.tsx"
 import { TransOpUpcomingBookings, TransOpOngoingBookings } from "../../routes/booking.tsx";
 //Four Imports needed for Amplify Data Queries and CRUD methods
 
