@@ -48,15 +48,18 @@ export const columns = (): ColumnDef<any>[] => {
     {
       accessorKey: "contact_bco",
       header: "Contact BCO",
-      cell: ({ row }) => (
-        <Button
-          variant="outline"
-          className="bg-blue-600 text-white hover:bg-blue-700"
-          onClick={() => alert(`Contacting ${row.original.bcoName} at ${row.original.bcoEmail}`)}
-        >
-          Contact
-        </Button>
-      ),
+      cell: ({ row }) => {
+        const email = row.original.bcoEmail
+  
+        // Option A: Anchor tag wrapping a Button
+        return (
+          <a
+            href={`mailto:${email}?subject=Inquiry%20About%20Cargo&body=Hello%20${row.original.bcoName},`}
+          >
+            <Button variant="outline">Contact</Button>
+          </a>
+        )
+      },
     },
 
   ];
