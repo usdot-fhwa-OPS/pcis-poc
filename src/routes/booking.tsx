@@ -23,6 +23,9 @@ const selectionSetTransOpUpcomingBookings = ['vesselID', 'containerID', 'origin'
 //Create a type based on your selectionSet that will be later used for the columns.tsx file of the able
 export type TransOpUpcomingBookings = SelectionSet<Schema['Container']['type'], typeof selectionSetTransOpUpcomingBookings>
 
+const selectionSetTransOpOngoingBookings = ['vesselID', 'containerID', 'origin', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail', 'bookingDate', 'bookingTime', 'bookingStatus', 'flag'] as const;
+export type TransOpOngoingBookings = SelectionSet<Schema['Container']['type'], typeof selectionSetTransOpOngoingBookings>
+
 const selectionSetTerminalOPUpcoming = ['vesselID', 'containerID', 'origin', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail','bookingDate','bookingTime','bookingStatus', 'flag'] as const;
 
 //Define the selection of data that will be used for the table
@@ -49,17 +52,6 @@ const Terminal_CompletedData = [
   { vesselId: "3", containerId: "M-35", origin: "Mexico", bco: "WB", bco_email: "wb@gmail.com", operator: "Sarah", operator_email: "emma@gmail.com", date_init: "22 March 2024", date_approved: "23 March 2024", status: "Picked Up", date_picked: "24 March 2024", time: "1:00pm" },
   { vesselId: "4", containerId: "CH-44", origin: "China", bco: "LK", bco_email: "lk@gmail.com", operator: "Emma", operator_email: "james@gmail.com", date_init: "2 March 2024", date_approved: "23 March 2024", status: "Picked Up", date_picked: "23 March 2024", time: "11:30am" }
 ];
-
-
-const Transportation_OngoingData = [
-  { vesselId: "1", containerId: "HM-266", origin: "Canada", bco: "WB", bco_email: "sm@gmail.com", operator: "Sarah", operator_email: "michael@gmail.com", date: "23 March 2024", time: "3:45pm", status: "Late",date_init: "22 March 2024", date_updated: "24 March 2024"},
-  { vesselId: "2", containerId: "HM-431", origin: "USA", bco: "JD", bco_email: "jd@gmail.com", operator: "Daniel", operator_email: "sarah@gmail.com", date: "22 March 2024", time: "10:00am", date_init: "22 March 2024", date_updated: "24 March 2024"},
-  { vesselId: "3", containerId: "HM-785", origin: "Mexico", bco: "RT", bco_email: "lk@gmail.com", operator: "Sarah", operator_email: "emma@gmail.com", date: "21 March 2024", time: "1:00pm", status: "Picked Up" ,date_init: "22 March 2024", date_updated: "24 March 2024",changepickupstatus: "checked"},
-  { vesselId: "4", containerId: "HM-262", origin: "Germany", bco: "WB", bco_email: "jd@gmail.com", operator: "James", operator_email: "emma@gmail.com", date: "21 March 2024", time: "1:00pm", date_init: "22 March 2024", date_updated: "24 March 2024"},
-  { vesselId: "5", containerId: "HM-903", origin: "Canada", bco: "JD", bco_email: "lk@gmail.com", operator: "Daniel", operator_email: "emma@gmail.com", date: "24 March 2024", time: "11:30am",date_init: "22 March 2024", date_updated: "24 March 2024" },
-  { vesselId: "6", containerId: "HM-960", origin: "USA", bco: "JD", bco_email: "lk@gmail.com", operator: "Michael", operator_email: "emma@gmail.com", date: "21 March 2024", time: "3:45pm", date_init: "22 March 2024", date_updated: "24 March 2024" }
-];
-
 
 const Transportation_CompletedData = [
   { vesselId: "1", containerId: "HM-22", origin: "Canada", bco: "WB", bco_email: "wb@gmail.com", operator: "James", operator_email: "sarah@gmail.com", date_init: "22 March 2024", date_approved: "24 March 2024", status: "Picked Up", date_picked: "23 March 2024", time: "10:00am" },
@@ -169,10 +161,58 @@ function RouteComponent() {
       }
     }
   }
-
   useEffect(() => {
     fetchTransOpUpcoming();
   }, [userAttributes.role]);
+
+  const [transOpOngoingBookings, setTransOpOngoingBookings] = useState<TransOpOngoingBookings[]>([]);
+
+  async function fetchTransOpOngoing() {
+    if (userAttributes.role === 'Transportation Operator') {
+      try {
+        const { data: cargo } = await client.models.Container.list({
+          filter: {
+            and: [
+              {
+                transopEmail: { eq: userAttributes.email }
+              },
+              {
+                or: [
+                  {
+                    bookingStatus: { eq: 'Pending Booking' }
+                  },
+                  {
+                    bookingStatus: { eq: 'Pending Booking Approval' }
+                  },
+                  {
+                    bookingStatus: { eq: 'Pending Pick Up' }
+                  },
+                  {
+                    bookingStatus: { eq: 'Late for Pick Up' }
+                  },
+                  {
+                    bookingStatus: { eq: 'Picked Up' }
+                  },
+                  {
+                    bookingStatus: { eq: 'Late for Pick Up' }
+                  }
+                ]
+              }
+            ]
+          },
+          selectionSet: selectionSetTransOpOngoingBookings,
+          authMode: 'apiKey',
+          });
+        setTransOpOngoingBookings(cargo);
+      } catch (error) {
+        console.error('Error fetching containers:', error);
+      }
+    }
+  }
+  useEffect(() => {
+    fetchTransOpOngoing();
+  }, [userAttributes.role]);
+  
 
   // Update container then refetch containers
   async function assignTransOp(containerID: string, newName: string, newEmail: string, bookingStatus: string) {
@@ -316,7 +356,7 @@ async function updateBooking(id: string, status: string) {
 
       <TabsContent value="ongoing">
         <TransportationBookingsTableOngoing
-          data={ Transportation_OngoingData}
+          data={transOpOngoingBookings}
           status="Ongoing"
           meta={null}
         />
