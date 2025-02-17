@@ -150,7 +150,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
       header: "Booking",
       cell: ({ row }) => {
   
-        return row.original.bookingStatus === "pendingBooking" ? (
+        return row.original.bookingStatus === "Pending Booking" ? (
           <Button
             variant="outline"
             className="bg-blue-600 text-white hover:bg-blue-700"
@@ -158,7 +158,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
             Book
           </Button>
         ) : (
-          <span className="font-bold text-black bg-gray-300 px-2 py-1 rounded-md">Picked Up</span>
+          <span className="font-bold text-black bg-gray-300 px-2 py-1 rounded-md">row.original.bookingStatus</span>
         );
       },
     },
