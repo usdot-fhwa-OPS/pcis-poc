@@ -25,7 +25,7 @@ import {
 } from "../ui/dialog"  
 
 export const columns = (): ColumnDef<any>[] => {
-  const baseColumns: ColumnDef<BCOUpcomingBookings>[] = [
+  const baseColumns: ColumnDef<any>[] = [
     { accessorKey: "vesselID", header: "Vessel ID" },
     { accessorKey: "containerID", header: "Container ID" },
     { accessorKey: "origin", header: "Origin" },
@@ -226,8 +226,8 @@ export const CompletedColumn = (): ColumnDef<any>[] => {
     { accessorKey: "destination", header: "Destination" },
     { accessorKey: "bcoName", header: "BCO" },
     { accessorKey: "bcoEmail", header: "BCO Email" },
-    { accessorKey: "termopName", header: "Assigned Terminal Operator" },
-    { accessorKey: "transopName", header: "Assigned Transportation Operator" },
+  //  { accessorKey: "termopName", header: "Assigned Terminal Operator" },
+    { accessorKey: "transopName", header: "Transportation Operator Name" },
     { accessorKey: "transopEmail", header: "Transportation Operator Email" },
     {
       accessorKey: "to_status",
