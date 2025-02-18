@@ -252,8 +252,8 @@ export const CompletedColumn = (): ColumnDef<any>[] => {
 
 export const OngoingColumn = (): ColumnDef<any>[] => {
   const baseColumns1: ColumnDef<any>[] = [
-    { accessorKey: "port", header: "Port" },
-    { accessorKey: "terminalId", header: "Terminal ID" },
+    // { accessorKey: "port", header: "Port" },
+    // { accessorKey: "terminalId", header: "Terminal ID" },
     { accessorKey: "vesselId", header: "Vessel ID" },
     { accessorKey: "containerId", header: "Container ID" },
     { accessorKey: "bco", header: "BCO" },
