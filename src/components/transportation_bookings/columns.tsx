@@ -160,7 +160,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
               bookingTime: time,
             })
             console.log('Updated container status:', bookContainer);
-            (table.options.meta as TransOpDataTableMeta)?.fetchTransOpOngoing();
+            await (table.options.meta as TransOpDataTableMeta)?.fetchTransOpOngoing();
           } catch (error) {
             console.error('Error updating container status:', error);
           }
