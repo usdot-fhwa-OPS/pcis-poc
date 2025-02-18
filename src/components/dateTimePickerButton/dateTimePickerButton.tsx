@@ -11,7 +11,15 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select"
 
-export function DateTimePickerButton() {
+interface DateTimePickerButtonProps {
+    vesselID: string;
+    containerID: string;
+    origin: string;
+    bcoName: string;
+    bcoEmail: string;
+}
+
+export const DateTimePickerButton: React.FC<DateTimePickerButtonProps> = ({ vesselID, containerID, origin, bcoName, bcoEmail }) => {
   const [date, setDate] = useState<Date | undefined>(undefined)
   const [time, setTime] = useState<string | undefined>(undefined)
   const [isCalendarOpen, setIsCalendarOpen] = useState(false)
@@ -61,6 +69,9 @@ export function DateTimePickerButton() {
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Book Container Pick-Up</DialogTitle>
+          <div className="text-sm text-muted-foreground">
+            {`Container ID: ${containerID} | Origin: ${origin} | BCO: ${bcoName} | BCO Email: ${bcoEmail}`}
+          </div>
         </DialogHeader>
         <div className="grid gap-4 py-4">
           <div className="grid grid-cols-4 items-center gap-4">

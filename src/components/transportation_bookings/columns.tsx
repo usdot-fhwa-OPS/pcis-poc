@@ -152,7 +152,13 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
       cell: ({ row }) => {
   
         return row.original.bookingStatus === "Pending Booking" ? (
-          <DateTimePickerButton />
+          <DateTimePickerButton 
+            vesselID={row.original.vesselID ?? ""} 
+            containerID={row.original.containerID ?? ""} 
+            origin={row.original.origin ?? ""} 
+            bcoName={row.original.bcoName ?? ""} 
+            bcoEmail={row.original.bcoEmail ?? ""} 
+          />
         ) : (
           <span className="font-bold text-black bg-gray-300 px-2 py-1 rounded-md">row.original.bookingStatus</span>
         );
