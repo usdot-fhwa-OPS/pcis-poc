@@ -70,7 +70,7 @@ export const DateTimePickerButton: React.FC<DateTimePickerButtonProps> = ({ vess
         <DialogHeader>
           <DialogTitle>Book Container Pick-Up</DialogTitle>
           <div className="text-sm text-muted-foreground">
-            {`Container ID: ${containerID} | Origin: ${origin} | BCO: ${bcoName} | BCO Email: ${bcoEmail}`}
+            {`Vessel ID: ${vesselID} | Container ID: ${containerID} | Origin: ${origin} | BCO: ${bcoName} | BCO Email: ${bcoEmail}`}
           </div>
         </DialogHeader>
         <div className="grid gap-4 py-4">
