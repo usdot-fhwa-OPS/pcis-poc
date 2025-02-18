@@ -249,9 +249,14 @@ async function fetch_bco_ongoing() {
       selectionSet:selectionSetBCOOngoing ,
       authMode: 'apiKey',
       filter: {
-        bookingStatus: {
-          eq: 'Picked Up'
-        }
+        or: [
+          {
+            bookingStatus: { eq: 'Pending Pick Up' }
+          },
+          {
+            bookingStatus: { eq: 'Late' }
+          }
+        ]
       }
     });
     setBCOOngoingBookings(cargo);
