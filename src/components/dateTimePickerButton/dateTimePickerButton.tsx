@@ -17,41 +17,54 @@ interface DateTimePickerButtonProps {
     origin: string;
     bcoName: string;
     bcoEmail: string;
-    handleSubmit: (date: string | undefined, time: string | undefined) => void;
 }
 
-export const DateTimePickerButton: React.FC<DateTimePickerButtonProps> = ({ vesselID, containerID, origin, bcoName, bcoEmail, handleSubmit }) => {
+export const DateTimePickerButton: React.FC<DateTimePickerButtonProps> = ({ vesselID, containerID, origin, bcoName, bcoEmail }) => {
   const [date, setDate] = useState<Date | undefined>(undefined)
   const [time, setTime] = useState<string | undefined>(undefined)
   const [isCalendarOpen, setIsCalendarOpen] = useState(false)
-  const [isDialogOpen, setIsDialogOpen] = useState(false)
 
   const isDateTimeSelected = (): boolean => {
     return !!date && !!time
   }
 
   const timeOptions = [
-    "12:00 AM", "01:00 AM", "02:00 AM", "03:00 AM", "04:00 AM",
-    "05:00 AM", "06:00 AM", "07:00 AM", "08:00 AM", "09:00 AM",
-    "10:00 AM", "11:00 AM", "12:00 PM", "01:00 PM", "02:00 PM",
-    "03:00 PM", "04:00 PM", "05:00 PM", "06:00 PM", "07:00 PM",
-    "08:00 PM", "09:00 PM", "10:00 PM", "11:00 PM",
+    "12:00 AM",
+    "01:00 AM",
+    "02:00 AM",
+    "03:00 AM",
+    "04:00 AM",
+    "05:00 AM",
+    "06:00 AM",
+    "07:00 AM",
+    "08:00 AM",
+    "09:00 AM",
+    "10:00 AM",
+    "11:00 AM",
+    "12:00 PM",
+    "01:00 PM",
+    "02:00 PM",
+    "03:00 PM",
+    "04:00 PM",
+    "05:00 PM",
+    "06:00 PM",
+    "07:00 PM",
+    "08:00 PM",
+    "09:00 PM",
+    "10:00 PM",
+    "11:00 PM",
   ]
 
   const handleDateSelect = (selectedDate: Date | undefined) => {
     setDate(selectedDate)
+    // Keep the calendar open after selection
     setIsCalendarOpen(true)
   }
 
-  const handleBooking = () => {
-    handleSubmit(format(date!, "MM/dd/yyyy"), time)
-    setIsDialogOpen(false) // Close dialog after submission
-  }
-
   return (
-    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+    <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline" onClick={() => setIsDialogOpen(true)}>Book</Button>
+        <Button variant="outline">Book</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
@@ -101,16 +114,12 @@ export const DateTimePickerButton: React.FC<DateTimePickerButtonProps> = ({ vess
               ? `Selected: ${format(date!, "MM/dd/yyyy")} ${time}`
               : "Please select both date and time"}
           </div>
-            <Button 
-            type="submit" 
-            disabled={!date || !time} 
-            variant={!date || !time ? "outline" : "default"}
-            onClick={handleBooking}
-            >
+          <Button type="submit" disabled={!date || !time} variant={!date || !time ? "outline" : "default"}>
             Book
-            </Button>
+          </Button>
         </div>
       </DialogContent>
     </Dialog>
   )
 }
+

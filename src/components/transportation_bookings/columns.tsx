@@ -1,9 +1,14 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "../ui/button.tsx";
 import { useState } from "react";
-import { Flag } from "lucide-react";
+import { Flag, CalendarIcon, Clock } from "lucide-react";
 //import { Checkbox } from "../ui/checkbox.tsx"
-import { DateTimePickerButton } from "../dateTimePickerButton/dateTimePickerButton.tsx";
+import { Calendar } from "../ui/calendar"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog"
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select"
+import { format } from "date-fns"
+import { cn } from "../../lib/utils"
 import { TransOpUpcomingBookings, TransOpOngoingBookings } from "../../routes/booking.tsx";
 //Four Imports needed for Amplify Data Queries and CRUD methods
 
@@ -151,30 +156,112 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
       header: "Booking",
       cell: ({ row, table }) => {
 
-        const handleSubmit = async (date: string | undefined, time: string | undefined) => {
-          try {
-            const { data: bookContainer } = await client.models.Container.update({
-              containerID: row.original.containerID,
-              bookingStatus: "Pending Booking Approval",
-              bookingDate: date,
-              bookingTime: time,
-            })
-            console.log('Updated container status:', bookContainer);
-            await (table.options.meta as TransOpDataTableMeta)?.fetchTransOpOngoing();
-          } catch (error) {
-            console.error('Error updating container status:', error);
-          }
-        };
-        return row.original.bookingStatus === "Pending Booking" ? (
-          <DateTimePickerButton 
-            vesselID={row.original.vesselID ?? ""} 
-            containerID={row.original.containerID ?? ""} 
-            origin={row.original.origin ?? ""} 
-            bcoName={row.original.bcoName ?? ""} 
-            bcoEmail={row.original.bcoEmail ?? ""} 
-            handleSubmit={handleSubmit}
-          />
-        ) : (
+        const [date, setDate] = useState<Date | undefined>(undefined)
+        const [time, setTime] = useState<string | undefined>(undefined)
+         const [isCalendarOpen, setIsCalendarOpen] = useState(false)
+
+      const isDateTimeSelected = (): boolean => {
+        return !!date && !!time
+      }
+
+      const timeOptions = [
+        "12:00 AM",
+        "01:00 AM",
+        "02:00 AM",
+        "03:00 AM",
+        "04:00 AM",
+        "05:00 AM",
+        "06:00 AM",
+        "07:00 AM",
+        "08:00 AM",
+        "09:00 AM",
+        "10:00 AM",
+        "11:00 AM",
+        "12:00 PM",
+        "01:00 PM",
+        "02:00 PM",
+        "03:00 PM",
+        "04:00 PM",
+        "05:00 PM",
+        "06:00 PM",
+        "07:00 PM",
+        "08:00 PM",
+        "09:00 PM",
+        "10:00 PM",
+        "11:00 PM",
+      ]
+
+      const handleDateSelect = (selectedDate: Date | undefined) => {
+        setDate(selectedDate)
+        // Keep the calendar open after selection
+        setIsCalendarOpen(true)
+      }
+
+      return row.original.bookingStatus === "Pending Booking" ? (
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button variant="outline">Book</Button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle>Book Container Pick-Up</DialogTitle>
+              <div className="text-sm text-muted-foreground">
+                {`Vessel ID: ${row.original.vesselID} | Container ID: ${row.original.containerID} | Origin: ${row.original.origin} | BCO: ${row.original.bcoName} | BCO Email: ${row.original.bcoEmail}`}
+              </div>
+            </DialogHeader>
+            <div className="grid gap-4 py-4">
+              <div className="grid grid-cols-4 items-center gap-4">
+                <CalendarIcon className="h-4 w-4" />
+                <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant={"outline"}
+                      className={cn("w-[280px] justify-start text-left font-normal", !date && "text-muted-foreground")}
+                      onClick={() => setIsCalendarOpen(true)}
+                    >
+                      <CalendarIcon className="mr-2 h-4 w-4" />
+                      {date ? format(date, "MM/dd/yyyy") : <span>Pick a date</span>}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0">
+                    <Calendar mode="single" selected={date} disabled={{ before: new Date()}} onSelect={handleDateSelect} initialFocus />
+                  </PopoverContent>
+                </Popover>
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Clock className="h-4 w-4" />
+                <Select onValueChange={setTime}>
+                  <SelectTrigger className="w-[280px]">
+                    <SelectValue placeholder="Select time" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {timeOptions.map((timeOption) => (
+                      <SelectItem key={timeOption} value={timeOption}>
+                        {timeOption}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            <div className="flex justify-between">
+              <div className="text-sm text-muted-foreground">
+                {isDateTimeSelected()
+                  ? `Selected: ${format(date!, "MM/dd/yyyy")} ${time}`
+                  : "Please select both date and time"}
+              </div>
+              <Button 
+                type="submit" 
+                disabled={!date || !time} 
+                variant={!date || !time ? "outline" : "default"}
+                onClick={() => {(table.options.meta as TransOpDataTableMeta)?.bookContainerPickUp(row.original.containerID, "Pending Booking Approval", String(date), time ?? "")}}
+              >
+                Book
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
+      ) : (
           <span className="font-bold text-black bg-gray-300 px-2 py-1 rounded-md">{row.original.bookingStatus}</span>
         );
       },
