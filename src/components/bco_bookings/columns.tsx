@@ -253,18 +253,19 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
   const baseColumns1: ColumnDef<any>[] = [
     { accessorKey: "port", header: "Port" },
     { accessorKey: "terminalId", header: "Terminal ID" },
-    { accessorKey: "vesselId", header: "Vessel ID" },
-    { accessorKey: "containerId", header: "Container ID" },
-    { accessorKey: "bco", header: "BCO" },
-    { accessorKey: "bco_email", header: "BCO Email" },
-    { accessorKey: "operator", header: "Assigned Transportation  Operator" },
-    { accessorKey: "terminal_op", header: "Assigned Terminal Operator" },
-    { accessorKey: "operator_email", header: "Transportation Operator Email" },
+    { accessorKey: "vesselID", header: "Vessel ID" },
+    { accessorKey: "containerID", header: "Container ID" },
+    { accessorKey: "origin", header: "Origin" },
+    { accessorKey: "bcoName", header: "BCO" },
+    { accessorKey: "bcoEmail", header: "BCO Email" },
+    { accessorKey: "termopName", header: "Assigned Terminal Operator" },
+    { accessorKey: "transopName", header: "Assigned Transportation Operator" },
+    { accessorKey: "transopEmail", header: "Transportation Operator Email" },
     {
       accessorKey: "to_status",
       header: "Transportation Operator Status",
       cell: ({ row }) => {
-        const status = row.original.status; // Get status value
+        const status = row.original.bookingStatus; // Get status value
     
         return (
           <span className="px-2 py-1 rounded-md bg-gray-300 text-black font-bold text-center block">
