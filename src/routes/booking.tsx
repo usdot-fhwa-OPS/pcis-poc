@@ -249,12 +249,12 @@ async function fetch_bco_ongoing() {
       selectionSet:selectionSetBCOOngoing ,
       authMode: 'apiKey',
       filter: {
-        or: [
+        and: [
           {
-            bookingStatus: { eq: 'Pending Pick Up' }
+            bookingStatus: { ne: 'Picked UP' }
           },
           {
-            bookingStatus: { eq: 'Late' }
+            bookingStatus: { eq: 'unassigned' }
           }
         ]
       }
