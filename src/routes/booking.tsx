@@ -214,20 +214,21 @@ function RouteComponent() {
   }, [userAttributes.role]);
   
 
-  async function bookContainerPickUp(containerID: string, bookingStatus: string, bookingDate: string, bookingTime: string) {
-    try {
-      const { data: bookContainer } = await client.models.Container.update({
-        containerID: containerID,
-        bookingStatus: bookingStatus,
-        bookingDate: bookingDate,
-        bookingTime: bookingTime,
-      })
-      console.log('Updated container status:', bookContainer); 
-      await fetchTransOpOngoing();
-    } catch (error) {
-      console.error('Error updating container status:', error);
-    }
-  }
+  // async function bookContainerPickUp(containerID: string, bookingStatus: string, bookingDate: string, bookingTime: string) {
+  //   try {
+  //     console.log("ENTERING")
+  //     const { data: bookContainer } = await client.models.Container.update({
+  //       containerID: containerID,
+  //       bookingStatus: bookingStatus,
+  //       bookingDate: bookingDate,
+  //       bookingTime: bookingTime,
+  //     })
+  //     console.log('Updated container status:', bookContainer); 
+  //     await fetchTransOpOngoing();
+  //   } catch (error) {
+  //     console.error('Error updating container status:', error);
+  //   }
+  // }
   
   // Update container then refetch containers
   async function assignTransOp(containerID: string, newName: string, newEmail: string, bookingStatus: string) {
@@ -272,7 +273,7 @@ function RouteComponent() {
     fetchterminal_operator_requested();
   }, [])
 
-async function updateTransOpBooking(id: string, status: string) {
+async function updateTransOpBooking(id: string, status: string, bookingDate?: string, bookingTime?: string) {
   try {
     if (status === "unassigned") {
       const { data: updatedContainerStatus } = await client.models.Container.update({
@@ -283,6 +284,15 @@ async function updateTransOpBooking(id: string, status: string) {
       });
       console.log("Updated flag with transop details:", updatedContainerStatus);
       await fetchTransOpUpcoming();
+    } else if (status === "Pending Booking Approval"){
+      const { data: bookContainer } = await client.models.Container.update({
+        containerID: id,
+        bookingStatus: status,
+        bookingDate: bookingDate,
+        bookingTime: bookingTime,
+      })
+      console.log('Updated container status:', bookContainer); 
+      await fetchTransOpOngoing();
     } else {
       const { data: updatedContainerStatus } = await client.models.Container.update({
         containerID: id,
@@ -373,7 +383,7 @@ async function updateBooking(id: string, status: string) {
         <TransportationBookingsTableOngoing
           data={transOpOngoingBookings}
           status="Ongoing"
-          meta={{bookContainerPickUp}}
+          meta={{updateTransOpBooking}}
         />
       </TabsContent>
 
