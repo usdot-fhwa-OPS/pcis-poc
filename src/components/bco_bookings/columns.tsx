@@ -219,7 +219,7 @@ baseColumns.push({
 export const CompletedColumn = (): ColumnDef<any>[] => {
   const baseColumns: ColumnDef<any>[] = [
     // { accessorKey: "port", header: "Port" },
-    { accessorKey: "terminalId", header: "Terminal ID" },
+    //{ accessorKey: "terminalId", header: "Terminal ID" },
     { accessorKey: "vesselID", header: "Vessel ID" },
     { accessorKey: "containerID", header: "Container ID" },
     { accessorKey: "origin", header: "Origin" },
