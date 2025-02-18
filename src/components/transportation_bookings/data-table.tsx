@@ -21,7 +21,7 @@ import {
 
 export interface TransOpDataTableMeta {
   updateTransOpBooking: (containerID: string, bookingStatus: string) => void,
-  fetchTransOpUpcoming: () => void 
+  fetchTransOpOngoing: () => void 
 }
 
 interface DataTableProps<TData, TValue> {

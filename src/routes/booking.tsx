@@ -373,7 +373,7 @@ async function updateBooking(id: string, status: string) {
         <TransportationBookingsTableOngoing
           data={transOpOngoingBookings}
           status="Ongoing"
-          meta={{fetchTransOpUpcoming}}
+          meta={{fetchTransOpOngoing}}
         />
       </TabsContent>
 
