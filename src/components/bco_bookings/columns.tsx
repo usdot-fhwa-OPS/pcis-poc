@@ -259,11 +259,11 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
     { accessorKey: "destination", header: "Destination" },
     { accessorKey: "bcoName", header: "BCO" },
     { accessorKey: "bcoEmail", header: "BCO Email" },
-    { accessorKey: "termopName", header: "Assigned Terminal Operator" },
-    { accessorKey: "transopName", header: "Assigned Transportation Operator" },
+  //  { accessorKey: "termopName", header: "Assigned Terminal Operator" },
+    { accessorKey: "transopName", header: "Transportation Operator Name" },
     { accessorKey: "transopEmail", header: "Transportation Operator Email" },
     {
-      accessorKey: "bookingStatus",
+      accessorKey: "Booking Status",
       header: "Transportation Operator Status",
       cell: ({ row }) => {
         const status = row.original.bookingStatus; // Get status value
