@@ -149,8 +149,22 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
     {
       accessorKey: "status",
       header: "Booking",
-      cell: ({ row }) => {
-  
+      cell: ({ row, table }) => {
+
+        const handleSubmit = async (date: Date | undefined, time: string | undefined) => {
+          try {
+            const { data: bookContainer } = await client.models.Container.update({
+              containerID: row.original.containerID,
+              bookingStatus: "Pending Booking Approval",
+              bookingDate: date ? date.toISOString() : undefined,
+              bookingTime: time,
+            })
+            console.log('Updated container status:', bookContainer);
+            (table.options.meta as TransOpDataTableMeta)?.fetchTransOpUpcoming();
+          } catch (error) {
+            console.error('Error updating container status:', error);
+          }
+        };
         return row.original.bookingStatus === "Pending Booking" ? (
           <DateTimePickerButton 
             vesselID={row.original.vesselID ?? ""} 
@@ -158,6 +172,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
             origin={row.original.origin ?? ""} 
             bcoName={row.original.bcoName ?? ""} 
             bcoEmail={row.original.bcoEmail ?? ""} 
+            handleSubmit={handleSubmit}
           />
         ) : (
           <span className="font-bold text-black bg-gray-300 px-2 py-1 rounded-md">row.original.bookingStatus</span>

@@ -214,6 +214,21 @@ function RouteComponent() {
   }, [userAttributes.role]);
   
 
+  async function bookContainerPickUp(containerID: string, bookingStatus: string, bookingDate: string, bookingTime: string) {
+    try {
+      const { data: bookContainer } = await client.models.Container.update({
+        containerID: containerID,
+        bookingStatus: bookingStatus,
+        bookingDate: bookingDate,
+        bookingTime: bookingTime,
+      })
+      console.log('Updated container status:', bookContainer); 
+      await fetchTransOpOngoing();
+    } catch (error) {
+      console.error('Error updating container status:', error);
+    }
+  }
+  
   // Update container then refetch containers
   async function assignTransOp(containerID: string, newName: string, newEmail: string, bookingStatus: string) {
     try {
@@ -358,7 +373,7 @@ async function updateBooking(id: string, status: string) {
         <TransportationBookingsTableOngoing
           data={transOpOngoingBookings}
           status="Ongoing"
-          meta={null}
+          meta={{fetchTransOpUpcoming}}
         />
       </TabsContent>
 

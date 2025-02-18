@@ -11,15 +11,17 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select"
 
+
 interface DateTimePickerButtonProps {
     vesselID: string;
     containerID: string;
     origin: string;
     bcoName: string;
     bcoEmail: string;
+    handleSubmit: (date: Date | undefined, time: string | undefined) => void;
 }
 
-export const DateTimePickerButton: React.FC<DateTimePickerButtonProps> = ({ vesselID, containerID, origin, bcoName, bcoEmail }) => {
+export const DateTimePickerButton: React.FC<DateTimePickerButtonProps> = ({ vesselID, containerID, origin, bcoName, bcoEmail, handleSubmit }) => {
   const [date, setDate] = useState<Date | undefined>(undefined)
   const [time, setTime] = useState<string | undefined>(undefined)
   const [isCalendarOpen, setIsCalendarOpen] = useState(false)
@@ -114,7 +116,12 @@ export const DateTimePickerButton: React.FC<DateTimePickerButtonProps> = ({ vess
               ? `Selected: ${format(date!, "MM/dd/yyyy")} ${time}`
               : "Please select both date and time"}
           </div>
-          <Button type="submit" disabled={!date || !time} variant={!date || !time ? "outline" : "default"}>
+          <Button 
+            type="submit" 
+            disabled={!date || !time} 
+            variant={!date || !time ? "outline" : "default"}
+            onClick={() => handleSubmit(date, time)}
+          >
             Book
           </Button>
         </div>

@@ -20,7 +20,8 @@ import {
 } from "../ui/table.tsx"
 
 export interface TransOpDataTableMeta {
-  updateTransOpBooking: (containerID: string, bookingStatus: string) => void
+  updateTransOpBooking: (containerID: string, bookingStatus: string) => void,
+  fetchTransOpUpcoming: () => void 
 }
 
 interface DataTableProps<TData, TValue> {
