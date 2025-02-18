@@ -88,7 +88,7 @@ export const DateTimePickerButton: React.FC<DateTimePickerButtonProps> = ({ vess
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-auto p-0">
-                <Calendar mode="single" selected={date} onSelect={handleDateSelect} initialFocus />
+                <Calendar mode="single" selected={date} disabled={{ before: new Date()}} onSelect={handleDateSelect} initialFocus />
               </PopoverContent>
             </Popover>
           </div>
