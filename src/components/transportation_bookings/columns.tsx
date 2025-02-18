@@ -151,12 +151,12 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
       header: "Booking",
       cell: ({ row, table }) => {
 
-        const handleSubmit = async (date: Date | undefined, time: string | undefined) => {
+        const handleSubmit = async (date: string | undefined, time: string | undefined) => {
           try {
             const { data: bookContainer } = await client.models.Container.update({
               containerID: row.original.containerID,
               bookingStatus: "Pending Booking Approval",
-              bookingDate: date ? date.toISOString() : undefined,
+              bookingDate: date,
               bookingTime: time,
             })
             console.log('Updated container status:', bookContainer);
@@ -175,7 +175,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
             handleSubmit={handleSubmit}
           />
         ) : (
-          <span className="font-bold text-black bg-gray-300 px-2 py-1 rounded-md">row.original.bookingStatus</span>
+          <span className="font-bold text-black bg-gray-300 px-2 py-1 rounded-md">{row.original.bookingStatus}</span>
         );
       },
     },

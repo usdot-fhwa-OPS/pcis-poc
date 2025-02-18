@@ -18,7 +18,7 @@ interface DateTimePickerButtonProps {
     origin: string;
     bcoName: string;
     bcoEmail: string;
-    handleSubmit: (date: Date | undefined, time: string | undefined) => void;
+    handleSubmit: (date: string | undefined, time: string | undefined) => void;
 }
 
 export const DateTimePickerButton: React.FC<DateTimePickerButtonProps> = ({ vesselID, containerID, origin, bcoName, bcoEmail, handleSubmit }) => {
@@ -116,14 +116,14 @@ export const DateTimePickerButton: React.FC<DateTimePickerButtonProps> = ({ vess
               ? `Selected: ${format(date!, "MM/dd/yyyy")} ${time}`
               : "Please select both date and time"}
           </div>
-          <Button 
+            <Button 
             type="submit" 
             disabled={!date || !time} 
             variant={!date || !time ? "outline" : "default"}
-            onClick={() => handleSubmit(date, time)}
-          >
+            onClick={() => handleSubmit(format(date!, "MM/dd/yyyy"), time)}
+            >
             Book
-          </Button>
+            </Button>
         </div>
       </DialogContent>
     </Dialog>
