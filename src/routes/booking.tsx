@@ -33,7 +33,7 @@ export type TerminalOPUpcomingBookings= SelectionSet<Schema['Container']['type']
 
 
 
-const selectionSetBCOOngoing = ['vesselID', 'containerID', 'origin', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail','bookingDate','bookingApprovalDate','bookingStatus', 'bookingPickupDate','flag'] as const;
+const selectionSetBCOOngoing = ['vesselID', 'containerID', 'origin','destination', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail','bookingDate','bookingApprovalDate','bookingStatus', 'bookingPickupDate','flag'] as const;
 
 export type BCOOngoingBooking= SelectionSet<Schema['Container']['type'], typeof selectionSetBCOOngoing>
 // const Terminal_RequestedData = [
