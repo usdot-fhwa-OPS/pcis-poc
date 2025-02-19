@@ -41,13 +41,6 @@ const selectionSetBCOCompleted = ['vesselID', 'containerID', 'origin', 'bcoName'
 export type BCOCompletedBooking= SelectionSet<Schema['Container']['type'], typeof selectionSetBCOCompleted>
 
 
-const Terminal_CompletedData = [
-  { vesselId: "1", containerId: "HM-22", origin: "Canada", bco: "WB", bco_email: "wb@gmail.com", operator: "James", operator_email: "sarah@gmail.com", date_init: "22 March 2024", date_approved: "24 March 2024", status: "Picked Up", date_picked: "23 March 2024", time: "10:00am" },
-  { vesselId: "2", containerId: "US-45", origin: "USA", bco: "RT", bco_email: "wb@gmail.com", operator: "James", operator_email: "daniel@gmail.com", date_init: "23 March 2024", date_approved: "23 March 2024", status: "Picked Up", date_picked: "24 March 2024", time: "3:45pm" },
-  { vesselId: "3", containerId: "M-35", origin: "Mexico", bco: "WB", bco_email: "wb@gmail.com", operator: "Sarah", operator_email: "emma@gmail.com", date_init: "22 March 2024", date_approved: "23 March 2024", status: "Picked Up", date_picked: "24 March 2024", time: "1:00pm" },
-  { vesselId: "4", containerId: "CH-44", origin: "China", bco: "LK", bco_email: "lk@gmail.com", operator: "Emma", operator_email: "james@gmail.com", date_init: "2 March 2024", date_approved: "23 March 2024", status: "Picked Up", date_picked: "23 March 2024", time: "11:30am" }
-];
-
 const Transportation_UpcomingData = [
   { vesselId: "1", containerId: "HM-263", origin: "Canada", bco: "WB", bco_email: "jd@gmail.com", operator: "Emma", operator_email: "james@gmail.com", date: "23 March 2024", time: "1:00pm", status: "Scheduled for Pickup" },
   { vesselId: "2", containerId: "HM-155", origin: "Germany", bco: "WB", bco_email: "sm@gmail.com", operator: "James", operator_email: "sarah@gmail.com", date: "21 March 2024", time: "10:00am", status: "Late" },
@@ -70,13 +63,6 @@ const Transportation_OngoingData = [
   { vesselId: "6", containerId: "HM-960", origin: "USA", bco: "JD", bco_email: "lk@gmail.com", operator: "Michael", operator_email: "emma@gmail.com", date: "21 March 2024", time: "3:45pm", date_init: "22 March 2024", date_updated: "24 March 2024" }
 ];
 
-
-// const Transportation_CompletedData = [
-//   { vesselId: "1", containerId: "HM-22", origin: "Canada", bco: "WB", bco_email: "wb@gmail.com", operator: "James", operator_email: "sarah@gmail.com", date_init: "22 March 2024", date_approved: "24 March 2024", status: "Picked Up", date_picked: "23 March 2024", time: "10:00am" },
-//   { vesselId: "2", containerId: "US-45", origin: "USA", bco: "RT", bco_email: "wb@gmail.com", operator: "James", operator_email: "daniel@gmail.com", date_init: "23 March 2024", date_approved: "23 March 2024", status: "Picked Up", date_picked: "24 March 2024", time: "3:45pm" },
-//   { vesselId: "3", containerId: "M-35", origin: "Mexico", bco: "WB", bco_email: "wb@gmail.com", operator: "Sarah", operator_email: "emma@gmail.com", date_init: "22 March 2024", date_approved: "23 March 2024", status: "Picked Up", date_picked: "24 March 2024", time: "1:00pm" },
-//   { vesselId: "4", containerId: "CH-44", origin: "China", bco: "LK", bco_email: "lk@gmail.com", operator: "Emma", operator_email: "james@gmail.com", date_init: "2 March 2024", date_approved: "23 March 2024", status: "Picked Up", date_picked: "23 March 2024", time: "11:30am" }
-// ];
 
 const BCO_OngoingData = [
   { port:"NORfolk", terminalId:"N-10", vesselId: "1", terminal_op:"James Vince", containerId: "HMO-22", origin: "Canada", bco: "WB", bco_email: "wb@gmail.com", operator: "James", operator_email: "sarah@gmail.com", date_init: "22 March 2024", date_approved: "24 March 2024", status: "Pending Appointment", date_picked: "23 March 2024", time: "10:00am" },
@@ -104,9 +90,27 @@ const selectionSetTransportation_CompletedData = [
   'bookingTime',
 ] as const;
 
+//Define the selection of data that will be used for the table
+const selectionSetTerminal_CompletedData = [ 
+  'vesselID',
+  'containerID',
+  'origin',
+  'bcoName',
+  'bcoEmail',
+  'transopName',
+  'transopEmail',
+  'bookingDate',
+  'bookingApprovalDate',
+  'bookingStatus',
+  'bookingPickupDate',
+  'bookingTime',
+] as const;
+
 //Create a type based on your selectionSet that will be later used for the columns.tsx file of the able
 export type TransOperatorCompletedBookings = SelectionSet<Schema['Container']['type'], typeof selectionSetTransportation_CompletedData>;
 
+//Create a type based on your selectionSet that will be later used for the terminal-bookings/columns.tsx file of the able
+export type TermOperatorCompletedBookings = SelectionSet<Schema['Container']['type'], typeof selectionSetTerminal_CompletedData>;
 
 function RouteComponent() {
   const { user } = useAuthenticator();
@@ -171,7 +175,34 @@ function RouteComponent() {
   }, [userAttributes.role, userAttributes.email]);  // Updates when email changes
   
 
+  // State for Terminal Operator Completed bookings
+  const [Terminal_CompletedData, setTerminal_CompletedData] = useState<TermOperatorCompletedBookings[]>([]);
+  
+  async function fetchTermOperatorCBookingsContainers() {
+    if (userAttributes.role === 'Terminal Operator') {
+      try {
+        const { data: cargo } = await client.models.Container.list({
+          selectionSet:selectionSetTerminal_CompletedData,
+          authMode: 'apiKey',
+          filter: {
+                bookingStatus: { 
+                  eq: 'Picked Up' 
+                }
+          },
+        });
+        setTerminal_CompletedData(cargo);
+      } catch (error) {
+        console.error('Error fetching completed bookings:', error);
+      }
+    }
+  }
 
+  // Fetch containers on initial mount and when role changes
+  useEffect(() => {
+    if (userAttributes.role) {
+      fetchTermOperatorCBookingsContainers();
+    }
+  }, [userAttributes.role]);
 
   // State for BCO upcoming bookings
   const [bcoUpcomingBookings, setBcoUpcomingBookings] = useState<BCOUpcomingBookings[]>([]);
