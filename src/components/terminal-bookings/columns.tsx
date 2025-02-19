@@ -53,26 +53,30 @@ export const columns = (status: string): ColumnDef<any>[] => {
 
   if (status === "Ongoing") {
     baseColumns.push({
-      accessorKey: "status",
-      header: " Status",
+      accessorKey: "bookingStatus",
+      header: () => <div className="text-center min-w-[150px]">Status</div>,
+     // Adjust width as needed
       cell: ({ row }) => {
-        const status = row.original.status; // Get status value
+        const status = row.original.bookingStatus; // Get status value
         const isLate = status === "Late"; // Check if status is "Late"
-
+  
         return (
-          <span className={`px-2 py-1 rounded-md ${isLate ? "bg-red-500 text-white" : "bg-gray-200"}`}>
+          <span className={`flex justify-center items-center px-4 py-2 rounded-md ${isLate ? "bg-red-500 text-white" : "bg-gray-600 text-white"}`}>
             {status}
           </span>
         );
       },
-    },);
-
+    });
   }
+  
 
   baseColumns.push({
     accessorKey: "flag",
     header: () => <div style={{ minWidth: "200px", textAlign: "center" }}>Flag</div>,
     cell: ({ row }) => {
+      
+
+     
       // Initialize flagged state from the row data; fallback to false if undefined.
             const [flagged, setFlagged] = useState<boolean>(row.original.flag || false)
       
@@ -94,9 +98,11 @@ export const columns = (status: string): ColumnDef<any>[] => {
             }
       
             return (
+              <div className="flex space-x-4 justify-center">
               <Button variant="ghost" onClick={handleFlagToggle} className="p-2">
                 <Flag className={flagged ? "text-red-600" : "text-gray-400"} />
               </Button>
+              </div>
             )
     },
   });
