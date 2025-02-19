@@ -15,10 +15,10 @@ export function TransportationBookingsTableUpcoming({ data, meta }: Transportati
   );
 }
 
-export function TransportationBookingsTableOngoing({ data}: TransportationBookingsTableProps) {
+export function TransportationBookingsTableOngoing({ data, meta }: TransportationBookingsTableProps) {
   return (
     <div className="container mx-auto p-10">
-      <DataTable columns={OngoingColumn()} data={data} />
+      <DataTable columns={OngoingColumn()} data={data} meta={meta}/>
     </div>
   );
 }

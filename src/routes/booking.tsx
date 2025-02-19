@@ -286,13 +286,13 @@ async function updateTransOpBooking(id: string, status: string, bookingDate?: st
       await fetchTransOpUpcoming();
     } else if (status === "Pending Booking Approval"){
       console.log("BOOKING SUBMIT (BOOKING.TSX)")
-      const { data: bookContainer } = await client.models.Container.update({
+      const { data: updatedContainerStatus } = await client.models.Container.update({
         containerID: id,
         bookingStatus: status,
         bookingDate: bookingDate,
         bookingTime: bookingTime,
       })
-      console.log('Updated container status:', bookContainer); 
+      console.log('Updated container status:', updatedContainerStatus); 
       await fetchTransOpOngoing();
     } else {
       const { data: updatedContainerStatus } = await client.models.Container.update({
