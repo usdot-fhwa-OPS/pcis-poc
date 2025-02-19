@@ -31,7 +31,7 @@ export const columns = (): ColumnDef<any>[] => {
     { accessorKey: "origin", header: "Origin" },
     { accessorKey: "bcoName", header: "BCO" },
     { accessorKey: "bcoEmail", header: "BCO Email" },
-    { accessorKey: "transopName", header: "Terminal  Operator" },
+    { accessorKey: "transopName", header: "Transportation Operator" },
     { accessorKey: "transopEmail", header: "Transportation Operator Email" },
     { accessorKey: "assignmentDate", header: "Date Requested" },
     {
