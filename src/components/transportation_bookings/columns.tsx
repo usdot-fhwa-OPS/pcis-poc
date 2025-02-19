@@ -165,7 +165,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
           return !!date && !!time
         }
         const handleBooking = () => {
-          (table.options.meta as TransOpDataTableMeta)?.updateTransOpBooking(row.original.containerID, "Pending Booking Approval", String(date), time ?? "")
+          (table.options.meta as TransOpDataTableMeta)?.updateTransOpBooking(row.original.containerID, "Pending Booking Approval", String(format(date!, "MM/dd/yyyy")), time ?? "")
           setIsDialogOpen(false) // Close dialog after submission
         }
 
@@ -260,7 +260,6 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
                   disabled={!date || !time} 
                   variant={!date || !time ? "outline" : "default"}
                   onClick={handleBooking}
-                  //onClick={() => {(table.options.meta as TransOpDataTableMeta)?.updateTransOpBooking(row.original.containerID, "Pending Booking Approval", String(date), time ?? "")}}
                 >
                   Book
                 </Button>
