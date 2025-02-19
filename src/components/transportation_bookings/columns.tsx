@@ -3,13 +3,8 @@ import { Button } from "../ui/button.tsx";
 import { useState } from "react";
 import { Flag } from "lucide-react";
 import { Checkbox } from "../ui/checkbox.tsx"
-
-// import { generateClient } from 'aws-amplify/data';
-// import type { Schema } from '../../../amplify/data/resource';
 import { TransOperatorCompletedBookings } from "../../routes/booking"
 
-
-// const client = generateClient<Schema>();
 
 export const columns = (): ColumnDef<any>[] => {
   const baseColumns: ColumnDef<any>[] = [
@@ -143,39 +138,6 @@ export const CompletedColumn = (): ColumnDef<any>[] => {
   ];
   return baseColumns;
 };
-
-// export const CompletedColumn = (): ColumnDef<any>[] => {
-//   const baseColumns: ColumnDef<any>[] = [
-//     { accessorKey: "vesselId", header: "Vessel ID" },
-//     { accessorKey: "containerId", header: "Container ID" },
-//     { accessorKey: "origin", header: "Origin" },
-//     { accessorKey: "bco", header: "BCO" },
-//     { accessorKey: "bco_email", header: "BCO Email" },
-//     { accessorKey: "operator", header: "Terminal  Operator" },
-//     { accessorKey: "operator_email", header: "Transportation Operator Email" },
-//     {
-//       accessorKey: "status",
-//       header: "Booking Status",
-//       cell: ({ row }) => {
-//         const status = row.original.status; // Get status value
-//         const isLate = status === "Late"; // Check if status is "Late"
-
-//         return (
-//           <span className={`px-2 py-1 rounded-md ${isLate ? "bg-red-500 text-white" : "font-bold text-black bg-gray-300"} text-center block`}>
-//             {status}
-//           </span>
-//         );
-
-//       },
-//     },
-//     { accessorKey: "date_init", header: "Date Initiated" },
-//     { accessorKey: "date_approved", header: "Date Approved" },
-//     { accessorKey: "date_picked", header: "Date Picked Up" },
-    
-
-//   ];
-//   return baseColumns;
-// };
 
 export const OngoingColumn = (): ColumnDef<any>[] => {
   const baseColumns1: ColumnDef<any>[] = [
