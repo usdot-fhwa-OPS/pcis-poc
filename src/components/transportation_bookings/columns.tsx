@@ -205,7 +205,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
         return row.original.bookingStatus === "Pending Booking" ? (
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
-              <Button variant="outline" onClick={() => setIsDialogOpen(true)}>Book</Button>
+              <Button variant="outline" onClick={() => setIsDialogOpen(true)} disabled={row.original.containerStatus === "On Ship"}>Book</Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
               <DialogHeader>

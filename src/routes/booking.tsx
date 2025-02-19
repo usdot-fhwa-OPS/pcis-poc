@@ -23,7 +23,7 @@ const selectionSetTransOpUpcomingBookings = ['vesselID', 'containerID', 'origin'
 //Create a type based on your selectionSet that will be later used for the columns.tsx file of the able
 export type TransOpUpcomingBookings = SelectionSet<Schema['Container']['type'], typeof selectionSetTransOpUpcomingBookings>
 
-const selectionSetTransOpOngoingBookings = ['vesselID', 'containerID', 'origin', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail', 'bookingDate', 'bookingTime', 'bookingStatus', 'flag'] as const;
+const selectionSetTransOpOngoingBookings = ['vesselID', 'containerID', 'origin', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail', 'bookingDate', 'bookingTime', 'bookingStatus', 'flag', 'containerStatus'] as const;
 export type TransOpOngoingBookings = SelectionSet<Schema['Container']['type'], typeof selectionSetTransOpOngoingBookings>
 
 const selectionSetTerminalOPUpcoming = ['vesselID', 'containerID', 'origin', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail','bookingDate','bookingTime','bookingStatus', 'flag'] as const;
