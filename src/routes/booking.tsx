@@ -212,24 +212,7 @@ function RouteComponent() {
   useEffect(() => {
     fetchTransOpOngoing();
   }, [userAttributes.role]);
-  
-
-  // async function bookContainerPickUp(containerID: string, bookingStatus: string, bookingDate: string, bookingTime: string) {
-  //   try {
-  //     console.log("ENTERING")
-  //     const { data: bookContainer } = await client.models.Container.update({
-  //       containerID: containerID,
-  //       bookingStatus: bookingStatus,
-  //       bookingDate: bookingDate,
-  //       bookingTime: bookingTime,
-  //     })
-  //     console.log('Updated container status:', bookContainer); 
-  //     await fetchTransOpOngoing();
-  //   } catch (error) {
-  //     console.error('Error updating container status:', error);
-  //   }
-  // }
-  
+   
   // Update container then refetch containers
   async function assignTransOp(containerID: string, newName: string, newEmail: string, bookingStatus: string) {
     try {
@@ -248,9 +231,6 @@ function RouteComponent() {
     }
   }
 
-  // Separate return statements for each role
-
-  //getting Data
   const [terminalopBookings, setData] = useState<TerminalOPUpcomingBookings[]>([])
 
   //Fetch the data from the database
@@ -329,9 +309,6 @@ async function updateBooking(id: string, status: string) {
     console.error("Error updating flag:", error);
   }
 }
-
-
-
 
   if (userAttributes.role === "Terminal Operator") {
     return (
