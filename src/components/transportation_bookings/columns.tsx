@@ -166,7 +166,6 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
         }
         const handleBooking = () => {
           (table.options.meta as TransOpDataTableMeta)?.updateTransOpBooking(row.original.containerID, "Pending Booking Approval", String(date), time ?? "")
-          console.log("HANDLE BOOKING COLUMNS.TSX")
           setIsDialogOpen(false) // Close dialog after submission
         }
 
