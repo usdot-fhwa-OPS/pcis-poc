@@ -212,13 +212,13 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
             <TooltipProvider>
-              <Tooltip>
+              <Tooltip delayDuration={300}>
                 <TooltipTrigger>
                   <Button variant="outline" onClick={() => setIsDialogOpen(true)} disabled={row.original.containerStatus === "On Ship"}>Book</Button>
                 </TooltipTrigger>
                 {row.original.containerStatus === "On Ship" && (
                   <TooltipContent>
-                    <p>Cannot book while Container is still on ship</p>
+                    <p>Container still on ship. Cannot book.</p>
                   </TooltipContent>
                 )}
               </Tooltip>
