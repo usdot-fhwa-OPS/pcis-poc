@@ -4,8 +4,8 @@ import { useState } from "react";
 import { Flag } from "lucide-react";
 import { Checkbox } from "../ui/checkbox.tsx"
 
-import { generateClient } from 'aws-amplify/data';
-import type { Schema } from '../../../amplify/data/resource';
+// import { generateClient } from 'aws-amplify/data';
+// import type { Schema } from '../../../amplify/data/resource';
 import { TransOperatorCompletedBookings } from "../../routes/booking"
 
 
