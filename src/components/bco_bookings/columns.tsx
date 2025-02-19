@@ -2,7 +2,6 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "../ui/button.tsx";
 import { useState } from "react";
 import { Flag } from "lucide-react";
-import { BCOUpcomingBookings } from "../../routes/booking.tsx";
 import { Label } from "../ui/label"
 import { Input } from "../ui/input"
 import { BCODataTableMeta } from "./data-table.tsx";
@@ -25,7 +24,7 @@ import {
 } from "../ui/dialog"  
 
 export const columns = (): ColumnDef<any>[] => {
-  const baseColumns: ColumnDef<BCOUpcomingBookings>[] = [
+  const baseColumns: ColumnDef<any>[] = [
     { accessorKey: "vesselID", header: "Vessel ID" },
     { accessorKey: "containerID", header: "Container ID" },
     { accessorKey: "origin", header: "Origin" },
@@ -218,21 +217,22 @@ baseColumns.push({
 
 export const CompletedColumn = (): ColumnDef<any>[] => {
   const baseColumns: ColumnDef<any>[] = [
-    { accessorKey: "port", header: "Port" },
-    { accessorKey: "terminalId", header: "Terminal ID" },
-    { accessorKey: "vesselId", header: "Vessel ID" },
-    { accessorKey: "containerId", header: "Container ID" },
+    // { accessorKey: "port", header: "Port" },
+    //{ accessorKey: "terminalId", header: "Terminal ID" },
+    { accessorKey: "vesselID", header: "Vessel ID" },
+    { accessorKey: "containerID", header: "Container ID" },
     { accessorKey: "origin", header: "Origin" },
-    { accessorKey: "bco", header: "BCO" },
-    { accessorKey: "bco_email", header: "BCO Email" },
-    { accessorKey: "operator", header: "Assigned Transportation  Operator" },
-    { accessorKey: "terminal_op", header: "Assigned Terminal Operator" },
-    { accessorKey: "operator_email", header: "Transportation Operator Email" },
+    { accessorKey: "destination", header: "Destination" },
+    { accessorKey: "bcoName", header: "BCO" },
+    { accessorKey: "bcoEmail", header: "BCO Email" },
+  //  { accessorKey: "termopName", header: "Assigned Terminal Operator" },
+    { accessorKey: "transopName", header: "Transportation Operator Name" },
+    { accessorKey: "transopEmail", header: "Transportation Operator Email" },
     {
       accessorKey: "to_status",
       header: "Booking Status",
       cell: ({ row }) => {
-        const status = row.original.status; // Get status value
+        const status = row.original.bookingStatus; // Get status value
     
         return (
           <span className="px-2 py-1 rounded-md bg-gray-300 text-black font-bold text-center block">
@@ -242,19 +242,21 @@ export const CompletedColumn = (): ColumnDef<any>[] => {
       }
     },
     
-    { accessorKey: "date_init", header: "Date Initiated" },
-    { accessorKey: "date_approved", header: "Date Approved" },
-    { accessorKey: "date_picked", header: "Date Picked Up" },
+    { accessorKey: "bookingDate", header: "Date Initiated" },
+    { accessorKey: "bookingApprovalDate", header: "Date Approved" },
+    { accessorKey: "bookingPickupDate", header: "Date Picked Up" },
   ]
   return baseColumns;
 };
 
 export const OngoingColumn = (): ColumnDef<any>[] => {
   const baseColumns1: ColumnDef<any>[] = [
-    { accessorKey: "port", header: "Port" },
-    { accessorKey: "terminalId", header: "Terminal ID" },
+    // { accessorKey: "port", header: "Port" },
+    // { accessorKey: "terminalId", header: "Terminal ID" },
     { accessorKey: "vesselId", header: "Vessel ID" },
     { accessorKey: "containerId", header: "Container ID" },
+    { accessorKey: "origin", header: "Origin" },
+    { accessorKey: "destination", header: "Destination" },
     { accessorKey: "bco", header: "BCO" },
     { accessorKey: "bco_email", header: "BCO Email" },
     { accessorKey: "operator", header: "Assigned Transportation  Operator" },
