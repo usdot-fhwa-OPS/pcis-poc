@@ -4,7 +4,12 @@ import { useState } from "react";
 import { Flag } from "lucide-react";
 import { Checkbox } from "../ui/checkbox.tsx"
 
+import { generateClient } from 'aws-amplify/data';
+import type { Schema } from '../../../amplify/data/resource';
+import { TransOperatorCompletedBookings } from "../../routes/booking"
 
+
+// const client = generateClient<Schema>();
 
 export const columns = (): ColumnDef<any>[] => {
   const baseColumns: ColumnDef<any>[] = [
@@ -75,23 +80,50 @@ baseColumns.push({
 };
 
 
-
 export const CompletedColumn = (): ColumnDef<any>[] => {
-  const baseColumns: ColumnDef<any>[] = [
-    { accessorKey: "vesselId", header: "Vessel ID" },
-    { accessorKey: "containerId", header: "Container ID" },
-    { accessorKey: "origin", header: "Origin" },
-    { accessorKey: "bco", header: "BCO" },
-    { accessorKey: "bco_email", header: "BCO Email" },
-    { accessorKey: "operator", header: "Terminal  Operator" },
-    { accessorKey: "operator_email", header: "Transportation Operator Email" },
+  const baseColumns: ColumnDef<TransOperatorCompletedBookings>[] = [
     {
-      accessorKey: "status",
-      header: "Booking Status",
+      accessorKey: "vesselID",
+      header: () => <div className="text-center">Vessel ID</div>,
+    },
+    {
+      accessorKey: "containerID",
+      header: () => <div className="text-center">Container ID</div>,
+    },
+    {
+      accessorKey: "origin",
+      header: () => <div className="text-center">Origin</div>,
+    },
+    {
+      accessorKey: "bcoName",
+      header: () => <div className="text-center">BCO</div>,
+    },
+    {
+      accessorKey: "bcoEmail",
+      header: () => <div className="text-center">BCO Email</div>,
+    },
+    {
+      accessorKey: "transopName",
+      header: () => <div className="text-center">Transportation Operator</div>,
+    },
+    {
+      accessorKey: "transopEmail",
+      header: () => <div className="text-center">Transportation Operator Email</div>,
+    },
+    {
+      accessorKey: "bookingDate",
+      header: () => <div className="text-center">Booking Date</div>,
+    },
+    {
+      accessorKey: "bookingApprovalDate",
+      header: () => <div className="text-center">Booking Approval Date</div>,
+    },
+    {
+      accessorKey: "bookingStatus",
+      header: () => <div className="text-center">Booking Status</div>,
       cell: ({ row }) => {
-        const status = row.original.status; // Get status value
+        const status = row.original.bookingStatus; // Get status value
         const isLate = status === "Late"; // Check if status is "Late"
-
         return (
           <span className={`px-2 py-1 rounded-md ${isLate ? "bg-red-500 text-white" : "font-bold text-black bg-gray-300"} text-center block`}>
             {status}
@@ -100,14 +132,50 @@ export const CompletedColumn = (): ColumnDef<any>[] => {
 
       },
     },
-    { accessorKey: "date_init", header: "Date Initiated" },
-    { accessorKey: "date_approved", header: "Date Approved" },
-    { accessorKey: "date_picked", header: "Date Picked Up" },
-    
-
+    {
+      accessorKey: "bookingPickupDate",
+      header: () => <div className="text-center">Booking Pickup Date</div>,
+    },
+    {
+      accessorKey: "bookingTime",
+      header: () => <div className="text-center">Booking Time</div>,
+    },
   ];
   return baseColumns;
 };
+
+// export const CompletedColumn = (): ColumnDef<any>[] => {
+//   const baseColumns: ColumnDef<any>[] = [
+//     { accessorKey: "vesselId", header: "Vessel ID" },
+//     { accessorKey: "containerId", header: "Container ID" },
+//     { accessorKey: "origin", header: "Origin" },
+//     { accessorKey: "bco", header: "BCO" },
+//     { accessorKey: "bco_email", header: "BCO Email" },
+//     { accessorKey: "operator", header: "Terminal  Operator" },
+//     { accessorKey: "operator_email", header: "Transportation Operator Email" },
+//     {
+//       accessorKey: "status",
+//       header: "Booking Status",
+//       cell: ({ row }) => {
+//         const status = row.original.status; // Get status value
+//         const isLate = status === "Late"; // Check if status is "Late"
+
+//         return (
+//           <span className={`px-2 py-1 rounded-md ${isLate ? "bg-red-500 text-white" : "font-bold text-black bg-gray-300"} text-center block`}>
+//             {status}
+//           </span>
+//         );
+
+//       },
+//     },
+//     { accessorKey: "date_init", header: "Date Initiated" },
+//     { accessorKey: "date_approved", header: "Date Approved" },
+//     { accessorKey: "date_picked", header: "Date Picked Up" },
+    
+
+//   ];
+//   return baseColumns;
+// };
 
 export const OngoingColumn = (): ColumnDef<any>[] => {
   const baseColumns1: ColumnDef<any>[] = [
@@ -181,11 +249,6 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
     
 
   ];
-
-
-
-
-
 
 
 // Clickable Flag Component
