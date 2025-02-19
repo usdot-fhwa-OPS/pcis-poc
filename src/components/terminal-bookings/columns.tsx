@@ -125,7 +125,7 @@ export const CompletedColumn = (): ColumnDef<any>[] => {
     { accessorKey: "date_approved", header: "Date Approved" },
     { accessorKey: "date_picked", header: "Date Picked Up" },
     {
-      accessorKey: "status",
+      accessorKey: "bookingStatus",
       header: "Booking Status",
       cell: ({ row }) => {
         const status = row.original.status; // Get status value
