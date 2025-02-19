@@ -23,7 +23,6 @@ import type { Schema } from '../../../amplify/data/resource';
 import { TransOpDataTableMeta } from "./data-table.tsx";
 
 const client = generateClient<Schema>();
-import { Checkbox } from "../ui/checkbox.tsx"
 import { TransOperatorCompletedBookings } from "../../routes/booking"
 
 
