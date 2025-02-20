@@ -309,9 +309,6 @@ function RouteComponent() {
                   {
                     bookingStatus: { eq: 'Picked Up' }
                   },
-                  {
-                    bookingStatus: { eq: 'Late for Pick Up' }
-                  }
                 ]
               }
             ]
