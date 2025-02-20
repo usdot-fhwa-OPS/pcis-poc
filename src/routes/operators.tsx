@@ -1,12 +1,24 @@
+"use client"
 import { createFileRoute } from '@tanstack/react-router'
 import { User, columns } from "../components/users/columns"
 import { DataTable } from "../components/users/users-table"
 import { useEffect, useState } from "react"
-
+import { CognitoIdentityProviderClient, ListUsersCommand } from "@aws-sdk/client-cognito-identity-provider"
 
 export const Route = createFileRoute('/operators')({
   component: Operators,
 })
+const client = new CognitoIdentityProviderClient(); 
+
+const input = { // ListUsersRequest
+  UserPoolId: "us-east-1_ODcx7VXFP", // required
+  AttributesToGet: [ // SearchedAttributeNamesListType
+    "STRING_VALUE",
+  ],
+};
+
+const command = new ListUsersCommand(input);
+const response = await client.send(command);
 
 export default function Operators() {
   const [data, setData] = useState<User[]>([])
@@ -14,6 +26,7 @@ export default function Operators() {
 
   useEffect(() => {
     async function fetchData() {
+      console.log(response)
       const result = await getData()
       setData(result)
       setLoading(false)
