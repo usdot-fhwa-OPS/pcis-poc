@@ -398,7 +398,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
         return (
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
-            <Button variant="ghost" className="p-2" onClick={() => setIsDialogOpen(true)} disabled={row.original.containerStatus !== "Pending Pick Up"}>
+            <Button variant="ghost" className="p-2" onClick={() => setIsDialogOpen(true)} disabled={row.original.bookingStatus !== "Pending Pick Up"}>
               <Pencil />
             </Button>
           </DialogTrigger>
