@@ -326,7 +326,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
       id: "changepickupstatus",
       header: "Mark as Picked Up",
       cell: ({ row, table}) => {
-        const [isChecked, setIsChecked] = useState(false);
+        const [isChecked, setIsChecked] = useState(row.original.bookingStatus === "Picked Up");
   
         const handlePickUp = () => {
           (table.options.meta as TransOpDataTableMeta)?.updateTransOpBooking(row.original.containerID, "Picked Up", new Date().toLocaleDateString('en-US'))
