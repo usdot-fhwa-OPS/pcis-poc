@@ -13,6 +13,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "../ui/tooltip"
+import { toast } from "sonner"
 import { format } from "date-fns"
 import { cn } from "../../lib/utils"
 import { TransOpUpcomingBookings, TransOpOngoingBookings } from "../../routes/booking.tsx";
@@ -204,9 +205,15 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
         const isDateTimeSelected = (): boolean => {
           return !!date && !!time
         }
-        const handleBooking = () => {
-          (table.options.meta as TransOpDataTableMeta)?.updateTransOpBooking(row.original.containerID, "Pending Booking Approval", String(format(date!, "MM/dd/yyyy")), time ?? "")
-          setIsDialogOpen(false) // Close dialog after submission
+        const handleBooking = async () => {
+          try {
+            (table.options.meta as TransOpDataTableMeta)?.updateTransOpBooking(row.original.containerID, "Pending Booking Approval", String(format(date!, "MM/dd/yyyy")), time ?? "")
+            setIsDialogOpen(false)
+            toast.success("Booking has been submitted");
+          } catch {
+            console.error("Error submitting booking");
+            toast.error("Error submitting booking");
+          }
         }
 
         const timeOptions = [
@@ -329,8 +336,13 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
         const [isChecked, setIsChecked] = useState<boolean>(row.original.bookingStatus === "Picked Up");
   
         const handlePickUp = async () => {
-          (table.options.meta as TransOpDataTableMeta)?.updateTransOpBooking(row.original.containerID, "Picked Up", new Date().toLocaleDateString('en-US'))
-          setIsChecked(!isChecked)
+          try {
+            (table.options.meta as TransOpDataTableMeta)?.updateTransOpBooking(row.original.containerID, "Picked Up", new Date().toLocaleDateString('en-US'))
+            setIsChecked(!isChecked)
+          } catch {
+            console.error("Error updating booking status");
+            toast.error("Error updating booking status");
+          }
         }
 
         return (
@@ -358,8 +370,14 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
         }
         
         const handleBooking = () => {
-          (table.options.meta as TransOpDataTableMeta)?.updateTransOpBooking(row.original.containerID, "Pickup Modification Requested", String(format(date!, "MM/dd/yyyy")), time ?? "")
-          setIsDialogOpen(false) // Close dialog after submission
+          try {
+            (table.options.meta as TransOpDataTableMeta)?.updateTransOpBooking(row.original.containerID, "Pickup Modification Requested", String(format(date!, "MM/dd/yyyy")), time ?? "")
+            setIsDialogOpen(false) // Close dialog after submission
+            toast.success("Modification has been submitted");
+          } catch {
+            console.error("Error submitting modification");
+            toast.error("Error submitting modification");
+          }
         }
 
         const timeOptions = [
