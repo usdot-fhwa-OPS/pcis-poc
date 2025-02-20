@@ -405,8 +405,8 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
           <DialogContent className="sm:max-w-[425px]">
             <DialogHeader>
               <DialogTitle>Modify Container Pick-Up Booking</DialogTitle>
-              <div className="text-sm text-muted-foreground">
-                {`Original Booking Date: ${row.original.bookingDate} | Original Booking Time: ${row.original.bookingTime}`}
+              <div className="text-sm">
+                {`Original Booking: ${row.original.bookingDate} at  ${row.original.bookingTime}`}
               </div>
               <div className="text-sm text-muted-foreground">
                 {`Vessel ID: ${row.original.vesselID} | Container ID: ${row.original.containerID} | Origin: ${row.original.origin} | BCO: ${row.original.bcoName} | BCO Email: ${row.original.bcoEmail}`}
