@@ -425,6 +425,15 @@ async function updateTransOpBooking(id: string, status: string, bookingDate?: st
       })
       console.log('Updated container status:', updatedContainerStatus); 
       await fetchTransOpOngoing();
+    } else if(status === "Booking Modification Requested") {
+      const { data: updatedContainerStatus } = await client.models.Container.update({
+        containerID: id,
+        bookingStatus: status,
+        modifiedBookingDate: bookingDate,
+        modifiedBookingTime: bookingTime,
+      })
+      console.log('Updated container status:', updatedContainerStatus); 
+      await fetchTransOpOngoing();
     } else {
       const { data: updatedContainerStatus } = await client.models.Container.update({
         containerID: id,
