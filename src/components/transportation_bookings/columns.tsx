@@ -330,12 +330,12 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
   
         const handlePickUp = () => {
           (table.options.meta as TransOpDataTableMeta)?.updateTransOpBooking(row.original.containerID, "Picked Up", new Date().toLocaleDateString('en-US'))
-          setIsChecked(!isChecked) // Close dialog after submission
+          setIsChecked(!isChecked)
         }
 
         return (
           <Checkbox
-            disabled={row.original.bookingStatus !== "Pending Booking Approval" || row.original.containerStatus === "Picked Up"}
+            disabled={row.original.bookingStatus !== "Pending Pick Up"}
             checked={isChecked}
             onCheckedChange={handlePickUp}
           />
