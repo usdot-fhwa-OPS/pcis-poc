@@ -1,7 +1,7 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "../ui/button.tsx";
 import { useState } from "react";
-import { Flag, CalendarIcon, Clock } from "lucide-react";
+import { Flag, CalendarIcon, Clock, Pencil} from "lucide-react";
 //import { Checkbox } from "../ui/checkbox.tsx"
 import { Calendar } from "../ui/calendar"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog"
@@ -344,7 +344,23 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
       enableSorting: false,
       enableColumnFilter: false,
     },
-   
+    {
+      accessorKey: "modifyBooking",
+      header: "Modify Booking",
+      cell: ({ row }) => {
+        const [isModifiable, setIsModifiable] = useState<boolean>(row.original.bookingStatus === "Pending Pick Up");
+
+        const handleModify = async () => {
+          setIsModifiable(!isModifiable);
+        }
+
+        return (
+          <Button variant="ghost" className="p-2" disabled={!isModifiable} onClick={handleModify}>
+            <Pencil />
+          </Button>
+        )
+      },
+    },
     {
       accessorKey: "contact_bco",
       header: "Contact BCO",
