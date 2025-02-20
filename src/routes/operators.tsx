@@ -8,21 +8,23 @@ import { CognitoIdentityProviderClient, ListUsersCommand } from "@aws-sdk/client
 export const Route = createFileRoute('/operators')({
   component: Operators,
 })
-const client = new CognitoIdentityProviderClient(); 
 
-const input = { // ListUsersRequest
-  UserPoolId: "us-east-1_ODcx7VXFP", // required
-  AttributesToGet: [ // SearchedAttributeNamesListType
-    "STRING_VALUE",
-  ],
-};
 
-const command = new ListUsersCommand(input);
-const response = await client.send(command);
-
-export default function Operators() {
+export default async function Operators() {
   const [data, setData] = useState<User[]>([])
   const [loading, setLoading] = useState(true)
+
+  const client = new CognitoIdentityProviderClient(); 
+
+  const input = { // ListUsersRequest
+    UserPoolId: "us-east-1_ODcx7VXFP", // required
+    AttributesToGet: [ // SearchedAttributeNamesListType
+      "STRING_VALUE",
+    ],
+  };
+
+  const command = new ListUsersCommand(input);
+  const response = await client.send(command);
 
   useEffect(() => {
     async function fetchData() {
