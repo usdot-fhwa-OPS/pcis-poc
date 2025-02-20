@@ -24,6 +24,7 @@ import { TransOpDataTableMeta } from "./data-table.tsx";
 
 const client = generateClient<Schema>();
 import { TransOperatorCompletedBookings } from "../../routes/booking"
+import { Checkbox } from "../ui/checkbox.tsx";
 
 
 export const columns = (): ColumnDef<any>[] => {
@@ -321,31 +322,28 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
           );
       },
     },
-    // {
-    //   id: "changepickupstatus",
-    //   header: "Mark as Picked Up",
-    //   cell: ({ row }) => {
-    //     const [isChecked, setIsChecked] = useState(row.original.changepickupstatus === "checked");
+    {
+      id: "changepickupstatus",
+      header: "Mark as Picked Up",
+      cell: ({ row, table}) => {
+        const [isChecked, setIsChecked] = useState(false);
   
-    //     return (
-    //       <Checkbox
-    //         checked={isChecked}
-    //         onCheckedChange={() => {
-              
-    //           if (isChecked)
-    //             setIsChecked(false); // will add API calls here to chnage status 
-    //           else
-    //           setIsChecked(true);  //will add API calls here to chnage status
+        const handlePickUp = () => {
+          (table.options.meta as TransOpDataTableMeta)?.updateTransOpBooking(row.original.containerID, "Picked Up", new Date().toLocaleDateString('en-US'))
+          setIsChecked(!isChecked) // Close dialog after submission
+        }
 
-    //             console.log(`Checkbox clicked for row ${row.original.id}`);
-              
-    //         }}
-    //       />
-    //     );
-    //   },
-    //   enableSorting: false,
-    //   enableColumnFilter: false,
-    // },
+        return (
+          <Checkbox
+            disabled={row.original.bookingStatus !== "Pending Booking Approval" || row.original.containerStatus === "Picked Up"}
+            checked={isChecked}
+            onCheckedChange={handlePickUp}
+          />
+        );
+      },
+      enableSorting: false,
+      enableColumnFilter: false,
+    },
    
     {
       accessorKey: "contact_bco",

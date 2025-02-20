@@ -447,7 +447,8 @@ async function updateBooking(id: string, status: string) {
     } else {
       const { data: updatedContainerStatus } = await client.models.Container.update({
         containerID: id,
-        bookingStatus: status
+        bookingStatus: status,
+        bookingApprovalDate: new Date().toLocaleDateString('en-US')
       });
       console.log("Updated flag:", updatedContainerStatus);
       await fetchterminal_operator_requested();
