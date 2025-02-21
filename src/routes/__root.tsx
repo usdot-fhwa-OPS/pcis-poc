@@ -7,6 +7,7 @@ import { SidebarProvider } from "../components/ui/sidebar";
 import { AppSidebar } from "../components/app-sidebar/app-sidebar"
 import UserButton from '../components/userButton/userButton';
 import '../index.css';
+import { Toaster } from 'sonner';
 
 interface UserAttributes {
   given_name?: string;
@@ -59,6 +60,7 @@ function RootComponent() {
         <SidebarProvider>
             <AppSidebar />
               <div className="flex-1">
+                <Toaster position="bottom-right" />
                 <UserButton fullName={userAttributes.fullName} role={userAttributes.role} />
                 <Outlet />
               </div>
