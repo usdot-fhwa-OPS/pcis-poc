@@ -287,7 +287,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
           <a
             href={`mailto:${email}?subject=Inquiry%20About%20Cargo&body=Hello%20${row.original.transopName},`}
           >
-            <Button variant="outline">Contact</Button>
+            <Button variant="outline" className="bg-blue-500 text-white hover:bg-blue-600">Contact</Button>
           </a>
         )
       },
