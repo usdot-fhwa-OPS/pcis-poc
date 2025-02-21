@@ -5,6 +5,7 @@ import { Flag } from "lucide-react";
 import {TerminalOperatorDataTableMeta} from './data-table.tsx'
 import { generateClient } from 'aws-amplify/data';
 import type { Schema } from '../../../amplify/data/resource';
+import { TermOperatorCompletedBookings } from "../../routes/booking"
 
 const client = generateClient<Schema>();
 export const columns = (status: string): ColumnDef<any>[] => {
@@ -53,26 +54,30 @@ export const columns = (status: string): ColumnDef<any>[] => {
 
   if (status === "Ongoing") {
     baseColumns.push({
-      accessorKey: "status",
-      header: " Status",
+      accessorKey: "bookingStatus",
+      header: () => <div className="text-center min-w-[150px]">Status</div>,
+     // Adjust width as needed
       cell: ({ row }) => {
-        const status = row.original.status; // Get status value
+        const status = row.original.bookingStatus; // Get status value
         const isLate = status === "Late"; // Check if status is "Late"
-
+  
         return (
-          <span className={`px-2 py-1 rounded-md ${isLate ? "bg-red-500 text-white" : "bg-gray-200"}`}>
+          <span className={`flex justify-center items-center px-4 py-2 rounded-md ${isLate ? "bg-red-500 text-white" : "bg-gray-600 text-white"}`}>
             {status}
           </span>
         );
       },
-    },);
-
+    });
   }
+  
 
   baseColumns.push({
     accessorKey: "flag",
     header: () => <div style={{ minWidth: "200px", textAlign: "center" }}>Flag</div>,
     cell: ({ row }) => {
+      
+
+     
       // Initialize flagged state from the row data; fallback to false if undefined.
             const [flagged, setFlagged] = useState<boolean>(row.original.flag || false)
       
@@ -94,9 +99,11 @@ export const columns = (status: string): ColumnDef<any>[] => {
             }
       
             return (
+              <div className="flex space-x-4 justify-center">
               <Button variant="ghost" onClick={handleFlagToggle} className="p-2">
                 <Flag className={flagged ? "text-red-600" : "text-gray-400"} />
               </Button>
+              </div>
             )
     },
   });
@@ -104,25 +111,49 @@ export const columns = (status: string): ColumnDef<any>[] => {
   return baseColumns;
 };
 
-
-
 export const CompletedColumn = (): ColumnDef<any>[] => {
-  const baseColumns1: ColumnDef<any>[] = [
-    { accessorKey: "vesselID", header: "Vessel ID" },
-    { accessorKey: "containerID", header: "Container ID" },
-    { accessorKey: "origin", header: "Origin" },
-    { accessorKey: "bcoName", header: "BCO" },
-    { accessorKey: "bcoEmail", header: "BCO Email" },
-    { accessorKey: "transopName", header: "Transportation Operator" },
-    { accessorKey: "transopEmail", header: "Transportation Operator Email" },
-    { accessorKey: "date_init", header: "Date Initiated" },
-    { accessorKey: "date_approved", header: "Date Approved" },
-    { accessorKey: "date_picked", header: "Date Picked Up" },
+  const baseColumns1: ColumnDef<TermOperatorCompletedBookings>[] = [
     {
-      accessorKey: "status",
-      header: "Booking Status",
+      accessorKey: "vesselID",
+      header: () => <div className="text-center">Vessel ID</div>,
+    },
+    {
+      accessorKey: "containerID",
+      header: () => <div className="text-center">Container ID</div>,
+    },
+    {
+      accessorKey: "origin",
+      header: () => <div className="text-center">Origin</div>,
+    },
+    {
+      accessorKey: "bcoName",
+      header: () => <div className="text-center">BCO</div>,
+    },
+    {
+      accessorKey: "bcoEmail",
+      header: () => <div className="text-center">BCO Email</div>,
+    },
+    {
+      accessorKey: "transopName",
+      header: () => <div className="text-center">Transportation Operator</div>,
+    },
+    {
+      accessorKey: "transopEmail",
+      header: () => <div className="text-center">Transportation Operator Email</div>,
+    },
+    {
+      accessorKey: "bookingDate",
+      header: () => <div className="text-center">Booking Date</div>,
+    },
+    {
+      accessorKey: "bookingApprovalDate",
+      header: () => <div className="text-center">Booking Approval Date</div>,
+    },
+    {
+      accessorKey: "bookingStatus",
+      header: () => <div className="text-center">Booking Status</div>,
       cell: ({ row }) => {
-        const status = row.original.status; // Get status value
+        const status = row.original.bookingStatus; // Get status value
         const isLate = status === "Late"; // Check if status is "Late"
 
         return (
@@ -132,40 +163,16 @@ export const CompletedColumn = (): ColumnDef<any>[] => {
         );
       },
     },
-
+    {
+      accessorKey: "bookingPickupDate",
+      header: () => <div className="text-center">Booking Pickup Date</div>,
+    },
+    {
+      accessorKey: "bookingTime",
+      header: () => <div className="text-center">Booking Time</div>,
+    },
   ];
 
-
-
- 
-
-
-
-
-// Clickable Flag Component
-const FlagComponent = ({ initialFlagged = false }) => {
-  const [flagged, setFlagged] = useState(initialFlagged);
-
-  return (
-    <Button
-      onClick={() => setFlagged(!flagged)}
-      variant="ghost"
-      className={`flex items-center space-x-2 ${flagged ? "text-red-500" : "text-gray-500"}`}
-    >
-      <Flag className={`w-5 h-5 ${flagged ? "fill-red-500 stroke-red-500" : "stroke-gray-500"}`} />
-    </Button>
-  );
-};
-
-baseColumns1.push({
-  accessorKey: "flag",
-  header: () => <div style={{ minWidth: "200px", textAlign: "center" }}>Flag</div>,
-  cell: ({ row }) => (
-    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100%" }}>
-      <FlagComponent initialFlagged={row.original.flagged} />
-    </div>
-  ),
-});
   return baseColumns1;
 };
 

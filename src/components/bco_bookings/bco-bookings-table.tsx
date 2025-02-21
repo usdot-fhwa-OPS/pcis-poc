@@ -23,10 +23,10 @@ export function BcoBookingsTableOngoing({ data,meta}: BcoBookingsTableProps) {
   );
 }
 
-  export function BcoBookingsTableCompleted({ data}: BcoBookingsTableProps) {
+  export function BcoBookingsTableCompleted({ data,meta }: BcoBookingsTableProps) {
     return (
       <div className="container mx-auto p-10">
-        <DataTable columns={CompletedColumn()} data={data} />
+        <DataTable columns={CompletedColumn()} data={data} meta={meta}/>
       </div>
     );
 

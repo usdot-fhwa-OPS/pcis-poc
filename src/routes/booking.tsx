@@ -8,30 +8,38 @@ import { fetchUserAttributes } from 'aws-amplify/auth';
 import { useEffect, useState } from "react";
 import { useAuthenticator } from "@aws-amplify/ui-react";
 
+//Three Imports needed for Amplify Data Queries and CRUD methods
+import { generateClient, SelectionSet } from 'aws-amplify/data';
 import type { Schema } from '../../amplify/data/resource';
 
 const client = generateClient<Schema>();
-
-//Three Imports needed for Amplify Data Queries and CRUD methods
-import { generateClient, SelectionSet } from 'aws-amplify/data';
-
 
 export const Route = createFileRoute('/booking')({
   component: RouteComponent,
 })
 
+//Define the selection of data that will be used for the table
+const selectionSetTransOpUpcomingBookings = ['vesselID', 'containerID', 'origin', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail', 'assignmentDate', 'bookingStatus','flag'] as const;
+//Create a type based on your selectionSet that will be later used for the columns.tsx file of the able
+export type TransOpUpcomingBookings = SelectionSet<Schema['Container']['type'], typeof selectionSetTransOpUpcomingBookings>
+
+const selectionSetTransOpOngoingBookings = ['vesselID', 'containerID', 'origin', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail', 'bookingDate', 'bookingTime', 'bookingStatus', 'flag', 'containerStatus'] as const;
+export type TransOpOngoingBookings = SelectionSet<Schema['Container']['type'], typeof selectionSetTransOpOngoingBookings>
 
 const selectionSetTerminalOPUpcoming = ['vesselID', 'containerID', 'origin', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail','bookingDate','bookingTime','bookingStatus', 'flag'] as const;
 
 //Define the selection of data that will be used for the table
 const selectionSetBCOUpcomingBookings = ['vesselID', 'containerID', 'origin', 'destination', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail', 'containerStatus','arrivalDate', 'flag'] as const;
 //Create a type based on your selectionSet that will be later used for the columns.tsx file of the able
+
+const selectionSetTerminalOPOngoing = ['vesselID', 'containerID', 'origin', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail','bookingDate','bookingTime','bookingStatus', 'flag'] as const;
 export type BCOUpcomingBookings = SelectionSet<Schema['Container']['type'], typeof selectionSetBCOUpcomingBookings>
 
 //Create a type based on your selectionSet that will be later used for the columns.tsx file of the able
 export type TerminalOPUpcomingBookings= SelectionSet<Schema['Container']['type'], typeof selectionSetTerminalOPUpcoming>
 
 
+export type TerminalOPOngoingBookings= SelectionSet<Schema['Container']['type'], typeof selectionSetTerminalOPOngoing >
 
 const selectionSetBCOOngoing = ['vesselID', 'containerID', 'origin','destination', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail','bookingDate','bookingApprovalDate','bookingStatus', 'bookingPickupDate','flag'] as const;
 
@@ -87,13 +95,45 @@ const Transportation_CompletedData = [
 
 
 
-const BCO_CompletedData = [
-  { port:"NORfolk", terminalId:"N-10", vesselId: "1", terminal_op:"James Vince", containerId: "HMO-22", origin: "Canada", bco: "WB", bco_email: "wb@gmail.com", operator: "James", operator_email: "sarah@gmail.com", date_init: "22 March 2024", date_approved: "24 March 2024", status: "Picked Up", date_picked: "23 March 2024", time: "10:00am" },
-  { port:"Los Angeles", terminalId:"L-22", vesselId: "2", terminal_op:"Michael Scott", containerId: "US-45", origin: "USA", bco: "RT", bco_email: "rt@gmail.com", operator: "Daniel", operator_email: "daniel@gmail.com", date_init: "23 March 2024", date_approved: "23 March 2024", status: "Picked Up", date_picked: "24 March 2024", time: "3:45pm" },
-  { port:"Mexico City", terminalId:"M-14", vesselId: "3", terminal_op:"Sarah Doe", containerId: "M-35", origin: "Mexico", bco: "WB", bco_email: "wb@gmail.com", operator: "Emma", operator_email: "emma@gmail.com", date_init: "22 March 2024", date_approved: "23 March 2024", status: "Picked Up", date_picked: "24 March 2024", time: "1:00pm" },
-  { port:"Shanghai", terminalId:"S-33", vesselId: "4", terminal_op:"Liam Wong", containerId: "CH-44", origin: "China", bco: "LK", bco_email: "lk@gmail.com", operator: "Sophia", operator_email: "sophia@gmail.com", date_init: "2 March 2024", date_approved: "23 March 2024", status: "Picked Up", date_picked: "23 March 2024", time: "11:30am" }
-];
 
+
+//Define the selection of data that will be used for the table
+const selectionSetTransportation_CompletedData = [ 
+  'vesselID',
+  'containerID',
+  'origin',
+  'bcoName',
+  'bcoEmail',
+  'transopName',
+  'transopEmail',
+  'bookingDate',
+  'bookingApprovalDate',
+  'bookingStatus',
+  'bookingPickupDate',
+  'bookingTime',
+] as const;
+
+//Define the selection of data that will be used for the table
+const selectionSetTerminal_CompletedData = [ 
+  'vesselID',
+  'containerID',
+  'origin',
+  'bcoName',
+  'bcoEmail',
+  'transopName',
+  'transopEmail',
+  'bookingDate',
+  'bookingApprovalDate',
+  'bookingStatus',
+  'bookingPickupDate',
+  'bookingTime',
+] as const;
+
+//Create a type based on your selectionSet that will be later used for the columns.tsx file of the able
+export type TransOperatorCompletedBookings = SelectionSet<Schema['Container']['type'], typeof selectionSetTransportation_CompletedData>;
+
+//Create a type based on your selectionSet that will be later used for the terminal-bookings/columns.tsx file of the able
+export type TermOperatorCompletedBookings = SelectionSet<Schema['Container']['type'], typeof selectionSetTerminal_CompletedData>;
 
 function RouteComponent() {
   const { user } = useAuthenticator();
@@ -121,6 +161,71 @@ function RouteComponent() {
 
     getUserAttributes();
   }, [user]);
+
+  // State for Transportation Operator Completed bookings
+  const [Transportation_CompletedData, setTransportation_CompletedData] = useState<TransOperatorCompletedBookings[]>([]);
+  
+  
+  async function fetchTransOperatorCBookingsContainers() {
+    if (userAttributes.role === 'Transportation Operator' && userAttributes.email) {
+      try {
+        const { data: cargo } = await client.models.Container.list({
+          selectionSet:selectionSetTransportation_CompletedData,
+          authMode: 'apiKey',
+          filter: {
+            and: [
+              {
+                transopEmail: { eq: userAttributes.email }
+              },
+              {
+                bookingStatus: { eq: 'Picked Up' }
+              }
+            ]
+          },
+        });
+        setTransportation_CompletedData(cargo);
+      } catch (error) {
+        console.error('Error fetching completed bookings:', error);
+      }
+    }
+  }
+
+  // Fetch containers on initial mount and when role/email changes
+  useEffect(() => {
+    if (userAttributes.email) {
+      fetchTransOperatorCBookingsContainers();
+    }
+  }, [userAttributes.role, userAttributes.email]);  // Updates when email changes
+  
+
+  // State for Terminal Operator Completed bookings
+  const [Terminal_CompletedData, setTerminal_CompletedData] = useState<TermOperatorCompletedBookings[]>([]);
+  
+  async function fetchTermOperatorCBookingsContainers() {
+    if (userAttributes.role === 'Terminal Operator') {
+      try {
+        const { data: cargo } = await client.models.Container.list({
+          selectionSet:selectionSetTerminal_CompletedData,
+          authMode: 'apiKey',
+          filter: {
+                bookingStatus: { 
+                  eq: 'Picked Up' 
+                }
+          },
+        });
+        setTerminal_CompletedData(cargo);
+      } catch (error) {
+        console.error('Error fetching completed bookings:', error);
+      }
+    }
+  }
+
+  // Fetch containers on initial mount and when role changes
+  useEffect(() => {
+    if (userAttributes.role) {
+      fetchTermOperatorCBookingsContainers();
+    }
+  }, [userAttributes.role]);
 
   // State for BCO upcoming bookings
   const [bcoUpcomingBookings, setBcoUpcomingBookings] = useState<BCOUpcomingBookings[]>([]);
@@ -150,11 +255,119 @@ function RouteComponent() {
     }
   }
 
+
+
+  //fetch complted BCOBokkings
+
+  const [bcocompletedBookings, setBcoCompletedBookings] = useState<BCOCompletedBooking[]>([]);
+
+  // Move fetchContainers outside of useEffect so it can be reused
+  async function fetch_bco_completed() {
+   
+      try{
+      const { data: cargo } = await client.models.Container.list({
+        selectionSet:selectionSetBCOCompleted ,
+        authMode: 'apiKey',
+        filter: {
+          bookingStatus: {
+            eq: 'Picked Up'
+          }
+        }
+      });
+      setBcoCompletedBookings(cargo);
+    }
+    catch(error )
+    {console.error('Error fetching BCO Completed:', error);
+
+    }
+    
+  
+    //Fetch the data on the first render
+
+  }
+
+
   // Fetch containers on initial mount and when role/email changes
   useEffect(() => {
     fetchContainers();
+    fetch_bco_completed();
+    fetchterminal_operator_requested();
   }, [userAttributes.role]);
 
+  const [transOpUpcomingBookings, setTransOpUpcomingBookings] = useState<TransOpUpcomingBookings[]>([]);
+
+  async function fetchTransOpUpcoming() {
+    if (userAttributes.role === 'Transportation Operator') {
+      try {
+        const { data: cargo } = await client.models.Container.list({
+          filter: {
+            and: [
+              {
+                transopEmail: { eq: userAttributes.email }
+              },
+              {
+                bookingStatus: { eq: 'Pending Transportation Operator Approval' }
+              }
+            ]
+          },
+          selectionSet: selectionSetTransOpUpcomingBookings,
+          authMode: 'apiKey',
+        });
+        setTransOpUpcomingBookings(cargo);
+      } catch (error) {
+        console.error('Error fetching containers:', error);
+      }
+    }
+  }
+  useEffect(() => {
+    fetchTransOpUpcoming();
+  }, [userAttributes.role]);
+
+  const [transOpOngoingBookings, setTransOpOngoingBookings] = useState<TransOpOngoingBookings[]>([]);
+
+  async function fetchTransOpOngoing() {
+    if (userAttributes.role === 'Transportation Operator') {
+      try {
+        const { data: cargo } = await client.models.Container.list({
+          filter: {
+            and: [
+              {
+                transopEmail: { eq: userAttributes.email }
+              },
+              {
+                or: [
+                  {
+                    bookingStatus: { eq: 'Pending Booking' }
+                  },
+                  {
+                    bookingStatus: { eq: 'Pending Booking Approval' }
+                  },
+                  {
+                    bookingStatus: { eq: 'Pending Pick Up' }
+                  },
+                  {
+                    bookingStatus: { eq: 'Late for Pick Up' }
+                  },
+                  {
+                    bookingStatus: { eq: 'Picked Up' }
+                  },
+                ]
+              }
+            ]
+          },
+          selectionSet: selectionSetTransOpOngoingBookings,
+          authMode: 'apiKey',
+          });
+        setTransOpOngoingBookings(cargo);
+      } catch (error) {
+        console.error('Error fetching containers:', error);
+      }
+    }
+  }
+  useEffect(() => {
+    fetchTransOpOngoing();
+  }, [userAttributes.role]);
+   
   // Update container then refetch containers
   async function assignTransOp(containerID: string, newName: string, newEmail: string, bookingStatus: string) {
     try {
@@ -176,7 +389,7 @@ function RouteComponent() {
   // Separate return statements for each role
 
   //getting Data
-  const [terminalopBookings, setData] = useState<TerminalOPUpcomingBookings[]>([])
+  const [terminalopBookingsupcoming, setData] = useState<TerminalOPOngoingBookings[]>([])
 
   //Fetch the data from the database
   const fetchterminal_operator_requested = async () => {
@@ -194,9 +407,70 @@ function RouteComponent() {
   }
 
   //Fetch the data on the first render
-  useEffect(() => {
-    fetchterminal_operator_requested();
-  }, [])
+
+
+  //Fetch Ongoing Terminal Operator data
+    //Fetch the data from the database
+    const [terminalopBookingongoing, set_terminal_ongoing] = useState<TerminalOPOngoingBookings[]>([])
+    const fetchterminal_operator_ongoing = async () => {
+      //Query the data from the database with selection set and auth mode (always apiKey)
+      const { data: cargo } = await client.models.Container.list({
+        selectionSet:selectionSetTerminalOPOngoing ,
+        authMode: 'apiKey',
+       
+        filter: {
+          or: [
+            {
+              bookingStatus: { eq: 'Pending Pick Up' }
+            },
+            {
+              bookingStatus: { eq: 'Late' }
+            }
+          ]
+        }
+      });
+      set_terminal_ongoing(cargo);
+    }
+  
+    //Fetch the data on the first render
+    useEffect(() => {
+      fetchterminal_operator_ongoing();
+    }, [])
+
+    //Update Terminal Operator Booking
+
+async function updateTransOpBooking(id: string, status: string, bookingDate?: string, bookingTime?: string) {
+  try {
+    if (status === "unassigned") {
+      const { data: updatedContainerStatus } = await client.models.Container.update({
+        containerID: id,
+        bookingStatus: status,
+        transopName:"",
+        transopEmail:""
+      });
+      console.log("Updated flag with transop details:", updatedContainerStatus);
+      await fetchTransOpUpcoming();
+    } else if (status === "Pending Booking Approval"){
+      const { data: updatedContainerStatus } = await client.models.Container.update({
+        containerID: id,
+        bookingStatus: status,
+        bookingDate: bookingDate,
+        bookingTime: bookingTime,
+      })
+      console.log('Updated container status:', updatedContainerStatus); 
+      await fetchTransOpOngoing();
+    } else {
+      const { data: updatedContainerStatus } = await client.models.Container.update({
+        containerID: id,
+        bookingStatus: status
+      });
+      console.log("Updated flag:", updatedContainerStatus);
+      await fetchTransOpUpcoming();
+    }
+  } catch (error) {
+    console.error("Error updating flag:", error);
+  }
+}
 
 async function updateBooking(id: string, status: string) {
   try {
@@ -222,6 +496,7 @@ async function updateBooking(id: string, status: string) {
   }
 }
 
+<<<<<<< HEAD
 const [BCOOngingData, setBCOOngoingBookings] = useState<BCOOngoingBooking[]>([]);
 
 // Move fetchContainers outside of useEffect so it can be reused
@@ -263,6 +538,8 @@ useEffect(() => {
 
 
 
+=======
+>>>>>>> develop
   if (userAttributes.role === "Terminal Operator") {
     return (
       <div className="w-full">
@@ -276,10 +553,10 @@ useEffect(() => {
         </div>
         <div>
         <TabsContent value="requested">
-          <TerminalBookingsTable data={terminalopBookings} status="Requested" meta={{updateBooking}} />
+          <TerminalBookingsTable data={terminalopBookingsupcoming} status="Requested" meta={{updateBooking}} />
         </TabsContent>
         <TabsContent value="ongoing">
-          <TerminalBookingsTable data={Terminal_OngoingData} status="Ongoing" meta={{updateBooking}} />
+          <TerminalBookingsTable data={terminalopBookingongoing} status="Ongoing" meta={{updateBooking}} />
         </TabsContent>
         <TabsContent value="completed">
           < TerminalBookingsCompleted data={Terminal_CompletedData} status="Completed" meta={{updateBooking}}/>
@@ -303,17 +580,17 @@ useEffect(() => {
 
       <TabsContent value="upcoming">
         <TransportationBookingsTableUpcoming
-          data={Transportation_UpcomingData}
-        
+          data={transOpUpcomingBookings}     
           status="Upcoming"
+          meta={{updateTransOpBooking}}
         />
       </TabsContent>
 
       <TabsContent value="ongoing">
         <TransportationBookingsTableOngoing
-          data={ Transportation_OngoingData}
-      
+          data={transOpOngoingBookings}
           status="Ongoing"
+          meta={{updateTransOpBooking}}
         />
       </TabsContent>
 
@@ -321,6 +598,7 @@ useEffect(() => {
       <TransportationBookingsTableCompleted
           data={ Transportation_CompletedData}
           status='completed'
+          meta={null}
         />
       </TabsContent>
     </Tabs>
@@ -359,7 +637,7 @@ useEffect(() => {
   
         <TabsContent value="completed">
         <BcoBookingsTableCompleted
-            data={ BCO_CompletedData}
+            data={bcocompletedBookings}
             meta={null}
             status='completed'
           />
