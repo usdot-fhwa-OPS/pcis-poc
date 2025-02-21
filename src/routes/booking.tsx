@@ -487,7 +487,7 @@ async function fetch_bco_ongoing() {
     setBCOOngoingBookings(cargo);
   }
   catch(error )
-  {console.error('Error fetching BCO Completed:', error);
+  {console.error('Error fetching BCO OnGoing', error);
 
   }
   
