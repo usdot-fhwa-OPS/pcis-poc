@@ -14,12 +14,19 @@ export default async function Operators() {
   const [data, setData] = useState<User[]>([])
   const [loading, setLoading] = useState(true)
 
-  const client = new CognitoIdentityProviderClient(); 
+  const client = new CognitoIdentityProviderClient({
+    region: 'us-east-1',
+  }); 
 
   const input = { // ListUsersRequest
     UserPoolId: "us-east-1_ODcx7VXFP", // required
     AttributesToGet: [ // SearchedAttributeNamesListType
-      "STRING_VALUE",
+      "given_name",
+      "family_name",
+      "email",
+      "phone_number",
+      "custom:organization",
+      "custom:role",
     ],
   };
 
