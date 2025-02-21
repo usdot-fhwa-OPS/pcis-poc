@@ -476,15 +476,10 @@ async function fetch_bco_ongoing() {
             bcoEmail: { eq: userAttributes.email }
           },
           {
-            or: [
-              {
-                bookingStatus: { ne: 'unassigned' }
-              },
-         
-              {
-                bookingStatus: { ne: 'Picked Up' }
-              },
-            ]
+            bookingStatus: { ne: 'unassigned' }
+          },
+          {
+            bookingStatus: { ne: 'Picked Up' }
           }
         ]
       },
