@@ -369,7 +369,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
           return !!date && !!time
         }
         
-        const handleBooking = () => {
+        const handleBooking = async () => {
           try {
             (table.options.meta as TransOpDataTableMeta)?.updateTransOpBooking(row.original.containerID, "Pickup Modification Requested", String(format(date!, "MM/dd/yyyy")), time ?? "")
             setIsDialogOpen(false) // Close dialog after submission

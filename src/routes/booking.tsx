@@ -4,6 +4,7 @@ import {TransportationBookingsTableUpcoming,  TransportationBookingsTableComplet
 import {BcoBookingsTableUpcoming,  BcoBookingsTableCompleted,BcoBookingsTableOngoing} from "../components/bco_bookings/bco-bookings-table.tsx"
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs.tsx"
+import { toast } from "sonner"
 import { fetchUserAttributes } from 'aws-amplify/auth';
 import { useEffect, useState } from "react";
 import { useAuthenticator } from "@aws-amplify/ui-react";
@@ -397,55 +398,54 @@ function RouteComponent() {
 
     //Update Terminal Operator Booking
 
-async function updateTransOpBooking(id: string, status: string, bookingDate?: string, bookingTime?: string) {
-  try {
-    if (status === "unassigned") {
-      const { data: updatedContainerStatus } = await client.models.Container.update({
-        containerID: id,
-        bookingStatus: status,
-        transopName:"",
-        transopEmail:""
-      });
-      console.log("Updated flag with transop details:", updatedContainerStatus);
-      await fetchTransOpUpcoming();
-    } else if (status === "Pending Booking Approval"){
-      const { data: updatedContainerStatus } = await client.models.Container.update({
-        containerID: id,
-        bookingStatus: status,
-        bookingDate: bookingDate,
-        bookingTime: bookingTime,
-      })
-      console.log('Updated container status:', updatedContainerStatus); 
-      await fetchTransOpOngoing();
-    } else if (status === "Picked Up") {
-      const { data: updatedContainerStatus } = await client.models.Container.update({
-        containerID: id,
-        bookingStatus: status,
-        bookingPickupDate: bookingDate,
-      })
-      console.log('Updated container status:', updatedContainerStatus); 
-      await fetchTransOpOngoing();
-    } else if(status === "Pickup Modification Requested") {
-      const { data: updatedContainerStatus } = await client.models.Container.update({
-        containerID: id,
-        bookingStatus: status,
-        modifiedBookingDate: bookingDate,
-        modifiedBookingTime: bookingTime,
-      })
-      console.log('Updated container status:', updatedContainerStatus); 
-      await fetchTransOpOngoing();
-    } else {
-      const { data: updatedContainerStatus } = await client.models.Container.update({
-        containerID: id,
-        bookingStatus: status
-      });
-      console.log("Updated flag:", updatedContainerStatus);
-      await fetchTransOpUpcoming();
+    async function updateTransOpBooking(id: string, status: string, bookingDate?: string, bookingTime?: string) {
+      // Check if the browser is online before attempting any network request
+      if (!navigator.onLine) {
+        console.error("No internet connection. Please check your connection and try again.");
+        toast.error("No internet connection. Please check your connection and try again.");
+        return;
+      }
+    
+      try {
+        let updatePayload = { containerID: id, bookingStatus: status };
+    
+        if (status === "unassigned") {
+          Object.assign(updatePayload, {
+            transopName: "",
+            transopEmail: ""
+          });
+        } else if (status === "Pending Booking Approval") {
+          Object.assign(updatePayload, {
+            bookingDate,
+            bookingTime
+          });
+        } else if (status === "Picked Up") {
+          Object.assign(updatePayload, {
+            bookingPickupDate: bookingDate
+          });
+        } else if (status === "Pickup Modification Requested") {
+          Object.assign(updatePayload, {
+            modifiedBookingDate: bookingDate,
+            modifiedBookingTime: bookingTime
+          });
+        }
+        
+        const { data: updatedContainerStatus } = await client.models.Container.update(updatePayload);
+        console.log("Updated container status:", updatedContainerStatus);
+        toast.success("Container status updated successfully");
+    
+        // Call the appropriate function based on the status
+        await fetchTransOpUpcoming();
+      
+        await fetchTransOpOngoing();
+        
+      } catch (error) {
+        // This catch block will now capture errors like network failures or timeouts
+        console.error("Error updating container:", error);
+        toast.error("Error submitting modification");
+      }
     }
-  } catch (error) {
-    console.error("Error updating flag:", error);
-  }
-}
+    
 
 async function updateBooking(id: string, status: string) {
   try {
