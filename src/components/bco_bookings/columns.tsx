@@ -279,15 +279,18 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
     {
       accessorKey: "contact_to",
       header: "Contact Trasnportation Operator",
-      cell: ({ row }) => (
-        <Button
-          variant="outline"
-          className="bg-blue-600 text-white hover:bg-blue-700"
-          onClick={() => alert(`Contacting ${row.original.transopName} at ${row.original.transopEmail}`)}
-        >
-          Contact
-        </Button>
-      ),
+      cell: ({ row }) => {
+        const email = row.original.transopEmail
+  
+        // Option A: Anchor tag wrapping a Button
+        return (
+          <a
+            href={`mailto:${email}?subject=Inquiry%20About%20Cargo&body=Hello%20${row.original.transopName},`}
+          >
+            <Button variant="outline">Contact</Button>
+          </a>
+        )
+      },
     },
     
 
