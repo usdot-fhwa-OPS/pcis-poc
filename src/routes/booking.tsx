@@ -41,16 +41,14 @@ export type TerminalOPUpcomingBookings= SelectionSet<Schema['Container']['type']
 
 export type TerminalOPOngoingBookings= SelectionSet<Schema['Container']['type'], typeof selectionSetTerminalOPOngoing >
 
+const selectionSetBCOOngoing = ['vesselID', 'containerID', 'origin','destination', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail','bookingDate','bookingApprovalDate','bookingStatus', 'bookingPickupDate','flag'] as const;
+
+export type BCOOngoingBooking= SelectionSet<Schema['Container']['type'], typeof selectionSetBCOOngoing>
+
 const selectionSetBCOCompleted = ['vesselID', 'containerID', 'origin', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail','bookingDate','bookingApprovalDate','bookingStatus','destination', 'bookingPickupDate','flag'] as const;
 
 export type BCOCompletedBooking= SelectionSet<Schema['Container']['type'], typeof selectionSetBCOCompleted>
 
-const BCO_OngoingData = [
-  { port:"NORfolk", terminalId:"N-10", vesselId: "1", terminal_op:"James Vince", containerId: "HMO-22", origin: "Canada", bco: "WB", bco_email: "wb@gmail.com", operator: "James", operator_email: "sarah@gmail.com", date_init: "22 March 2024", date_approved: "24 March 2024", status: "Pending Appointment", date_picked: "23 March 2024", time: "10:00am" },
-  { port:"Los Angeles", terminalId:"L-22", vesselId: "2", terminal_op:"Michael Scott", containerId: "US-45", origin: "USA", bco: "RT", bco_email: "rt@gmail.com", operator: "Daniel", operator_email: "daniel@gmail.com", date_init: "23 March 2024", date_approved: "23 March 2024", status: "Pending Pick Up", date_picked: "24 March 2024", time: "3:45pm" },
-  { port:"Mexico City", terminalId:"M-14", vesselId: "3", terminal_op:"Sarah Doe", containerId: "M-35", origin: "Mexico", bco: "WB", bco_email: "wb@gmail.com", operator: "Emma", operator_email: "emma@gmail.com", date_init: "22 March 2024", date_approved: "23 March 2024", status: "Pending Approval", date_picked: "24 March 2024", time: "1:00pm" },
-  { port:"Shanghai", terminalId:"S-33", vesselId: "4", terminal_op:"Liam Wong", containerId: "CH-44", origin: "China", bco: "LK", bco_email: "lk@gmail.com", operator: "Sophia", operator_email: "sophia@gmail.com", date_init: "2 March 2024", date_approved: "23 March 2024", status: "Pening Approval", date_picked: "23 March 2024", time: "11:30am" }
-];
 
 
 
@@ -227,9 +225,18 @@ function RouteComponent() {
         selectionSet:selectionSetBCOCompleted ,
         authMode: 'apiKey',
         filter: {
-          bookingStatus: {
-            eq: 'Picked Up'
-          }
+
+          and: [
+            {
+              bcoEmail: { eq: userAttributes.email }
+            },
+            {
+              bookingStatus: {
+                eq: 'Picked Up'
+              }
+            }
+          ]
+     
         }
       });
       setBcoCompletedBookings(cargo);
@@ -454,6 +461,50 @@ async function updateBooking(id: string, status: string) {
   }
 }
 
+const [BCOOngoingData, setBCOOngoingBookings] = useState<BCOOngoingBooking[]>([]);
+
+// Move fetchContainers outside of useEffect so it can be reused
+async function fetch_bco_ongoing() {
+ 
+    try{
+    const { data: cargo } = await client.models.Container.list({
+      selectionSet:selectionSetBCOOngoing ,
+      authMode: 'apiKey',
+      filter: {
+        and: [
+          {
+            bcoEmail: { eq: userAttributes.email }
+          },
+          {
+            bookingStatus: { ne: 'unassigned' }
+          },
+          {
+            bookingStatus: { ne: 'Picked Up' }
+          }
+        ]
+      },
+    });
+    setBCOOngoingBookings(cargo);
+  }
+  catch(error )
+  {console.error('Error fetching BCO OnGoing', error);
+
+  }
+  
+
+  //Fetch the data on the first render
+
+}
+
+useEffect(() => {
+  fetchContainers();
+  //fetch_bco_completed();
+  fetch_bco_ongoing();
+  fetchterminal_operator_requested();
+}, [userAttributes.role]);
+
+
+
   if (userAttributes.role === "Terminal Operator") {
     return (
       <div className="w-full">
@@ -543,7 +594,7 @@ async function updateBooking(id: string, status: string) {
   
         <TabsContent value="ongoing">
           <BcoBookingsTableOngoing
-            data={ BCO_OngoingData}
+            data={ BCOOngoingData}
             meta={null}
             status="Ongoing"
           />
