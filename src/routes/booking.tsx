@@ -45,6 +45,9 @@ const selectionSetBCOOngoing = ['vesselID', 'containerID', 'origin','destination
 
 export type BCOOngoingBooking= SelectionSet<Schema['Container']['type'], typeof selectionSetBCOOngoing>
 
+const selectionSetBCOCompleted = ['vesselID', 'containerID', 'origin', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail','bookingDate','bookingApprovalDate','bookingStatus','destination', 'bookingPickupDate','flag'] as const;
+
+export type BCOCompletedBooking= SelectionSet<Schema['Container']['type'], typeof selectionSetBCOCompleted>
 
 
 
@@ -222,9 +225,18 @@ function RouteComponent() {
         selectionSet:selectionSetBCOCompleted ,
         authMode: 'apiKey',
         filter: {
-          bookingStatus: {
-            eq: 'Picked Up'
-          }
+
+          and: [
+            {
+              bcoEmail: { eq: userAttributes.email }
+            },
+            {
+              bookingStatus: {
+                eq: 'Picked Up'
+              }
+            }
+          ]
+     
         }
       });
       setBcoCompletedBookings(cargo);
@@ -461,13 +473,21 @@ async function fetch_bco_ongoing() {
       filter: {
         and: [
           {
-            bookingStatus: { ne: 'Picked UP' }
+            bcoEmail: { eq: userAttributes.email }
           },
           {
-            bookingStatus: { eq: 'unassigned' }
+            or: [
+              {
+                bookingStatus: { ne: 'unassigned' }
+              },
+         
+              {
+                bookingStatus: { ne: 'Picked Up' }
+              },
+            ]
           }
         ]
-      }
+      },
     });
     setBCOOngoingBookings(cargo);
   }

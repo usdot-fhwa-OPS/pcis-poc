@@ -283,7 +283,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
         <Button
           variant="outline"
           className="bg-blue-600 text-white hover:bg-blue-700"
-          onClick={() => alert(`Contacting ${row.original.bco} at ${row.original.bco_email}`)}
+          onClick={() => alert(`Contacting ${row.original.transopName} at ${row.original.transopEmail}`)}
         >
           Contact
         </Button>
