@@ -405,8 +405,8 @@ function RouteComponent() {
       bookingTime?: string
     ): Promise<boolean> {
       if (!navigator.onLine) {
-        console.error("No internet connection. Please check your connection and try again.");
-        toast.error("No internet connection. Please check your connection and try again.");
+        console.error("No internet connection. Update not submitted. Please check your connection and try again.");
+        toast.error("No internet connection. Update not submitted. Please check your connection and try again.");
         return false; // Explicitly return false when offline
       }
     
