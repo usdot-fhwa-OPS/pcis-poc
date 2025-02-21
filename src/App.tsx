@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { SidebarProvider } from "./components/ui/sidebar";
 import { AppSidebar } from "./components/app-sidebar/app-sidebar"
 import UserButton from './components/userButton/userButton';
+import { Toaster } from 'sonner';
 import './index.css';
 
 interface UserAttributes {
@@ -44,6 +45,7 @@ function App() {
     <SidebarProvider>
       <AppSidebar />
       <main>
+        <Toaster position="bottom-right" />
         <h3>Home</h3>
         <UserButton fullName={userAttributes.fullName} role={userAttributes.role} />
       </main>
