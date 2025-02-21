@@ -4,6 +4,7 @@ import {TransportationBookingsTableUpcoming,  TransportationBookingsTableComplet
 import {BcoBookingsTableUpcoming,  BcoBookingsTableCompleted,BcoBookingsTableOngoing} from "../components/bco_bookings/bco-bookings-table.tsx"
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs.tsx"
+import { toast } from "sonner"
 import { fetchUserAttributes } from 'aws-amplify/auth';
 import { useEffect, useState } from "react";
 import { useAuthenticator } from "@aws-amplify/ui-react";
@@ -404,38 +405,58 @@ function RouteComponent() {
 
     //Update Terminal Operator Booking
 
-async function updateTransOpBooking(id: string, status: string, bookingDate?: string, bookingTime?: string) {
-  try {
-    if (status === "unassigned") {
-      const { data: updatedContainerStatus } = await client.models.Container.update({
-        containerID: id,
-        bookingStatus: status,
-        transopName:"",
-        transopEmail:""
-      });
-      console.log("Updated flag with transop details:", updatedContainerStatus);
-      await fetchTransOpUpcoming();
-    } else if (status === "Pending Booking Approval"){
-      const { data: updatedContainerStatus } = await client.models.Container.update({
-        containerID: id,
-        bookingStatus: status,
-        bookingDate: bookingDate,
-        bookingTime: bookingTime,
-      })
-      console.log('Updated container status:', updatedContainerStatus); 
-      await fetchTransOpOngoing();
-    } else {
-      const { data: updatedContainerStatus } = await client.models.Container.update({
-        containerID: id,
-        bookingStatus: status
-      });
-      console.log("Updated flag:", updatedContainerStatus);
-      await fetchTransOpUpcoming();
+    async function updateTransOpBooking(
+      id: string,
+      status: string,
+      bookingDate?: string,
+      bookingTime?: string
+    ): Promise<boolean> {
+      if (!navigator.onLine) {
+        console.error("No internet connection. Update not submitted. Please check your connection and try again.");
+        toast.error("No internet connection. Update not submitted. Please check your connection and try again.");
+        return false; // Explicitly return false when offline
+      }
+    
+      try {
+        let updatePayload = { containerID: id, bookingStatus: status };
+    
+        if (status === "unassigned") {
+          Object.assign(updatePayload, {
+            transopName: "",
+            transopEmail: ""
+          });
+        } else if (status === "Pending Booking Approval") {
+          Object.assign(updatePayload, {
+            bookingDate,
+            bookingTime
+          });
+        } else if (status === "Picked Up") {
+          Object.assign(updatePayload, {
+            bookingPickupDate: bookingDate
+          });
+        } else if (status === "Pickup Modification Requested") {
+          Object.assign(updatePayload, {
+            modifiedBookingDate: bookingDate,
+            modifiedBookingTime: bookingTime
+          });
+        }
+        
+        const { data: updatedContainerStatus } = await client.models.Container.update(updatePayload);
+        console.log("Updated container status:", updatedContainerStatus);
+        toast.success("Container status updated successfully");
+    
+        // Refresh data after successful update
+        await fetchTransOpUpcoming();
+        await fetchTransOpOngoing();
+        
+        return true; // Update succeeded
+      } catch (error) {
+        console.error("Error updating container:", error);
+        toast.error("Error submitting modification");
+        return false; // Update failed
+      }
     }
-  } catch (error) {
-    console.error("Error updating flag:", error);
-  }
-}
+    
 
 async function updateBooking(id: string, status: string) {
   try {
@@ -451,7 +472,8 @@ async function updateBooking(id: string, status: string) {
     } else {
       const { data: updatedContainerStatus } = await client.models.Container.update({
         containerID: id,
-        bookingStatus: status
+        bookingStatus: status,
+        bookingApprovalDate: new Date().toLocaleDateString('en-US')
       });
       console.log("Updated flag:", updatedContainerStatus);
       await fetchterminal_operator_requested();

@@ -23,6 +23,8 @@ const schema = a.schema({
       bookingStatus: a.string().default('unassigned'),
       bookingDate: a.string(),
       bookingTime: a.string(),
+      modifiedBookingDate: a.string(),
+      modifiedBookingTime: a.string(),
       bookingLatestUpdateDate: a.string(),
       bookingApprovalDate: a.string(),
       bookingPickupDate: a.string(),
