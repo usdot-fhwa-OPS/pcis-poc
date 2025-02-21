@@ -15,10 +15,10 @@ export function BcoBookingsTableUpcoming({ data, meta }: BcoBookingsTableProps) 
   );
 }
 
-export function BcoBookingsTableOngoing({ data, meta}: BcoBookingsTableProps) {
+export function BcoBookingsTableOngoing({ data,meta}: BcoBookingsTableProps) {
   return (
     <div className="container mx-auto p-10">
-      <DataTable columns={OngoingColumn()} data={data} meta={meta} />
+      <DataTable columns={OngoingColumn()}  data={data} meta={meta}  />
     </div>
   );
 }
