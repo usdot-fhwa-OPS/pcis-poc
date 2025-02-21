@@ -60,7 +60,7 @@ function RootComponent() {
         <SidebarProvider>
             <AppSidebar />
               <div className="flex-1">
-                <Toaster position="bottom-right" />
+                <Toaster position="bottom-right" richColors={true} />
                 <UserButton fullName={userAttributes.fullName} role={userAttributes.role} />
                 <Outlet />
               </div>

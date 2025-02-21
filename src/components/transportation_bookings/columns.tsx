@@ -205,15 +205,9 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
         const isDateTimeSelected = (): boolean => {
           return !!date && !!time
         }
-        const handleBooking = async () => {
-          try {
-            (table.options.meta as TransOpDataTableMeta)?.updateTransOpBooking(row.original.containerID, "Pending Booking Approval", String(format(date!, "MM/dd/yyyy")), time ?? "")
-            setIsDialogOpen(false)
-            toast.success("Booking has been submitted");
-          } catch {
-            console.error("Error submitting booking");
-            toast.error("Error submitting booking");
-          }
+        const handleBooking = () => {
+          (table.options.meta as TransOpDataTableMeta)?.updateTransOpBooking(row.original.containerID, "Pending Booking Approval", String(format(date!, "MM/dd/yyyy")), time ?? "")
+          setIsDialogOpen(false)
         }
 
         const timeOptions = [
@@ -335,14 +329,9 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
       cell: ({ row, table}) => {
         const [isChecked, setIsChecked] = useState<boolean>(row.original.bookingStatus === "Picked Up");
   
-        const handlePickUp = async () => {
-          try {
-            (table.options.meta as TransOpDataTableMeta)?.updateTransOpBooking(row.original.containerID, "Picked Up", new Date().toLocaleDateString('en-US'))
-            setIsChecked(!isChecked)
-          } catch {
-            console.error("Error updating booking status");
-            toast.error("Error updating booking status");
-          }
+        const handlePickUp =  () => {
+          (table.options.meta as TransOpDataTableMeta)?.updateTransOpBooking(row.original.containerID, "Picked Up", new Date().toLocaleDateString('en-US'))
+          setIsChecked(!isChecked)
         }
 
         return (
@@ -369,15 +358,9 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
           return !!date && !!time
         }
         
-        const handleBooking = async () => {
-          try {
-            (table.options.meta as TransOpDataTableMeta)?.updateTransOpBooking(row.original.containerID, "Pickup Modification Requested", String(format(date!, "MM/dd/yyyy")), time ?? "")
-            setIsDialogOpen(false) // Close dialog after submission
-            toast.success("Modification has been submitted");
-          } catch {
-            console.error("Error submitting modification");
-            toast.error("Error submitting modification");
-          }
+        const handleBooking = () => {
+          (table.options.meta as TransOpDataTableMeta)?.updateTransOpBooking(row.original.containerID, "Pickup Modification Requested", String(format(date!, "MM/dd/yyyy")), time ?? "")
+          setIsDialogOpen(false)
         }
 
         const timeOptions = [
