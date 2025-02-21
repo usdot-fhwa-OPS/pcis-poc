@@ -398,12 +398,16 @@ function RouteComponent() {
 
     //Update Terminal Operator Booking
 
-    async function updateTransOpBooking(id: string, status: string, bookingDate?: string, bookingTime?: string) {
-      // Check if the browser is online before attempting any network request
+    async function updateTransOpBooking(
+      id: string,
+      status: string,
+      bookingDate?: string,
+      bookingTime?: string
+    ): Promise<boolean> {
       if (!navigator.onLine) {
         console.error("No internet connection. Please check your connection and try again.");
         toast.error("No internet connection. Please check your connection and try again.");
-        return;
+        return false; // Explicitly return false when offline
       }
     
       try {
@@ -434,15 +438,15 @@ function RouteComponent() {
         console.log("Updated container status:", updatedContainerStatus);
         toast.success("Container status updated successfully");
     
-        // Call the appropriate function based on the status
+        // Refresh data after successful update
         await fetchTransOpUpcoming();
-      
         await fetchTransOpOngoing();
         
+        return true; // Update succeeded
       } catch (error) {
-        // This catch block will now capture errors like network failures or timeouts
         console.error("Error updating container:", error);
         toast.error("Error submitting modification");
+        return false; // Update failed
       }
     }
     

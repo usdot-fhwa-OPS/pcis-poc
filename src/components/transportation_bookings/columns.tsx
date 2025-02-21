@@ -328,10 +328,19 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
       cell: ({ row, table}) => {
         const [isChecked, setIsChecked] = useState<boolean>(row.original.bookingStatus === "Picked Up");
   
-        const handlePickUp =  () => {
-          (table.options.meta as TransOpDataTableMeta)?.updateTransOpBooking(row.original.containerID, "Picked Up", new Date().toLocaleDateString('en-US'))
-          setIsChecked(!isChecked)
-        }
+        const handlePickUp = async () => {
+          const success = await (table.options.meta as TransOpDataTableMeta)?.updateTransOpBooking(
+            row.original.containerID,
+            "Picked Up",
+            new Date().toLocaleDateString('en-US')
+          );
+          
+          if (success) {
+            setIsChecked((prev) => !prev);
+          } else {
+            console.error("Booking update failed. State not updated.");
+          }
+        };
 
         return (
           <Checkbox
