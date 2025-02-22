@@ -18,8 +18,8 @@ export const columns = (status: string): ColumnDef<any>[] => {
     { accessorKey: "bcoEmail", header: "BCO Email" },
     { accessorKey: "transopName", header: "Transportation Operator" },
     { accessorKey: "transopEmail", header: "Transportation Operator Email" },
-    { accessorKey: "bookingDate", header: "Date Requested" },
-    { accessorKey: "bookingTime", header: "Time Requested" },
+    { accessorKey: "bookingDate", header: "Original Date Requested" },
+    { accessorKey: "bookingTime", header: "Original Time Requested" },
 
   ];
 
@@ -55,11 +55,11 @@ export const columns = (status: string): ColumnDef<any>[] => {
   if (status === "Modified") {
     baseColumns.push({
       accessorKey: "modifiedBookingDate",
-      header: () => <div className="text-center min-w-[200px]">Modified Date</div>,
+      header: "Modified Date Requested",
     });
     baseColumns.push({
       accessorKey: "modifiedBookingTime",
-      header: () => <div className="text-center min-w-[200px]">Modified Time</div>,
+      header: "Modified Time Requested",
     });
     baseColumns.push({
       accessorKey: "status",
