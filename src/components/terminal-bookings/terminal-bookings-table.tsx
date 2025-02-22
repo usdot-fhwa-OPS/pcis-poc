@@ -7,12 +7,20 @@ interface TerminalBookingsTableProps {
   meta: any;
 }
 
-export function TerminalBookingsTable({ data, status,meta }: TerminalBookingsTableProps) {
+export function TerminalBookingsTable({ data, status, meta }: TerminalBookingsTableProps) {
   return (
     <div className="container mx-auto p-10">
       <DataTable columns={columns(status)} data={data} meta={meta} />
     </div>
   );
+}
+
+export function TerminalBookingModification({ data, status, meta }: TerminalBookingsTableProps) {
+    return (
+      <div className="container mx-auto p-10">
+        <DataTable columns={columns(status)} data={data} meta={meta} />
+      </div>
+    )
 }
 
   export function TerminalBookingsCompleted({ data}: TerminalBookingsTableProps) {

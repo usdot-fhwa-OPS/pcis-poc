@@ -29,6 +29,9 @@ export type TransOpOngoingBookings = SelectionSet<Schema['Container']['type'], t
 
 const selectionSetTerminalOPUpcoming = ['vesselID', 'containerID', 'origin', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail','bookingDate','bookingTime','bookingStatus', 'flag'] as const;
 
+const selectionSetTerminalOpModified = ['vesselID', 'containerID', 'origin', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail','bookingDate','bookingTime', 'bookingStatus', 'modifiedBookingDate', 'modifiedBookingTime'] as const;
+
+export type TerminalOpModifiedBookings = SelectionSet<Schema['Container']['type'], typeof selectionSetTerminalOpModified>
 //Define the selection of data that will be used for the table
 const selectionSetBCOUpcomingBookings = ['vesselID', 'containerID', 'origin', 'destination', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail', 'containerStatus','arrivalDate', 'flag'] as const;
 //Create a type based on your selectionSet that will be later used for the columns.tsx file of the able
@@ -39,7 +42,6 @@ export type BCOUpcomingBookings = SelectionSet<Schema['Container']['type'], type
 //Create a type based on your selectionSet that will be later used for the columns.tsx file of the able
 export type TerminalOPUpcomingBookings= SelectionSet<Schema['Container']['type'], typeof selectionSetTerminalOPUpcoming>
 
-
 export type TerminalOPOngoingBookings= SelectionSet<Schema['Container']['type'], typeof selectionSetTerminalOPOngoing >
 
 const selectionSetBCOOngoing = ['vesselID', 'containerID', 'origin','destination', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail','bookingDate','bookingApprovalDate','bookingStatus', 'bookingPickupDate','flag'] as const;
@@ -49,10 +51,6 @@ export type BCOOngoingBooking= SelectionSet<Schema['Container']['type'], typeof 
 const selectionSetBCOCompleted = ['vesselID', 'containerID', 'origin', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail','bookingDate','bookingApprovalDate','bookingStatus','destination', 'bookingPickupDate','flag'] as const;
 
 export type BCOCompletedBooking= SelectionSet<Schema['Container']['type'], typeof selectionSetBCOCompleted>
-
-
-
-
 
 //Define the selection of data that will be used for the table
 const selectionSetTransportation_CompletedData = [ 
@@ -372,7 +370,20 @@ function RouteComponent() {
     setData(cargo);
   }
 
-  //Fetch the data on the first render
+  const [terminalOpModifiedBookings, setTerminalOpModifiedBookings] = useState<TerminalOpModifiedBookings[]>([])
+
+  const fetchTerminalOperatorModified = async() => {
+    const { data: cargo } = await client.models.Container.list({
+      selectionSet: selectionSetTerminalOpModified,
+      authMode: 'apiKey',
+      filter: {
+        bookingStatus: {
+          eq: 'Pickup Modification Requested'
+        }
+      }
+  });
+  setTerminalOpModifiedBookings(cargo);
+}
 
 
   //Fetch Ongoing Terminal Operator data
@@ -523,6 +534,7 @@ useEffect(() => {
   //fetch_bco_completed();
   fetch_bco_ongoing();
   fetchterminal_operator_requested();
+  fetchTerminalOperatorModified();
 }, [userAttributes.role]);
 
 
@@ -534,6 +546,7 @@ useEffect(() => {
         <div>
       <TabsList className="mb-4 flex w-full justify-start gap-x-4">
           <TabsTrigger value="requested">Requested</TabsTrigger>
+          <TabsTrigger value="modification">Modification Requested</TabsTrigger>
           <TabsTrigger value="ongoing">Ongoing</TabsTrigger>
           <TabsTrigger value="completed">Completed</TabsTrigger>
         </TabsList>
@@ -541,6 +554,9 @@ useEffect(() => {
         <div>
         <TabsContent value="requested">
           <TerminalBookingsTable data={terminalopBookingsupcoming} status="Requested" meta={{updateBooking}} />
+        </TabsContent>
+        <TabsContent value="modification">
+          <TerminalBookingsTable data={terminalOpModifiedBookings} status="Modified" meta={{updateBooking}} />
         </TabsContent>
         <TabsContent value="ongoing">
           <TerminalBookingsTable data={terminalopBookingongoing} status="Ongoing" meta={{updateBooking}} />

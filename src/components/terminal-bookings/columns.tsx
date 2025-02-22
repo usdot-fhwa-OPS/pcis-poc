@@ -52,6 +52,41 @@ export const columns = (status: string): ColumnDef<any>[] => {
     });
   }
 
+  if (status === "Requested") {
+    baseColumns.push({
+      accessorKey: "modifiedBookingDate",
+      header: () => <div className="text-center min-w-[200px]">Modified Date</div>,
+    });
+    baseColumns.push({
+      accessorKey: "modifiedBookingTime",
+      header: () => <div className="text-center min-w-[200px]">Modified Time</div>,
+    });
+    baseColumns.push({
+      accessorKey: "status",
+      header: () => <div className="text-center min-w-[200px]">Status</div>,
+      cell: ({ row,table }) => (
+        <div className="flex space-x-4 justify-center">
+          {/* Approve Button */}
+          <Button
+            variant="outline"
+            className="text-green-700"
+            onClick={() =>  (table.options.meta as TerminalOperatorDataTableMeta)?.updateBooking(row.original.containerID, "Pending Pick Up")}
+          >
+            Approve
+          </Button>
+
+          {/* Deny Button */}
+          <Button
+            variant="destructive"
+            onClick={() => (table.options.meta as TerminalOperatorDataTableMeta)?.updateBooking(row.original.containerID, "unassigned")}
+          >
+            Deny
+          </Button>
+        </div>
+      ),
+    });
+  }
+
   if (status === "Ongoing") {
     baseColumns.push({
       accessorKey: "bookingStatus",
