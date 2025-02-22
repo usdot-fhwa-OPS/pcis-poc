@@ -52,7 +52,7 @@ export const columns = (status: string): ColumnDef<any>[] => {
     });
   }
 
-  if (status === "Requested") {
+  if (status === "Modified") {
     baseColumns.push({
       accessorKey: "modifiedBookingDate",
       header: () => <div className="text-center min-w-[200px]">Modified Date</div>,
