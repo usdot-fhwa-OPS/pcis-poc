@@ -18,8 +18,8 @@ export const columns = (status: string): ColumnDef<any>[] => {
     { accessorKey: "bcoEmail", header: "BCO Email" },
     { accessorKey: "transopName", header: "Transportation Operator" },
     { accessorKey: "transopEmail", header: "Transportation Operator Email" },
-    { accessorKey: "bookingDate", header: "Date Requested" },
-    { accessorKey: "bookingTime", header: "Time Requested" },
+    { accessorKey: "bookingDate", header: "Original Date Requested" },
+    { accessorKey: "bookingTime", header: "Original Time Requested" },
 
   ];
 
@@ -40,6 +40,46 @@ export const columns = (status: string): ColumnDef<any>[] => {
             Approve
           </Button>
 
+          {/* Deny Button */}
+          <Button
+            variant="destructive"
+            onClick={() => (table.options.meta as TerminalOperatorDataTableMeta)?.updateBooking(row.original.containerID, "unassigned")}
+          >
+            Deny
+          </Button>
+        </div>
+      ),
+    });
+  }
+
+  if (status === "Modified") {
+    baseColumns.push({
+      accessorKey: "modifiedBookingDate",
+      header: "Modified Date Requested",
+    });
+    baseColumns.push({
+      accessorKey: "modifiedBookingTime",
+      header: "Modified Time Requested",
+    });
+    baseColumns.push({
+      accessorKey: "status",
+      header: () => <div className="text-center min-w-[200px]">Status</div>,
+      cell: ({ row,table }) => (
+        <div className="flex space-x-4 justify-center">
+          {/* Approve Button */}
+
+          {/* Modify selection set to include modified time and date
+              Modify function to pass modified time and date
+  
+          */}
+          <Button
+            variant="outline"
+            className="text-green-700"
+            onClick={() =>  (table.options.meta as TerminalOperatorDataTableMeta)?.updateBooking(row.original.containerID, "Pending Pick Up", row.original.modifiedBookingDate, row.original.modifiedBookingTime)}
+          >
+            Approve
+          </Button>
+          
           {/* Deny Button */}
           <Button
             variant="destructive"

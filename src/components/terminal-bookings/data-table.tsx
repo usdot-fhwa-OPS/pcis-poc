@@ -21,7 +21,7 @@ import {
 
 //Adding interface for setting Booking status
 export interface TerminalOperatorDataTableMeta {
-  updateBooking: (id: string, status: string)  => void
+  updateBooking: (id: string, status: string, bookingDate?: string, bookingTime?: string)  => void
 }
 
 interface DataTableProps<TData, TValue> {
