@@ -8,6 +8,7 @@ import { AppSidebar } from "../components/app-sidebar/app-sidebar"
 import UserButton from '../components/userButton/userButton';
 import '../index.css';
 import { Toaster } from 'sonner';
+import SettingsButton from '../components/settings/settingsButton';
 
 interface UserAttributes {
   given_name?: string;
@@ -29,42 +30,46 @@ export const Route = createRootRoute({
 })
 
 function RootComponent() {
-    const { user } = useAuthenticator();
-    const [userAttributes, setUserAttributes] = useState<{ fullName: string; role: string }>({ fullName: '', role: '' });
-    
-    useEffect(() => {
+  const { user } = useAuthenticator()
+  const [userAttributes, setUserAttributes] = useState<{ fullName: string; role: string }>({ fullName: "", role: "" })
+
+  useEffect(() => {
     const getUserAttributes = async () => {
-        try {
-        const attributes: UserAttributes = await fetchUserAttributes();
-        
-        const fullName = attributes.given_name && attributes.family_name
+      try {
+        const attributes: UserAttributes = await fetchUserAttributes()
+
+        const fullName =
+          attributes.given_name && attributes.family_name
             ? `${attributes.given_name} ${attributes.family_name}`
-            : 'Unknown';
+            : "Unknown"
 
         setUserAttributes({
-            fullName,
-            role: attributes['custom:role'] ?? 'No role assigned',
-        });
-        } catch (error) {
-        console.error('Error fetching user attributes:', error);
-        }
-    };
+          fullName,
+          role: attributes["custom:role"] ?? "No role assigned",
+        })
+      } catch (error) {
+        console.error("Error fetching user attributes:", error)
+      }
+    }
 
     if (user) {
-        getUserAttributes();
+      getUserAttributes()
     }
-    }, [user]);
+  }, [user])
 
-    return (
-      <div className="flex min-h-screen bg-background">
-        <SidebarProvider>
-            <AppSidebar />
-              <div className="flex-1">
-                <Toaster position="bottom-right" richColors={true} />
-                <UserButton fullName={userAttributes.fullName} role={userAttributes.role} />
-                <Outlet />
-              </div>
-        </SidebarProvider>
-      </div>
-    )
+  return (
+    <div className="flex min-h-screen bg-background">
+      <SidebarProvider>
+        <AppSidebar />
+        <div className="flex-1">
+          <Toaster position="bottom-right" richColors={true} />
+          <div className="flex items-center justify-end gap-2 p-4">
+            <SettingsButton role={userAttributes.role} />
+            <UserButton fullName={userAttributes.fullName} role={userAttributes.role} />
+          </div>
+          <Outlet />
+        </div>
+      </SidebarProvider>
+    </div>
+  )
 }
