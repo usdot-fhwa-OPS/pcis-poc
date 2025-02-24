@@ -35,7 +35,7 @@ export const columns = (status: string): ColumnDef<any>[] => {
           <Button
             variant="outline"
             className="text-green-700"
-            onClick={() =>  (table.options.meta as TerminalOperatorDataTableMeta)?.updateBooking(row.original.containerID, "Pending Pick Up")}
+            onClick={() =>  (table.options.meta as TerminalOperatorDataTableMeta)?.updateBooking(row.original.containerID, "Pending Pick Up", row.original.modifiedBookingDate, row.original.modifiedBookingTime)}
           >
             Approve
           </Button>
@@ -67,6 +67,11 @@ export const columns = (status: string): ColumnDef<any>[] => {
       cell: ({ row,table }) => (
         <div className="flex space-x-4 justify-center">
           {/* Approve Button */}
+
+          {/* Modify selection set to include modified time and date
+              Modify function to pass modified time and date
+  
+          */}
           <Button
             variant="outline"
             className="text-green-700"
@@ -74,7 +79,7 @@ export const columns = (status: string): ColumnDef<any>[] => {
           >
             Approve
           </Button>
-
+          
           {/* Deny Button */}
           <Button
             variant="destructive"

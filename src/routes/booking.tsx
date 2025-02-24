@@ -469,22 +469,42 @@ function RouteComponent() {
     }
     
 
-async function updateBooking(id: string, status: string) {
+async function updateBooking(id: string, status: string, bookingDate?: string, bookingTime?: string) {  
   try {
     if (status === "unassigned") {
       const { data: updatedContainerStatus } = await client.models.Container.update({
         containerID: id,
         bookingStatus: status,
         transopName:"",
-        transopEmail:""
+        transopEmail:"",
+        assignmentDate: "",
+        bookingDate: "",
+        bookingTime: "",
+        bookingApprovalDate: "",
+        bookingLatestUpdateDate: "",
+        modifiedBookingDate: "",
+        modifiedBookingTime:"",
+
       });
       console.log("Updated flag with transop details:", updatedContainerStatus);
+      await fetchterminal_operator_requested();
+    } else if (bookingDate) {
+      const { data: updatedContainerStatus } = await client.models.Container.update({
+        containerID: id,
+        bookingStatus: status,
+        bookingApprovalDate: new Date().toLocaleDateString('en-US'),
+        bookingDate: bookingDate,
+        bookingTime: bookingTime,
+        modifiedBookingDate: "",
+        modifiedBookingTime: "",
+      });
+      console.log("Updated flag:", updatedContainerStatus);
       await fetchterminal_operator_requested();
     } else {
       const { data: updatedContainerStatus } = await client.models.Container.update({
         containerID: id,
         bookingStatus: status,
-        bookingApprovalDate: new Date().toLocaleDateString('en-US')
+        bookingApprovalDate: new Date().toLocaleDateString('en-US'),
       });
       console.log("Updated flag:", updatedContainerStatus);
       await fetchterminal_operator_requested();
