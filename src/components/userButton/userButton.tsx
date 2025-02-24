@@ -5,12 +5,13 @@ import './userButtonStyles.css';
 interface UserButtonProps {
   fullName: string;
   role: string;
+  limit: number;
 }
 
-const UserButton: React.FC<UserButtonProps> = ({ fullName, role }) => {
+const UserButton: React.FC<UserButtonProps> = ({ fullName, role, limit }) => {
     return (
         <button className="user-button">
-            <SettingsButton role={role} />
+            <SettingsButton role={role} limit={limit} />
             <div className="user-button-content">
             <span>{fullName}</span>
             <span className="user-role">{role}</span>

@@ -19,11 +19,12 @@ import { Label } from "../ui/label"
 
 interface SettingsDialogProps {
   role: string
+  limit: number
 }
 
-export default function SettingsButton({ role }: SettingsDialogProps) {
+export default function SettingsButton({ role, limit }: SettingsDialogProps) {
     const [open, setOpen] = useState(false)
-    const [portCapacity, setPortCapacity] = useState("")
+    const [portCapacity, setPortCapacity] = useState(limit)
   
     // If user is not a Terminal Operator, don't render anything
     if (role !== "Terminal Operator") {
@@ -60,7 +61,7 @@ export default function SettingsButton({ role }: SettingsDialogProps) {
                   id="portCapacity"
                   type="number"
                   value={portCapacity}
-                  onChange={(e) => setPortCapacity(e.target.value)}
+                  onChange={(e) => setPortCapacity(Number(e.target.value))}
                   className="col-span-3"
                   min="0"
                   step="1"

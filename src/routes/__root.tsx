@@ -8,6 +8,8 @@ import { AppSidebar } from "../components/app-sidebar/app-sidebar"
 import UserButton from '../components/userButton/userButton';
 import '../index.css';
 import { Toaster } from 'sonner';
+import { generateClient } from 'aws-amplify/data';
+import type { Schema } from '../../amplify/data/resource';
 
 
 interface UserAttributes {
@@ -29,9 +31,17 @@ export const Route = createRootRoute({
   },
 })
 
-function RootComponent() {
+async function RootComponent() {
   const { user } = useAuthenticator()
   const [userAttributes, setUserAttributes] = useState<{ fullName: string; role: string }>({ fullName: "", role: "" })
+  
+  
+  const client = generateClient<Schema>();
+  
+  // get a specific item
+  const { data: limit } = await client.models.Limit.get({
+    id: 'fb06313f-66fa-47e7-830c-20f343b9339c',
+  });
 
   useEffect(() => {
     const getUserAttributes = async () => {
@@ -64,7 +74,7 @@ function RootComponent() {
         <div className="flex-1">
           <Toaster position="bottom-right" richColors={true} />
           <div className="flex items-center justify-end p-4">
-            <UserButton fullName={userAttributes.fullName} role={userAttributes.role} />
+            <UserButton fullName={userAttributes.fullName} role={userAttributes.role} limit={limit?.portCapacity ?? 0} />
           </div>
           <Outlet />
         </div>
