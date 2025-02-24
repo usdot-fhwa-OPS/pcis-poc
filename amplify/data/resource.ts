@@ -32,6 +32,12 @@ const schema = a.schema({
     })
     .identifier(['containerID'])
     .authorization((allow) => [allow.publicApiKey(),]),
+  Limit: a
+    .model({
+      portCapacity: a.integer().required().default(3),
+    })
+    .identifier(['portCapacity'])
+    .authorization((allow) => [allow.publicApiKey(),]),
 });
 
 export type Schema = ClientSchema<typeof schema>;
