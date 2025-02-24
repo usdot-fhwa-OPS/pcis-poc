@@ -36,7 +36,6 @@ const schema = a.schema({
     .model({
       portCapacity: a.integer().required().default(3),
     })
-    .identifier(['portCapacity'])
     .authorization((allow) => [allow.publicApiKey(),]),
 });
 
