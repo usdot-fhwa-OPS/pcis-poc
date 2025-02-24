@@ -35,7 +35,7 @@ export const columns = (status: string): ColumnDef<any>[] => {
           <Button
             variant="outline"
             className="text-green-700"
-            onClick={() =>  (table.options.meta as TerminalOperatorDataTableMeta)?.updateBooking(row.original.containerID, "Pending Pick Up", row.original.modifiedBookingDate, row.original.modifiedBookingTime)}
+            onClick={() =>  (table.options.meta as TerminalOperatorDataTableMeta)?.updateBooking(row.original.containerID, "Pending Pick Up")}
           >
             Approve
           </Button>
@@ -75,7 +75,7 @@ export const columns = (status: string): ColumnDef<any>[] => {
           <Button
             variant="outline"
             className="text-green-700"
-            onClick={() =>  (table.options.meta as TerminalOperatorDataTableMeta)?.updateBooking(row.original.containerID, "Pending Pick Up")}
+            onClick={() =>  (table.options.meta as TerminalOperatorDataTableMeta)?.updateBooking(row.original.containerID, "Pending Pick Up", row.original.modifiedBookingDate, row.original.modifiedBookingTime)}
           >
             Approve
           </Button>
