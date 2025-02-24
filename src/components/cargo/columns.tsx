@@ -4,11 +4,6 @@ import { ColumnDef } from "@tanstack/react-table"
 import { Flag } from "lucide-react"
 import { useState } from "react"
 import { Button } from "../ui/button"
-import { Label } from "../ui/label"
-import { Input } from "../ui/input"
-import { CargoTableMeta } from "./cargo-table"
-
-
 
 import {
   DropdownMenu,
@@ -19,17 +14,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu"
-
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-  DialogFooter,
-} from "../ui/dialog"  
-
 //Four Imports needed for Amplify Data Queries and CRUD methods
 
 import { generateClient } from 'aws-amplify/data';
