@@ -1,4 +1,5 @@
-import { ChevronDown } from 'lucide-react';
+
+import SettingsButton from '../settings/settingsButton';
 import './userButtonStyles.css';
 
 interface UserButtonProps {
@@ -9,7 +10,7 @@ interface UserButtonProps {
 const UserButton: React.FC<UserButtonProps> = ({ fullName, role }) => {
     return (
         <button className="user-button">
-            <ChevronDown size={20} />
+            <SettingsButton role={role} />
             <div className="user-button-content">
             <span>{fullName}</span>
             <span className="user-role">{role}</span>
