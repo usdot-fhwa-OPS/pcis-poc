@@ -34,10 +34,8 @@ const schema = a.schema({
     .authorization((allow) => [allow.publicApiKey(),]),
   Limit: a
     .model({
-      limitType: a.string().required(),
-      limit: a.integer().required().default(3),
+      portCapacity: a.integer().required().default(3),
     })
-    .identifier(['limitType'])
     .authorization((allow) => [allow.publicApiKey(),]),
 });
 

@@ -1,26 +1,26 @@
 import { createRootRoute, Link, Outlet } from '@tanstack/react-router'
 import '../App.css';
-// import { useAuthenticator } from '@aws-amplify/ui-react';
-// import { fetchUserAttributes } from 'aws-amplify/auth';
-// import { useEffect, useState } from 'react';
+import { useAuthenticator } from '@aws-amplify/ui-react';
+import { fetchUserAttributes } from 'aws-amplify/auth';
+import { useEffect, useState } from 'react';
 import { SidebarProvider } from "../components/ui/sidebar";
 import { AppSidebar } from "../components/app-sidebar/app-sidebar"
-// import UserButton from '../components/userButton/userButton';
+import UserButton from '../components/userButton/userButton';
 import '../index.css';
 import { Toaster } from 'sonner';
-// import { generateClient } from 'aws-amplify/data';
-// import type { Schema } from '../../amplify/data/resource';
-// import type { SelectionSet } from 'aws-amplify/data';
+import { generateClient } from 'aws-amplify/data';
+import type { Schema } from '../../amplify/data/resource';
+import type { SelectionSet } from 'aws-amplify/data';
 
-// const selectionSet = ['portCapacity'] as const;
+const selectionSet = ['portCapacity'] as const;
 
-// type BookingLimit = SelectionSet<Schema['Limit']['type'], typeof selectionSet>;
+type BookingLimit = SelectionSet<Schema['Limit']['type'], typeof selectionSet>;
 
-// interface UserAttributes {
-//   given_name?: string;
-//   family_name?: string;
-//   'custom:role'?: string;
-// }
+interface UserAttributes {
+  given_name?: string;
+  family_name?: string;
+  'custom:role'?: string;
+}
 
 
 export const Route = createRootRoute({
@@ -34,54 +34,57 @@ export const Route = createRootRoute({
     )
   },
 })
-// const client = generateClient<Schema>();
+const client = generateClient<Schema>();
 
 function RootComponent() {
-  // const { user } = useAuthenticator()
-  // const [userAttributes, setUserAttributes] = useState<{ fullName: string; role: string }>({ fullName: "", role: "" })
-  // const [bookingLimit, setBookingLimit] = useState<BookingLimit[]>([]);
+  const { user } = useAuthenticator()
+  const [userAttributes, setUserAttributes] = useState<{ fullName: string; role: string }>({ fullName: "", role: "" })
+  const [bookingLimit, setBookingLimit] = useState<BookingLimit[]>([]);
   
   
-  // // async function fetchBookingLimit() {
-  // //   try {
-  // //     const { data: limit } = await client.models.Limit.get(
-        
-  // //     );
-  // //     if (limit) {
-  // //       setBookingLimit([limit]);
-  // //     }
-  // //   } catch (error) {
-  // //     console.error('Error fetching booking limit', error);
-  // //   }
-  // // }
+  async function fetchBookingLimit() {
+    try {
+      const { data: limit } = await client.models.Limit.get(
+        {id: 'fb06313f-66fa-47e7-830c-20f343b9339c'},
+        {
+          authMode: 'apiKey',
+        }
+      );
+      if (limit) {
+        setBookingLimit([limit]);
+      }
+    } catch (error) {
+      console.error('Error fetching booking limit', error);
+    }
+  }
   
-  // useEffect(() => {
-  //   fetchBookingLimit();
-  // }, [userAttributes.role]);
+  useEffect(() => {
+    fetchBookingLimit();
+  }, [userAttributes.role]);
 
-  // useEffect(() => {
-  //   const getUserAttributes = async () => {
-  //     try {
-  //       const attributes: UserAttributes = await fetchUserAttributes()
+  useEffect(() => {
+    const getUserAttributes = async () => {
+      try {
+        const attributes: UserAttributes = await fetchUserAttributes()
 
-  //       const fullName =
-  //         attributes.given_name && attributes.family_name
-  //           ? `${attributes.given_name} ${attributes.family_name}`
-  //           : "Unknown"
+        const fullName =
+          attributes.given_name && attributes.family_name
+            ? `${attributes.given_name} ${attributes.family_name}`
+            : "Unknown"
 
-  //       setUserAttributes({
-  //         fullName,
-  //         role: attributes["custom:role"] ?? "No role assigned",
-  //       })
-  //     } catch (error) {
-  //       console.error("Error fetching user attributes:", error)
-  //     }
-  //   }
+        setUserAttributes({
+          fullName,
+          role: attributes["custom:role"] ?? "No role assigned",
+        })
+      } catch (error) {
+        console.error("Error fetching user attributes:", error)
+      }
+    }
 
-  //   if (user) {
-  //     getUserAttributes()
-  //   }
-  // }, [user])
+    if (user) {
+      getUserAttributes()
+    }
+  }, [user])
 
   return (
     <div className="flex min-h-screen bg-background">
@@ -90,7 +93,7 @@ function RootComponent() {
         <div className="flex-1">
           <Toaster position="bottom-right" richColors={true} />
           <div className="flex items-center justify-end p-4">
-            {/* <UserButton fullName={userAttributes.fullName} role={userAttributes.role} limit={bookingLimit[0]?.portCapacity ?? 0} /> */}
+            <UserButton fullName={userAttributes.fullName} role={userAttributes.role} limit={bookingLimit[0]?.portCapacity ?? 0} />
           </div>
           <Outlet />
         </div>
