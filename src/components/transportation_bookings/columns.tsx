@@ -196,7 +196,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
       header: "Booking",
       cell: ({ row, table }) => {
 
-        const [date, setDate] = useState<Date | undefined>(undefined)
+        const [date, setDate] = useState<Date | undefined>(new Date())
         const [time, setTime] = useState<string | undefined>(undefined)
         const [isCalendarOpen, setIsCalendarOpen] = useState(false)
         const [isDialogOpen, setIsDialogOpen] = useState(false)
@@ -218,19 +218,18 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
 
         useEffect(() => {
           const bookingSub = client.models.Container.observeQuery(
-            // {
-            //   filter: {
-            //     bookingDate: {
-            //       eq: String(format(date!, "MM/dd/yyyy"))}
-            //   }
-            // }
+            {
+              filter: {
+                bookingDate: {eq: String(format(date!, "MM/dd/yyyy"))}
+              }
+            }
           ).subscribe({  
             next: ({ items }) => {
               setBookingsLength(items.length);
             },
           });
           return () => bookingSub.unsubscribe();
-        }, []);
+        }, [date]);
 
         const handleBooking = async () => {
           // try{
