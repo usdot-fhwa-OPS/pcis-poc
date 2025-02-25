@@ -233,26 +233,8 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
         }, [date]);
 
         const handleBooking = async () => {
-          // try{
-          //   const {data: bookings} = await client.models.Container.list({
-          //     authMode: 'apiKey',
-          //     filter: {
-          //       bookingDate: {
-          //         eq: String(format(date!, "MM/dd/yyyy"))
-          //       }
-          //     }
-          //   })
-          //   console.log(String(format(date!, "MM/dd/yyyy")));
-          //   console.log("Bookings: ", bookings);
-          //   setBookingsLength(bookings.length);
-          // } catch {
-          //   console.error("Error fetching bookings")
-          // }
-
-          console.log("Bookings Length: ", bookingsLength)
-          console.log("Limit: ", limit)
           if (bookingsLength >= limit!) {
-            toast.error("Booking limit reached. Please try again later.")
+            toast.error(`Port at capacity (Limit ${limit} per day). Please try a different date.`)
           } else {
             (table.options.meta as TransOpDataTableMeta)?.updateTransOpBooking(row.original.containerID, "Pending Booking Approval", String(format(date!, "MM/dd/yyyy")), time ?? "")
             setIsDialogOpen(false)
@@ -409,18 +391,49 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
       accessorKey: "modifyBooking",
       header: "Modify Booking",
       cell: ({ row, table }) => {
-        const [date, setDate] = useState<Date | undefined>(undefined)
+        const [date, setDate] = useState<Date | undefined>(new Date())
         const [time, setTime] = useState<string | undefined>(undefined)
         const [isCalendarOpen, setIsCalendarOpen] = useState(false)
         const [isDialogOpen, setIsDialogOpen] = useState(false)
+        const [limit, setLimit] = useState<number>();
+        const [bookingsLength, setBookingsLength] = useState<number>(0);
         
         const isDateTimeSelected = (): boolean => {
           return !!date && !!time
         }
-        
-        const handleBooking = () => {
-          (table.options.meta as TransOpDataTableMeta)?.updateTransOpBooking(row.original.containerID, "Pickup Modification Requested", String(format(date!, "MM/dd/yyyy")), time ?? "")
-          setIsDialogOpen(false)
+
+        useEffect(() => {
+          const limitSub = client.models.Limit.observeQuery().subscribe({
+            next: ({ items }) => {
+              setLimit(items[0].portCapacity);
+            },
+          });
+          return () => limitSub.unsubscribe();
+        }, []);
+
+        useEffect(() => {
+          const bookingSub = client.models.Container.observeQuery(
+            {
+              filter: {
+                bookingDate: {eq: String(format(date!, "MM/dd/yyyy"))}
+              }
+            }
+          ).subscribe({  
+            next: ({ items }) => {
+              setBookingsLength(items.length);
+            },
+          });
+          return () => bookingSub.unsubscribe();
+        }, [date]);
+
+        const handleBooking = async () => {
+          if (bookingsLength >= limit!) {
+            toast.error(`Port at capacity (Limit ${limit} per day). Please try a different date.`)
+          } else {
+            (table.options.meta as TransOpDataTableMeta)?.updateTransOpBooking(row.original.containerID, "Pickup Modification Requested", String(format(date!, "MM/dd/yyyy")), time ?? "")
+            setIsDialogOpen(false)
+          }
+          
         }
 
         const timeOptions = [
@@ -451,6 +464,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
         ]
 
         const handleDateSelect = (selectedDate: Date | undefined) => {
+          if (!selectedDate) return;
           setDate(selectedDate)
           // Keep the calendar open after selection
           setIsCalendarOpen(true)
