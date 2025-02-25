@@ -24,7 +24,7 @@ interface SettingsDialogProps {
 
 export default function SettingsButton({ role, limit }: SettingsDialogProps) {
     const [open, setOpen] = useState(false)
-    const [portCapacity, setPortCapacity] = useState<number>(limit)
+    const [portCapacity, setPortCapacity] = useState(limit)
   
     // If user is not a Terminal Operator, don't render anything
     if (role !== "Terminal Operator") {
@@ -43,13 +43,13 @@ export default function SettingsButton({ role, limit }: SettingsDialogProps) {
         <DialogTrigger asChild>
           <Button variant="ghost" size="icon" className="h-8 w-8 mr-0">
             <Settings className="h-4 w-4" />
-            <span className="sr-only">{limit}</span>
+            <span className="sr-only">Open settings</span>
           </Button>
         </DialogTrigger>
         <DialogContent>
           <form onSubmit={handleSubmit}>
             <DialogHeader>
-              <DialogTitle>Settings</DialogTitle>
+              <DialogTitle>{`Current Booking Limit: ${limit}`}</DialogTitle>
               <DialogDescription>Adjust your application settings here.</DialogDescription>
             </DialogHeader>
             <div className="grid gap-4 py-4">
