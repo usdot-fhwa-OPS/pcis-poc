@@ -226,6 +226,8 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
                 }
               }
             })
+            console.log(String(format(date!, "MM/dd/yyyy")));
+            console.log("Bookings: ", bookings);
             setBookingsLength(bookings.length);
           } catch {
             console.error("Error fetching bookings")
