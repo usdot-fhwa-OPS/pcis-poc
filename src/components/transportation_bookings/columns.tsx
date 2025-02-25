@@ -215,14 +215,15 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
           });
           return () => limitSub.unsubscribe();
         }, []);
+
         useEffect(() => {
           const bookingSub = client.models.Container.observeQuery(
-            {
-              filter: {
-                bookingDate: {
-                  eq: String(format(date!, "MM/dd/yyyy"))}
-              }
-            }
+            // {
+            //   filter: {
+            //     bookingDate: {
+            //       eq: String(format(date!, "MM/dd/yyyy"))}
+            //   }
+            // }
           ).subscribe({  
             next: ({ items }) => {
               setBookingsLength(items.length);
@@ -230,6 +231,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
           });
           return () => bookingSub.unsubscribe();
         }, []);
+
         const handleBooking = async () => {
           // try{
           //   const {data: bookings} = await client.models.Container.list({
