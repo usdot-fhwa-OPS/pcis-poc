@@ -1,7 +1,5 @@
 "use client"
 
-import type React from "react"
-
 import { useState, useEffect } from "react"
 import { Settings } from "lucide-react"
 import { Button } from "../ui/button"
@@ -16,7 +14,9 @@ import {
 } from "../ui/dialog"
 import { Input } from "../ui/input"
 import { Label } from "../ui/label"
-
+import { generateClient } from 'aws-amplify/data';
+import type { Schema } from '../../../amplify/data/resource';
+const client = generateClient<Schema>();
 interface SettingsDialogProps {
   role: string
   limit: number
@@ -35,10 +35,18 @@ export default function SettingsButton({ role, limit }: SettingsDialogProps) {
       return null
     }
   
-    const handleSubmit = (e: React.FormEvent) => {
-      e.preventDefault()
-      // Handle the submission logic here
-      console.log("Port Capacity:", portCapacity)
+    const handleSubmit = async () => {
+      try {
+        const { data: updatePortCapacity } = await client.models.Limit.update({
+          id: 'fb06313f-66fa-47e7-830c-20f343b9339c',
+          portCapacity: portCapacity,
+        }, {
+          authMode: 'apiKey',
+        })
+        console.log("updated port capacity", updatePortCapacity)
+      } catch (error) {
+        console.error ("error updating port capacity", error);
+      }
       setOpen(false)
     }
     
