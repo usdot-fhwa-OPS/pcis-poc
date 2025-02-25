@@ -208,30 +208,44 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
         }
 
         useEffect(() => {
-          const sub = client.models.Limit.observeQuery().subscribe({
+          const limitSub = client.models.Limit.observeQuery().subscribe({
             next: ({ items }) => {
               setLimit(items[0].portCapacity);
             },
           });
-          return () => sub.unsubscribe();
+          return () => limitSub.unsubscribe();
         }, []);
-
-        const handleBooking = async () => {
-          try{
-            const {data: bookings} = await client.models.Container.list({
-              authMode: 'apiKey',
+        useEffect(() => {
+          const bookingSub = client.models.Container.observeQuery(
+            {
               filter: {
                 bookingDate: {
-                  eq: String(format(date!, "MM/dd/yyyy"))
-                }
+                  eq: String(format(date!, "MM/dd/yyyy"))}
               }
-            })
-            console.log(String(format(date!, "MM/dd/yyyy")));
-            console.log("Bookings: ", bookings);
-            setBookingsLength(bookings.length);
-          } catch {
-            console.error("Error fetching bookings")
-          }
+            }
+          ).subscribe({  
+            next: ({ items }) => {
+              setBookingsLength(items.length);
+            },
+          });
+          return () => bookingSub.unsubscribe();
+        }, []);
+        const handleBooking = async () => {
+          // try{
+          //   const {data: bookings} = await client.models.Container.list({
+          //     authMode: 'apiKey',
+          //     filter: {
+          //       bookingDate: {
+          //         eq: String(format(date!, "MM/dd/yyyy"))
+          //       }
+          //     }
+          //   })
+          //   console.log(String(format(date!, "MM/dd/yyyy")));
+          //   console.log("Bookings: ", bookings);
+          //   setBookingsLength(bookings.length);
+          // } catch {
+          //   console.error("Error fetching bookings")
+          // }
 
           console.log("Bookings Length: ", bookingsLength)
           console.log("Limit: ", limit)
