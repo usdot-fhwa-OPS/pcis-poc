@@ -12,7 +12,7 @@ import { generateClient } from 'aws-amplify/data';
 import type { Schema } from '../../amplify/data/resource';
 import type { SelectionSet } from 'aws-amplify/data';
 
-const selectionSet = ['id', 'portCapacity'] as const;
+const selectionSet = ['portCapacity'] as const;
 
 type BookingLimit = SelectionSet<Schema['Limit']['type'], typeof selectionSet>;
 
@@ -39,15 +39,20 @@ const client = generateClient<Schema>();
 function RootComponent() {
   const { user } = useAuthenticator()
   const [userAttributes, setUserAttributes] = useState<{ fullName: string; role: string }>({ fullName: "", role: "" })
-  const [bookingLimit, setBookingLimit] = useState<number>(0);
+  const [bookingLimit, setBookingLimit] = useState<BookingLimit[]>([]);
   
   
   async function fetchBookingLimit() {
     try {
-      const { data: limit } = await client.models.Limit.get({
-        id: 'fb06313f-66fa-47e7-830c-20f343b9339c',
-      });
-      setBookingLimit(limit?.portCapacity ?? 0);
+      const { data: limit } = await client.models.Limit.get(
+        {id: 'fb06313f-66fa-47e7-830c-20f343b9339c'},
+        {
+          selectionSet
+        }
+      );
+      if (limit) {
+        setBookingLimit([limit]);
+      }
     } catch (error) {
       console.error('Error fetching booking limit', error);
     }
@@ -88,7 +93,7 @@ function RootComponent() {
         <div className="flex-1">
           <Toaster position="bottom-right" richColors={true} />
           <div className="flex items-center justify-end p-4">
-            <UserButton fullName={userAttributes.fullName} role={userAttributes.role} limit={bookingLimit} />
+            <UserButton fullName={userAttributes.fullName} role={userAttributes.role} limit={bookingLimit[0]?.portCapacity ?? 0} />
           </div>
           <Outlet />
         </div>
