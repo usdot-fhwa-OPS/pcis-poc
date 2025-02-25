@@ -10,11 +10,6 @@ import '../index.css';
 import { Toaster } from 'sonner';
 import { generateClient } from 'aws-amplify/data';
 import type { Schema } from '../../amplify/data/resource';
-import type { SelectionSet } from 'aws-amplify/data';
-
-const selectionSet = ['portCapacity'] as const;
-
-type BookingLimit = SelectionSet<Schema['Limit']['type'], typeof selectionSet>;
 
 interface UserAttributes {
   given_name?: string;
