@@ -47,7 +47,7 @@ function RootComponent() {
       const { data: limit } = await client.models.Limit.get(
         {id: 'fb06313f-66fa-47e7-830c-20f343b9339c'},
         {
-          selectionSet
+          authMode: 'apiKey',
         }
       );
       if (limit) {
