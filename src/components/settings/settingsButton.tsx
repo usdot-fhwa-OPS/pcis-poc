@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Settings } from "lucide-react"
 import { Button } from "../ui/button"
 import {
@@ -25,10 +25,11 @@ interface SettingsDialogProps {
 export default function SettingsButton({ role, limit }: SettingsDialogProps) {
     const [open, setOpen] = useState(false)
     const [portCapacity, setPortCapacity] = useState(limit)
-    
+
     useEffect(() => {
       setPortCapacity(limit);
     }, [limit]);
+
     // If user is not a Terminal Operator, don't render anything
     if (role !== "Terminal Operator") {
       return null
@@ -85,6 +86,3 @@ export default function SettingsButton({ role, limit }: SettingsDialogProps) {
     )
   }  
 
-function useEffect(arg0: () => void, arg1: number[]) {
-  throw new Error("Function not implemented.")
-}
