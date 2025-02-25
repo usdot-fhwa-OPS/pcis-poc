@@ -25,7 +25,10 @@ interface SettingsDialogProps {
 export default function SettingsButton({ role, limit }: SettingsDialogProps) {
     const [open, setOpen] = useState(false)
     const [portCapacity, setPortCapacity] = useState(limit)
-  
+    
+    useEffect(() => {
+      setPortCapacity(limit);
+    }, [limit]);
     // If user is not a Terminal Operator, don't render anything
     if (role !== "Terminal Operator") {
       return null
@@ -37,6 +40,8 @@ export default function SettingsButton({ role, limit }: SettingsDialogProps) {
       console.log("Port Capacity:", portCapacity)
       setOpen(false)
     }
+    
+    
   
     return (
       <Dialog open={open} onOpenChange={setOpen}>
@@ -79,3 +84,7 @@ export default function SettingsButton({ role, limit }: SettingsDialogProps) {
       </Dialog>
     )
   }  
+
+function useEffect(arg0: () => void, arg1: number[]) {
+  throw new Error("Function not implemented.")
+}
