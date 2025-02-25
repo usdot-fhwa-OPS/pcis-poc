@@ -230,6 +230,9 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
           } catch {
             console.error("Error fetching bookings")
           }
+
+          console.log("Bookings Length: ", bookingsLength)
+          console.log("Limit: ", limit)
           if (bookingsLength >= limit!) {
             alert("Booking limit reached. Please try again later.")
           } else {
