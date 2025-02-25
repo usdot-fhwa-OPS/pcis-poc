@@ -30,18 +30,28 @@ export const Route = createRootRoute({
     )
   },
 })
+const client = generateClient<Schema>();
 
-async function RootComponent() {
+function RootComponent() {
   const { user } = useAuthenticator()
   const [userAttributes, setUserAttributes] = useState<{ fullName: string; role: string }>({ fullName: "", role: "" })
+  const [bookingLimit, setBookingLimit] = useState<number>(0);
   
   
-  const client = generateClient<Schema>();
+  async function fetchBookingLimit() {
+    try {
+      const { data: limit } = await client.models.Limit.get({
+        id: 'fb06313f-66fa-47e7-830c-20f343b9339c',
+      });
+      setBookingLimit(limit?.portCapacity ?? 0);
+    } catch (error) {
+      console.error('Error fetching booking limit', error);
+    }
+  }
   
-  // get a specific item
-  const { data: limit } = await client.models.Limit.get({
-    id: 'fb06313f-66fa-47e7-830c-20f343b9339c',
-  });
+  useEffect(() => {
+    fetchBookingLimit();
+  }, [userAttributes.role]);
 
   useEffect(() => {
     const getUserAttributes = async () => {
@@ -74,7 +84,7 @@ async function RootComponent() {
         <div className="flex-1">
           <Toaster position="bottom-right" richColors={true} />
           <div className="flex items-center justify-end p-4">
-            <UserButton fullName={userAttributes.fullName} role={userAttributes.role} limit={limit?.portCapacity ?? 0} />
+            <UserButton fullName={userAttributes.fullName} role={userAttributes.role} limit={bookingLimit} />
           </div>
           <Outlet />
         </div>
