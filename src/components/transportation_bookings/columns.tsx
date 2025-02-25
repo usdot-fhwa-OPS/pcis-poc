@@ -287,6 +287,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
         ]
 
         const handleDateSelect = (selectedDate: Date | undefined) => {
+          if (!selectedDate) return;
           setDate(selectedDate)
           // Keep the calendar open after selection
           setIsCalendarOpen(true)
