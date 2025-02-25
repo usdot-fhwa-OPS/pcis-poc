@@ -25,6 +25,7 @@ import { TransOpDataTableMeta } from "./data-table.tsx";
 const client = generateClient<Schema>();
 import { TransOperatorCompletedBookings } from "../../routes/booking"
 import { Checkbox } from "../ui/checkbox.tsx";
+import { toast } from "sonner";
 
 
 export const columns = (): ColumnDef<any>[] => {
@@ -251,7 +252,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
           console.log("Bookings Length: ", bookingsLength)
           console.log("Limit: ", limit)
           if (bookingsLength >= limit!) {
-            alert("Booking limit reached. Please try again later.")
+            toast.error("Booking limit reached. Please try again later.")
           } else {
             (table.options.meta as TransOpDataTableMeta)?.updateTransOpBooking(row.original.containerID, "Pending Booking Approval", String(format(date!, "MM/dd/yyyy")), time ?? "")
             setIsDialogOpen(false)
