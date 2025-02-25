@@ -50,8 +50,6 @@ export default function SettingsButton({ role, limit }: SettingsDialogProps) {
       setOpen(false)
     }
     
-    
-  
     return (
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
@@ -63,7 +61,7 @@ export default function SettingsButton({ role, limit }: SettingsDialogProps) {
         <DialogContent>
           <form onSubmit={handleSubmit}>
             <DialogHeader>
-              <DialogTitle>{`Current Booking Limit: ${portCapacity}`}</DialogTitle>
+              <DialogTitle>Settings</DialogTitle>
               <DialogDescription>Adjust your application settings here.</DialogDescription>
             </DialogHeader>
             <div className="grid gap-4 py-4">
