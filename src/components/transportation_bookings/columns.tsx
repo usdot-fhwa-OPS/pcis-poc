@@ -1,6 +1,6 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "../ui/button.tsx";
-import { useState } from "react";
+import { useState, useEffect} from "react";
 import { Flag, CalendarIcon, Clock, Pencil} from "lucide-react";
 //import { Checkbox } from "../ui/checkbox.tsx"
 import { Calendar } from "../ui/calendar"
@@ -200,13 +200,43 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
         const [time, setTime] = useState<string | undefined>(undefined)
         const [isCalendarOpen, setIsCalendarOpen] = useState(false)
         const [isDialogOpen, setIsDialogOpen] = useState(false)
+        const [limit, setLimit] = useState<number>();
+        const [bookingsLength, setBookingsLength] = useState<number>(0);
         
         const isDateTimeSelected = (): boolean => {
           return !!date && !!time
         }
-        const handleBooking = () => {
-          (table.options.meta as TransOpDataTableMeta)?.updateTransOpBooking(row.original.containerID, "Pending Booking Approval", String(format(date!, "MM/dd/yyyy")), time ?? "")
-          setIsDialogOpen(false)
+
+        useEffect(() => {
+          const sub = client.models.Limit.observeQuery().subscribe({
+            next: ({ items }) => {
+              setLimit(items[0].portCapacity);
+            },
+          });
+          return () => sub.unsubscribe();
+        }, []);
+
+        const handleBooking = async () => {
+          try{
+            const {data: bookings} = await client.models.Container.list({
+              authMode: 'apiKey',
+              filter: {
+                bookingDate: {
+                  eq: String(format(date!, "MM/dd/yyyy"))
+                }
+              }
+            })
+            setBookingsLength(bookings.length);
+          } catch {
+            console.error("Error fetching bookings")
+          }
+          if (bookingsLength >= limit!) {
+            alert("Booking limit reached. Please try again later.")
+          } else {
+            (table.options.meta as TransOpDataTableMeta)?.updateTransOpBooking(row.original.containerID, "Pending Booking Approval", String(format(date!, "MM/dd/yyyy")), time ?? "")
+            setIsDialogOpen(false)
+          }
+          
         }
 
         const timeOptions = [
