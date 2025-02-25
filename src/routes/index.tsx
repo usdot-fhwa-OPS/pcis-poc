@@ -2,6 +2,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { useAuthenticator } from '@aws-amplify/ui-react';
 import { fetchUserAttributes } from 'aws-amplify/auth';
 import { useEffect, useState } from 'react';
+import {RouteComponent} from './booking';  
 
 interface UserAttributes {
   given_name?: string;
@@ -82,6 +83,9 @@ function Index() {
             {dateString}
           </p>
         </div>
+        <RouteComponent /> 
+        
       </div>
+
     );
 }

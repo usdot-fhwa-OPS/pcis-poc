@@ -670,6 +670,6 @@ useEffect(() => {
   );
 }
 }
-
+export { RouteComponent };
 
 
