@@ -1,4 +1,4 @@
-import { FileUp, Home, Ship, User, Bell, CalendarClock } from "lucide-react"
+import { FileUp, Home, Ship, User , CalendarClock } from "lucide-react"
 
 import {
   Sidebar,
@@ -18,6 +18,7 @@ import { useAuthenticator } from "@aws-amplify/ui-react";
 
 import { fetchUserAttributes } from 'aws-amplify/auth';
 import { useEffect, useState } from "react";
+import { NotificationsButton } from "../notifications-button/notifications-button";
 
 // Menu items.
 const items = [
@@ -46,11 +47,11 @@ const items = [
     url: "/booking",
     icon: CalendarClock,
   },
-  {
-    title: "Notifications",
-    url: "/notifications",
-    icon: Bell,
-  },
+  // {
+  //   title: "Notifications",
+  //   url: "/notifications",
+  //   icon: Bell,
+  // },
 ]
 
 export function AppSidebar() {
@@ -114,6 +115,7 @@ export function AppSidebar() {
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
+              <NotificationsButton />
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
