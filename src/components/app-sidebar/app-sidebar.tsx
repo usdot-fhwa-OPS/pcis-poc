@@ -22,6 +22,7 @@ import { NotificationsButton } from "../notifications-button/notifications-butto
 
 import { generateClient, SelectionSet } from 'aws-amplify/data';
 import type { Schema } from '../../../amplify/data/resource';
+import { Subscription } from "rxjs";
 
 const client = generateClient<Schema>();
 
@@ -64,6 +65,7 @@ export function AppSidebar() {
     role: '',
     email: '',
   });
+  let notisSub: Subscription;
 
   const [userNotifications, setUserNotifications] = useState<Notifications[]>([]);
 
@@ -110,7 +112,7 @@ export function AppSidebar() {
 
   useEffect(() => {
     if (userAttributes.role === "Beneficiary Cargo Owner") {
-      const notisSub = client.models.Container.observeQuery(
+      notisSub = client.models.Container.observeQuery(
         {
           filter: {
             and: [
@@ -130,9 +132,8 @@ export function AppSidebar() {
           setUserNotifications(items);
         },
       });
-      return () => notisSub.unsubscribe();
     } else if (userAttributes.role === "Transportation Operator") {
-      const notisSub = client.models.Container.observeQuery(
+      notisSub = client.models.Container.observeQuery(
         {
           filter: {
             and: [
@@ -152,9 +153,8 @@ export function AppSidebar() {
           setUserNotifications(items);
         },
       });
-      return () => notisSub.unsubscribe();
     } else {
-      const notisSub = client.models.Container.observeQuery(
+      notisSub = client.models.Container.observeQuery(
         {
           filter: {
             isTerminalNotify: {
@@ -167,10 +167,16 @@ export function AppSidebar() {
           setUserNotifications(items);
         },
       });
-      return () => notisSub.unsubscribe();
     }
     
   }, []);
+  
+  const handleSignOut = () => {
+    if (notisSub) {
+      notisSub.unsubscribe();
+    }
+    signOut();
+  };
 
   return (
     <Sidebar>
@@ -194,7 +200,7 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
         <SidebarFooter>
-          <Button onClick={signOut} variant={"destructive"}>Sign out</Button>
+          <Button onClick={handleSignOut} variant={"destructive"}>Sign out</Button>
         </SidebarFooter>
       </SidebarContent>
     </Sidebar>
