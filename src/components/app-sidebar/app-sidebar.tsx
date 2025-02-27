@@ -20,6 +20,14 @@ import { fetchUserAttributes } from 'aws-amplify/auth';
 import { useEffect, useState } from "react";
 import { NotificationsButton } from "../notifications-button/notifications-button";
 
+import { generateClient, SelectionSet } from 'aws-amplify/data';
+import type { Schema } from '../../../amplify/data/resource';
+
+const client = generateClient<Schema>();
+
+const selectionSet = ['containerID', 'bookingStatus'] as const;
+export type Notifications = SelectionSet<Schema['Container']['type'], typeof selectionSet>
+
 // Menu items.
 const items = [
   {
@@ -47,48 +55,50 @@ const items = [
     url: "/booking",
     icon: CalendarClock,
   },
-  // {
-  //   title: "Notifications",
-  //   url: "/notifications",
-  //   icon: Bell,
-  // },
 ]
 
 export function AppSidebar() {
   const { user, signOut } = useAuthenticator();
 
-  const [role, setRole] = useState<{ role: string }>({ role: '' });
+  const [userAttributes, setUserAttributes] = useState<{ role: string; email: string }>({
+    role: '',
+    email: '',
+  });
+
+  const [userNotifications, setUserNotifications] = useState<Notifications[]>([]);
 
   useEffect(() => {
-    async function getRole() {
+    async function getUserAttributes() {
       if (user) {
         try {
-          // fetchUserAttributes returns an array of objects with Name and Value properties.
           const attributes = await fetchUserAttributes();
           const roleAttribute = attributes['custom:role'] ?? 'No role assigned';
-          setRole({ role: roleAttribute });
+          setUserAttributes({
+            role: roleAttribute,
+            email: attributes.email ?? 'No email found',
+          });
         } catch (error) {
-          console.error("Error fetching user attributes", error);
+          console.error('Error fetching user attributes', error);
         }
       }
     }
 
-    getRole();
-  }, [user, fetchUserAttributes]);
+    getUserAttributes();
+  }, [user]);
 
   // Define which menu items are allowed for limited roles.
   const allowedForLimitedRoles = ["Home", "Booking Status", "Notifications"];
 
   // Filter menu items based on the custom role.
   const filteredItems = items.filter((item) => {
-    if (role.role === "Terminal Operator") {
+    if (userAttributes.role === "Terminal Operator") {
       // Terminal Operators have access to all items.
       return true;
     }
 
     if (
-      role.role === "Transportation Operator" ||
-      role.role === "Beneficiary Cargo Owner"
+      userAttributes.role === "Transportation Operator" ||
+      userAttributes.role === "Beneficiary Cargo Owner"
     ) {
       // These roles only have access to the allowed items.
       return allowedForLimitedRoles.includes(item.title);
@@ -97,6 +107,70 @@ export function AppSidebar() {
     // If role is undefined or unrecognized, do not show any items.
     return false;
   });
+
+  useEffect(() => {
+    if (userAttributes.role === "Beneficiary Cargo Owner") {
+      const notisSub = client.models.Container.observeQuery(
+        {
+          filter: {
+            and: [
+              {
+                bcoEmail: { eq: userAttributes.email }
+              },
+              {
+                isBCONotify: {
+                  eq: true
+                }
+              },
+            ]
+          }
+        }
+      ).subscribe({  
+        next: ({ items }) => {
+          setUserNotifications(items);
+        },
+      });
+      return () => notisSub.unsubscribe();
+    } else if (userAttributes.role === "Transportation Operator") {
+      const notisSub = client.models.Container.observeQuery(
+        {
+          filter: {
+            and: [
+              {
+                transopEmail: { eq: userAttributes.email }
+              },
+              {
+                isTransportationNotify: {
+                  eq: true
+                }
+              },
+            ]
+          }
+        }
+      ).subscribe({  
+        next: ({ items }) => {
+          setUserNotifications(items);
+        },
+      });
+      return () => notisSub.unsubscribe();
+    } else {
+      const notisSub = client.models.Container.observeQuery(
+        {
+          filter: {
+            isTransportationNotify: {
+              eq: true
+            }
+          }
+        }
+      ).subscribe({  
+        next: ({ items }) => {
+          setUserNotifications(items);
+        },
+      });
+      return () => notisSub.unsubscribe();
+    }
+    
+  }, []);
 
   return (
     <Sidebar>
@@ -115,7 +189,7 @@ export function AppSidebar() {
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
-              <NotificationsButton />
+              <NotificationsButton notifications={userNotifications} role={userAttributes.role} />
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>

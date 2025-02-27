@@ -6,50 +6,53 @@ import { Dialog, DialogContent, DialogHeader } from "../ui/dialog"
 import { ScrollArea } from "../ui/scroll-area"
 import { Button } from "../ui/button"
 import { SidebarMenuItem, SidebarMenuButton, SidebarMenuBadge } from "../ui/sidebar"
+import { Notifications } from "../app-sidebar/app-sidebar"
 
-// Mock notifications data
-const notifications = [
-  {
-    id: 1,
-    message: "Terminal operator assignment is required for container YH798.",
-    date: "January 12, 2024",
-    time: "10:00am",
-  },
-  {
-    id: 2,
-    message: "Terminal operator assignment is required for container YH798.",
-    date: "January 12, 2024",
-    time: "10:00am",
-  },
-  {
-    id: 3,
-    message: "Terminal operator assignment is required for container YH798.",
-    date: "January 12, 2024",
-    time: "10:00am",
-  },
-  {
-    id: 4,
-    message: "Terminal operator assignment is required for container YH798.",
-    date: "January 12, 2024",
-    time: "10:00am",
-  },
-  {
-    id: 5,
-    message: "Terminal operator assignment is required for container YH798.",
-    date: "January 12, 2024",
-    time: "10:00am",
-  },
-  {
-    id: 6,
-    message: "Terminal operator assignment is required for container YH798.",
-    date: "January 12, 2024",
-    time: "10:00am",
-  },
-]
+interface NotificationsButtonProps {
+    notifications: Notifications[]
+    role: string
+}
 
-export function NotificationsButton() {
+
+export function NotificationsButton({notifications, role }: NotificationsButtonProps) {
   const [open, setOpen] = useState(false)
   const unreadCount = notifications.length
+
+  const getNotificationMessage = (role: string, notification: Notifications) => {
+    if (role === "Beneficiary Cargo Owner") {
+      switch (notification.bookingStatus) {
+        case "Pickup Modification Requested":
+          return `Modified Booking for Container ${notification.containerID} has been requested by transportation operator. Awaiting approval by the terminal operator.`;
+        case "Pending Booking Approval":
+          return `Booking for Container ${notification.containerID} has been requested by transportation operator. Awaiting approval by the terminal operator.`;
+        case "Pending Pick Up":
+          return `Booking for Container ${notification.containerID} has been approved by the terminal operator.`;
+        case "unassigned":
+          return `Terminal Operator has denied the booking for Container ${notification.containerID}.`;
+        
+      }
+    } else if (role === "Transportation Operator") {
+      switch (notification.bookingStatus) {
+        case "Pending Transportation Operator Approval":
+          return `Assignment of Container ${notification.containerID} requires your approval`;
+        case "Pending Booking":
+          return `Container ${notification.containerID} requires booking`;
+        case "Pending Pick Up":
+          return `Booking for Container ${notification.containerID} has been approved by terminal operator.`;
+        case "unassigned":
+          return `Terminal Operator has denied the booking for Container ${notification.containerID}.`;
+        
+      }
+    } else {
+      switch (notification.bookingStatus) {
+        case "Pending Booking Approval":
+          return `Booking for Container ${notification.containerID} requires your approval`;
+        case "Pickup Modification Requested":
+          return `Modified Booking for Container ${notification.containerID} requires your approval`;
+        
+      }
+    } 
+  };
 
   return (
     <>
@@ -74,14 +77,11 @@ export function NotificationsButton() {
           <ScrollArea className="h-[calc(80vh-100px)]">
             {notifications.map((notification) => (
               <div
-                key={notification.id}
+                key={notification.containerID}
                 className="flex items-start justify-between gap-4 p-4 border-b last:border-b-0"
               >
                 <div className="space-y-1">
-                  <p className="text-sm">{notification.message}</p>
-                  <p className="text-xs text-muted-foreground">
-                    {notification.date} • {notification.time}
-                  </p>
+                  <p className="text-sm">{getNotificationMessage(role, notification)}</p>
                 </div>
                 <Button variant="outline" size="sm" className="shrink-0">
                   View

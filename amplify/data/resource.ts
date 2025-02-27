@@ -29,6 +29,9 @@ const schema = a.schema({
       bookingApprovalDate: a.string(),
       bookingPickupDate: a.string(),
       flag: a.boolean().default(false),
+      isTransportationNotify: a.boolean().default(false),
+      isBCONotify: a.boolean().default(false),
+      isTerminalNotify: a.boolean().default(false),
     })
     .identifier(['containerID'])
     .authorization((allow) => [allow.publicApiKey(),]),
