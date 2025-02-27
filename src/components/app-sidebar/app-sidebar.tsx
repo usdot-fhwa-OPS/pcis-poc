@@ -111,7 +111,7 @@ export function AppSidebar() {
   });
 
   useEffect(() => {
-    if (userAttributes.role === "Beneficiary Cargo Owner") {
+    if (userAttributes.role == "Beneficiary Cargo Owner") {
       console.log("I AM BCO")
       notisSub = client.models.Container.observeQuery(
         {
@@ -134,7 +134,7 @@ export function AppSidebar() {
           console.log(items)
         },
       });
-    } else if (userAttributes.role === "Transportation Operator") {
+    } else if (userAttributes.role == "Transportation Operator") {
       console.log("I AM TRANSPORTATION")
       notisSub = client.models.Container.observeQuery(
         {
