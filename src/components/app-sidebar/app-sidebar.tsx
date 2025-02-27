@@ -163,8 +163,10 @@ export function AppSidebar() {
           }
         }
       ).subscribe({  
-        next: ({ items }) => {
+        next: ({ items, isSynced }) => {
           setUserNotifications(items);
+          console.log(items);
+          console.log(isSynced);
         },
       });
     }
