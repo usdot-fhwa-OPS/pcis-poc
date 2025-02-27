@@ -508,6 +508,7 @@ async function updateBooking(id: string, status: string, bookingDate?: string, b
       });
       console.log("Updated flag:", updatedContainerStatus);
       await fetchterminal_operator_requested();
+      await fetchTerminalOperatorModified();
     }
   } catch (error) {
     console.error("Error updating flag:", error);
