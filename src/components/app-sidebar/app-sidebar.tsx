@@ -130,6 +130,7 @@ export function AppSidebar() {
       ).subscribe({  
         next: ({ items }) => {
           setUserNotifications(items);
+          console.log(items)
         },
       });
     } else if (userAttributes.role === "Transportation Operator") {
@@ -151,6 +152,7 @@ export function AppSidebar() {
       ).subscribe({  
         next: ({ items }) => {
           setUserNotifications(items);
+          console.log(items)
         },
       });
     } else {
