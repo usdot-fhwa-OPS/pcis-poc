@@ -315,6 +315,9 @@ function RouteComponent() {
                   {
                     bookingStatus: { eq: 'Picked Up' }
                   },
+                  {
+                    bookingStatus: { eq: 'Pickup Modification Requested' }
+                  },
                 ]
               }
             ]
@@ -401,7 +404,7 @@ function RouteComponent() {
               bookingStatus: { eq: 'Pending Pick Up' }
             },
             {
-              bookingStatus: { eq: 'Late' }
+              bookingStatus: { eq: 'Late for Pick Up' }
             }
           ]
         }
