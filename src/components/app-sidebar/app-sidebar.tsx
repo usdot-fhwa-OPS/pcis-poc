@@ -111,6 +111,7 @@ export function AppSidebar() {
   });
 
   useEffect(() => {
+    console.log(userAttributes.role)
     if (userAttributes.role == "Beneficiary Cargo Owner") {
       console.log("I AM BCO")
       notisSub = client.models.Container.observeQuery(
