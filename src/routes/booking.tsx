@@ -12,6 +12,7 @@ import { useAuthenticator } from "@aws-amplify/ui-react";
 //Three Imports needed for Amplify Data Queries and CRUD methods
 import { generateClient, SelectionSet } from 'aws-amplify/data';
 import type { Schema } from '../../amplify/data/resource';
+import { isDateRange } from 'react-day-picker'
 
 const client = generateClient<Schema>();
 
@@ -341,6 +342,7 @@ function RouteComponent() {
         transopEmail: newEmail,
         bookingStatus: bookingStatus,
         assignmentDate: new Date().toLocaleDateString('en-US'),
+        isTransportationNotify: true,
       });
       console.log('Updated container status:', assignTransportationOp);
       // Refetch containers after updating
@@ -429,26 +431,38 @@ function RouteComponent() {
       }
     
       try {
-        let updatePayload = { containerID: id, bookingStatus: status };
+        let updatePayload = { containerID: id, bookingStatus: status, isTransportationNotify: false, isBCONotify: false, isTerminalNotify: false };
     
         if (status === "unassigned") {
           Object.assign(updatePayload, {
             transopName: "",
-            transopEmail: ""
+            transopEmail: "",
+            isTransportationNotify: false,
+            isBCONotify: true,
+            isTerminalNotify: false,
           });
         } else if (status === "Pending Booking Approval") {
           Object.assign(updatePayload, {
             bookingDate,
-            bookingTime
+            bookingTime,
+            isTerminalNotify: true,
+            isBCONotify: true,
+            isTransportationNotify: false,
           });
         } else if (status === "Picked Up") {
           Object.assign(updatePayload, {
-            bookingPickupDate: bookingDate
+            bookingPickupDate: bookingDate,
+            isTransportationNotify: false,
+            isBCONotify:false,
+            isTerminalNotify: false
           });
         } else if (status === "Pickup Modification Requested") {
           Object.assign(updatePayload, {
             modifiedBookingDate: bookingDate,
-            modifiedBookingTime: bookingTime
+            modifiedBookingTime: bookingTime,
+            isTerminalNotify: true,
+            isBCONotify: true,
+            isTransportationNotify: false,
           });
         }
         
@@ -472,6 +486,7 @@ function RouteComponent() {
 async function updateBooking(id: string, status: string, bookingDate?: string, bookingTime?: string) {  
   try {
     if (status === "unassigned") {
+      //Denying a Booking -> unassigned
       const { data: updatedContainerStatus } = await client.models.Container.update({
         containerID: id,
         bookingStatus: status,
@@ -484,11 +499,14 @@ async function updateBooking(id: string, status: string, bookingDate?: string, b
         bookingLatestUpdateDate: "",
         modifiedBookingDate: "",
         modifiedBookingTime:"",
-
+        isTerminalNotify: false,
+        isTransportationNotify: true,
+        isBCONotify: true,
       });
       console.log("Updated flag with transop details:", updatedContainerStatus);
       await fetchterminal_operator_requested();
     } else if (bookingDate) {
+      //Approving a Booking -> Pending Pick Up
       const { data: updatedContainerStatus } = await client.models.Container.update({
         containerID: id,
         bookingStatus: status,
@@ -497,14 +515,21 @@ async function updateBooking(id: string, status: string, bookingDate?: string, b
         bookingTime: bookingTime,
         modifiedBookingDate: "",
         modifiedBookingTime: "",
+        isTerminalNotify: false,
+        isBCONotify: true,
+        isTransportationNotify: true,
       });
       console.log("Updated flag:", updatedContainerStatus);
       await fetchTerminalOperatorModified();
     } else {
+      //Approving a Booking -> Pending Pick Up
       const { data: updatedContainerStatus } = await client.models.Container.update({
         containerID: id,
         bookingStatus: status,
         bookingApprovalDate: new Date().toLocaleDateString('en-US'),
+        isTerminalNotify: false,
+        isBCONotify: true,
+        isTransportationNotify: true,
       });
       console.log("Updated flag:", updatedContainerStatus);
       await fetchterminal_operator_requested();
