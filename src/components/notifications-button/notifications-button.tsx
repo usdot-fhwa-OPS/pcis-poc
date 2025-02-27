@@ -81,7 +81,7 @@ export function NotificationsButton({notifications, role }: NotificationsButtonP
                 <div className="space-y-1">
                   <p className="text-sm">{getNotificationMessage(role, notification)}</p>
                 </div>
-                <Link  to="/booking">
+                <Link to="/booking" onClick={() => setOpen(false)} className="text-blue-500 hover:underline">
                   View
                 </Link>
               </div>
