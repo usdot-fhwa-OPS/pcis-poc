@@ -7,6 +7,7 @@ import { ScrollArea } from "../ui/scroll-area"
 import { Button } from "../ui/button"
 import { SidebarMenuItem, SidebarMenuButton, SidebarMenuBadge } from "../ui/sidebar"
 import { Notifications } from "../app-sidebar/app-sidebar"
+import { Link, linkOptions } from "@tanstack/react-router"
 
 interface NotificationsButtonProps {
     notifications: Notifications[]
@@ -17,6 +18,11 @@ interface NotificationsButtonProps {
 export function NotificationsButton({notifications, role }: NotificationsButtonProps) {
   const [open, setOpen] = useState(false)
   const unreadCount = notifications.length
+
+  const bookingLinkOptions = linkOptions({
+    to: '/booking',
+    search: { search: '' },
+  })
 
   const getNotificationMessage = (role: string, notification: Notifications) => {
     if (role === "Beneficiary Cargo Owner") {
@@ -35,8 +41,6 @@ export function NotificationsButton({notifications, role }: NotificationsButtonP
       switch (notification.bookingStatus) {
         case "Pending Transportation Operator Approval":
           return `Assignment of Container ${notification.containerID} requires your approval`;
-        case "Pending Booking":
-          return `Container ${notification.containerID} requires booking`;
         case "Pending Pick Up":
           return `Booking for Container ${notification.containerID} has been approved by terminal operator.`;
         case "unassigned":
@@ -83,9 +87,9 @@ export function NotificationsButton({notifications, role }: NotificationsButtonP
                 <div className="space-y-1">
                   <p className="text-sm">{getNotificationMessage(role, notification)}</p>
                 </div>
-                <Button variant="outline" size="sm" className="shrink-0">
+                <Link  to="/booking">
                   View
-                </Button>
+                </Link>
               </div>
             ))}
           </ScrollArea>
