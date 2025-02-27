@@ -12,7 +12,6 @@ import { useAuthenticator } from "@aws-amplify/ui-react";
 //Three Imports needed for Amplify Data Queries and CRUD methods
 import { generateClient, SelectionSet } from 'aws-amplify/data';
 import type { Schema } from '../../amplify/data/resource';
-import { isDateRange } from 'react-day-picker'
 
 const client = generateClient<Schema>();
 
