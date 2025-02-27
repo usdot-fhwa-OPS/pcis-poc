@@ -4,10 +4,9 @@ import { Bell } from "lucide-react"
 import { useState } from "react"
 import { Dialog, DialogContent, DialogHeader } from "../ui/dialog"
 import { ScrollArea } from "../ui/scroll-area"
-import { Button } from "../ui/button"
 import { SidebarMenuItem, SidebarMenuButton, SidebarMenuBadge } from "../ui/sidebar"
 import { Notifications } from "../app-sidebar/app-sidebar"
-import { Link, linkOptions } from "@tanstack/react-router"
+import { Link } from "@tanstack/react-router"
 
 interface NotificationsButtonProps {
     notifications: Notifications[]
@@ -18,11 +17,6 @@ interface NotificationsButtonProps {
 export function NotificationsButton({notifications, role }: NotificationsButtonProps) {
   const [open, setOpen] = useState(false)
   const unreadCount = notifications.length
-
-  const bookingLinkOptions = linkOptions({
-    to: '/booking',
-    search: { search: '' },
-  })
 
   const getNotificationMessage = (role: string, notification: Notifications) => {
     if (role === "Beneficiary Cargo Owner") {
