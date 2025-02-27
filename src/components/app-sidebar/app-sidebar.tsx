@@ -154,7 +154,7 @@ export function AppSidebar() {
         },
       });
     } else {
-      notisSub = client.models.Container.onUpdate(
+      notisSub = client.models.Container.observeQuery(
         {
           filter: {
             isTerminalNotify: {
@@ -163,13 +163,8 @@ export function AppSidebar() {
           }
         }
       ).subscribe({  
-        next: (data) => {
-          setUserNotifications([{
-            containerID: data.containerID,
-            bookingStatus: data.bookingStatus,
-          }]);
-          console.log(data);
-          //console.log(isSynced);
+        next: ({ items }) => {
+          setUserNotifications(items);
         },
       });
     }
