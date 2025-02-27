@@ -157,7 +157,7 @@ export function AppSidebar() {
       const notisSub = client.models.Container.observeQuery(
         {
           filter: {
-            isTransportationNotify: {
+            isTerminalNotify: {
               eq: true
             }
           }
