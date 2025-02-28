@@ -64,7 +64,7 @@ function RootComponent() {
   async function fetchBookingLimit() {
     try {
       const { data: limit } = await client.models.Limit.get(
-        {id: 'fb06313f-66fa-47e7-830c-20f343b9339c'},
+        {id: '7bde2cc5-23dc-4f46-b6d9-502133cc2e8c'},
         {
           authMode: 'apiKey',
         }
