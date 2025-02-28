@@ -315,6 +315,9 @@ function RouteComponent() {
                   {
                     bookingStatus: { eq: 'Picked Up' }
                   },
+                  {
+                    bookingStatus: { eq: 'Pickup Modification Requested' }
+                  },
                 ]
               }
             ]
@@ -402,7 +405,7 @@ function RouteComponent() {
               bookingStatus: { eq: 'Pending Pick Up' }
             },
             {
-              bookingStatus: { eq: 'Late' }
+              bookingStatus: { eq: 'Late for Pick Up' }
             }
           ]
         }
@@ -532,6 +535,7 @@ async function updateBooking(id: string, status: string, bookingDate?: string, b
       });
       console.log("Updated flag:", updatedContainerStatus);
       await fetchterminal_operator_requested();
+      await fetchTerminalOperatorModified();
     }
   } catch (error) {
     console.error("Error updating flag:", error);
