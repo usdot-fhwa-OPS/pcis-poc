@@ -32,6 +32,11 @@ const schema = a.schema({
     })
     .identifier(['containerID'])
     .authorization((allow) => [allow.publicApiKey(),]),
+  Limit: a
+    .model({
+      portCapacity: a.integer().required().default(3),
+    })
+    .authorization((allow) => [allow.publicApiKey(),]),
 });
 
 export type Schema = ClientSchema<typeof schema>;
@@ -42,6 +47,7 @@ export const data = defineData({
     defaultAuthorizationMode: 'apiKey',
   },
 });
+
 
 /*== STEP 2 ===============================================================
 Go to your frontend source code. From your client-side code, generate a

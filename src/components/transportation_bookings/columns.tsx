@@ -1,6 +1,6 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "../ui/button.tsx";
-import { useState } from "react";
+import { useState, useEffect} from "react";
 import { Flag, CalendarIcon, Clock, Pencil} from "lucide-react";
 //import { Checkbox } from "../ui/checkbox.tsx"
 import { Calendar } from "../ui/calendar"
@@ -25,6 +25,7 @@ import { TransOpDataTableMeta } from "./data-table.tsx";
 const client = generateClient<Schema>();
 import { TransOperatorCompletedBookings } from "../../routes/booking"
 import { Checkbox } from "../ui/checkbox.tsx";
+import { toast } from "sonner";
 
 
 export const columns = (): ColumnDef<any>[] => {
@@ -196,17 +197,49 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
       header: "Booking",
       cell: ({ row, table }) => {
 
-        const [date, setDate] = useState<Date | undefined>(undefined)
+        const [date, setDate] = useState<Date | undefined>(new Date())
         const [time, setTime] = useState<string | undefined>(undefined)
         const [isCalendarOpen, setIsCalendarOpen] = useState(false)
         const [isDialogOpen, setIsDialogOpen] = useState(false)
+        const [limit, setLimit] = useState<number>();
+        const [bookingsLength, setBookingsLength] = useState<number>(0);
         
         const isDateTimeSelected = (): boolean => {
           return !!date && !!time
         }
-        const handleBooking = () => {
-          (table.options.meta as TransOpDataTableMeta)?.updateTransOpBooking(row.original.containerID, "Pending Booking Approval", String(format(date!, "MM/dd/yyyy")), time ?? "")
-          setIsDialogOpen(false)
+
+        useEffect(() => {
+          const limitSub = client.models.Limit.observeQuery().subscribe({
+            next: ({ items }) => {
+              setLimit(items[0].portCapacity);
+            },
+          });
+          return () => limitSub.unsubscribe();
+        }, []);
+
+        useEffect(() => {
+          const bookingSub = client.models.Container.observeQuery(
+            {
+              filter: {
+                bookingDate: {eq: String(format(date!, "MM/dd/yyyy"))}
+              }
+            }
+          ).subscribe({  
+            next: ({ items }) => {
+              setBookingsLength(items.length);
+            },
+          });
+          return () => bookingSub.unsubscribe();
+        }, [date]);
+
+        const handleBooking = async () => {
+          if (bookingsLength >= limit!) {
+            toast.error(`Port at capacity (Limit ${limit} per day). Please try a different date.`)
+          } else {
+            (table.options.meta as TransOpDataTableMeta)?.updateTransOpBooking(row.original.containerID, "Pending Booking Approval", String(format(date!, "MM/dd/yyyy")), time ?? "")
+            setIsDialogOpen(false)
+          }
+          
         }
 
         const timeOptions = [
@@ -237,6 +270,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
         ]
 
         const handleDateSelect = (selectedDate: Date | undefined) => {
+          if (!selectedDate) return;
           setDate(selectedDate)
           // Keep the calendar open after selection
           setIsCalendarOpen(true)
@@ -357,18 +391,49 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
       accessorKey: "modifyBooking",
       header: "Modify Booking",
       cell: ({ row, table }) => {
-        const [date, setDate] = useState<Date | undefined>(undefined)
+        const [date, setDate] = useState<Date | undefined>(new Date())
         const [time, setTime] = useState<string | undefined>(undefined)
         const [isCalendarOpen, setIsCalendarOpen] = useState(false)
         const [isDialogOpen, setIsDialogOpen] = useState(false)
+        const [limit, setLimit] = useState<number>();
+        const [bookingsLength, setBookingsLength] = useState<number>(0);
         
         const isDateTimeSelected = (): boolean => {
           return !!date && !!time
         }
-        
-        const handleBooking = () => {
-          (table.options.meta as TransOpDataTableMeta)?.updateTransOpBooking(row.original.containerID, "Pickup Modification Requested", String(format(date!, "MM/dd/yyyy")), time ?? "")
-          setIsDialogOpen(false)
+
+        useEffect(() => {
+          const limitSub = client.models.Limit.observeQuery().subscribe({
+            next: ({ items }) => {
+              setLimit(items[0].portCapacity);
+            },
+          });
+          return () => limitSub.unsubscribe();
+        }, []);
+
+        useEffect(() => {
+          const bookingSub = client.models.Container.observeQuery(
+            {
+              filter: {
+                bookingDate: {eq: String(format(date!, "MM/dd/yyyy"))}
+              }
+            }
+          ).subscribe({  
+            next: ({ items }) => {
+              setBookingsLength(items.length);
+            },
+          });
+          return () => bookingSub.unsubscribe();
+        }, [date]);
+
+        const handleBooking = async () => {
+          if (bookingsLength >= limit!) {
+            toast.error(`Port at capacity (Limit ${limit} per day). Please try a different date.`)
+          } else {
+            (table.options.meta as TransOpDataTableMeta)?.updateTransOpBooking(row.original.containerID, "Pickup Modification Requested", String(format(date!, "MM/dd/yyyy")), time ?? "")
+            setIsDialogOpen(false)
+          }
+          
         }
 
         const timeOptions = [
@@ -399,6 +464,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
         ]
 
         const handleDateSelect = (selectedDate: Date | undefined) => {
+          if (!selectedDate) return;
           setDate(selectedDate)
           // Keep the calendar open after selection
           setIsCalendarOpen(true)
@@ -407,7 +473,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
         return (
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
-            <Button variant="ghost" className="p-2" onClick={() => setIsDialogOpen(true)} disabled={row.original.bookingStatus !== "Pending Pick Up"}>
+            <Button variant="ghost" className="p-2" onClick={() => setIsDialogOpen(true)} disabled={row.original.bookingStatus !== "Pending Pick Up" && row.original.bookingStatus !== "Late for Pick Up"}>
               <Pencil />
             </Button>
           </DialogTrigger>
