@@ -366,26 +366,6 @@ function RouteComponent() {
     }
   }
   
-   
-  // // Update container then refetch containers
-  // async function assignTransOp(containerID: string, newName: string, newEmail: string, bookingStatus: string) {
-  //   try {
-  //     const { data: assignTransportationOp } = await client.models.Container.update({
-  //       containerID: containerID,
-  //       transopName: newName,
-  //       transopEmail: newEmail,
-  //       bookingStatus: bookingStatus,
-  //       assignmentDate: new Date().toLocaleDateString('en-US'),
-  //     });
-  //     console.log('Updated container status:', assignTransportationOp);
-  //     // Refetch containers after updating
-  //     await fetchContainers();
-  //   } catch (error) {
-  //     console.error('Error updating container status:', error);
-  //   }
-  // }
-
-  // Separate return statements for each role
 
   //getting Data
   const [terminalopBookingsupcoming, setData] = useState<TerminalOPOngoingBookings[]>([])
