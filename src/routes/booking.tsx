@@ -5,7 +5,7 @@ import {BcoBookingsTableUpcoming,  BcoBookingsTableCompleted,BcoBookingsTableOng
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs.tsx"
 import { toast } from "sonner"
-import { fetchUserAttributes } from 'aws-amplify/auth';
+import { fetchUserAttributes, fetchAuthSession } from 'aws-amplify/auth';
 import { useEffect, useState } from "react";
 import { useAuthenticator } from "@aws-amplify/ui-react";
 
@@ -113,7 +113,17 @@ function RouteComponent() {
         }
       }
     }
-
+    async function getUserSession() {
+      if (user) {
+        try {
+          const session = await fetchAuthSession();
+          console.log('User session:', session.tokens?.idToken ?? 'No session found');
+        } catch (error) {
+          console.error('Error fetching user session', error);
+        }
+      }
+    }
+    getUserSession();
     getUserAttributes();
   }, [user]);
 
