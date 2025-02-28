@@ -86,6 +86,33 @@ export function AppSidebar() {
     }
 
     getUserAttributes();
+  }, [user]);
+
+  // Define which menu items are allowed for limited roles.
+  const allowedForLimitedRoles = ["Home", "Booking Status", "Notifications"];
+
+  // Filter menu items based on the custom role.
+  const filteredItems = items.filter((item) => {
+    if (userAttributes.role === "Terminal Operator") {
+      // Terminal Operators have access to all items.
+      return true;
+    }
+
+    if (
+      userAttributes.role === "Transportation Operator" ||
+      userAttributes.role === "Beneficiary Cargo Owner"
+    ) {
+      // These roles only have access to the allowed items.
+      return allowedForLimitedRoles.includes(item.title);
+    }
+
+    // If role is undefined or unrecognized, do not show any items.
+    return false;
+  });
+
+  useEffect(() => {
+    if (!userAttributes.role) return;
+    console.log(userAttributes.role)
     if (userAttributes.role == "Beneficiary Cargo Owner") {
       console.log("I AM BCO")
       notisSub = client.models.Container.observeQuery(
@@ -148,96 +175,8 @@ export function AppSidebar() {
         },
       });
     }
-  }, [user]);
-
-  // Define which menu items are allowed for limited roles.
-  const allowedForLimitedRoles = ["Home", "Booking Status", "Notifications"];
-
-  // Filter menu items based on the custom role.
-  const filteredItems = items.filter((item) => {
-    if (userAttributes.role === "Terminal Operator") {
-      // Terminal Operators have access to all items.
-      return true;
-    }
-
-    if (
-      userAttributes.role === "Transportation Operator" ||
-      userAttributes.role === "Beneficiary Cargo Owner"
-    ) {
-      // These roles only have access to the allowed items.
-      return allowedForLimitedRoles.includes(item.title);
-    }
-
-    // If role is undefined or unrecognized, do not show any items.
-    return false;
-  });
-
-  // useEffect(() => {
-  //   console.log(userAttributes.role)
-  //   if (userAttributes.role == "Beneficiary Cargo Owner") {
-  //     console.log("I AM BCO")
-  //     notisSub = client.models.Container.observeQuery(
-  //       {
-  //         filter: {
-  //           and: [
-  //             {
-  //               bcoEmail: { eq: userAttributes.email }
-  //             },
-  //             {
-  //               isBCONotify: {
-  //                 eq: true
-  //               }
-  //             },
-  //           ]
-  //         }
-  //       }
-  //     ).subscribe({  
-  //       next: ({ items }) => {
-  //         setUserNotifications(items);
-  //         console.log(items)
-  //       },
-  //     });
-  //   } else if (userAttributes.role == "Transportation Operator") {
-  //     console.log("I AM TRANSPORTATION")
-  //     notisSub = client.models.Container.observeQuery(
-  //       {
-  //         filter: {
-  //           and: [
-  //             {
-  //               transopEmail: { eq: userAttributes.email }
-  //             },
-  //             {
-  //               isTransportationNotify: {
-  //                 eq: true
-  //               }
-  //             },
-  //           ]
-  //         }
-  //       }
-  //     ).subscribe({  
-  //       next: ({ items }) => {
-  //         setUserNotifications(items);
-  //         console.log(items)
-  //       },
-  //     });
-  //   } else {
-  //     console.log("I AM TERMINAL OP")
-  //     notisSub = client.models.Container.observeQuery(
-  //       {
-  //         filter: {
-  //           isTerminalNotify: {
-  //             eq: true
-  //           }
-  //         }
-  //       }
-  //     ).subscribe({  
-  //       next: ({ items }) => {
-  //         setUserNotifications(items);
-  //       },
-  //     });
-  //   }
     
-  // }, [userAttributes.role]);
+  }, [userAttributes]);
   
   const handleSignOut = () => {
     if (notisSub) {
