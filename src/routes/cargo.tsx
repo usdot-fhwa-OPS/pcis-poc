@@ -53,7 +53,7 @@ export default function Cargo() {
   return (
     <div>
       <h1 className="text-2xl font-bold text-center">Upcoming Cargo</h1>
-      <div>
+      <div className="container mx-auto p-10">
         <DataTable
           columns={columns}
           data={data}

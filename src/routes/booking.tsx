@@ -5,7 +5,7 @@ import {BcoBookingsTableUpcoming,  BcoBookingsTableCompleted,BcoBookingsTableOng
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs.tsx"
 import { toast } from "sonner"
-import { fetchUserAttributes } from 'aws-amplify/auth';
+import { fetchUserAttributes, fetchAuthSession } from 'aws-amplify/auth';
 import { useEffect, useState } from "react";
 import { useAuthenticator } from "@aws-amplify/ui-react";
 
@@ -113,7 +113,18 @@ function RouteComponent() {
         }
       }
     }
-
+    async function getUserSession() {
+      if (user) {
+        try {
+          const session = await fetchAuthSession();
+          console.log('User session:', session.tokens?.idToken?.toString() ?? 'No session found');
+          console.log('User access token:', session.tokens?.accessToken.toString() ?? 'No access token found');
+        } catch (error) {
+          console.error('Error fetching user session', error);
+        }
+      }
+    }
+    getUserSession();
     getUserAttributes();
   }, [user]);
 
@@ -349,7 +360,8 @@ function RouteComponent() {
         transopName: newName,
         transopEmail: newEmail,
         bookingStatus: bookingStatus,
-        assignmentDate: new Date().toLocaleDateString("en-US"),
+        assignmentDate: new Date().toLocaleDateString('en-US'),
+        isTransportationNotify: true,
       });
   
       console.log("Updated container status:", assignTransportationOp);
@@ -442,28 +454,40 @@ function RouteComponent() {
         toast.error("No internet connection. Update not submitted. Please check your connection and try again.");
         return false; // Explicitly return false when offline
       }
-    
+      console.log("Updating container status:", id, status, bookingDate, bookingTime);
       try {
-        let updatePayload = { containerID: id, bookingStatus: status };
+        let updatePayload = { containerID: id, bookingStatus: status, isTransportationNotify: false, isBCONotify: false, isTerminalNotify: false };
     
         if (status === "unassigned") {
           Object.assign(updatePayload, {
             transopName: "",
-            transopEmail: ""
+            transopEmail: "",
+            isTransportationNotify: false,
+            isBCONotify: true,
+            isTerminalNotify: false,
           });
         } else if (status === "Pending Booking Approval") {
           Object.assign(updatePayload, {
             bookingDate,
-            bookingTime
+            bookingTime,
+            isTerminalNotify: true,
+            isBCONotify: true,
+            isTransportationNotify: false,
           });
         } else if (status === "Picked Up") {
           Object.assign(updatePayload, {
-            bookingPickupDate: bookingDate
+            bookingPickupDate: bookingDate,
+            isTransportationNotify: false,
+            isBCONotify:false,
+            isTerminalNotify: false
           });
         } else if (status === "Pickup Modification Requested") {
           Object.assign(updatePayload, {
             modifiedBookingDate: bookingDate,
-            modifiedBookingTime: bookingTime
+            modifiedBookingTime: bookingTime,
+            isTerminalNotify: true,
+            isBCONotify: true,
+            isTransportationNotify: false,
           });
         }
         
@@ -505,7 +529,10 @@ async function updateBooking(id: string, status: string, bookingDate?: string, b
         bookingApprovalDate: "",
         bookingLatestUpdateDate: "",
         modifiedBookingDate: "",
-        modifiedBookingTime: "",
+        modifiedBookingTime:"",
+        isTerminalNotify: false,
+        isTransportationNotify: true,
+        isBCONotify: true,
       });
     } else if (bookingDate) {
       Object.assign(updatePayload, {
@@ -514,10 +541,17 @@ async function updateBooking(id: string, status: string, bookingDate?: string, b
         bookingTime,
         modifiedBookingDate: "",
         modifiedBookingTime: "",
+        isTerminalNotify: false,
+        isBCONotify: true,
+        isTransportationNotify: true,
       });
     } else {
+      //Approving a Booking -> Pending Pick Up
       Object.assign(updatePayload, {
         bookingApprovalDate: new Date().toLocaleDateString("en-US"),
+        isTerminalNotify: false,
+        isBCONotify: true,
+        isTransportationNotify: true,
       });
     }
 
