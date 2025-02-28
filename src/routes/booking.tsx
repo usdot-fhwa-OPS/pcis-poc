@@ -431,7 +431,7 @@ function RouteComponent() {
         toast.error("No internet connection. Update not submitted. Please check your connection and try again.");
         return false; // Explicitly return false when offline
       }
-    
+      console.log("Updating container status:", id, status, bookingDate, bookingTime);
       try {
         let updatePayload = { containerID: id, bookingStatus: status, isTransportationNotify: false, isBCONotify: false, isTerminalNotify: false };
     
