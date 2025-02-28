@@ -334,24 +334,56 @@ function RouteComponent() {
   useEffect(() => {
     fetchTransOpOngoing();
   }, [userAttributes.role]);
-   
-  // Update container then refetch containers
-  async function assignTransOp(containerID: string, newName: string, newEmail: string, bookingStatus: string) {
+
+
+  async function assignTransOp(containerID: string, newName: string, newEmail: string, bookingStatus: string): Promise<boolean> {
+    if (!navigator.onLine) {
+      console.error("No internet connection. Update not submitted. Please check your connection and try again.");
+      toast.error("No internet connection. Update not submitted. Please check your connection and try again.");
+      return false; // Explicitly return false when offline
+    }
+  
     try {
       const { data: assignTransportationOp } = await client.models.Container.update({
         containerID: containerID,
         transopName: newName,
         transopEmail: newEmail,
         bookingStatus: bookingStatus,
-        assignmentDate: new Date().toLocaleDateString('en-US'),
+        assignmentDate: new Date().toLocaleDateString("en-US"),
       });
-      console.log('Updated container status:', assignTransportationOp);
-      // Refetch containers after updating
+  
+      console.log("Updated container status:", assignTransportationOp);
+      toast.success("Transportation Operator assigned successfully");
+  
+      // Refetch data to reflect changes
       await fetchContainers();
+  
+      return true;
     } catch (error) {
-      console.error('Error updating container status:', error);
+      console.error("Error updating container status:", error);
+      toast.error("Error assigning Transportation Operator. Please try again.");
+      return false; // Explicitly return false when the update fails
     }
   }
+  
+   
+  // // Update container then refetch containers
+  // async function assignTransOp(containerID: string, newName: string, newEmail: string, bookingStatus: string) {
+  //   try {
+  //     const { data: assignTransportationOp } = await client.models.Container.update({
+  //       containerID: containerID,
+  //       transopName: newName,
+  //       transopEmail: newEmail,
+  //       bookingStatus: bookingStatus,
+  //       assignmentDate: new Date().toLocaleDateString('en-US'),
+  //     });
+  //     console.log('Updated container status:', assignTransportationOp);
+  //     // Refetch containers after updating
+  //     await fetchContainers();
+  //   } catch (error) {
+  //     console.error('Error updating container status:', error);
+  //   }
+  // }
 
   // Separate return statements for each role
 
@@ -526,52 +558,6 @@ async function updateBooking(id: string, status: string, bookingDate?: string, b
   }
 }
        
-
-// async function updateBooking(id: string, status: string, bookingDate?: string, bookingTime?: string) {  
-//   try {
-//     if (status === "unassigned") {
-//       const { data: updatedContainerStatus } = await client.models.Container.update({
-//         containerID: id,
-//         bookingStatus: status,
-//         transopName:"",
-//         transopEmail:"",
-//         assignmentDate: "",
-//         bookingDate: "",
-//         bookingTime: "",
-//         bookingApprovalDate: "",
-//         bookingLatestUpdateDate: "",
-//         modifiedBookingDate: "",
-//         modifiedBookingTime:"",
-
-//       });
-//       console.log("Updated flag with transop details:", updatedContainerStatus);
-//       await fetchterminal_operator_requested();
-//     } else if (bookingDate) {
-//       const { data: updatedContainerStatus } = await client.models.Container.update({
-//         containerID: id,
-//         bookingStatus: status,
-//         bookingApprovalDate: new Date().toLocaleDateString('en-US'),
-//         bookingDate: bookingDate,
-//         bookingTime: bookingTime,
-//         modifiedBookingDate: "",
-//         modifiedBookingTime: "",
-//       });
-//       console.log("Updated flag:", updatedContainerStatus);
-//       await fetchTerminalOperatorModified();
-//     } else {
-//       const { data: updatedContainerStatus } = await client.models.Container.update({
-//         containerID: id,
-//         bookingStatus: status,
-//         bookingApprovalDate: new Date().toLocaleDateString('en-US'),
-//       });
-//       console.log("Updated flag:", updatedContainerStatus);
-//       await fetchterminal_operator_requested();
-//       await fetchTerminalOperatorModified();
-//     }
-//   } catch (error) {
-//     console.error("Error updating flag:", error);
-//   }
-// }
 
 const [BCOOngoingData, setBCOOngoingBookings] = useState<BCOOngoingBooking[]>([]);
 
