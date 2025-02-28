@@ -11,8 +11,8 @@ const UserButton: React.FC<UserButtonProps> = ({ fullName, role }) => {
         <button className="user-button">
             <ChevronDown size={20} />
             <div className="user-button-content">
-            <span>{fullName}</span>
-            <span className="user-role">{role}</span>
+                <span>{fullName}</span>
+                <span className="user-role">{role}</span>
             </div>
             <div className="user-avatar"></div>
         </button>

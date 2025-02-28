@@ -17,23 +17,41 @@
     height: auto;
     white-space: nowrap;
 }
-  
+
 .user-button-content {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
 }
-  
+
 .user-role {
     font-size: 12px;
     font-weight: normal;
     color: #666;
 }
-  
+
 .user-avatar {
     width: 40px;
     height: 40px;
     border-radius: 50%;
     background-color: #ccc;
     flex-shrink: 0;
+}
+
+/* Media queries for responsiveness */
+@media (max-width: 768px) {
+    .user-button {
+        padding: 8px;
+        gap: 8px;
+        min-width: auto;
+    }
+
+    .user-button-content {
+        display: none;
+    }
+
+    .user-avatar {
+        width: 32px;
+        height: 32px;
+    }
 }
