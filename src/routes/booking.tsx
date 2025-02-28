@@ -117,8 +117,8 @@ function RouteComponent() {
       if (user) {
         try {
           const session = await fetchAuthSession();
-          console.log('User session:', session.tokens?.idToken ?? 'No session found');
-          console.log('User access token:', session.tokens?.accessToken ?? 'No access token found');
+          console.log('User session:', session.tokens?.idToken?.toString() ?? 'No session found');
+          console.log('User access token:', session.tokens?.accessToken.toString() ?? 'No access token found');
         } catch (error) {
           console.error('Error fetching user session', error);
         }
