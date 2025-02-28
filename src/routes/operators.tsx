@@ -28,7 +28,7 @@ export default function Operators() {
   return (
     <div>
       <h1 className="text-2xl font-bold text-center">Available Users</h1>
-      <div>
+      <div className="container mx-auto p-10">
         <DataTable columns={columns} data={data} />
       </div>
     </div>
