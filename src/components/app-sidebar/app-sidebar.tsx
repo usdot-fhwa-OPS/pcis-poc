@@ -42,7 +42,7 @@ const items = [
     icon: User,
   },
   {
-    title: "Import BAPLIE Data",
+    title: "Import Stow Plan",
     url: "/import",
     icon: FileUp,
   },
