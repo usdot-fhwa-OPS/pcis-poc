@@ -2,6 +2,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { User, columns } from "../components/users/columns"
 import { DataTable } from "../components/users/users-table"
 import { useEffect, useState } from "react"
+import { fetchAuthSession } from 'aws-amplify/auth';
 
 
 export const Route = createFileRoute('/operators')({
@@ -15,7 +16,16 @@ export default function Operators() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const response = await fetch("https://xlj2x9eurh.execute-api.us-east-1.amazonaws.com/dev");
+        const session = await fetchAuthSession();
+        const response = await fetch(
+          "https://xlj2x9eurh.execute-api.us-east-1.amazonaws.com/dev",
+          { 
+            headers: {
+              "Authorization": `${session.tokens?.idToken?.toString()}`,
+              "Content-Type": "application/json"
+            }
+          },
+        );
         const result = await response.json();
         console.log(result);
         setData(result);
