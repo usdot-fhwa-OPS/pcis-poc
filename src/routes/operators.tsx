@@ -23,7 +23,8 @@ export default function Operators() {
             method: 'GET',
             headers: {
               "Authorization": session.tokens?.idToken?.toString() ?? "",
-              "Content-Type": "application/json"
+              "Content-Type": "application/json",
+              "Access-Control-Allow-Origin": "*"
             }
           },
         );
