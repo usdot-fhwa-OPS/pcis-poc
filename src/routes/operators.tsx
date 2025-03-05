@@ -43,42 +43,42 @@ export default function Operators() {
 }
 
 
-async function getData(): Promise<User[]> {
-  // Replace with API Calls
-  return [
-    {
-      name: "John Doe",
-      role: "BCO",
-      organization: "Leidos",
-      email: "johndoe@leidos.com",
-      phone: "123-456-7890",
-      status: "Approved"
-    },
-    {
-      name: "Bob Doe",
-      role: "BCO",
-      organization: "Port Authority NYNJ",
-      email: "bobdoe@panynj.com",
-      phone: "123-456-7890",
-      status: "Approved"
-    },
-    {
-      name: "Adam Smith",
-      role: "BCO",
-      organization: "Port of Virginia",
-      email: "adamsmith@portva.com",
-      phone: "123-456-7890",
-      status: "Approved"
-    },
-    {
-      name: "Jane Wilson",
-      role: "BCO",
-      organization: "CSX",
-      email: "janewilson@csx.com",
-      phone: "123-456-7890",
-      status: "Approved"
-    },
+// async function getData(): Promise<User[]> {
+//   // Replace with API Calls
+//   return [
+//     {
+//       name: "John Doe",
+//       role: "BCO",
+//       organization: "Leidos",
+//       email: "johndoe@leidos.com",
+//       phone: "123-456-7890",
+//       status: "Approved"
+//     },
+//     {
+//       name: "Bob Doe",
+//       role: "BCO",
+//       organization: "Port Authority NYNJ",
+//       email: "bobdoe@panynj.com",
+//       phone: "123-456-7890",
+//       status: "Approved"
+//     },
+//     {
+//       name: "Adam Smith",
+//       role: "BCO",
+//       organization: "Port of Virginia",
+//       email: "adamsmith@portva.com",
+//       phone: "123-456-7890",
+//       status: "Approved"
+//     },
+//     {
+//       name: "Jane Wilson",
+//       role: "BCO",
+//       organization: "CSX",
+//       email: "janewilson@csx.com",
+//       phone: "123-456-7890",
+//       status: "Approved"
+//     },
 
-  ]
-}
+//   ]
+// }
 
