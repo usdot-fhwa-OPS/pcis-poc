@@ -14,11 +14,18 @@ export default function Operators() {
 
   useEffect(() => {
     async function fetchData() {
-      const result = await getData()
-      setData(result)
-      setLoading(false)
+      try {
+        const response = await fetch("https://xlj2x9eurh.execute-api.us-east-1.amazonaws.com/dev");
+        const result = await response.json();
+        console.log(result);
+        setData(result);
+      } catch (error) {
+        throw new Error(`Failed to fetch data: ${error}`);
+      } finally {
+        setLoading(false);
+      }
     }
-    fetchData()
+    fetchData();
   }, [])
 
   if (loading) {
