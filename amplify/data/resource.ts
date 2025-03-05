@@ -23,12 +23,22 @@ const schema = a.schema({
       bookingStatus: a.string().default('unassigned'),
       bookingDate: a.string(),
       bookingTime: a.string(),
+      modifiedBookingDate: a.string(),
+      modifiedBookingTime: a.string(),
       bookingLatestUpdateDate: a.string(),
       bookingApprovalDate: a.string(),
       bookingPickupDate: a.string(),
       flag: a.boolean().default(false),
+      isTransportationNotify: a.boolean().default(false),
+      isBCONotify: a.boolean().default(false),
+      isTerminalNotify: a.boolean().default(false),
     })
     .identifier(['containerID'])
+    .authorization((allow) => [allow.publicApiKey(),]),
+  Limit: a
+    .model({
+      portCapacity: a.integer().required().default(3),
+    })
     .authorization((allow) => [allow.publicApiKey(),]),
 });
 
@@ -40,6 +50,7 @@ export const data = defineData({
     defaultAuthorizationMode: 'apiKey',
   },
 });
+
 
 /*== STEP 2 ===============================================================
 Go to your frontend source code. From your client-side code, generate a

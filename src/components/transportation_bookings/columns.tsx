@@ -1,7 +1,7 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "../ui/button.tsx";
-import { useState } from "react";
-import { Flag, CalendarIcon, Clock } from "lucide-react";
+import { useState, useEffect} from "react";
+import { Flag, CalendarIcon, Clock, Pencil} from "lucide-react";
 //import { Checkbox } from "../ui/checkbox.tsx"
 import { Calendar } from "../ui/calendar"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog"
@@ -24,6 +24,8 @@ import { TransOpDataTableMeta } from "./data-table.tsx";
 
 const client = generateClient<Schema>();
 import { TransOperatorCompletedBookings } from "../../routes/booking"
+import { Checkbox } from "../ui/checkbox.tsx";
+import { toast } from "sonner";
 
 
 export const columns = (): ColumnDef<any>[] => {
@@ -195,17 +197,49 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
       header: "Booking",
       cell: ({ row, table }) => {
 
-        const [date, setDate] = useState<Date | undefined>(undefined)
+        const [date, setDate] = useState<Date | undefined>(new Date())
         const [time, setTime] = useState<string | undefined>(undefined)
         const [isCalendarOpen, setIsCalendarOpen] = useState(false)
         const [isDialogOpen, setIsDialogOpen] = useState(false)
+        const [limit, setLimit] = useState<number>();
+        const [bookingsLength, setBookingsLength] = useState<number>(0);
         
         const isDateTimeSelected = (): boolean => {
           return !!date && !!time
         }
-        const handleBooking = () => {
-          (table.options.meta as TransOpDataTableMeta)?.updateTransOpBooking(row.original.containerID, "Pending Booking Approval", String(format(date!, "MM/dd/yyyy")), time ?? "")
-          setIsDialogOpen(false) // Close dialog after submission
+
+        useEffect(() => {
+          const limitSub = client.models.Limit.observeQuery().subscribe({
+            next: ({ items }) => {
+              setLimit(items[0].portCapacity);
+            },
+          });
+          return () => limitSub.unsubscribe();
+        }, []);
+
+        useEffect(() => {
+          const bookingSub = client.models.Container.observeQuery(
+            {
+              filter: {
+                bookingDate: {eq: String(format(date!, "MM/dd/yyyy"))}
+              }
+            }
+          ).subscribe({  
+            next: ({ items }) => {
+              setBookingsLength(items.length);
+            },
+          });
+          return () => bookingSub.unsubscribe();
+        }, [date]);
+
+        const handleBooking = async () => {
+          if (bookingsLength >= limit!) {
+            toast.error(`Port at capacity (Limit ${limit} per day). Please try a different date.`)
+          } else {
+            (table.options.meta as TransOpDataTableMeta)?.updateTransOpBooking(row.original.containerID, "Pending Booking Approval", String(format(date!, "MM/dd/yyyy")), time ?? "")
+            setIsDialogOpen(false)
+          }
+          
         }
 
         const timeOptions = [
@@ -236,6 +270,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
         ]
 
         const handleDateSelect = (selectedDate: Date | undefined) => {
+          if (!selectedDate) return;
           setDate(selectedDate)
           // Keep the calendar open after selection
           setIsCalendarOpen(true)
@@ -247,9 +282,9 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
             <TooltipProvider>
               <Tooltip delayDuration={300}>
                 <TooltipTrigger>
-                  <Button variant="outline" onClick={() => setIsDialogOpen(true)} disabled={row.original.containerStatus === "On Ship"}>Book</Button>
+                  <Button variant="outline" onClick={() => setIsDialogOpen(true)} disabled={row.original.containerStatus === "On-Ship"}>Book</Button>
                 </TooltipTrigger>
-                {row.original.containerStatus === "On Ship" && (
+                {row.original.containerStatus === "On-Ship" && (
                   <TooltipContent>
                     <p>Container still on ship. Cannot book.</p>
                   </TooltipContent>
@@ -321,32 +356,192 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
           );
       },
     },
-    // {
-    //   id: "changepickupstatus",
-    //   header: "Mark as Picked Up",
-    //   cell: ({ row }) => {
-    //     const [isChecked, setIsChecked] = useState(row.original.changepickupstatus === "checked");
+    {
+      id: "changepickupstatus",
+      header: "Mark as Picked Up",
+      cell: ({ row, table}) => {
+        const [isChecked, setIsChecked] = useState<boolean>(row.original.bookingStatus === "Picked Up");
   
-    //     return (
-    //       <Checkbox
-    //         checked={isChecked}
-    //         onCheckedChange={() => {
-              
-    //           if (isChecked)
-    //             setIsChecked(false); // will add API calls here to chnage status 
-    //           else
-    //           setIsChecked(true);  //will add API calls here to chnage status
+        const handlePickUp = async () => {
+          const success = await (table.options.meta as TransOpDataTableMeta)?.updateTransOpBooking(
+            row.original.containerID,
+            "Picked Up",
+            new Date().toLocaleDateString('en-US')
+          );
+          
+          if (success) {
+            setIsChecked((prev) => !prev);
+          } else {
+            console.error("Booking update failed. State not updated.");
+          }
+        };
 
-    //             console.log(`Checkbox clicked for row ${row.original.id}`);
-              
-    //         }}
-    //       />
-    //     );
-    //   },
-    //   enableSorting: false,
-    //   enableColumnFilter: false,
-    // },
-   
+        return (
+          <Checkbox
+            disabled={row.original.bookingStatus !== "Pending Pick Up"}
+            checked={isChecked}
+            onCheckedChange={handlePickUp}
+          />
+        );
+      },
+      enableSorting: false,
+      enableColumnFilter: false,
+    },
+    {
+      accessorKey: "modifyBooking",
+      header: "Modify Booking",
+      cell: ({ row, table }) => {
+        const [date, setDate] = useState<Date | undefined>(new Date())
+        const [time, setTime] = useState<string | undefined>(undefined)
+        const [isCalendarOpen, setIsCalendarOpen] = useState(false)
+        const [isDialogOpen, setIsDialogOpen] = useState(false)
+        const [limit, setLimit] = useState<number>();
+        const [bookingsLength, setBookingsLength] = useState<number>(0);
+        
+        const isDateTimeSelected = (): boolean => {
+          return !!date && !!time
+        }
+
+        useEffect(() => {
+          const limitSub = client.models.Limit.observeQuery().subscribe({
+            next: ({ items }) => {
+              setLimit(items[0].portCapacity);
+            },
+          });
+          return () => limitSub.unsubscribe();
+        }, []);
+
+        useEffect(() => {
+          const bookingSub = client.models.Container.observeQuery(
+            {
+              filter: {
+                bookingDate: {eq: String(format(date!, "MM/dd/yyyy"))}
+              }
+            }
+          ).subscribe({  
+            next: ({ items }) => {
+              setBookingsLength(items.length);
+            },
+          });
+          return () => bookingSub.unsubscribe();
+        }, [date]);
+
+        const handleBooking = async () => {
+          if (bookingsLength >= limit!) {
+            toast.error(`Port at capacity (Limit ${limit} per day). Please try a different date.`)
+          } else {
+            (table.options.meta as TransOpDataTableMeta)?.updateTransOpBooking(row.original.containerID, "Pickup Modification Requested", String(format(date!, "MM/dd/yyyy")), time ?? "")
+            setIsDialogOpen(false)
+          }
+          
+        }
+
+        const timeOptions = [
+          "12:00 AM",
+          "01:00 AM",
+          "02:00 AM",
+          "03:00 AM",
+          "04:00 AM",
+          "05:00 AM",
+          "06:00 AM",
+          "07:00 AM",
+          "08:00 AM",
+          "09:00 AM",
+          "10:00 AM",
+          "11:00 AM",
+          "12:00 PM",
+          "01:00 PM",
+          "02:00 PM",
+          "03:00 PM",
+          "04:00 PM",
+          "05:00 PM",
+          "06:00 PM",
+          "07:00 PM",
+          "08:00 PM",
+          "09:00 PM",
+          "10:00 PM",
+          "11:00 PM",
+        ]
+
+        const handleDateSelect = (selectedDate: Date | undefined) => {
+          if (!selectedDate) return;
+          setDate(selectedDate)
+          // Keep the calendar open after selection
+          setIsCalendarOpen(true)
+        }
+
+        return (
+          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+          <DialogTrigger asChild>
+            <Button variant="ghost" className="p-2" onClick={() => setIsDialogOpen(true)} disabled={row.original.bookingStatus !== "Pending Pick Up" && row.original.bookingStatus !== "Late for Pick Up"}>
+              <Pencil />
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle>Modify Container Pick-Up Booking</DialogTitle>
+              <div className="text-sm">
+                {`Original Booking: ${row.original.bookingDate} at  ${row.original.bookingTime}`}
+              </div>
+              <div className="text-sm text-muted-foreground">
+                {`Vessel ID: ${row.original.vesselID} | Container ID: ${row.original.containerID} | Origin: ${row.original.origin} | BCO: ${row.original.bcoName} | BCO Email: ${row.original.bcoEmail}`}
+              </div>
+            </DialogHeader>
+            <div className="grid gap-4 py-4">
+              <div className="grid grid-cols-4 items-center gap-4">
+                <CalendarIcon className="h-4 w-4" />
+                <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant={"outline"}
+                      className={cn("w-[280px] justify-start text-left font-normal", !date && "text-muted-foreground")}
+                      onClick={() => setIsCalendarOpen(true)}
+                    >
+                      <CalendarIcon className="mr-2 h-4 w-4" />
+                      {date ? format(date, "MM/dd/yyyy") : <span>Pick a date</span>}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0">
+                    <Calendar mode="single" selected={date} disabled={{ before: new Date()}} onSelect={handleDateSelect} initialFocus />
+                  </PopoverContent>
+                </Popover>
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Clock className="h-4 w-4" />
+                <Select onValueChange={setTime}>
+                  <SelectTrigger className="w-[280px]">
+                    <SelectValue placeholder="Select time" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {timeOptions.map((timeOption) => (
+                      <SelectItem key={timeOption} value={timeOption}>
+                        {timeOption}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            <div className="flex justify-between">
+              <div className="text-sm text-muted-foreground">
+                {isDateTimeSelected()
+                  ? `Selected: ${format(date!, "MM/dd/yyyy")} ${time}`
+                  : "Please select both date and time"}
+              </div>
+              <Button 
+                type="submit" 
+                disabled={!date || !time} 
+                variant={!date || !time ? "outline" : "default"}
+                onClick={handleBooking}
+              >
+                Modify
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
+        )
+      },
+    },
     {
       accessorKey: "contact_bco",
       header: "Contact BCO",

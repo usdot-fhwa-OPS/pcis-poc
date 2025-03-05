@@ -47,8 +47,7 @@ export function DataTable<TData, TValue>({
   })
 
   return (
-    <div>
-        <div className="flex items-center py-4">
+    <div className="mb-4 w-full px-3 py-2 border rounded-md">
         <Input
           placeholder="Filter by name..."
           value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
@@ -57,10 +56,8 @@ export function DataTable<TData, TValue>({
           }
           className="max-w-sm"
         />
-      </div>
 
-    <div className="rounded-md border">
-      <Table className="w-full table-fixed text-center">
+      <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
@@ -102,7 +99,6 @@ export function DataTable<TData, TValue>({
           )}
         </TableBody>
       </Table>
-    </div>
     </div>
   )
 }

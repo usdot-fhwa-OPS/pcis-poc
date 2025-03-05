@@ -4,7 +4,8 @@ import {TransportationBookingsTableUpcoming,  TransportationBookingsTableComplet
 import {BcoBookingsTableUpcoming,  BcoBookingsTableCompleted,BcoBookingsTableOngoing} from "../components/bco_bookings/bco-bookings-table.tsx"
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs.tsx"
-import { fetchUserAttributes } from 'aws-amplify/auth';
+import { toast } from "sonner"
+import { fetchUserAttributes, fetchAuthSession } from 'aws-amplify/auth';
 import { useEffect, useState } from "react";
 import { useAuthenticator } from "@aws-amplify/ui-react";
 
@@ -28,6 +29,9 @@ export type TransOpOngoingBookings = SelectionSet<Schema['Container']['type'], t
 
 const selectionSetTerminalOPUpcoming = ['vesselID', 'containerID', 'origin', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail','bookingDate','bookingTime','bookingStatus', 'flag'] as const;
 
+const selectionSetTerminalOpModified = ['vesselID', 'containerID', 'origin', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail','bookingDate','bookingTime', 'bookingStatus', 'modifiedBookingDate', 'modifiedBookingTime'] as const;
+
+export type TerminalOpModifiedBookings = SelectionSet<Schema['Container']['type'], typeof selectionSetTerminalOpModified>
 //Define the selection of data that will be used for the table
 const selectionSetBCOUpcomingBookings = ['vesselID', 'containerID', 'origin', 'destination', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail', 'containerStatus','arrivalDate', 'flag'] as const;
 //Create a type based on your selectionSet that will be later used for the columns.tsx file of the able
@@ -38,7 +42,6 @@ export type BCOUpcomingBookings = SelectionSet<Schema['Container']['type'], type
 //Create a type based on your selectionSet that will be later used for the columns.tsx file of the able
 export type TerminalOPUpcomingBookings= SelectionSet<Schema['Container']['type'], typeof selectionSetTerminalOPUpcoming>
 
-
 export type TerminalOPOngoingBookings= SelectionSet<Schema['Container']['type'], typeof selectionSetTerminalOPOngoing >
 
 const selectionSetBCOOngoing = ['vesselID', 'containerID', 'origin','destination', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail','bookingDate','bookingApprovalDate','bookingStatus', 'bookingPickupDate','flag'] as const;
@@ -48,10 +51,6 @@ export type BCOOngoingBooking= SelectionSet<Schema['Container']['type'], typeof 
 const selectionSetBCOCompleted = ['vesselID', 'containerID', 'origin', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail','bookingDate','bookingApprovalDate','bookingStatus','destination', 'bookingPickupDate','flag'] as const;
 
 export type BCOCompletedBooking= SelectionSet<Schema['Container']['type'], typeof selectionSetBCOCompleted>
-
-
-
-
 
 //Define the selection of data that will be used for the table
 const selectionSetTransportation_CompletedData = [ 
@@ -114,7 +113,18 @@ function RouteComponent() {
         }
       }
     }
-
+    async function getUserSession() {
+      if (user) {
+        try {
+          const session = await fetchAuthSession();
+          console.log('User session:', session.tokens?.idToken?.toString() ?? 'No session found');
+          console.log('User access token:', session.tokens?.accessToken.toString() ?? 'No access token found');
+        } catch (error) {
+          console.error('Error fetching user session', error);
+        }
+      }
+    }
+    getUserSession();
     getUserAttributes();
   }, [user]);
 
@@ -316,6 +326,9 @@ function RouteComponent() {
                   {
                     bookingStatus: { eq: 'Picked Up' }
                   },
+                  {
+                    bookingStatus: { eq: 'Pickup Modification Requested' }
+                  },
                 ]
               }
             ]
@@ -332,9 +345,15 @@ function RouteComponent() {
   useEffect(() => {
     fetchTransOpOngoing();
   }, [userAttributes.role]);
-   
-  // Update container then refetch containers
-  async function assignTransOp(containerID: string, newName: string, newEmail: string, bookingStatus: string) {
+
+
+  async function assignTransOp(containerID: string, newName: string, newEmail: string, bookingStatus: string): Promise<boolean> {
+    if (!navigator.onLine) {
+      console.error("No internet connection. Update not submitted. Please check your connection and try again.");
+      toast.error("No internet connection. Update not submitted. Please check your connection and try again.");
+      return false; // Explicitly return false when offline
+    }
+  
     try {
       const { data: assignTransportationOp } = await client.models.Container.update({
         containerID: containerID,
@@ -342,16 +361,23 @@ function RouteComponent() {
         transopEmail: newEmail,
         bookingStatus: bookingStatus,
         assignmentDate: new Date().toLocaleDateString('en-US'),
+        isTransportationNotify: true,
       });
-      console.log('Updated container status:', assignTransportationOp);
-      // Refetch containers after updating
+  
+      console.log("Updated container status:", assignTransportationOp);
+      toast.success("Transportation Operator assigned successfully");
+  
+      // Refetch data to reflect changes
       await fetchContainers();
+  
+      return true;
     } catch (error) {
-      console.error('Error updating container status:', error);
+      console.error("Error updating container status:", error);
+      toast.error("Error assigning Transportation Operator. Please try again.");
+      return false; // Explicitly return false when the update fails
     }
   }
-
-  // Separate return statements for each role
+  
 
   //getting Data
   const [terminalopBookingsupcoming, setData] = useState<TerminalOPOngoingBookings[]>([])
@@ -371,7 +397,20 @@ function RouteComponent() {
     setData(cargo);
   }
 
-  //Fetch the data on the first render
+  const [terminalOpModifiedBookings, setTerminalOpModifiedBookings] = useState<TerminalOpModifiedBookings[]>([])
+
+  const fetchTerminalOperatorModified = async() => {
+    const { data: cargo } = await client.models.Container.list({
+      selectionSet: selectionSetTerminalOpModified,
+      authMode: 'apiKey',
+      filter: {
+        bookingStatus: {
+          eq: 'Pickup Modification Requested'
+        }
+      }
+  });
+  setTerminalOpModifiedBookings(cargo);
+}
 
 
   //Fetch Ongoing Terminal Operator data
@@ -389,7 +428,7 @@ function RouteComponent() {
               bookingStatus: { eq: 'Pending Pick Up' }
             },
             {
-              bookingStatus: { eq: 'Late' }
+              bookingStatus: { eq: 'Late for Pick Up' }
             }
           ]
         }
@@ -402,64 +441,137 @@ function RouteComponent() {
       fetchterminal_operator_ongoing();
     }, [])
 
-    //Update Terminal Operator Booking
+//Update Transporation Operator Booking
 
-async function updateTransOpBooking(id: string, status: string, bookingDate?: string, bookingTime?: string) {
-  try {
-    if (status === "unassigned") {
-      const { data: updatedContainerStatus } = await client.models.Container.update({
-        containerID: id,
-        bookingStatus: status,
-        transopName:"",
-        transopEmail:""
-      });
-      console.log("Updated flag with transop details:", updatedContainerStatus);
-      await fetchTransOpUpcoming();
-    } else if (status === "Pending Booking Approval"){
-      const { data: updatedContainerStatus } = await client.models.Container.update({
-        containerID: id,
-        bookingStatus: status,
-        bookingDate: bookingDate,
-        bookingTime: bookingTime,
-      })
-      console.log('Updated container status:', updatedContainerStatus); 
-      await fetchTransOpOngoing();
-    } else {
-      const { data: updatedContainerStatus } = await client.models.Container.update({
-        containerID: id,
-        bookingStatus: status
-      });
-      console.log("Updated flag:", updatedContainerStatus);
-      await fetchTransOpUpcoming();
+    async function updateTransOpBooking(
+      id: string,
+      status: string,
+      bookingDate?: string,
+      bookingTime?: string
+    ): Promise<boolean> {
+      if (!navigator.onLine) {
+        console.error("No internet connection. Update not submitted. Please check your connection and try again.");
+        toast.error("No internet connection. Update not submitted. Please check your connection and try again.");
+        return false; // Explicitly return false when offline
+      }
+      console.log("Updating container status:", id, status, bookingDate, bookingTime);
+      try {
+        let updatePayload = { containerID: id, bookingStatus: status, isTransportationNotify: false, isBCONotify: false, isTerminalNotify: false };
+    
+        if (status === "unassigned") {
+          Object.assign(updatePayload, {
+            transopName: "",
+            transopEmail: "",
+            isTransportationNotify: false,
+            isBCONotify: true,
+            isTerminalNotify: false,
+          });
+        } else if (status === "Pending Booking Approval") {
+          Object.assign(updatePayload, {
+            bookingDate,
+            bookingTime,
+            isTerminalNotify: true,
+            isBCONotify: true,
+            isTransportationNotify: false,
+          });
+        } else if (status === "Picked Up") {
+          Object.assign(updatePayload, {
+            bookingPickupDate: bookingDate,
+            isTransportationNotify: false,
+            isBCONotify:false,
+            isTerminalNotify: false
+          });
+        } else if (status === "Pickup Modification Requested") {
+          Object.assign(updatePayload, {
+            modifiedBookingDate: bookingDate,
+            modifiedBookingTime: bookingTime,
+            isTerminalNotify: true,
+            isBCONotify: true,
+            isTransportationNotify: false,
+          });
+        }
+        
+        const { data: updatedContainerStatus } = await client.models.Container.update(updatePayload);
+        console.log("Updated container status:", updatedContainerStatus);
+        toast.success("Container status updated successfully");
+    
+        // Refresh data after successful update
+        await fetchTransOpUpcoming();
+        await fetchTransOpOngoing();
+        
+        return true; // Update succeeded
+      } catch (error) {
+        console.error("Error updating container:", error);
+        toast.error("Error submitting modification");
+        return false; // Update failed
+      }
     }
+
+//Update Terminal Operator Booking
+
+async function updateBooking(id: string, status: string, bookingDate?: string, bookingTime?: string): Promise<boolean> {
+  if (!navigator.onLine) {
+    console.error("No internet connection. Update not submitted. Please check your connection and try again.");
+    toast.error("No internet connection. Update not submitted. Please check your connection and try again.");
+    return false; // Explicitly return false when offline
+  }
+
+  try {
+    let updatePayload: any = { containerID: id, bookingStatus: status };
+
+    if (status === "unassigned") {
+      Object.assign(updatePayload, {
+        transopName: "",
+        transopEmail: "",
+        assignmentDate: "",
+        bookingDate: "",
+        bookingTime: "",
+        bookingApprovalDate: "",
+        bookingLatestUpdateDate: "",
+        modifiedBookingDate: "",
+        modifiedBookingTime:"",
+        isTerminalNotify: false,
+        isTransportationNotify: true,
+        isBCONotify: true,
+      });
+    } else if (bookingDate) {
+      Object.assign(updatePayload, {
+        bookingApprovalDate: new Date().toLocaleDateString("en-US"),
+        bookingDate,
+        bookingTime,
+        modifiedBookingDate: "",
+        modifiedBookingTime: "",
+        isTerminalNotify: false,
+        isBCONotify: true,
+        isTransportationNotify: true,
+      });
+    } else {
+      //Approving a Booking -> Pending Pick Up
+      Object.assign(updatePayload, {
+        bookingApprovalDate: new Date().toLocaleDateString("en-US"),
+        isTerminalNotify: false,
+        isBCONotify: true,
+        isTransportationNotify: true,
+      });
+    }
+
+    const { data: updatedContainerStatus } = await client.models.Container.update(updatePayload);
+    
+    console.log("Updated booking status:", updatedContainerStatus);
+    toast.success("Booking status updated successfully");
+
+    // Refresh relevant data after successful update
+    await fetchterminal_operator_requested();
+    await fetchTerminalOperatorModified();
+
+    return true;
   } catch (error) {
-    console.error("Error updating flag:", error);
+    console.error("Error updating booking status:", error);
+    toast.error("Error updating booking status. Please try again.");
+    return false; // Explicitly return false when the update fails
   }
 }
-
-async function updateBooking(id: string, status: string) {
-  try {
-    if (status === "unassigned") {
-      const { data: updatedContainerStatus } = await client.models.Container.update({
-        containerID: id,
-        bookingStatus: status,
-        transopName:"",
-        transopEmail:""
-      });
-      console.log("Updated flag with transop details:", updatedContainerStatus);
-      await fetchterminal_operator_requested();
-    } else {
-      const { data: updatedContainerStatus } = await client.models.Container.update({
-        containerID: id,
-        bookingStatus: status
-      });
-      console.log("Updated flag:", updatedContainerStatus);
-      await fetchterminal_operator_requested();
-    }
-  } catch (error) {
-    console.error("Error updating flag:", error);
-  }
-}
+       
 
 const [BCOOngoingData, setBCOOngoingBookings] = useState<BCOOngoingBooking[]>([]);
 
@@ -501,6 +613,7 @@ useEffect(() => {
   //fetch_bco_completed();
   fetch_bco_ongoing();
   fetchterminal_operator_requested();
+  fetchTerminalOperatorModified();
 }, [userAttributes.role]);
 
 
@@ -512,6 +625,7 @@ useEffect(() => {
         <div>
       <TabsList className="mb-4 flex w-full justify-start gap-x-4">
           <TabsTrigger value="requested">Requested</TabsTrigger>
+          <TabsTrigger value="modification">Modification Requested</TabsTrigger>
           <TabsTrigger value="ongoing">Ongoing</TabsTrigger>
           <TabsTrigger value="completed">Completed</TabsTrigger>
         </TabsList>
@@ -519,6 +633,9 @@ useEffect(() => {
         <div>
         <TabsContent value="requested">
           <TerminalBookingsTable data={terminalopBookingsupcoming} status="Requested" meta={{updateBooking}} />
+        </TabsContent>
+        <TabsContent value="modification">
+          <TerminalBookingsTable data={terminalOpModifiedBookings} status="Modified" meta={{updateBooking}} />
         </TabsContent>
         <TabsContent value="ongoing">
           <TerminalBookingsTable data={terminalopBookingongoing} status="Ongoing" meta={{updateBooking}} />

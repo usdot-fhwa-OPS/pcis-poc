@@ -20,7 +20,7 @@ import {
 } from "../ui/table.tsx"
 
 export interface BCODataTableMeta {
-  assignTransOp: (containerID: string, newName: string, newEmail: string, bookingStatus: string) => void
+  assignTransOp: (containerID: string, newName: string, newEmail: string, bookingStatus: string) => Promise<boolean>;
 }
 
 interface DataTableProps<TData, TValue> {
