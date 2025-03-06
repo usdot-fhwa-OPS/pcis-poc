@@ -6,7 +6,7 @@ import {TerminalOperatorDataTableMeta} from './data-table.tsx'
 import { generateClient } from 'aws-amplify/data';
 import type { Schema } from '../../../amplify/data/resource';
 import { TermOperatorCompletedBookings } from "../../routes/booking"
-
+import { Checkbox } from "../ui/checkbox.tsx";
 const client = generateClient<Schema>();
 export const columns = (status: string): ColumnDef<any>[] => {
   const baseColumns: ColumnDef<any>[] = [
@@ -107,6 +107,36 @@ export const columns = (status: string): ColumnDef<any>[] => {
           </span>
         );
       },
+    },
+    {
+      id: "changepickupstatus",
+      header: "Mark as Late for Pick Up",
+      cell: ({ row, table}) => {
+        const [isChecked, setIsChecked] = useState<boolean>(row.original.bookingStatus === "Late for Pick Up");
+  
+        const markLateforPickup = async () => {
+          const success = await (table.options.meta as TerminalOperatorDataTableMeta)?.markBookingLate(
+            row.original.containerID,
+            "Late for Pick Up",
+          );
+          
+          if (success) {
+            setIsChecked((prev) => !prev);
+          } else {
+            console.error("Booking update failed. State not updated.");
+          }
+        };
+
+        return (
+          <Checkbox
+            disabled={row.original.bookingStatus == "Late for Pick Up"}
+            checked={isChecked}
+            onCheckedChange={markLateforPickup}
+          />
+        );
+      },
+      enableSorting: false,
+      enableColumnFilter: false,
     });
   }
   
