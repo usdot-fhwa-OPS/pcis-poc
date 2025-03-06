@@ -23,9 +23,11 @@ export default function Operators() {
           { 
             method: 'GET',
             headers: {
-              // "Authorization": session.tokens?.idToken?.toString() ,
+              "Authorization": session.tokens?.idToken?.toString() ?? "" ,
               "Content-Type": "application/json",
               "Access-Control-Allow-Origin": "*",
+              "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+              "Access-Control-Allow-Headers": "Content-Type, Authorization, X-Requested-With",
               "Accept": "*/*",
             }
           },
