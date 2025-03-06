@@ -17,12 +17,13 @@ export default function Operators() {
     async function fetchData() {
       try {
         const session = await fetchAuthSession();
+        console.log(session.tokens?.idToken?.toString());
         const response = await fetch(
           "https://xlj2x9eurh.execute-api.us-east-1.amazonaws.com/dev",
           { 
             method: 'GET',
             headers: {
-              "Authorization": session.tokens?.idToken?.toString() ?? "",
+              // "Authorization": session.tokens?.idToken?.toString() ,
               "Content-Type": "application/json",
               "Access-Control-Allow-Origin": "*",
               "Accept": "*/*",
