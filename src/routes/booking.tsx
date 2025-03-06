@@ -12,6 +12,7 @@ import { useAuthenticator } from "@aws-amplify/ui-react";
 //Three Imports needed for Amplify Data Queries and CRUD methods
 import { generateClient, SelectionSet } from 'aws-amplify/data';
 import type { Schema } from '../../amplify/data/resource';
+import { Button } from '../components/ui/button.tsx'
 
 const client = generateClient<Schema>();
 
@@ -616,6 +617,24 @@ useEffect(() => {
   fetchTerminalOperatorModified();
 }, [userAttributes.role]);
 
+  function refreshBCOData() {
+    fetchContainers();
+    fetch_bco_completed();
+    fetch_bco_ongoing();
+  }
+
+  function refreshTransOpData() {
+    fetchTransOpUpcoming();
+    fetchTransOpOngoing();
+    fetchTransOperatorCBookingsContainers();
+  }
+
+  function refreshTerminalOpData() {
+    fetchterminal_operator_requested();
+    fetchTerminalOperatorModified();
+    fetchterminal_operator_ongoing();
+    fetchTermOperatorCBookingsContainers();
+  }
 
 
   if (userAttributes.role === "Terminal Operator") {
@@ -630,6 +649,9 @@ useEffect(() => {
           <TabsTrigger value="completed">Completed</TabsTrigger>
         </TabsList>
         </div>
+        <Button onClick={refreshTerminalOpData}>
+          Refresh Table
+        </Button>
         <div>
         <TabsContent value="requested">
           <TerminalBookingsTable data={terminalopBookingsupcoming} status="Requested" meta={{updateBooking}} />
@@ -659,6 +681,10 @@ useEffect(() => {
         <TabsTrigger value="ongoing">Ongoing</TabsTrigger>
         <TabsTrigger value="completed">Completed</TabsTrigger>
       </TabsList>
+
+      <Button onClick={refreshTransOpData}>
+          Refresh Table
+      </Button>
 
       <TabsContent value="upcoming">
         <TransportationBookingsTableUpcoming
@@ -700,6 +726,10 @@ useEffect(() => {
           <TabsTrigger value="ongoing">Ongoing</TabsTrigger>
           <TabsTrigger value="completed">Completed</TabsTrigger>
         </TabsList>
+
+        <Button onClick={refreshBCOData}>
+          Refresh Table
+        </Button>
   
         <TabsContent value="upcoming">
           <BcoBookingsTableUpcoming
