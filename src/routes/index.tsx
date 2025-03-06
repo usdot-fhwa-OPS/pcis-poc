@@ -564,6 +564,9 @@ function Index() {
           const { data: updatedContainerStatus } = await client.models.Container.update({
             containerID: id,
             bookingStatus: status,
+            isTransportationNotify: true,
+            isBCONotify: true,
+            isTerminalNotify: false,
     
           });
           console.log("Marked Booking status Late for Pick Up:", updatedContainerStatus);
