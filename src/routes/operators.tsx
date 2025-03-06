@@ -24,7 +24,7 @@ export default function Operators() {
             mode: 'no-cors',
             method: 'GET',
             headers: {
-              "Authorization": `Bearer ${session.tokens?.idToken?.toString()}` ,
+              "Authorization": `Bearer ${session.tokens?.accessToken.toString()}` ,
               "Content-Type": "application/json",
               "Access-Control-Allow-Methods": "GET, OPTIONS",
               "Access-Control-Allow-Origin": "*",
