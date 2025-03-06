@@ -24,10 +24,9 @@ export default function Operators() {
             mode: 'no-cors',
             method: 'GET',
             headers: {
-              "Authorization": session.tokens?.idToken?.toString() ?? "" ,
+              //"Authorization": session.tokens?.idToken?.toString() ?? "" ,
               "Content-Type": "application/json",
               "Access-Control-Allow-Methods": "GET, OPTIONS",
-              "Access-Control-Allow-Headers": 'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token',
               "Accept": "*/*",
             }
           },
