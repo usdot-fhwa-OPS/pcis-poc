@@ -13,6 +13,7 @@ import { useAuthenticator } from "@aws-amplify/ui-react";
 import { generateClient, SelectionSet } from 'aws-amplify/data';
 import type { Schema } from '../../amplify/data/resource';
 import { Button } from '../components/ui/button.tsx'
+import { RefreshCcw } from 'lucide-react'
 
 const client = generateClient<Schema>();
 
@@ -650,7 +651,7 @@ useEffect(() => {
         </TabsList>
         </div>
         <Button onClick={refreshTerminalOpData}>
-          Refresh Table
+          <RefreshCcw />
         </Button>
         <div>
         <TabsContent value="requested">
@@ -683,7 +684,7 @@ useEffect(() => {
       </TabsList>
 
       <Button onClick={refreshTransOpData}>
-          Refresh Table
+        <RefreshCcw />
       </Button>
 
       <TabsContent value="upcoming">
@@ -728,7 +729,7 @@ useEffect(() => {
         </TabsList>
 
         <Button onClick={refreshBCOData}>
-          Refresh Table
+          <RefreshCcw />
         </Button>
   
         <TabsContent value="upcoming">
