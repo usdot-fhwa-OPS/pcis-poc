@@ -99,7 +99,7 @@ export const columns = (status: string): ColumnDef<any>[] => {
      // Adjust width as needed
       cell: ({ row }) => {
         const status = row.original.bookingStatus; // Get status value
-        const isLate = status === "Late"; // Check if status is "Late"
+        const isLate = status === "Late for Pick Up"; // Check if status is "Late"
   
         return (
           <span className={`flex justify-center items-center px-4 py-2 rounded-md ${isLate ? "bg-red-500 text-white" : "bg-gray-600 text-white"}`}>
