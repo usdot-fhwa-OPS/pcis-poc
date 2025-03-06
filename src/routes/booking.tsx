@@ -401,7 +401,7 @@ function RouteComponent() {
               bookingStatus: { eq: 'Pending Pick Up' }
             },
             {
-              bookingStatus: { eq: 'Late' }
+              bookingStatus: { eq: 'Late for Pick Up' }
             }
           ]
         }
@@ -525,7 +525,7 @@ async function  markBookingLate(id: string, status: string){
 
       });
       console.log("Marked Booking status Late for Pick Up:", updatedContainerStatus);
-      await fetchterminal_operator_requested();
+      await fetchterminal_operator_ongoing();
     } 
    catch (error) {
     console.error("Error Marking Booking Status as Late:", error);
