@@ -526,9 +526,11 @@ async function  markBookingLate(id: string, status: string){
       });
       console.log("Marked Booking status Late for Pick Up:", updatedContainerStatus);
       await fetchterminal_operator_ongoing();
+      return true; 
     } 
    catch (error) {
     console.error("Error Marking Booking Status as Late:", error);
+    return false;
   }
 }
 
