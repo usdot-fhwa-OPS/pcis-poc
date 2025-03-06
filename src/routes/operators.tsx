@@ -19,7 +19,7 @@ export default function Operators() {
         const session = await fetchAuthSession();
         console.log(session.tokens?.idToken?.toString());
         const response = await fetch(
-          "https://xlj2x9eurh.execute-api.us-east-1.amazonaws.com",
+          "https://xlj2x9eurh.execute-api:us-east-1:286010155551:xlj2x9eurh/*/GET/",
           { 
             mode: 'no-cors',
             method: 'GET',
