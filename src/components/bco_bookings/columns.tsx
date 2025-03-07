@@ -159,10 +159,6 @@ export const columns = (): ColumnDef<any>[] => {
         return <span>{row.original.transopName}</span>
       },
     },
-    { 
-      accessorKey: "transopEmail", 
-      header: "Transportation Operator Email",
-    },
     {
       accessorKey: "containerStatus",
       header: "Booking Status",
