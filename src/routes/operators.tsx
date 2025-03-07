@@ -18,18 +18,14 @@ export default function Operators() {
       try {
         const session = await fetchAuthSession();
         console.log(session.tokens?.idToken?.toString());
-        const response = await fetch(
-          "https://xlj2x9eurh.execute-api.us-east-1.amazonaws.com/dev/",
-          { 
-            headers: {
-              "Authorization": `Bearer ${session.tokens?.idToken?.toString()}` ,
-              "Content-Type": "application/json",
-              "Access-Control-Allow-Methods": "GET, OPTIONS",
-              "Access-Control-Allow-Origin": "https://pcismvp23-users-table-backend-connect.d19yhr3c3if28a.amplifyapp.com",
-              "Access-Control-Allow-Headers": "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token, Accept",
-            }
-          },
-        );
+        const response = await fetch("https://xlj2x9eurh.execute-api.us-east-1.amazonaws.com/dev/", {
+          method: 'GET',
+          headers: {
+            "Authorization": `Bearer ${session.tokens?.idToken?.toString()}`,
+            "Content-Type": "application/json",
+            "Accept": "*/*"
+          }
+        });
         const result = await response.json();
         console.log(result);
         setData(result);
