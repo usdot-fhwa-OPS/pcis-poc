@@ -73,7 +73,9 @@ export function NotificationsButton({notifications, role }: NotificationsButtonP
           <DialogHeader className="p-4 border-b">
             <div className="flex items-center gap-2">
               <h2 className="text-lg font-semibold">Notifications</h2>
-              <span className="rounded-full bg-red-500 px-2 py-0.5 text-xs text-white">{unreadCount} unread</span>
+              {unreadCount > 0 && (
+                <span className="rounded-full bg-red-500 px-2 py-0.5 text-xs text-white">{unreadCount} Notifications</span>
+              )}
             </div>
           </DialogHeader>
           <ScrollArea className="h-[calc(80vh-100px)]">
