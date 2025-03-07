@@ -16,11 +16,11 @@ export type User = {
 export const columns : ColumnDef<User>[] = [
     {
         accessorKey: "given_name",
-        header: () => <div className="text-center">Name</div>,
+        header: () => <div className="text-center">First Name</div>,
     },
     {
         accessorKey: "family_name",
-        header: () => <div className="text-center">Name</div>,
+        header: () => <div className="text-center">Last Name</div>,
     },
     {
         accessorKey: "custom:role",
