@@ -64,7 +64,7 @@ export const columns: ColumnDef<UpcomingCargo>[] = [
 
       return (
         <DropdownMenu>
-          <DropdownMenuTrigger asChild>
+          <DropdownMenuTrigger asChild disabled={cargoStatus === "On-Dock"}>
             <Button variant="outline">{cargoStatus}</Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-56">
