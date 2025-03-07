@@ -21,14 +21,13 @@ export default function Operators() {
         const response = await fetch(
           "https://xlj2x9eurh.execute-api.us-east-1.amazonaws.com/dev/",
           { 
-            mode: 'no-cors',
-            method: 'GET',
             headers: {
               "Authorization": `Bearer ${session.tokens?.idToken?.toString()}` ,
               "Content-Type": "application/json",
-              "Access-Control-Allow-Methods": "GET, OPTIONS",
+              "Access-Control-Allow-Methods": "OPTIONS, GET, POST, PUT, DELETE",
               "Access-Control-Allow-Origin": "*",
-              "Accept": "*/*",
+              "Access-Control-Allow-Headers": "Authorization, Content-Type",
+              "Access-Control-Allow-Credentials": "true"
             }
           },
         );
