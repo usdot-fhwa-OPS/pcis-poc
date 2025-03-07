@@ -333,6 +333,9 @@ function Index() {
                       {
                         bookingStatus: { eq: 'Picked Up' }
                       },
+                      {
+                        bookingStatus: { eq: 'Pickup Modification Requested' }
+                      },
                     ]
                   }
                 ]
