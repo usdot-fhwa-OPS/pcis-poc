@@ -103,7 +103,7 @@ export const columns = (): ColumnDef<any>[] => {
                 <div className="space-y-2 py-2">
                   <div>
                     <Label>Transportation Operator Name</Label>
-                    <Select value={tempName} onValueChange={(value) => setTempName(value)}>
+                    <Select value={tempName} onValueChange={(value) => setTempName(value)} disabled={isLoading}>
                       <SelectTrigger className="w-full">
                         <div className="flex items-center gap-2">
                           {isLoading && <Loader2 className="h-4 w-4 animate-spin" />}
