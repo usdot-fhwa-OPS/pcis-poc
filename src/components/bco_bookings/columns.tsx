@@ -1,7 +1,7 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "../ui/button.tsx";
 import { useEffect, useState } from "react";
-import { Flag } from "lucide-react";
+import { Flag, Loader2 } from "lucide-react";
 import { Label } from "../ui/label"
 import { Input } from "../ui/input"
 import { BCODataTableMeta } from "./data-table.tsx";
@@ -89,7 +89,7 @@ export const columns = (): ColumnDef<any>[] => {
 
         if (isMissing) {
           return (
-            <Dialog open={open} onOpenChange={setOpen} isLoading={isLoading}>
+            <Dialog open={open} onOpenChange={setOpen}>
               <DialogTrigger asChild>
                 <Button variant="outline" className="bg-blue-600 text-white hover:bg-blue-700">Assign</Button>
               </DialogTrigger>
@@ -105,6 +105,7 @@ export const columns = (): ColumnDef<any>[] => {
                     <Label>Transportation Operator Name</Label>
                     <Select value={tempName} onValueChange={(value) => setTempName(value)}>
                       <SelectTrigger className="w-[180px]">
+                        {isLoading && <Loader2 className="h-4 w-4 animate-spin" />}
                         <SelectValue placeholder="Select a transportation operator" />
                       </SelectTrigger>
                       <SelectContent>
