@@ -23,6 +23,16 @@ import {
   DialogFooter,
 } from "../ui/dialog"  
 
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select"
+
 export const columns = (): ColumnDef<any>[] => {
   const baseColumns: ColumnDef<any>[] = [
     { accessorKey: "vesselID", header: "Vessel ID" },
@@ -98,66 +108,6 @@ export const columns = (): ColumnDef<any>[] => {
     { 
       accessorKey: "transopEmail", 
       header: "Transportation Operator Email",
-      cell: ({ row, table }) => {
-
-        const [open, setOpen] = useState(false)
-        const [tempName, setTempName] = useState("")
-        const [tempEmail, setTempEmail] = useState("")
-
-        // If either operator OR email is missing, show "Book" button
-        const isMissing = !row.original.transopName?.trim() || !row.original.transopEmail?.trim()
-
-        function handleSubmit() {
-          // Use the parent's updateCargo method:
-          (table.options.meta as BCODataTableMeta)?.assignTransOp(row.original.containerID, tempName, tempEmail, "Pending Transportation Operator Approval")
-          setOpen(false)
-        }
-
-        if (isMissing) {
-          return (
-            <Dialog open={open} onOpenChange={setOpen}>
-              <DialogTrigger asChild>
-                <Button variant="outline" className="bg-blue-600 text-white hover:bg-blue-700">Assign</Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Book Transportation Operator</DialogTitle>
-                  <DialogDescription>
-                    Enter a Transportation Operator name and email to assign this container.
-                  </DialogDescription>
-                </DialogHeader>
-                <div className="space-y-2 py-2">
-                  <div>
-                    <Label>Transportation Operator Name</Label>
-                    <Input
-                      value={tempName}
-                      onChange={(e) => setTempName(e.target.value)}
-                    />
-                  </div>
-                  <div>
-                    <Label>Transportation Operator Email</Label>
-                    <Input
-                      value={tempEmail}
-                      onChange={(e) => setTempEmail(e.target.value)}
-                    />
-                  </div>
-                </div>
-                <DialogFooter>
-                  <Button variant="outline" onClick={() => setOpen(false)}>
-                    Cancel
-                  </Button>
-                  <Button onClick={handleSubmit} disabled={!tempName.trim() || !tempEmail.trim()}>
-                    Submit
-                    </Button>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
-          )
-        }
-
-        // If both operator and email are already filled, just display operator's name
-        return <span>{row.original.transopEmail}</span>
-      },
     },
     {
       accessorKey: "containerStatus",
