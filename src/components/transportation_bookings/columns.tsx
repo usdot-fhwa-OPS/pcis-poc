@@ -378,7 +378,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
 
         return (
           <Checkbox
-            disabled={row.original.bookingStatus !== "Pending Pick Up"}
+            disabled={row.original.bookingStatus !== "Pending Pick Up" || row.original.bookingStatus === "Late for Pick Up"}
             checked={isChecked}
             onCheckedChange={handlePickUp}
           />
