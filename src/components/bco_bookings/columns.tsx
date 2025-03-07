@@ -1,6 +1,6 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "../ui/button.tsx";
-import { useEffect, useState } from "react";
+import { SetStateAction, useEffect, useState } from "react";
 import { Flag, Loader2 } from "lucide-react";
 import { Label } from "../ui/label"
 import { Input } from "../ui/input"
@@ -87,7 +87,7 @@ export const columns = (): ColumnDef<any>[] => {
           fetchData();
         }, [])
 
-        const handleOperatorSelect = (value) => {
+        const handleOperatorSelect = (value: string) => {
           setTempName(value);
           const selectedUser = data.find(
             (user) => `${user.given_name} ${user.family_name}` === value
