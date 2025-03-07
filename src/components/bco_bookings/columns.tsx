@@ -50,6 +50,7 @@ export const columns = (): ColumnDef<any>[] => {
         const [open, setOpen] = useState(false)
         const [tempName, setTempName] = useState("")
         const [tempEmail, setTempEmail] = useState("")
+        const [isLoading, setIsLoading] = useState(true)
 
         // If either operator OR email is missing, show "Book" button
         const isMissing = !row.original.transopName?.trim() || !row.original.transopEmail?.trim()
@@ -79,6 +80,8 @@ export const columns = (): ColumnDef<any>[] => {
               setData(filteredData);
             } catch (error) {
               throw new Error(`Failed to fetch data: ${error}`);
+            } finally {
+              setIsLoading(false)
             }
           }
           fetchData();
@@ -86,7 +89,7 @@ export const columns = (): ColumnDef<any>[] => {
 
         if (isMissing) {
           return (
-            <Dialog open={open} onOpenChange={setOpen}>
+            <Dialog open={open} onOpenChange={setOpen} isLoading={isLoading}>
               <DialogTrigger asChild>
                 <Button variant="outline" className="bg-blue-600 text-white hover:bg-blue-700">Assign</Button>
               </DialogTrigger>
@@ -117,10 +120,6 @@ export const columns = (): ColumnDef<any>[] => {
                         </SelectGroup>
                       </SelectContent>
                     </Select>
-                    <Input
-                      value={tempName}
-                      onChange={(e) => setTempName(e.target.value)}
-                    />
                   </div>
                   <div>
                     <Label>Transportation Operator Email</Label>
