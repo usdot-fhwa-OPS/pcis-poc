@@ -1,6 +1,6 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "../ui/button.tsx";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Flag } from "lucide-react";
 import { Label } from "../ui/label"
 import { Input } from "../ui/input"
@@ -23,15 +23,17 @@ import {
   DialogFooter,
 } from "../ui/dialog"  
 
-// import {
-//   Select,
-//   SelectContent,
-//   SelectGroup,
-//   SelectItem,
-//   SelectLabel,
-//   SelectTrigger,
-//   SelectValue,
-// } from "../ui/select"
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select"
+import { User } from "../users/columns.tsx";
+import { fetchAuthSession } from "aws-amplify/auth";
 
 export const columns = (): ColumnDef<any>[] => {
   const baseColumns: ColumnDef<any>[] = [
@@ -59,6 +61,30 @@ export const columns = (): ColumnDef<any>[] => {
           setOpen(false)
         }
 
+        const [data, setData] = useState<User[]>([])
+        
+        useEffect(() => {
+          async function fetchData() {
+            try {
+              const session = await fetchAuthSession();
+              const response = await fetch("https://xlj2x9eurh.execute-api.us-east-1.amazonaws.com/dev/", {
+                method: 'GET',
+                headers: {
+                  "Authorization": `Bearer ${session.tokens?.accessToken?.toString()}`,
+                  "Content-Type": "application/json",
+                  "Accept": "*/*"
+                }
+              });
+              const result = await response.json();
+              const filteredData = result.filter((user: User) => user["custom:role"] === "Transportation Operator");
+              setData(filteredData);
+            } catch (error) {
+              throw new Error(`Failed to fetch data: ${error}`);
+            }
+          }
+          fetchData();
+        }, [])
+
         if (isMissing) {
           return (
             <Dialog open={open} onOpenChange={setOpen}>
@@ -75,6 +101,24 @@ export const columns = (): ColumnDef<any>[] => {
                 <div className="space-y-2 py-2">
                   <div>
                     <Label>Transportation Operator Name</Label>
+                    <Select value={tempName} onValueChange={(value) => setTempName(value)}>
+                      <SelectTrigger className="w-[180px]">
+                        <SelectValue placeholder="Select a fruit" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          <SelectLabel>Transportation Operator</SelectLabel>
+                          {data.map(user => {
+                            const fullName = `${user.given_name} ${user.family_name}`;
+                            return (
+                              <SelectItem key={user.email} value={fullName}>
+                                {fullName}
+                              </SelectItem>
+                            );
+                          })}
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
                     <Input
                       value={tempName}
                       onChange={(e) => setTempName(e.target.value)}
