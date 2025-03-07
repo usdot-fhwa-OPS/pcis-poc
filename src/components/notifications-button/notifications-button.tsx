@@ -29,6 +29,8 @@ export function NotificationsButton({notifications, role }: NotificationsButtonP
           return `Booking for Container ${notification.containerID} has been approved by the terminal operator.`;
         case "unassigned":
           return `Terminal Operator has denied the booking for Container ${notification.containerID}.`;
+        case "Late for Pick Up":
+          return `Terminal Operator has marked Late for Pick Up for Container ${notification.containerID}.`;
         
       }
     } else if (role === "Transportation Operator") {
@@ -39,6 +41,8 @@ export function NotificationsButton({notifications, role }: NotificationsButtonP
           return `Booking for Container ${notification.containerID} has been approved by terminal operator.`;
         case "unassigned":
           return `Terminal Operator has denied the booking for Container ${notification.containerID}.`;
+        case "Late for Pick Up":
+          return `Terminal Operator has marked Late for Pick Up for Container ${notification.containerID}.`;
         
       }
     } else {

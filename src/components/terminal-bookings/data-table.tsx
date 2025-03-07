@@ -22,6 +22,8 @@ import {
 //Adding interface for setting Booking status
 export interface TerminalOperatorDataTableMeta {
   updateBooking: (id: string, status: string, bookingDate?: string, bookingTime?: string)  => Promise<boolean>;
+  markBookingLate: (id: string, status: string) => Promise<boolean>;
+  
 }
 
 interface DataTableProps<TData, TValue> {
