@@ -87,6 +87,16 @@ export const columns = (): ColumnDef<any>[] => {
           fetchData();
         }, [])
 
+        const handleOperatorSelect = (value) => {
+          setTempName(value);
+          const selectedUser = data.find(
+            (user) => `${user.given_name} ${user.family_name}` === value
+          );
+          if (selectedUser) {
+            setTempEmail(selectedUser.email);
+          }
+        };
+
         if (isMissing) {
           return (
             <Dialog open={open} onOpenChange={setOpen}>
@@ -103,7 +113,7 @@ export const columns = (): ColumnDef<any>[] => {
                 <div className="space-y-2 py-2">
                   <div>
                     <Label>Transportation Operator Name</Label>
-                    <Select value={tempName} onValueChange={(value) => setTempName(value)} disabled={isLoading}>
+                    <Select value={tempName} onValueChange={handleOperatorSelect} disabled={isLoading}>
                       <SelectTrigger className="w-full">
                         <div className="flex items-center gap-2">
                           {isLoading && <Loader2 className="h-4 w-4 animate-spin" />}
@@ -128,7 +138,7 @@ export const columns = (): ColumnDef<any>[] => {
                     <Label>Transportation Operator Email</Label>
                     <Input
                       value={tempEmail}
-                      onChange={(e) => setTempEmail(e.target.value)}
+                      disabled={true}
                     />
                   </div>
                 </div>
