@@ -103,11 +103,10 @@ export const columns = (): ColumnDef<any>[] => {
                     <Label>Transportation Operator Name</Label>
                     <Select value={tempName} onValueChange={(value) => setTempName(value)}>
                       <SelectTrigger className="w-[180px]">
-                        <SelectValue placeholder="Select a fruit" />
+                        <SelectValue placeholder="Select a transportation operator" />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectGroup>
-                          <SelectLabel>Transportation Operator</SelectLabel>
                           {data.map(user => {
                             const fullName = `${user.given_name} ${user.family_name}`;
                             return (
