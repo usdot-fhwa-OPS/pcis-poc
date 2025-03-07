@@ -104,9 +104,11 @@ export const columns = (): ColumnDef<any>[] => {
                   <div>
                     <Label>Transportation Operator Name</Label>
                     <Select value={tempName} onValueChange={(value) => setTempName(value)}>
-                      <SelectTrigger className="w-[180px]">
-                        {isLoading && <Loader2 className="h-4 w-4 animate-spin" />}
-                        <SelectValue placeholder="Select a transportation operator" />
+                      <SelectTrigger className="w-full">
+                        <div className="flex items-center gap-2">
+                          {isLoading && <Loader2 className="h-4 w-4 animate-spin" />}
+                          <SelectValue placeholder="Select operator" />
+                        </div>
                       </SelectTrigger>
                       <SelectContent>
                         <SelectGroup>
