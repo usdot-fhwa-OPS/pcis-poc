@@ -4,25 +4,30 @@ import { ColumnDef } from "@tanstack/react-table"
 import { Badge } from "../ui/badge"
 
 export type User = {
-    name : string
-    role : string
-    organization : string
+    given_name : string
+    family_name: string
+    "custom:role" : string
+    "custom:organization" : string
     email : string
-    phone : string
-    status : "Approved"
+    phone_number : string
+    verification_status : string
 } 
 
 export const columns : ColumnDef<User>[] = [
     {
-        accessorKey: "name",
+        accessorKey: "given_name",
         header: () => <div className="text-center">Name</div>,
     },
     {
-        accessorKey: "role",
+        accessorKey: "family_name",
+        header: () => <div className="text-center">Name</div>,
+    },
+    {
+        accessorKey: "custom:role",
         header: () => <div className="text-center">Role</div>,
     },
     {
-        accessorKey: "organization",
+        accessorKey: "custom:organization",
         header: () => <div className="text-center">Organization</div>,
     },
     {
@@ -30,14 +35,14 @@ export const columns : ColumnDef<User>[] = [
         header: () => <div className="text-center">Email</div>,
     },
     {
-        accessorKey: "phone",
+        accessorKey: "phone_number",
         header: () => <div className="text-center">Phone Number</div>,
     },
     {
-        accessorKey: "status",
+        accessorKey: "verification_status",
         header: () => <div className="text-center">Status</div>,
-        cell: () => { 
-            return <Badge variant="outline">Approved</Badge>
+        cell: ({row}) => { 
+            return <Badge variant="outline">{row.original.verification_status}</Badge>
         },
     },   
 ]
