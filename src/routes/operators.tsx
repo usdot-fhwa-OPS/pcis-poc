@@ -24,10 +24,9 @@ export default function Operators() {
             headers: {
               "Authorization": `Bearer ${session.tokens?.idToken?.toString()}` ,
               "Content-Type": "application/json",
-              "Access-Control-Allow-Methods": "OPTIONS, GET, POST, PUT, DELETE",
-              "Access-Control-Allow-Origin": "*",
-              "Access-Control-Allow-Headers": "Authorization, Content-Type",
-              "Access-Control-Allow-Credentials": "true"
+              "Access-Control-Allow-Methods": "GET, OPTIONS",
+              "Access-Control-Allow-Origin": "https://pcismvp23-users-table-backend-connect.d19yhr3c3if28a.amplifyapp.com",
+              "Access-Control-Allow-Headers": "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token, Accept",
             }
           },
         );
