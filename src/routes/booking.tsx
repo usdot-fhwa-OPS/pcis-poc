@@ -440,7 +440,25 @@ function RouteComponent() {
     useEffect(() => {
       fetchterminal_operator_ongoing();
     }, [])
+    
+    async function  markBookingLate(id: string, status: string){  
+      try {
 
+        let updatePayload: any = { containerID: id, bookingStatus: status };
+      Object.assign(updatePayload, {
+        isTerminalNotify: false,
+        isTransportationNotify: true,
+        isBCONotify: true,
+      });
+          await fetchterminal_operator_ongoing();
+          return true; 
+        } 
+       catch (error) {
+        console.error("Error Marking Booking Status as Late:", error);
+        return false;
+      }
+    }
+    
 //Update Transporation Operator Booking
 
     async function updateTransOpBooking(
@@ -638,7 +656,7 @@ useEffect(() => {
           <TerminalBookingsTable data={terminalOpModifiedBookings} status="Modified" meta={{updateBooking}} />
         </TabsContent>
         <TabsContent value="ongoing">
-          <TerminalBookingsTable data={terminalopBookingongoing} status="Ongoing" meta={{updateBooking}} />
+          <TerminalBookingsTable data={terminalopBookingongoing} status="Ongoing" meta={{updateBooking,markBookingLate}} />
         </TabsContent>
         <TabsContent value="completed">
           < TerminalBookingsCompleted data={Terminal_CompletedData} status="Completed" meta={{updateBooking}}/>
@@ -729,6 +747,5 @@ useEffect(() => {
   );
 }
 }
-
 
 
