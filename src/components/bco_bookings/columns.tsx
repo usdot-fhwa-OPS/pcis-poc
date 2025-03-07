@@ -1,6 +1,6 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "../ui/button.tsx";
-import { SetStateAction, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Flag, Loader2 } from "lucide-react";
 import { Label } from "../ui/label"
 import { Input } from "../ui/input"
