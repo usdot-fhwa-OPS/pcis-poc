@@ -78,10 +78,9 @@ export const columns = (): ColumnDef<any>[] => {
               const result = await response.json();
               const filteredData = result.filter((user: User) => user["custom:role"] === "Transportation Operator");
               setData(filteredData);
+              setIsLoading(false)
             } catch (error) {
               throw new Error(`Failed to fetch data: ${error}`);
-            } finally {
-              setIsLoading(false)
             }
           }
           fetchData();
