@@ -420,7 +420,7 @@ function Index() {
                   bookingStatus: { eq: 'Pending Pick Up' }
                 },
                 {
-                  bookingStatus: { eq: 'Late' }
+                  bookingStatus: { eq: 'Late for Pick Up' }
                 }
               ]
             }
@@ -556,6 +556,30 @@ function Index() {
       }
     }
     
+
+
+    async function  markBookingLate(id: string, status: string){  
+      try {
+    
+          const { data: updatedContainerStatus } = await client.models.Container.update({
+            containerID: id,
+            bookingStatus: status,
+            isTransportationNotify: true,
+            isBCONotify: true,
+            isTerminalNotify: false,
+    
+          });
+          console.log("Marked Booking status Late for Pick Up:", updatedContainerStatus);
+          await fetchterminal_operator_ongoing();
+          return true; 
+        } 
+       catch (error) {
+        console.error("Error Marking Booking Status as Late:", error);
+        return false;
+      }
+    }
+    
+
     const [BCOOngoingData, setBCOOngoingBookings] = useState<BCOOngoingBooking[]>([]);
     
     // Move fetchContainers outside of useEffect so it can be reused
@@ -652,7 +676,7 @@ function Index() {
             <TerminalBookingsTable data={terminalOpModifiedBookings} status="Modified" meta={{updateBooking}} />
           </TabsContent>
           <TabsContent value="ongoing">
-            <TerminalBookingsTable data={terminalopBookingongoing} status="Ongoing" meta={{updateBooking}} />
+            <TerminalBookingsTable data={terminalopBookingongoing} status="Ongoing" meta={{updateBooking,markBookingLate}} />
           </TabsContent>
           <TabsContent value="completed">
             < TerminalBookingsCompleted data={Terminal_CompletedData} status="Completed" meta={{updateBooking}}/>
