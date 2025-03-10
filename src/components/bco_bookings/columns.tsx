@@ -1,7 +1,7 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "../ui/button.tsx";
-import { useState } from "react";
-import { Flag } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Flag, Loader2 } from "lucide-react";
 import { Label } from "../ui/label"
 import { Input } from "../ui/input"
 import { BCODataTableMeta } from "./data-table.tsx";
@@ -23,6 +23,17 @@ import {
   DialogFooter,
 } from "../ui/dialog"  
 
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select"
+import { User } from "../users/columns.tsx";
+import { fetchAuthSession } from "aws-amplify/auth";
+
 export const columns = (): ColumnDef<any>[] => {
   const baseColumns: ColumnDef<any>[] = [
     { accessorKey: "vesselID", header: "Vessel ID" },
@@ -39,6 +50,7 @@ export const columns = (): ColumnDef<any>[] => {
         const [open, setOpen] = useState(false)
         const [tempName, setTempName] = useState("")
         const [tempEmail, setTempEmail] = useState("")
+        const [isLoading, setIsLoading] = useState(true)
 
         // If either operator OR email is missing, show "Book" button
         const isMissing = !row.original.transopName?.trim() || !row.original.transopEmail?.trim()
@@ -48,6 +60,40 @@ export const columns = (): ColumnDef<any>[] => {
           (table.options.meta as BCODataTableMeta)?.assignTransOp(row.original.containerID, tempName, tempEmail, "Pending Transportation Operator Approval")
           setOpen(false)
         }
+
+        const [data, setData] = useState<User[]>([])
+        
+        useEffect(() => {
+          async function fetchData() {
+            try {
+              const session = await fetchAuthSession();
+              const response = await fetch("https://xlj2x9eurh.execute-api.us-east-1.amazonaws.com/dev/", {
+                method: 'GET',
+                headers: {
+                  "Authorization": `Bearer ${session.tokens?.accessToken?.toString()}`,
+                  "Content-Type": "application/json",
+                  "Accept": "*/*"
+                }
+              });
+              const result = await response.json();
+              setData(result);
+              setIsLoading(false)
+            } catch (error) {
+              throw new Error(`Failed to fetch data: ${error}`);
+            }
+          }
+          fetchData();
+        }, [])
+
+        const handleOperatorSelect = (value: string) => {
+          setTempName(value);
+          const selectedUser = data.find(
+            (user) => `${user.given_name} ${user.family_name}` === value
+          );
+          if (selectedUser) {
+            setTempEmail(selectedUser.email);
+          }
+        };
 
         if (isMissing) {
           return (
@@ -65,16 +111,32 @@ export const columns = (): ColumnDef<any>[] => {
                 <div className="space-y-2 py-2">
                   <div>
                     <Label>Transportation Operator Name</Label>
-                    <Input
-                      value={tempName}
-                      onChange={(e) => setTempName(e.target.value)}
-                    />
+                    <Select value={tempName} onValueChange={handleOperatorSelect} disabled={isLoading}>
+                      <SelectTrigger className="w-full">
+                        <div className="flex items-center gap-2">
+                          {isLoading && <Loader2 className="h-4 w-4 animate-spin" />}
+                          <SelectValue placeholder="Select operator" />
+                        </div>
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          {data.map(user => {
+                            const fullName = `${user.given_name} ${user.family_name}`;
+                            return (
+                              <SelectItem key={user.email} value={fullName}>
+                                {fullName}
+                              </SelectItem>
+                            );
+                          })}
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
                   </div>
                   <div>
                     <Label>Transportation Operator Email</Label>
                     <Input
                       value={tempEmail}
-                      onChange={(e) => setTempEmail(e.target.value)}
+                      disabled={true}
                     />
                   </div>
                 </div>
@@ -93,70 +155,6 @@ export const columns = (): ColumnDef<any>[] => {
 
         // If both operator and email are already filled, just display operator's name
         return <span>{row.original.transopName}</span>
-      },
-    },
-    { 
-      accessorKey: "transopEmail", 
-      header: "Transportation Operator Email",
-      cell: ({ row, table }) => {
-
-        const [open, setOpen] = useState(false)
-        const [tempName, setTempName] = useState("")
-        const [tempEmail, setTempEmail] = useState("")
-
-        // If either operator OR email is missing, show "Book" button
-        const isMissing = !row.original.transopName?.trim() || !row.original.transopEmail?.trim()
-
-        function handleSubmit() {
-          // Use the parent's updateCargo method:
-          (table.options.meta as BCODataTableMeta)?.assignTransOp(row.original.containerID, tempName, tempEmail, "Pending Transportation Operator Approval")
-          setOpen(false)
-        }
-
-        if (isMissing) {
-          return (
-            <Dialog open={open} onOpenChange={setOpen}>
-              <DialogTrigger asChild>
-                <Button variant="outline" className="bg-blue-600 text-white hover:bg-blue-700">Assign</Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Book Transportation Operator</DialogTitle>
-                  <DialogDescription>
-                    Enter a Transportation Operator name and email to assign this container.
-                  </DialogDescription>
-                </DialogHeader>
-                <div className="space-y-2 py-2">
-                  <div>
-                    <Label>Transportation Operator Name</Label>
-                    <Input
-                      value={tempName}
-                      onChange={(e) => setTempName(e.target.value)}
-                    />
-                  </div>
-                  <div>
-                    <Label>Transportation Operator Email</Label>
-                    <Input
-                      value={tempEmail}
-                      onChange={(e) => setTempEmail(e.target.value)}
-                    />
-                  </div>
-                </div>
-                <DialogFooter>
-                  <Button variant="outline" onClick={() => setOpen(false)}>
-                    Cancel
-                  </Button>
-                  <Button onClick={handleSubmit} disabled={!tempName.trim() || !tempEmail.trim()}>
-                    Submit
-                    </Button>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
-          )
-        }
-
-        // If both operator and email are already filled, just display operator's name
-        return <span>{row.original.transopEmail}</span>
       },
     },
     {
