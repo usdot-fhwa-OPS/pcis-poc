@@ -41,11 +41,11 @@ export function DataTable<TData, TValue>({ columns, data, meta }: DataTableProps
     getFilteredRowModel: getFilteredRowModel(),
     onColumnFiltersChange: setColumnFilters,
     state: { columnFilters },
-    // initialState: {
-    //   sorting: [
-    //     {id: "updatedAt", desc:true }
-    //   ],
-    // },
+    initialState: {
+      sorting: [
+        {id: "updatedAt", desc:true }
+      ],
+    },
     getSortedRowModel: getSortedRowModel(),
   })
 
