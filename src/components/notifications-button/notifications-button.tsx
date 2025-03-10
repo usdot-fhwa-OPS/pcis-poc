@@ -83,7 +83,7 @@ export function NotificationsButton({notifications, role}: NotificationsButtonPr
             {notifications.map((notification) => {
               const dateObj = new Date(notification.updatedAt);
               const formattedDate = format(dateObj, 'MM/dd/yyyy'); // Formats date as MM/dd/yyyy
-              const formattedTime = format(dateObj, 'HH:mm'); // Formats time as HH:mm (note: minutes are 'mm')
+              const formattedTime = format(dateObj, 'hh:mm a'); // Formats time as HH:mm (note: minutes are 'mm')
               return (
                 <div
                   key={notification.containerID}
