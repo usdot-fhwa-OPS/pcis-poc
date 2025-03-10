@@ -446,12 +446,15 @@ function RouteComponent() {
     async function  markBookingLate(id: string, status: string){  
       try {
 
-        let updatePayload: any = { containerID: id, bookingStatus: status };
-      Object.assign(updatePayload, {
-        isTerminalNotify: false,
-        isTransportationNotify: true,
-        isBCONotify: true,
-      });
+          const { data: updatedContainerStatus } = await client.models.Container.update({
+            containerID: id,
+            bookingStatus: status,
+            isTransportationNotify: true,
+            isBCONotify: true,
+            isTerminalNotify: false,
+
+          });
+          console.log("Marked Booking status Late for Pick Up:", updatedContainerStatus);
           await fetchterminal_operator_ongoing();
           return true; 
         } 
