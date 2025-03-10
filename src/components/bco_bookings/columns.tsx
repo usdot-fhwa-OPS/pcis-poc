@@ -22,6 +22,7 @@ import {
   DialogTrigger,
   DialogFooter,
 } from "../ui/dialog"  
+import { format } from "date-fns";
 
 export const columns = (): ColumnDef<any>[] => {
   const baseColumns: ColumnDef<any>[] = [
@@ -278,7 +279,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
    
     {
       accessorKey: "contact_to",
-      header: "Contact Trasnportation Operator",
+      header: "Contact Transportation Operator",
       cell: ({ row }) => {
         const email = row.original.transopEmail
   
@@ -292,7 +293,15 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
         )
       },
     },
-    { accessorKey: "updatedAt", header: "Last Updated"}
+    { accessorKey: "updatedAt", 
+      header: "Last Updated",
+      cell: ({ row }) => {
+        const rawDate = row.original.updatedAt;
+        if (!rawDate) return null;
+        const formattedDate = format(new Date(rawDate), "MM/dd/yyyy");
+        return formattedDate;
+      }
+    }
     
 
   ];
