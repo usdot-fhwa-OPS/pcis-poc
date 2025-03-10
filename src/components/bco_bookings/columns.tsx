@@ -292,7 +292,6 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
         )
       },
     },
-    { accessorKey: "updatedAt", header: "Last Updated", sortingFn: 'datetime',  sortDescFirst: true,}
     
 
   ];
