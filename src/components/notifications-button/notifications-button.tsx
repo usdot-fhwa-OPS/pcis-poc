@@ -82,8 +82,8 @@ export function NotificationsButton({notifications, role}: NotificationsButtonPr
           <ScrollArea className="h-[calc(80vh-100px)]">
             {notifications.map((notification) => {
               const dateObj = new Date(notification.updatedAt);
-              const formattedDate = format(dateObj, 'MM/dd/yyyy'); // Formats date as MM/dd/yyyy
-              const formattedTime = format(dateObj, 'hh:mm a'); // Formats time as HH:mm (note: minutes are 'mm')
+              const formattedDate = format(dateObj, 'MM/dd/yyyy');
+              const formattedTime = format(dateObj, 'hh:mm a'); 
               return (
                 <div
                   key={notification.containerID}
