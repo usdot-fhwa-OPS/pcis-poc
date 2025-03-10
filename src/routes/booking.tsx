@@ -362,6 +362,8 @@ function RouteComponent() {
         bookingStatus: bookingStatus,
         assignmentDate: new Date().toLocaleDateString('en-US'),
         isTransportationNotify: true,
+        isBCONotify: false,
+        isTerminalNotify: false,
       });
   
       console.log("Updated container status:", assignTransportationOp);
