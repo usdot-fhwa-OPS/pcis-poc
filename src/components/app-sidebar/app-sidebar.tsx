@@ -26,7 +26,7 @@ import { Subscription } from "rxjs";
 
 const client = generateClient<Schema>();
 
-const selectionSet = ['containerID', 'bookingStatus'] as const;
+const selectionSet = ['containerID', 'bookingStatus', "updatedAt"] as const;
 export type Notifications = SelectionSet<Schema['Container']['type'], typeof selectionSet>
 
 // Menu items.

@@ -7,6 +7,7 @@ import { ScrollArea } from "../ui/scroll-area"
 import { SidebarMenuItem, SidebarMenuButton, SidebarMenuBadge } from "../ui/sidebar"
 import { Notifications } from "../app-sidebar/app-sidebar"
 import { Link } from "@tanstack/react-router"
+import { format } from "date-fns"
 
 interface NotificationsButtonProps {
     notifications: Notifications[]
@@ -14,7 +15,7 @@ interface NotificationsButtonProps {
 }
 
 
-export function NotificationsButton({notifications, role }: NotificationsButtonProps) {
+export function NotificationsButton({notifications, role}: NotificationsButtonProps) {
   const [open, setOpen] = useState(false)
   const unreadCount = notifications.length
 
@@ -79,19 +80,27 @@ export function NotificationsButton({notifications, role }: NotificationsButtonP
             </div>
           </DialogHeader>
           <ScrollArea className="h-[calc(80vh-100px)]">
-            {notifications.map((notification) => (
-              <div
-                key={notification.containerID}
-                className="flex items-start justify-between gap-4 p-4 border-b last:border-b-0"
-              >
-                <div className="space-y-1">
-                  <p className="text-sm">{getNotificationMessage(role, notification)}</p>
+            {notifications.map((notification) => {
+              const dateObj = new Date(notification.updatedAt);
+              const formattedDate = format(dateObj, 'MM/dd/yyyy'); // Formats date as MM/dd/yyyy
+              const formattedTime = format(dateObj, 'HH:mm'); // Formats time as HH:mm (note: minutes are 'mm')
+              return (
+                <div
+                  key={notification.containerID}
+                  className="flex items-start justify-between gap-4 p-4 border-b last:border-b-0"
+                >
+                  <div className="space-y-1">
+                    <p className="text-sm">{getNotificationMessage(role, notification)}</p>
+                    <p className="text-xs text-muted-foreground">
+                      {formattedDate} • {formattedTime}
+                    </p>
+                  </div>
+                  <Link to="/booking" onClick={() => setOpen(false)} className="text-blue-500 hover:underline">
+                    View
+                  </Link>
                 </div>
-                <Link to="/booking" onClick={() => setOpen(false)} className="text-blue-500 hover:underline">
-                  View
-                </Link>
-              </div>
-            ))}
+              )
+            })}
           </ScrollArea>
         </DialogContent>
       </Dialog>
