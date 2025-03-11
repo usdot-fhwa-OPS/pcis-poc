@@ -176,11 +176,12 @@ export function AppSidebar() {
       });
     }
     
-  }, [userAttributes]);
+  }, [user]);
   
   const handleSignOut = () => {
     if (notisSub) {
       notisSub.unsubscribe();
+      console.log("Unsubscribed")
     }
     signOut();
   };
