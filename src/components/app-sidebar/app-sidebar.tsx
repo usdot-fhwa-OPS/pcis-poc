@@ -66,7 +66,7 @@ export function AppSidebar() {
     email: '',
   });
 
-  let notisSub: Subscription;
+  
 
   const [userNotifications, setUserNotifications] = useState<Notifications[]>([]);
 
@@ -116,7 +116,7 @@ export function AppSidebar() {
     console.log(userAttributes.role)
     if (userAttributes.role == "Beneficiary Cargo Owner") {
       console.log("I AM BCO")
-      notisSub = client.models.Container.observeQuery(
+      const notisSub = client.models.Container.observeQuery(
         {
           filter: {
             and: [
@@ -140,7 +140,7 @@ export function AppSidebar() {
       return () => notisSub.unsubscribe();
     } else if (userAttributes.role == "Transportation Operator") {
       console.log("I AM TRANSPORTATION")
-      notisSub = client.models.Container.observeQuery(
+      const notisSub = client.models.Container.observeQuery(
         {
           filter: {
             and: [
@@ -164,7 +164,7 @@ export function AppSidebar() {
       return () => notisSub.unsubscribe();
     } else {
       console.log("I AM TERMINAL OP")
-      notisSub = client.models.Container.observeQuery(
+      const notisSub = client.models.Container.observeQuery(
         {
           filter: {
             isTerminalNotify: {
@@ -183,10 +183,6 @@ export function AppSidebar() {
   }, [user]);
   
   const handleSignOut = () => {
-    if (notisSub) {
-      notisSub.unsubscribe();
-      console.log("Unsubscribed")
-    }
     signOut();
   };
 
