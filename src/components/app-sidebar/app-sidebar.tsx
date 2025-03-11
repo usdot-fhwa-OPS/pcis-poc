@@ -65,7 +65,7 @@ export function AppSidebar() {
     role: '',
     email: '',
   });
-  
+
   let notisSub: Subscription;
 
   const [userNotifications, setUserNotifications] = useState<Notifications[]>([]);
@@ -137,6 +137,7 @@ export function AppSidebar() {
           console.log(items)
         },
       });
+      return () => notisSub.unsubscribe();
     } else if (userAttributes.role == "Transportation Operator") {
       console.log("I AM TRANSPORTATION")
       notisSub = client.models.Container.observeQuery(
@@ -160,6 +161,7 @@ export function AppSidebar() {
           console.log(items)
         },
       });
+      return () => notisSub.unsubscribe();
     } else {
       console.log("I AM TERMINAL OP")
       notisSub = client.models.Container.observeQuery(
@@ -175,6 +177,7 @@ export function AppSidebar() {
           setUserNotifications(items);
         },
       });
+      return () => notisSub.unsubscribe();
     }
     
   }, [user]);
