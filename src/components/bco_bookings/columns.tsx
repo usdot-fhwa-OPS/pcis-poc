@@ -215,20 +215,17 @@ baseColumns.push({
 
 export const CompletedColumn = (): ColumnDef<any>[] => {
   const baseColumns: ColumnDef<any>[] = [
-    // { accessorKey: "port", header: "Port" },
-    //{ accessorKey: "terminalId", header: "Terminal ID" },
     { accessorKey: "vesselID", header: "Vessel ID" },
     { accessorKey: "containerID", header: "Container ID" },
     { accessorKey: "origin", header: "Origin" },
     { accessorKey: "destination", header: "Destination" },
     { accessorKey: "bcoName", header: "BCO" },
     { accessorKey: "bcoEmail", header: "BCO Email" },
-  //  { accessorKey: "termopName", header: "Assigned Terminal Operator" },
     { accessorKey: "transopName", header: "Transportation Operator Name" },
     { accessorKey: "transopEmail", header: "Transportation Operator Email" },
     {
       accessorKey: "to_status",
-      header: "Booking Status",
+      header: "Reservation Status",
       cell: ({ row }) => {
         const status = row.original.bookingStatus; // Get status value
     
