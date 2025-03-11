@@ -149,15 +149,19 @@ export const CompletedColumn = (): ColumnDef<any>[] => {
     },
     {
       accessorKey: "bookingDate",
-      header: () => <div className="text-center">Booking Date</div>,
+      header: () => <div className="text-center">Reservation Date</div>,
+    },
+    {
+      accessorKey: "bookingTime",
+      header: () => <div className="text-center">Reservation Time</div>,
     },
     {
       accessorKey: "bookingApprovalDate",
-      header: () => <div className="text-center">Booking Approval Date</div>,
+      header: () => <div className="text-center">Reservation Approval Date</div>,
     },
     {
       accessorKey: "bookingStatus",
-      header: () => <div className="text-center">Booking Status</div>,
+      header: () => <div className="text-center">Reservation Status</div>,
       cell: ({ row }) => {
         const status = row.original.bookingStatus; // Get status value
         const isLate = status === "Late"; // Check if status is "Late"
@@ -171,11 +175,7 @@ export const CompletedColumn = (): ColumnDef<any>[] => {
     },
     {
       accessorKey: "bookingPickupDate",
-      header: () => <div className="text-center">Booking Pickup Date</div>,
-    },
-    {
-      accessorKey: "bookingTime",
-      header: () => <div className="text-center">Booking Time</div>,
+      header: () => <div className="text-center">Reservation Pickup Date</div>,
     },
   ];
   return baseColumns;
@@ -194,7 +194,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
     { accessorKey: "bookingTime", header: "Time Initiated" },
     {
       accessorKey: "status",
-      header: "Booking",
+      header: "Reservation",
       cell: ({ row, table }) => {
 
         const [date, setDate] = useState<Date | undefined>(new Date())
@@ -282,11 +282,11 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
             <TooltipProvider>
               <Tooltip delayDuration={300}>
                 <TooltipTrigger>
-                  <Button variant="outline" onClick={() => setIsDialogOpen(true)} disabled={row.original.containerStatus === "On-Ship"}>Book</Button>
+                  <Button variant="outline" onClick={() => setIsDialogOpen(true)} disabled={row.original.containerStatus === "On-Ship"}>Reserve</Button>
                 </TooltipTrigger>
                 {row.original.containerStatus === "On-Ship" && (
                   <TooltipContent>
-                    <p>Container still on ship. Cannot book.</p>
+                    <p>Container still on ship. Cannot reserve.</p>
                   </TooltipContent>
                 )}
               </Tooltip>
@@ -294,7 +294,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
               <DialogHeader>
-                <DialogTitle>Book Container Pick-Up</DialogTitle>
+                <DialogTitle>Reserve Container Pick-Up</DialogTitle>
                 <div className="text-sm text-muted-foreground">
                   {`Vessel ID: ${row.original.vesselID} | Container ID: ${row.original.containerID} | Origin: ${row.original.origin} | BCO: ${row.original.bcoName} | BCO Email: ${row.original.bcoEmail}`}
                 </div>
@@ -346,7 +346,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
                   variant={!date || !time ? "outline" : "default"}
                   onClick={handleBooking}
                 >
-                  Book
+                  Reserve
                 </Button>
               </div>
             </DialogContent>
@@ -372,7 +372,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
           if (success) {
             setIsChecked((prev) => !prev);
           } else {
-            console.error("Booking update failed. State not updated.");
+            console.error("Reservation update failed. State not updated.");
           }
         };
 
@@ -389,7 +389,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
     },
     {
       accessorKey: "modifyBooking",
-      header: "Modify Booking",
+      header: "Modify Reservation",
       cell: ({ row, table }) => {
         const [date, setDate] = useState<Date | undefined>(new Date())
         const [time, setTime] = useState<string | undefined>(undefined)
@@ -479,9 +479,9 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
           </DialogTrigger>
           <DialogContent className="sm:max-w-[425px]">
             <DialogHeader>
-              <DialogTitle>Modify Container Pick-Up Booking</DialogTitle>
+              <DialogTitle>Modify Container Pick-Up Reservation</DialogTitle>
               <div className="text-sm">
-                {`Original Booking: ${row.original.bookingDate} at  ${row.original.bookingTime}`}
+                {`Original Reservation: ${row.original.bookingDate} at  ${row.original.bookingTime}`}
               </div>
               <div className="text-sm text-muted-foreground">
                 {`Vessel ID: ${row.original.vesselID} | Container ID: ${row.original.containerID} | Origin: ${row.original.origin} | BCO: ${row.original.bcoName} | BCO Email: ${row.original.bcoEmail}`}
