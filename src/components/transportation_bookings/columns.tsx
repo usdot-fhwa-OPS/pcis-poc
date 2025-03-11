@@ -1,6 +1,6 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "../ui/button.tsx";
-import { useState, useEffect} from "react";
+import { useState } from "react";
 import { Flag, CalendarIcon, Clock, Pencil} from "lucide-react";
 //import { Checkbox } from "../ui/checkbox.tsx"
 import { Calendar } from "../ui/calendar"
@@ -208,30 +208,30 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
           return !!date && !!time
         }
 
-        useEffect(() => {
-          const bookingSub = client.models.Container.observeQuery(
-            {
-              filter: {
-                bookingDate: {eq: String(format(date!, "MM/dd/yyyy"))}
-              }
-            }
-          ).subscribe({  
-            next: ({ items }) => {
-              setBookingsLength(items.length);
-            },
-          });
+        // useEffect(() => {
+        //   const bookingSub = client.models.Container.observeQuery(
+        //     {
+        //       filter: {
+        //         bookingDate: {eq: String(format(date!, "MM/dd/yyyy"))}
+        //       }
+        //     }
+        //   ).subscribe({  
+        //     next: ({ items }) => {
+        //       setBookingsLength(items.length);
+        //     },
+        //   });
 
-          const limitSub = client.models.Limit.observeQuery().subscribe({
-            next: ({ items }) => {
-              setLimit(items[0].portCapacity);
-            },
-          });
+        //   const limitSub = client.models.Limit.observeQuery().subscribe({
+        //     next: ({ items }) => {
+        //       setLimit(items[0].portCapacity);
+        //     },
+        //   });
 
-            return () => {
-            bookingSub.unsubscribe();
-            limitSub.unsubscribe();
-            };
-        }, []);
+        //     return () => {
+        //     bookingSub.unsubscribe();
+        //     limitSub.unsubscribe();
+        //     };
+        // }, []);
 
         const handleBooking = async () => {
           if (bookingsLength >= limit!) {
@@ -403,30 +403,30 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
           return !!date && !!time
         }
 
-        useEffect(() => {
-          const bookingSub = client.models.Container.observeQuery(
-            {
-              filter: {
-                bookingDate: {eq: String(format(date!, "MM/dd/yyyy"))}
-              }
-            }
-          ).subscribe({  
-            next: ({ items }) => {
-              setBookingsLength(items.length);
-            },
-          });
+        // useEffect(() => {
+        //   const bookingSub = client.models.Container.observeQuery(
+        //     {
+        //       filter: {
+        //         bookingDate: {eq: String(format(date!, "MM/dd/yyyy"))}
+        //       }
+        //     }
+        //   ).subscribe({  
+        //     next: ({ items }) => {
+        //       setBookingsLength(items.length);
+        //     },
+        //   });
 
-          const limitSub = client.models.Limit.observeQuery().subscribe({
-            next: ({ items }) => {
-              setLimit(items[0].portCapacity);
-            },
-          });
+        //   const limitSub = client.models.Limit.observeQuery().subscribe({
+        //     next: ({ items }) => {
+        //       setLimit(items[0].portCapacity);
+        //     },
+        //   });
 
-            return () => {
-            bookingSub.unsubscribe();
-            limitSub.unsubscribe();
-            };
-        }, []);
+        //     return () => {
+        //     bookingSub.unsubscribe();
+        //     limitSub.unsubscribe();
+        //     };
+        // }, []);
 
         const handleBooking = async () => {
           if (bookingsLength >= limit!) {
