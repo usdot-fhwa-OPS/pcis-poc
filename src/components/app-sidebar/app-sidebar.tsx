@@ -184,10 +184,12 @@ export function AppSidebar() {
       notisSub.unsubscribe();
     }
     signOut();
-    redirect({
+    if (!user) {
+      redirect({
       to: '/',
       replace: true,
     });
+    }
   };
 
   return (
