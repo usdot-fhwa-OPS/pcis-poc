@@ -319,22 +319,10 @@ function Index() {
                   {
                     or: [
                       {
-                        bookingStatus: { eq: 'Pending Booking' }
+                        bookingStatus: { ne: 'unassigned' }
                       },
                       {
-                        bookingStatus: { eq: 'Pending Booking Approval' }
-                      },
-                      {
-                        bookingStatus: { eq: 'Pending Pick Up' }
-                      },
-                      {
-                        bookingStatus: { eq: 'Late for Pick Up' }
-                      },
-                      {
-                        bookingStatus: { eq: 'Picked Up' }
-                      },
-                      {
-                        bookingStatus: { eq: 'Pickup Modification Requested' }
+                        bookingStatus: { ne: 'Pending Transportation Operator Approval' }
                       },
                     ]
                   }
