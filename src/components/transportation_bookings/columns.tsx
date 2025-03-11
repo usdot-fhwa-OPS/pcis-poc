@@ -15,7 +15,7 @@ import {
 } from "../ui/tooltip"
 import { format } from "date-fns"
 import { cn } from "../../lib/utils"
-import { TransOpUpcomingBookings, TransOpOngoingBookings } from "../../routes/booking.tsx";
+import { TransOpUpcomingBookings, TransOpOngoingBookings } from "../../routes/reservation.tsx";
 //Four Imports needed for Amplify Data Queries and CRUD methods
 
 import { generateClient } from 'aws-amplify/data';
@@ -23,7 +23,7 @@ import type { Schema } from '../../../amplify/data/resource';
 import { TransOpDataTableMeta } from "./data-table.tsx";
 
 const client = generateClient<Schema>();
-import { TransOperatorCompletedBookings } from "../../routes/booking"
+import { TransOperatorCompletedBookings } from "../../routes/reservation.tsx"
 import { Checkbox } from "../ui/checkbox.tsx";
 import { toast } from "sonner";
 

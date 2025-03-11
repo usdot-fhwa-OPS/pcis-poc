@@ -52,8 +52,8 @@ const items = [
     icon: Ship,
   },
   {
-    title: "Booking Status",
-    url: "/booking",
+    title: "Reservation Status",
+    url: "/reservation",
     icon: CalendarClock,
   },
 ]

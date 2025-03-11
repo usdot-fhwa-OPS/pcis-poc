@@ -11,14 +11,20 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as ReservationImport } from './routes/reservation'
 import { Route as OperatorsImport } from './routes/operators'
 import { Route as NotificationsImport } from './routes/notifications'
 import { Route as ImportImport } from './routes/import'
-import { Route as CargoImport } from './routes/cargo'
-import { Route as BookingImport } from './routes/booking'
+import { Route as CargoImport } from '././routes/reservation
 import { Route as IndexImport } from './routes/index'
 
 // Create/Update Routes
+
+const ReservationRoute = ReservationImport.update({
+  id: '/reservation',
+  path: '/reservation',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const OperatorsRoute = OperatorsImport.update({
   id: '/operators',
@@ -44,12 +50,6 @@ const CargoRoute = CargoImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const BookingRoute = BookingImport.update({
-  id: '/booking',
-  path: '/booking',
-  getParentRoute: () => rootRoute,
-} as any)
-
 const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
@@ -65,13 +65,6 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexImport
-      parentRoute: typeof rootRoute
-    }
-    '/booking': {
-      id: '/booking'
-      path: '/booking'
-      fullPath: '/booking'
-      preLoaderRoute: typeof BookingImport
       parentRoute: typeof rootRoute
     }
     '/cargo': {
@@ -102,6 +95,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OperatorsImport
       parentRoute: typeof rootRoute
     }
+    '/reservation': {
+      id: '/reservation'
+      path: '/reservation'
+      fullPath: '/reservation'
+      preLoaderRoute: typeof ReservationImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -109,70 +109,76 @@ declare module '@tanstack/react-router' {
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/booking': typeof BookingRoute
   '/cargo': typeof CargoRoute
   '/import': typeof ImportRoute
   '/notifications': typeof NotificationsRoute
   '/operators': typeof OperatorsRoute
+  '/reservation': typeof ReservationRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/booking': typeof BookingRoute
   '/cargo': typeof CargoRoute
   '/import': typeof ImportRoute
   '/notifications': typeof NotificationsRoute
   '/operators': typeof OperatorsRoute
+  '/reservation': typeof ReservationRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
-  '/booking': typeof BookingRoute
   '/cargo': typeof CargoRoute
   '/import': typeof ImportRoute
   '/notifications': typeof NotificationsRoute
   '/operators': typeof OperatorsRoute
+  '/reservation': typeof ReservationRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/booking'
     | '/cargo'
     | '/import'
     | '/notifications'
     | '/operators'
+    | '/reservation'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/booking' | '/cargo' | '/import' | '/notifications' | '/operators'
+  to:
+    | '/'
+    | '/cargo'
+    | '/import'
+    | '/notifications'
+    | '/operators'
+    | '/reservation'
   id:
     | '__root__'
     | '/'
-    | '/booking'
     | '/cargo'
     | '/import'
     | '/notifications'
     | '/operators'
+    | '/reservation'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  BookingRoute: typeof BookingRoute
   CargoRoute: typeof CargoRoute
   ImportRoute: typeof ImportRoute
   NotificationsRoute: typeof NotificationsRoute
   OperatorsRoute: typeof OperatorsRoute
+  ReservationRoute: typeof ReservationRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  BookingRoute: BookingRoute,
   CargoRoute: CargoRoute,
   ImportRoute: ImportRoute,
   NotificationsRoute: NotificationsRoute,
   OperatorsRoute: OperatorsRoute,
+  ReservationRoute: ReservationRoute,
 }
 
 export const routeTree = rootRoute
@@ -186,18 +192,15 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/booking",
         "/cargo",
         "/import",
         "/notifications",
-        "/operators"
+        "/operators",
+        "/reservation"
       ]
     },
     "/": {
       "filePath": "index.tsx"
-    },
-    "/booking": {
-      "filePath": "booking.tsx"
     },
     "/cargo": {
       "filePath": "cargo.tsx"
@@ -210,6 +213,9 @@ export const routeTree = rootRoute
     },
     "/operators": {
       "filePath": "operators.tsx"
+    },
+    "/reservation": {
+      "filePath": "reservation.tsx"
     }
   }
 }

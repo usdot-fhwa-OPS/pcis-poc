@@ -55,7 +55,7 @@ export const columns: ColumnDef<UpcomingCargo>[] = [
   }, 
   {
     accessorKey: "containerStatus",
-    header: () => <div className="text-center">Cargo Status</div>,
+    header: () => <div className="text-center">Container Status</div>,
     cell: ({ row }) => {
       // Initialize local state with the current containerStatus.
       const [cargoStatus, setStatus] = useState<"On-Ship" | "On-Dock">(
