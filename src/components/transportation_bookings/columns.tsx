@@ -209,15 +209,6 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
         }
 
         useEffect(() => {
-          const limitSub = client.models.Limit.observeQuery().subscribe({
-            next: ({ items }) => {
-              setLimit(items[0].portCapacity);
-            },
-          });
-          return () => limitSub.unsubscribe();
-        }, []);
-
-        useEffect(() => {
           const bookingSub = client.models.Container.observeQuery(
             {
               filter: {
@@ -229,7 +220,17 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
               setBookingsLength(items.length);
             },
           });
-          return () => bookingSub.unsubscribe();
+
+          const limitSub = client.models.Limit.observeQuery().subscribe({
+            next: ({ items }) => {
+              setLimit(items[0].portCapacity);
+            },
+          });
+
+            return () => {
+            bookingSub.unsubscribe();
+            limitSub.unsubscribe();
+            };
         }, []);
 
         const handleBooking = async () => {
@@ -403,15 +404,6 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
         }
 
         useEffect(() => {
-          const limitSub = client.models.Limit.observeQuery().subscribe({
-            next: ({ items }) => {
-              setLimit(items[0].portCapacity);
-            },
-          });
-          return () => limitSub.unsubscribe();
-        }, []);
-
-        useEffect(() => {
           const bookingSub = client.models.Container.observeQuery(
             {
               filter: {
@@ -423,7 +415,17 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
               setBookingsLength(items.length);
             },
           });
-          return () => bookingSub.unsubscribe();
+
+          const limitSub = client.models.Limit.observeQuery().subscribe({
+            next: ({ items }) => {
+              setLimit(items[0].portCapacity);
+            },
+          });
+
+            return () => {
+            bookingSub.unsubscribe();
+            limitSub.unsubscribe();
+            };
         }, []);
 
         const handleBooking = async () => {
