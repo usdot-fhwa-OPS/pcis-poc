@@ -22,7 +22,6 @@ export default function Operators() {
           headers: {
             "Authorization": `Bearer ${session.tokens?.accessToken?.toString()}`,
             "Content-Type": "application/json",
-            "Access-Control-Allow-Origin" : "*",
             "Accept": "*/*"
           }
         });
