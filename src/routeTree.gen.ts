@@ -15,7 +15,7 @@ import { Route as ReservationImport } from './routes/reservation'
 import { Route as OperatorsImport } from './routes/operators'
 import { Route as NotificationsImport } from './routes/notifications'
 import { Route as ImportImport } from './routes/import'
-import { Route as CargoImport } from '././routes/reservation
+import { Route as CargoImport } from './routes/cargo'
 import { Route as IndexImport } from './routes/index'
 
 // Create/Update Routes
