@@ -84,6 +84,12 @@ export function AppSidebar() {
           console.error('Error fetching user attributes', error);
         }
       }
+      if (!user) {
+        redirect({
+        to: '/',
+        replace: true,
+      });
+      }
     }
 
     getUserAttributes();
@@ -184,12 +190,7 @@ export function AppSidebar() {
       notisSub.unsubscribe();
     }
     signOut();
-    if (!user) {
-      redirect({
-      to: '/',
-      replace: true,
-    });
-    }
+    
   };
 
   return (
