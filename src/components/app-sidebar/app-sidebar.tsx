@@ -22,7 +22,6 @@ import { NotificationsButton } from "../notifications-button/notifications-butto
 
 import { generateClient, SelectionSet } from 'aws-amplify/data';
 import type { Schema } from '../../../amplify/data/resource';
-import { Subscription } from "rxjs";
 
 const client = generateClient<Schema>();
 
