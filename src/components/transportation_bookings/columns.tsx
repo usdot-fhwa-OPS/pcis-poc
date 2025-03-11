@@ -230,7 +230,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
             },
           });
           return () => bookingSub.unsubscribe();
-        }, [date]);
+        }, []);
 
         const handleBooking = async () => {
           if (bookingsLength >= limit!) {
@@ -424,7 +424,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
             },
           });
           return () => bookingSub.unsubscribe();
-        }, [date]);
+        }, []);
 
         const handleBooking = async () => {
           if (bookingsLength >= limit!) {
