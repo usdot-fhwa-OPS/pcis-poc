@@ -103,7 +103,7 @@ export const columns = (): ColumnDef<any>[] => {
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
-                  <DialogTitle>Book Transportation Operator</DialogTitle>
+                  <DialogTitle>Assign Transportation Operator</DialogTitle>
                   <DialogDescription>
                   Enter a Transportation Operator name and email to assign this container.
                   </DialogDescription>
@@ -159,7 +159,7 @@ export const columns = (): ColumnDef<any>[] => {
     },
     {
       accessorKey: "containerStatus",
-      header: "Booking Status",
+      header: "Container Status",
       cell: ({ row }) => {
         const status = row.original.containerStatus; // Get status value
         const isOnShip = status === "On-Ship"; // Check if status is "Late"
