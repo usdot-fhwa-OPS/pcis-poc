@@ -65,6 +65,7 @@ export function AppSidebar() {
     role: '',
     email: '',
   });
+  
   let notisSub: Subscription;
 
   const [userNotifications, setUserNotifications] = useState<Notifications[]>([]);
