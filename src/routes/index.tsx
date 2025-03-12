@@ -127,6 +127,39 @@ function Index() {
       }
     }, [user]);
 
+    async function getPortCapacity() {
+      try {
+        const { data: limit } = await client.models.Limit.get(
+          {id: '7bde2cc5-23dc-4f46-b6d9-502133cc2e8c'},
+          {
+            authMode: 'apiKey',
+          }
+        );
+        
+        if (limit) {
+          return limit.portCapacity;
+        }
+      } catch (error) {
+        console.error('Error fetching booking limit', error);
+      }
+  }
+
+  async function getBookingsAmount(bookingDate: string) {
+    try {
+      const { data: bookings } = await client.models.Container.list({
+        authMode: 'apiKey',
+        filter: {
+          bookingDate: {eq: bookingDate}
+        },  
+      });
+      if (bookings) {
+        return bookings.length;
+      }
+    } catch (error) {
+      console.error('Error fetching bookings', error);
+    }
+  }
+
     const dateString = new Date().toLocaleString('en-US', {
       weekday: 'long',
       month: 'long',
@@ -136,6 +169,7 @@ function Index() {
       minute: '2-digit',
       timeZoneName: 'short',
     });
+
     const [Transportation_CompletedData, setTransportation_CompletedData] = useState<TransOperatorCompletedBookings[]>([]);
       
       
@@ -739,7 +773,7 @@ function Index() {
           <TransportationBookingsTableOngoing
             data={transOpOngoingBookings}
             status="Ongoing"
-            meta={{updateTransOpBooking}}
+            meta={{updateTransOpBooking, getPortCapacity, getBookingsAmount}}
           />
         </TabsContent>
   
