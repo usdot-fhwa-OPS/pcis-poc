@@ -99,6 +99,7 @@ baseColumns.push({
             containerID: row.original.containerID,
             flag: newFlag,
           })
+          console.log("Updated container status:", updatedContainerStatus);
         } catch (error) {
           console.error("Error updating flag:", error);
         }
