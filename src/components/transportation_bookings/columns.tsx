@@ -212,8 +212,8 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
         const handleBooking = async () => {
           const limit = (table.options.meta as TransOpDataTableMeta)?.getPortCapacity()
           const bookingsLength = (table.options.meta as TransOpDataTableMeta)?.getBookingsAmount(String(format(date!, "MM/dd/yyyy")))
-          if (bookingsLength >= limit!) {
-            toast.error(`Port at capacity (Limit ${limit} per day). Please try a different date.`)
+          if (bookingsLength >= limit) {
+            toast.error(`Port at capacity (Limit ${String(limit)} per day). Please try a different date.`)
           } else {
             (table.options.meta as TransOpDataTableMeta)?.updateTransOpBooking(row.original.containerID, "Pending Booking Approval", String(format(date!, "MM/dd/yyyy")), time ?? "")
             setIsDialogOpen(false)
@@ -381,7 +381,9 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
         const handleBooking = async () => {
           const limit = (table.options.meta as TransOpDataTableMeta)?.getPortCapacity()
           const bookingsLength = (table.options.meta as TransOpDataTableMeta)?.getBookingsAmount(String(format(date!, "MM/dd/yyyy")))
-          if (bookingsLength >= limit!) {
+          console.log(limit)
+          console.log(bookingsLength)
+          if (bookingsLength >= limit) {
             toast.error(`Port at capacity (Limit ${limit} per day). Please try a different date.`)
           } else {
             (table.options.meta as TransOpDataTableMeta)?.updateTransOpBooking(row.original.containerID, "Pending Booking Approval", String(format(date!, "MM/dd/yyyy")), time ?? "")
