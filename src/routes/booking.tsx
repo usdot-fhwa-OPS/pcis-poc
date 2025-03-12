@@ -98,9 +98,6 @@ function RouteComponent() {
     email: '',
   });
 
-  const [limit, setLimit] = useState<number>();
-  const [bookingsLength, setBookingsLength] = useState<number>(0);
-
   useEffect(() => {
     async function getUserAttributes() {
       if (user) {
