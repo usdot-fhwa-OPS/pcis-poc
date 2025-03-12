@@ -22,6 +22,7 @@ import { NotificationsButton } from "../notifications-button/notifications-butto
 
 import { generateClient, SelectionSet } from 'aws-amplify/data';
 import type { Schema } from '../../../amplify/data/resource';
+import { Subscription } from "rxjs";
 
 const client = generateClient<Schema>();
 
@@ -65,7 +66,7 @@ export function AppSidebar() {
     email: '',
   });
 
-  
+  let notisSub: Subscription;  
 
   const [userNotifications, setUserNotifications] = useState<Notifications[]>([]);
 
@@ -112,8 +113,10 @@ export function AppSidebar() {
 
   useEffect(() => {
     if (!userAttributes.role) return;
+    console.log(userAttributes.role)
     if (userAttributes.role == "Beneficiary Cargo Owner") {
-      const notisSub = client.models.Container.observeQuery(
+      console.log("I AM BCO")
+      notisSub = client.models.Container.observeQuery(
         {
           filter: {
             and: [
@@ -131,11 +134,12 @@ export function AppSidebar() {
       ).subscribe({  
         next: ({ items }) => {
           setUserNotifications(items);
+          console.log(items)
         },
       });
-      return () => notisSub.unsubscribe();
     } else if (userAttributes.role == "Transportation Operator") {
-      const notisSub = client.models.Container.observeQuery(
+      console.log("I AM TRANSPORTATION")
+      notisSub = client.models.Container.observeQuery(
         {
           filter: {
             and: [
@@ -153,11 +157,12 @@ export function AppSidebar() {
       ).subscribe({  
         next: ({ items }) => {
           setUserNotifications(items);
+          console.log(items)
         },
       });
-      return () => notisSub.unsubscribe();
     } else {
-      const notisSub = client.models.Container.observeQuery(
+      console.log("I AM TERMINAL OP")
+      notisSub = client.models.Container.observeQuery(
         {
           filter: {
             isTerminalNotify: {
@@ -170,12 +175,14 @@ export function AppSidebar() {
           setUserNotifications(items);
         },
       });
-      return () => notisSub.unsubscribe();
     }
     
-  }, [user]);
+  }, [userAttributes]);
   
   const handleSignOut = () => {
+    if (notisSub) {
+      notisSub.unsubscribe();
+    }
     signOut();
   };
 
