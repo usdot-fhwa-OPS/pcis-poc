@@ -72,7 +72,6 @@ function RootComponent() {
       
       if (limit) {
         setBookingLimit(limit.portCapacity);
-        console.log('Booking limit:', limit.portCapacity);
       }
     } catch (error) {
       console.error('Error fetching booking limit', error);

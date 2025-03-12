@@ -112,9 +112,7 @@ export function AppSidebar() {
 
   useEffect(() => {
     if (!userAttributes.role) return;
-    console.log(userAttributes.role)
     if (userAttributes.role == "Beneficiary Cargo Owner") {
-      console.log("I AM BCO")
       const notisSub = client.models.Container.observeQuery(
         {
           filter: {
@@ -133,12 +131,10 @@ export function AppSidebar() {
       ).subscribe({  
         next: ({ items }) => {
           setUserNotifications(items);
-          console.log(items)
         },
       });
       return () => notisSub.unsubscribe();
     } else if (userAttributes.role == "Transportation Operator") {
-      console.log("I AM TRANSPORTATION")
       const notisSub = client.models.Container.observeQuery(
         {
           filter: {
@@ -157,12 +153,10 @@ export function AppSidebar() {
       ).subscribe({  
         next: ({ items }) => {
           setUserNotifications(items);
-          console.log(items)
         },
       });
       return () => notisSub.unsubscribe();
     } else {
-      console.log("I AM TERMINAL OP")
       const notisSub = client.models.Container.observeQuery(
         {
           filter: {

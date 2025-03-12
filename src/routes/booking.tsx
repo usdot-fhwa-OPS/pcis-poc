@@ -5,7 +5,7 @@ import {BcoBookingsTableUpcoming,  BcoBookingsTableCompleted,BcoBookingsTableOng
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs.tsx"
 import { toast } from "sonner"
-import { fetchUserAttributes, fetchAuthSession } from 'aws-amplify/auth';
+import { fetchUserAttributes } from 'aws-amplify/auth';
 import { useEffect, useState } from "react";
 import { useAuthenticator } from "@aws-amplify/ui-react";
 
@@ -113,18 +113,6 @@ function RouteComponent() {
         }
       }
     }
-    async function getUserSession() {
-      if (user) {
-        try {
-          const session = await fetchAuthSession();
-          console.log('User session:', session.tokens?.idToken?.toString() ?? 'No session found');
-          console.log('User access token:', session.tokens?.accessToken.toString() ?? 'No access token found');
-        } catch (error) {
-          console.error('Error fetching user session', error);
-        }
-      }
-    }
-    getUserSession();
     getUserAttributes();
   }, [user]);
 
@@ -499,7 +487,6 @@ function RouteComponent() {
         toast.error("No internet connection. Update not submitted. Please check your connection and try again.");
         return false; // Explicitly return false when offline
       }
-      console.log("Updating container status:", id, status, bookingDate, bookingTime);
       try {
         let updatePayload = { containerID: id, bookingStatus: status, isTransportationNotify: false, isBCONotify: false, isTerminalNotify: false };
     
