@@ -490,7 +490,7 @@ function RouteComponent() {
           Object.assign(updatePayload, {
             transopName: "",
             transopEmail: "",
-            isTransportationNotify: false,
+            isTransportationNotify: true,
             isBCONotify: true,
             isTerminalNotify: false,
           });

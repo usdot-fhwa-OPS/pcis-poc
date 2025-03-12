@@ -142,16 +142,16 @@ export function AppSidebar() {
       notisSub = client.models.Container.observeQuery(
         {
           filter: {
-            and: [
-              {
-                transopEmail: { eq: userAttributes.email }
-              },
-              {
+            // and: [
+            //   {
+            //     transopEmail: { eq: userAttributes.email }
+            //   },
+            //   {
                 isTransportationNotify: {
                   eq: true
                 }
-              },
-            ]
+            //   },
+            // ]
           }
         }
       ).subscribe({  
