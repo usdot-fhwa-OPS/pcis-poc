@@ -128,31 +128,6 @@ function RouteComponent() {
     getUserAttributes();
   }, [user]);
 
-    // useEffect(() => {
-    //   const bookingSub = client.models.Container.observeQuery(
-    //     {
-    //       filter: {
-    //         bookingDate: {eq: String(format(date!, "MM/dd/yyyy"))}
-    //       }
-    //     }
-    //   ).subscribe({  
-    //     next: ({ items }) => {
-    //       setBookingsLength(items.length);
-    //     },
-    //   });
-
-    //   const limitSub = client.models.Limit.observeQuery().subscribe({
-    //     next: ({ items }) => {
-    //       setLimit(items[0].portCapacity);
-    //     },
-    //   });
-
-    //     return () => {
-    //     bookingSub.unsubscribe();
-    //     limitSub.unsubscribe();
-    //     };
-    // }, []);
-
     async function getPortCapacity() {
       try {
         const { data: limit } = await client.models.Limit.get(
