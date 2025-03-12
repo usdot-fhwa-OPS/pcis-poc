@@ -98,6 +98,9 @@ function RouteComponent() {
     email: '',
   });
 
+  const [limit, setLimit] = useState<number>();
+  const [bookingsLength, setBookingsLength] = useState<number>(0);
+
   useEffect(() => {
     async function getUserAttributes() {
       if (user) {
@@ -127,6 +130,65 @@ function RouteComponent() {
     getUserSession();
     getUserAttributes();
   }, [user]);
+
+    // useEffect(() => {
+    //   const bookingSub = client.models.Container.observeQuery(
+    //     {
+    //       filter: {
+    //         bookingDate: {eq: String(format(date!, "MM/dd/yyyy"))}
+    //       }
+    //     }
+    //   ).subscribe({  
+    //     next: ({ items }) => {
+    //       setBookingsLength(items.length);
+    //     },
+    //   });
+
+    //   const limitSub = client.models.Limit.observeQuery().subscribe({
+    //     next: ({ items }) => {
+    //       setLimit(items[0].portCapacity);
+    //     },
+    //   });
+
+    //     return () => {
+    //     bookingSub.unsubscribe();
+    //     limitSub.unsubscribe();
+    //     };
+    // }, []);
+
+    async function getPortCapacity() {
+      try {
+        const { data: limit } = await client.models.Limit.get(
+          {id: '7bde2cc5-23dc-4f46-b6d9-502133cc2e8c'},
+          {
+            authMode: 'apiKey',
+          }
+        );
+        
+        if (limit) {
+          return limit.portCapacity;
+        }
+      } catch (error) {
+        console.error('Error fetching booking limit', error);
+      }
+  }
+
+  async function getBookingsAmount(bookingDate: string) {
+    try {
+      const { data: bookings } = await client.models.Container.list({
+        authMode: 'apiKey',
+        filter: {
+          bookingDate: {eq: bookingDate}
+        },  
+      });
+      if (bookings) {
+        return bookings.length;
+      }
+    } catch (error) {
+      console.error('Error fetching bookings', error);
+    }
+  }
+    
 
   // State for Transportation Operator Completed bookings
   const [Transportation_CompletedData, setTransportation_CompletedData] = useState<TransOperatorCompletedBookings[]>([]);
@@ -649,7 +711,7 @@ useEffect(() => {
           <TerminalBookingsTable data={terminalOpModifiedBookings} status="Modified" meta={{updateBooking}} />
         </TabsContent>
         <TabsContent value="ongoing">
-          <TerminalBookingsTable data={terminalopBookingongoing} status="Ongoing" meta={{updateBooking,markBookingLate}} />
+          <TerminalBookingsTable data={terminalopBookingongoing} status="Ongoing" meta={{updateBooking, markBookingLate}} />
         </TabsContent>
         <TabsContent value="completed">
           < TerminalBookingsCompleted data={Terminal_CompletedData} status="Completed" meta={{updateBooking}}/>
@@ -683,7 +745,7 @@ useEffect(() => {
         <TransportationBookingsTableOngoing
           data={transOpOngoingBookings}
           status="Ongoing"
-          meta={{updateTransOpBooking}}
+          meta={{updateTransOpBooking, getPortCapacity, getBookingsAmount}}
         />
       </TabsContent>
 

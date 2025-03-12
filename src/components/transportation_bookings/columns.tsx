@@ -201,46 +201,23 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
         const [time, setTime] = useState<string | undefined>(undefined)
         const [isCalendarOpen, setIsCalendarOpen] = useState(false)
         const [isDialogOpen, setIsDialogOpen] = useState(false)
-        const [limit, setLimit] = useState<number>();
-        const [bookingsLength, setBookingsLength] = useState<number>(0);
+        
         
         const isDateTimeSelected = (): boolean => {
           return !!date && !!time
         }
 
-        // useEffect(() => {
-        //   const bookingSub = client.models.Container.observeQuery(
-        //     {
-        //       filter: {
-        //         bookingDate: {eq: String(format(date!, "MM/dd/yyyy"))}
-        //       }
-        //     }
-        //   ).subscribe({  
-        //     next: ({ items }) => {
-        //       setBookingsLength(items.length);
-        //     },
-        //   });
-
-        //   const limitSub = client.models.Limit.observeQuery().subscribe({
-        //     next: ({ items }) => {
-        //       setLimit(items[0].portCapacity);
-        //     },
-        //   });
-
-        //     return () => {
-        //     bookingSub.unsubscribe();
-        //     limitSub.unsubscribe();
-        //     };
-        // }, []);
+        
 
         const handleBooking = async () => {
+          const limit = (table.options.meta as TransOpDataTableMeta)?.getPortCapacity()
+          const bookingsLength = (table.options.meta as TransOpDataTableMeta)?.getBookingsAmount(String(format(date!, "MM/dd/yyyy")))
           if (bookingsLength >= limit!) {
             toast.error(`Port at capacity (Limit ${limit} per day). Please try a different date.`)
           } else {
             (table.options.meta as TransOpDataTableMeta)?.updateTransOpBooking(row.original.containerID, "Pending Booking Approval", String(format(date!, "MM/dd/yyyy")), time ?? "")
             setIsDialogOpen(false)
           }
-          
         }
 
         const timeOptions = [
@@ -396,46 +373,20 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
         const [time, setTime] = useState<string | undefined>(undefined)
         const [isCalendarOpen, setIsCalendarOpen] = useState(false)
         const [isDialogOpen, setIsDialogOpen] = useState(false)
-        const [limit, setLimit] = useState<number>();
-        const [bookingsLength, setBookingsLength] = useState<number>(0);
         
         const isDateTimeSelected = (): boolean => {
           return !!date && !!time
         }
 
-        // useEffect(() => {
-        //   const bookingSub = client.models.Container.observeQuery(
-        //     {
-        //       filter: {
-        //         bookingDate: {eq: String(format(date!, "MM/dd/yyyy"))}
-        //       }
-        //     }
-        //   ).subscribe({  
-        //     next: ({ items }) => {
-        //       setBookingsLength(items.length);
-        //     },
-        //   });
-
-        //   const limitSub = client.models.Limit.observeQuery().subscribe({
-        //     next: ({ items }) => {
-        //       setLimit(items[0].portCapacity);
-        //     },
-        //   });
-
-        //     return () => {
-        //     bookingSub.unsubscribe();
-        //     limitSub.unsubscribe();
-        //     };
-        // }, []);
-
         const handleBooking = async () => {
+          const limit = (table.options.meta as TransOpDataTableMeta)?.getPortCapacity()
+          const bookingsLength = (table.options.meta as TransOpDataTableMeta)?.getBookingsAmount(String(format(date!, "MM/dd/yyyy")))
           if (bookingsLength >= limit!) {
             toast.error(`Port at capacity (Limit ${limit} per day). Please try a different date.`)
           } else {
-            (table.options.meta as TransOpDataTableMeta)?.updateTransOpBooking(row.original.containerID, "Pickup Modification Requested", String(format(date!, "MM/dd/yyyy")), time ?? "")
+            (table.options.meta as TransOpDataTableMeta)?.updateTransOpBooking(row.original.containerID, "Pending Booking Approval", String(format(date!, "MM/dd/yyyy")), time ?? "")
             setIsDialogOpen(false)
           }
-          
         }
 
         const timeOptions = [

@@ -26,6 +26,11 @@ export interface TransOpDataTableMeta {
     bookingDate?: string, 
     bookingTime?: string
   ) => Promise<boolean>;
+  
+  getPortCapacity: () => Promise<number>;
+  getBookingsAmount: (
+    bookingDate: string,
+  ) => Promise<number>;
 }
 
 interface DataTableProps<TData, TValue> {
