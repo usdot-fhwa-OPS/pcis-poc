@@ -99,7 +99,6 @@ baseColumns.push({
             containerID: row.original.containerID,
             flag: newFlag,
           })
-          console.log("Updated flag:", updatedContainerStatus)
         } catch (error) {
           console.error("Error updating flag:", error);
         }
@@ -381,12 +380,10 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
         const handleBooking = async () => {
           const limit = await (table.options.meta as TransOpDataTableMeta)?.getPortCapacity()
           const bookingsLength = await (table.options.meta as TransOpDataTableMeta)?.getBookingsAmount(String(format(date!, "MM/dd/yyyy")))
-          console.log(limit)
-          console.log(bookingsLength)
           if (bookingsLength >= limit) {
             toast.error(`Port at capacity (Limit ${limit} per day). Please try a different date.`)
           } else {
-            (table.options.meta as TransOpDataTableMeta)?.updateTransOpBooking(row.original.containerID, "Pending Booking Approval", String(format(date!, "MM/dd/yyyy")), time ?? "")
+            (table.options.meta as TransOpDataTableMeta)?.updateTransOpBooking(row.original.containerID, "Pickup Modification Requested", String(format(date!, "MM/dd/yyyy")), time ?? "")
             setIsDialogOpen(false)
           }
         }
