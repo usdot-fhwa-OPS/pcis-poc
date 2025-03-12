@@ -332,15 +332,11 @@ function RouteComponent() {
                 transopEmail: { eq: userAttributes.email }
               },
               {
-                or: [
-                  {
-                    bookingStatus: { ne: 'unassigned' }
-                  },
-                  {
-                    bookingStatus: { ne: 'Pending Transportation Operator Approval' }
-                  },
-                ]
-              }
+                bookingStatus: { ne: 'unassigned' }
+              },
+              {
+                bookingStatus: { ne: 'Pending Transportation Operator Approval' }
+              },
             ]
           },
           selectionSet: selectionSetTransOpOngoingBookings,
