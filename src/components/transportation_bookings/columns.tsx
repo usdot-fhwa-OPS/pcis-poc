@@ -47,7 +47,7 @@ export const columns = (): ColumnDef<any>[] => {
           <Button 
             variant="outline" 
             className="text-green-700"
-            onClick={() => (table.options.meta as TransOpDataTableMeta)?.updateTransOpBooking(row.original.containerID, "Pending Booking")}
+            onClick={() => (table.options.meta as TransOpDataTableMeta)?.updateTransOpBooking(row.original.containerID, "Pending Reservation")}
           >
             Approve
           </Button>
@@ -236,7 +236,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
           if (bookingsLength >= limit!) {
             toast.error(`Port at capacity (Limit ${limit} per day). Please try a different date.`)
           } else {
-            (table.options.meta as TransOpDataTableMeta)?.updateTransOpBooking(row.original.containerID, "Pending Booking Approval", String(format(date!, "MM/dd/yyyy")), time ?? "")
+            (table.options.meta as TransOpDataTableMeta)?.updateTransOpBooking(row.original.containerID, "Pending Reservation Approval", String(format(date!, "MM/dd/yyyy")), time ?? "")
             setIsDialogOpen(false)
           }
           
@@ -276,7 +276,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
           setIsCalendarOpen(true)
         }
 
-        return row.original.bookingStatus === "Pending Booking" ? (
+        return row.original.bookingStatus === "Pending Reservation" ? (
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
             <TooltipProvider>

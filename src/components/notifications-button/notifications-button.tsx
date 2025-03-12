@@ -23,7 +23,7 @@ export function NotificationsButton({notifications, role }: NotificationsButtonP
       switch (notification.bookingStatus) {
         case "Pickup Modification Requested":
           return `Modified Reservation for Container ${notification.containerID} has been requested by transportation operator. Awaiting approval by the terminal operator.`;
-        case "Pending Booking Approval":
+        case "Pending Reservation Approval":
           return `Reservation for Container ${notification.containerID} has been requested by transportation operator. Awaiting approval by the terminal operator.`;
         case "Pending Pick Up":
           return `Reservation for Container ${notification.containerID} has been approved by the terminal operator.`;
@@ -47,7 +47,7 @@ export function NotificationsButton({notifications, role }: NotificationsButtonP
       }
     } else {
       switch (notification.bookingStatus) {
-        case "Pending Booking Approval":
+        case "Pending Reservation Approval":
           return `Reservation for Container ${notification.containerID} requires your approval`;
         case "Pickup Modification Requested":
           return `Modified Reservation for Container ${notification.containerID} requires your approval`;

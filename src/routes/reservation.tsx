@@ -472,10 +472,10 @@ function RouteComponent() {
               {
                 or: [
                   {
-                    bookingStatus: { eq: 'Pending Booking' },
+                    bookingStatus: { eq: 'Pending Reservation' },
                   },
                   {
-                    bookingStatus: { eq: 'Pending Booking Approval' },
+                    bookingStatus: { eq: 'Pending Reservation Approval' },
                   },
                   {
                     bookingStatus: { eq: 'Pending Pick Up' },
@@ -560,7 +560,7 @@ function RouteComponent() {
       authMode: 'apiKey',
       filter: {
         bookingStatus: {
-          eq: 'Pending Booking Approval',
+          eq: 'Pending Reservation Approval',
         },
       },
     })
@@ -671,7 +671,7 @@ function RouteComponent() {
           isBCONotify: true,
           isTerminalNotify: false,
         })
-      } else if (status === 'Pending Booking Approval') {
+      } else if (status === 'Pending Reservation Approval') {
         Object.assign(updatePayload, {
           bookingDate,
           bookingTime,
