@@ -191,6 +191,17 @@ function Index() {
       });
       return () => updateSubscription.unsubscribe();
     }, []);
+    
+    useEffect(() => {
+          const createSubscription = client.models.Container.onCreate().subscribe({
+            next: () => {
+              // Increment the refresh counter to trigger re-running the observeQuery.
+              setRefresh((prev) => prev + 1);
+            },
+            error: (error) => console.warn(error),
+          });
+          return () => createSubscription.unsubscribe();
+        }, []);
 
     const dateString = new Date().toLocaleString('en-US', {
       weekday: 'long',
@@ -388,6 +399,9 @@ function Index() {
                   {
                     bookingStatus: { ne: 'Pending Transportation Operator Approval' }
                   },
+                  {
+                    bookingStatus: { ne: 'Picked Up'}
+                  }
                 ]
               },
               selectionSet: selectionSetTransOpOngoingBookings,
