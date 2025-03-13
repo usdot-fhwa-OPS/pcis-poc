@@ -148,6 +148,20 @@ function RouteComponent() {
       console.error('Error fetching bookings', error);
     }
   }
+
+  const [refresh, setRefresh] = useState(0);
+  
+    // Subscribe to updates and trigger refresh.
+    useEffect(() => {
+      const updateSubscription = client.models.Container.onUpdate().subscribe({
+        next: () => {
+          // Increment the refresh counter to trigger re-running the observeQuery.
+          setRefresh((prev) => prev + 1);
+        },
+        error: (error) => console.warn(error),
+      });
+      return () => updateSubscription.unsubscribe();
+    }, []);
     
 
   // State for Transportation Operator Completed bookings
@@ -183,7 +197,7 @@ function RouteComponent() {
     if (userAttributes.email) {
       fetchTransOperatorCBookingsContainers();
     }
-  }, [userAttributes.role, userAttributes.email]);  // Updates when email changes
+  }, [userAttributes.role, userAttributes.email, refresh]);  // Updates when email changes
   
 
   // State for Terminal Operator Completed bookings
@@ -213,7 +227,7 @@ function RouteComponent() {
     if (userAttributes.role) {
       fetchTermOperatorCBookingsContainers();
     }
-  }, [userAttributes.role]);
+  }, [userAttributes.role, refresh]);
 
   // State for BCO upcoming bookings
   const [bcoUpcomingBookings, setBcoUpcomingBookings] = useState<BCOUpcomingBookings[]>([]);
@@ -289,7 +303,7 @@ function RouteComponent() {
     fetchContainers();
     fetch_bco_completed();
     fetchterminal_operator_requested();
-  }, [userAttributes.role]);
+  }, [userAttributes.role, refresh]);
 
   const [transOpUpcomingBookings, setTransOpUpcomingBookings] = useState<TransOpUpcomingBookings[]>([]);
 
@@ -318,7 +332,7 @@ function RouteComponent() {
   }
   useEffect(() => {
     fetchTransOpUpcoming();
-  }, [userAttributes.role]);
+  }, [userAttributes.role, refresh]);
 
   const [transOpOngoingBookings, setTransOpOngoingBookings] = useState<TransOpOngoingBookings[]>([]);
 
@@ -350,7 +364,7 @@ function RouteComponent() {
   }
   useEffect(() => {
     fetchTransOpOngoing();
-  }, [userAttributes.role]);
+  }, [userAttributes.role, refresh]);
 
 
   async function assignTransOp(containerID: string, newName: string, newEmail: string, bookingStatus: string): Promise<boolean> {
@@ -447,7 +461,7 @@ function RouteComponent() {
     //Fetch the data on the first render
     useEffect(() => {
       fetchterminal_operator_ongoing();
-    }, [])
+    }, [refresh])
     
     async function  markBookingLate(id: string, status: string){  
       try {
@@ -642,7 +656,7 @@ useEffect(() => {
   fetch_bco_ongoing();
   fetchterminal_operator_requested();
   fetchTerminalOperatorModified();
-}, [userAttributes.role]);
+}, [userAttributes.role, refresh]);
 
 
 
