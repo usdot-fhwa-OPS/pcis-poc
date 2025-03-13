@@ -76,7 +76,9 @@ export function AppSidebar() {
   const updateSub = client.models.Container.onUpdate().subscribe({
     next: (data) => console.log(data),
     error: (error) => console.warn(error),
-  });
+  }
+  
+  );
 
   useEffect(() => {
     async function getUserAttributes() {
@@ -121,7 +123,6 @@ export function AppSidebar() {
 
   useEffect(() => {
     if (!userAttributes.role) return;
-    console.log(userAttributes.role)
     if (userAttributes.role == "Beneficiary Cargo Owner") {
       notisSub = client.models.Container.observeQuery(
         {
@@ -141,7 +142,6 @@ export function AppSidebar() {
       ).subscribe({  
         next: ({ items }) => {
           setUserNotifications(items);
-          console.log(items)
         },
       });
     } else if (userAttributes.role == "Transportation Operator") {
@@ -163,7 +163,6 @@ export function AppSidebar() {
       ).subscribe({  
         next: ({ items }) => {
           setUserNotifications(items);
-          console.log(items)
         },
       });
     } else {
@@ -187,7 +186,6 @@ export function AppSidebar() {
   const handleSignOut = () => {
     if (notisSub) {
       notisSub.unsubscribe();
-      updateSub.unsubscribe();
     }
     signOut();
     navigate({ to: "/" });
