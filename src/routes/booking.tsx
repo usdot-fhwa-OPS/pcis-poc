@@ -369,6 +369,9 @@ function RouteComponent() {
               {
                 bookingStatus: { ne: 'Pending Transportation Operator Approval' }
               },
+              {
+                bookingStatus: { ne: 'Picked Up'}
+              }
             ]
           },
           selectionSet: selectionSetTransOpOngoingBookings,
