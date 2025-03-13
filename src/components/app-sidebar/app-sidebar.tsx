@@ -23,7 +23,6 @@ import { NotificationsButton } from "../notifications-button/notifications-butto
 import { generateClient, SelectionSet } from 'aws-amplify/data';
 import type { Schema } from '../../../amplify/data/resource';
 import { Subscription } from "rxjs";
-import { redirect } from "@tanstack/react-router";
 
 const client = generateClient<Schema>();
 
@@ -83,12 +82,6 @@ export function AppSidebar() {
         } catch (error) {
           console.error('Error fetching user attributes', error);
         }
-      }
-      if (!user) {
-        redirect({
-        to: '/',
-        replace: true,
-      });
       }
     }
 
