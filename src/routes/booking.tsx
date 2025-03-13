@@ -186,6 +186,7 @@ function RouteComponent() {
         next: () => {
           // Increment the refresh counter to trigger re-running the observeQuery.
           setRefresh((prev) => prev + 1);
+          console.log("CREATED")
         },
         error: (error) => console.warn(error),
       });
