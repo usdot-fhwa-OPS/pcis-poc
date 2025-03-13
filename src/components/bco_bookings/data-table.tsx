@@ -22,6 +22,7 @@ import {
 
 export interface BCODataTableMeta {
   assignTransOp: (containerID: string, newName: string, newEmail: string, bookingStatus: string) => Promise<boolean>;
+  fetchTransportationOperators: () => Promise<any>
 }
 
 interface DataTableProps<TData, TValue> {

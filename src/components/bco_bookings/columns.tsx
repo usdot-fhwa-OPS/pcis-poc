@@ -1,6 +1,6 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "../ui/button.tsx";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Flag, Loader2 } from "lucide-react";
 import { Label } from "../ui/label"
 import { Input } from "../ui/input"
@@ -33,7 +33,6 @@ import {
   SelectValue,
 } from "../ui/select"
 import { User } from "../users/columns.tsx";
-import { fetchAuthSession } from "aws-amplify/auth";
 
 export const columns = (): ColumnDef<any>[] => {
   const baseColumns: ColumnDef<any>[] = [
@@ -64,27 +63,33 @@ export const columns = (): ColumnDef<any>[] => {
 
         const [data, setData] = useState<User[]>([])
         
-        useEffect(() => {
-          async function fetchData() {
-            try {
-              const session = await fetchAuthSession();
-              const response = await fetch("https://xlj2x9eurh.execute-api.us-east-1.amazonaws.com/dev/", {
-                method: 'GET',
-                headers: {
-                  "Authorization": `Bearer ${session.tokens?.accessToken?.toString()}`,
-                  "Content-Type": "application/json",
-                  "Accept": "*/*"
-                }
-              });
-              const result = await response.json();
-              setData(result);
-              setIsLoading(false)
-            } catch (error) {
-              throw new Error(`Failed to fetch data: ${error}`);
-            }
-          }
-          fetchData();
-        }, [open])
+        // useEffect(() => {
+        //   async function fetchData() {
+        //     try {
+        //       const session = await fetchAuthSession();
+        //       const response = await fetch("https://xlj2x9eurh.execute-api.us-east-1.amazonaws.com/dev/", {
+        //         method: 'GET',
+        //         headers: {
+        //           "Authorization": `Bearer ${session.tokens?.accessToken?.toString()}`,
+        //           "Content-Type": "application/json",
+        //           "Accept": "*/*"
+        //         }
+        //       });
+        //       const result = await response.json();
+        //       setData(result);
+        //       setIsLoading(false)
+        //     } catch (error) {
+        //       throw new Error(`Failed to fetch data: ${error}`);
+        //     }
+        //   }
+        //   fetchData();
+        // }, [open])
+        
+        const handleOpen = async () => {
+          const result = await (table.options.meta as BCODataTableMeta)?.fetchTransportationOperators();
+          setData(result)
+          setIsLoading(false)
+        }
 
         const handleOperatorSelect = (value: string) => {
           setTempName(value);
@@ -98,7 +103,7 @@ export const columns = (): ColumnDef<any>[] => {
 
         if (isMissing) {
           return (
-            <Dialog open={open} onOpenChange={setOpen}>
+            <Dialog open={open} onOpenChange={handleOpen}>
               <DialogTrigger asChild>
                 <Button variant="outline" className="bg-blue-600 text-white hover:bg-blue-700">Assign</Button>
               </DialogTrigger>

@@ -5,7 +5,7 @@ import {BcoBookingsTableUpcoming,  BcoBookingsTableCompleted,BcoBookingsTableOng
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs.tsx"
 import { toast } from "sonner"
-import { fetchUserAttributes } from 'aws-amplify/auth';
+import { fetchAuthSession, fetchUserAttributes } from 'aws-amplify/auth';
 import { useEffect, useState } from "react";
 import { useAuthenticator } from "@aws-amplify/ui-react";
 
@@ -115,6 +115,24 @@ function RouteComponent() {
     }
     getUserAttributes();
   }, [user]);
+
+  async function fetchTransportationOperators() {
+    try {
+      const session = await fetchAuthSession();
+      const response = await fetch("https://xlj2x9eurh.execute-api.us-east-1.amazonaws.com/dev/", {
+        method: 'GET',
+        headers: {
+          "Authorization": `Bearer ${session.tokens?.accessToken?.toString()}`,
+          "Content-Type": "application/json",
+          "Accept": "*/*"
+        }
+      });
+      const result = await response.json();
+      return result
+    } catch (error) {
+
+    }
+  }
 
     async function getPortCapacity() {
       try {
@@ -747,7 +765,7 @@ useEffect(() => {
           <BcoBookingsTableUpcoming
             data={bcoUpcomingBookings}
             status="Upcoming"
-            meta={{ assignTransOp }}
+            meta={{ assignTransOp, fetchTransportationOperators }}
           />
         </TabsContent>
   
