@@ -23,11 +23,13 @@ import { NotificationsButton } from "../notifications-button/notifications-butto
 import { generateClient, SelectionSet } from 'aws-amplify/data';
 import type { Schema } from '../../../amplify/data/resource';
 import { Subscription } from "rxjs";
+import { useNavigate } from "@tanstack/react-router";
 
 const client = generateClient<Schema>();
 
 const selectionSet = ['containerID', 'bookingStatus', "updatedAt"] as const;
 export type Notifications = SelectionSet<Schema['Container']['type'], typeof selectionSet>
+
 
 // Menu items.
 const items = [
@@ -60,6 +62,7 @@ const items = [
 
 export function AppSidebar() {
   const { user, signOut } = useAuthenticator();
+  const navigate = useNavigate();
 
   const [userAttributes, setUserAttributes] = useState<{ role: string; email: string }>({
     role: '',
@@ -184,6 +187,7 @@ export function AppSidebar() {
       notisSub.unsubscribe();
     }
     signOut();
+    navigate({ to: "/" });
   };
 
   return (
