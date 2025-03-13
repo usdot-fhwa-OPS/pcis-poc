@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useAuthenticator } from '@aws-amplify/ui-react';
-import { fetchUserAttributes } from 'aws-amplify/auth';
+import { fetchAuthSession, fetchUserAttributes } from 'aws-amplify/auth';
 import { useEffect, useState } from 'react';
 import {TerminalBookingsTable,TerminalBookingsCompleted} from "../components/terminal-bookings/terminal-bookings-table.tsx"
 import {TransportationBookingsTableUpcoming,  TransportationBookingsTableCompleted,TransportationBookingsTableOngoing} from "../components/transportation_bookings/transportation-bookings-table.tsx"
@@ -126,6 +126,24 @@ function Index() {
         getUserAttributes();
       }
     }, [user]);
+    
+    async function fetchTransportationOperators() {
+        try {
+          const session = await fetchAuthSession();
+          const response = await fetch("https://xlj2x9eurh.execute-api.us-east-1.amazonaws.com/dev/", {
+            method: 'GET',
+            headers: {
+              "Authorization": `Bearer ${session.tokens?.accessToken?.toString()}`,
+              "Content-Type": "application/json",
+              "Accept": "*/*"
+            }
+          });
+          const result = await response.json();
+          return result
+        } catch (error) {
+    
+        }
+      }
 
     async function getPortCapacity() {
       try {
@@ -847,7 +865,7 @@ function Index() {
             <BcoBookingsTableUpcoming
               data={bcoUpcomingBookings}
               status="Upcoming"
-              meta={{ assignTransOp }}
+              meta={{ assignTransOp, fetchTransportationOperators }}
             />
           </TabsContent>
     

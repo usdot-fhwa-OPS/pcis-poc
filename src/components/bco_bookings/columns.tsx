@@ -63,28 +63,6 @@ export const columns = (): ColumnDef<any>[] => {
 
         const [data, setData] = useState<User[]>([])
         
-        // useEffect(() => {
-        //   async function fetchData() {
-        //     try {
-        //       const session = await fetchAuthSession();
-        //       const response = await fetch("https://xlj2x9eurh.execute-api.us-east-1.amazonaws.com/dev/", {
-        //         method: 'GET',
-        //         headers: {
-        //           "Authorization": `Bearer ${session.tokens?.accessToken?.toString()}`,
-        //           "Content-Type": "application/json",
-        //           "Accept": "*/*"
-        //         }
-        //       });
-        //       const result = await response.json();
-        //       setData(result);
-        //       setIsLoading(false)
-        //     } catch (error) {
-        //       throw new Error(`Failed to fetch data: ${error}`);
-        //     }
-        //   }
-        //   fetchData();
-        // }, [open])
-        
         const handleOpen = async () => {
           const result = await (table.options.meta as BCODataTableMeta)?.fetchTransportationOperators();
           setData(result)
