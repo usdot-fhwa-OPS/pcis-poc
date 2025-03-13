@@ -234,7 +234,7 @@ function Index() {
         if (userAttributes.email) {
           fetchTransOperatorCBookingsContainers();
         }
-      }, [userAttributes.role, userAttributes.email]);  // Updates when email changes
+      }, [userAttributes.role, userAttributes.email, refresh]);  // Updates when email changes
       
     
       // State for Terminal Operator Completed bookings
