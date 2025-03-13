@@ -69,16 +69,9 @@ export function AppSidebar() {
     email: '',
   });
 
-  let notisSub: Subscription;  
-
   const [userNotifications, setUserNotifications] = useState<Notifications[]>([]);
 
-  const updateSub = client.models.Container.onUpdate().subscribe({
-    next: (data) => console.log(data),
-    error: (error) => console.warn(error),
-  }
-  
-  );
+
 
   useEffect(() => {
     async function getUserAttributes() {
@@ -121,76 +114,66 @@ export function AppSidebar() {
     return false;
   });
 
+  const [refresh, setRefresh] = useState(0);
+
+  // Subscribe to updates and trigger refresh.
+  useEffect(() => {
+    const updateSubscription = client.models.Container.onUpdate().subscribe({
+      next: () => {
+        // Increment the refresh counter to trigger re-running the observeQuery.
+        setRefresh((prev) => prev + 1);
+      },
+      error: (error) => console.warn(error),
+    });
+    return () => updateSubscription.unsubscribe();
+  }, []);
+
+  // Subscribe to notifications based on user attributes and refresh state.
   useEffect(() => {
     if (!userAttributes.role) return;
-    if (userAttributes.role == "Beneficiary Cargo Owner") {
-      notisSub = client.models.Container.observeQuery(
-        {
-          filter: {
-            and: [
-              {
-                bcoEmail: { eq: userAttributes.email }
-              },
-              {
-                isBCONotify: {
-                  eq: true
-                }
-              },
-            ]
-          }
-        }
-      ).subscribe({  
-        next: ({ items }) => {
-          setUserNotifications(items);
+    let notisSub: Subscription;
+
+    if (userAttributes.role === "Beneficiary Cargo Owner") {
+      notisSub = client.models.Container.observeQuery({
+        filter: {
+          and: [
+            { bcoEmail: { eq: userAttributes.email } },
+            { isBCONotify: { eq: true } },
+          ],
         },
-      }
-    )
-    return () => notisSub.unsubscribe();
-    } else if (userAttributes.role == "Transportation Operator") {
-      notisSub = client.models.Container.observeQuery(
-        {
-          filter: {
-            // and: [
-            //   {
-            //     transopEmail: { eq: userAttributes.email }
-            //   },
-            //   {
-                isTransportationNotify: {
-                  eq: true
-                }
-            //   },
-            // ]
-          }
-        }
-      ).subscribe({  
+      }).subscribe({
         next: ({ items }) => {
           setUserNotifications(items);
         },
       });
-      return () => notisSub.unsubscribe();
+    } else if (userAttributes.role === "Transportation Operator") {
+      notisSub = client.models.Container.observeQuery({
+        filter: {
+          isTransportationNotify: { eq: true },
+        },
+      }).subscribe({
+        next: ({ items }) => {
+          setUserNotifications(items);
+        },
+      });
     } else {
-      notisSub = client.models.Container.observeQuery(
-        {
-          filter: {
-            isTerminalNotify: {
-              eq: true
-            }
-          }
-        }
-      ).subscribe({  
+      notisSub = client.models.Container.observeQuery({
+        filter: {
+          isTerminalNotify: { eq: true },
+        },
+      }).subscribe({
         next: ({ items }) => {
           setUserNotifications(items);
         },
       });
-      return () => notisSub.unsubscribe();
     }
-    
-  }, [userAttributes, updateSub]);
+
+    return () => {
+      notisSub.unsubscribe();
+    };
+  }, [userAttributes, refresh]);
   
   const handleSignOut = () => {
-    if (notisSub) {
-      notisSub.unsubscribe();
-    }
     signOut();
     navigate({ to: "/" });
   };
