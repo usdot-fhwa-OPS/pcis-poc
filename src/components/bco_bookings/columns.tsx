@@ -84,7 +84,7 @@ export const columns = (): ColumnDef<any>[] => {
             }
           }
           fetchData();
-        }, [])
+        }, [open])
 
         const handleOperatorSelect = (value: string) => {
           setTempName(value);
