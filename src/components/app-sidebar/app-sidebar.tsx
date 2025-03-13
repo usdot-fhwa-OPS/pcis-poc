@@ -73,6 +73,11 @@ export function AppSidebar() {
 
   const [userNotifications, setUserNotifications] = useState<Notifications[]>([]);
 
+  const updateSub = client.models.Container.onUpdate().subscribe({
+    next: (data) => console.log(data),
+    error: (error) => console.warn(error),
+  });
+
   useEffect(() => {
     async function getUserAttributes() {
       if (user) {
@@ -177,11 +182,12 @@ export function AppSidebar() {
       });
     }
     
-  }, [userAttributes]);
+  }, [userAttributes, updateSub]);
   
   const handleSignOut = () => {
     if (notisSub) {
       notisSub.unsubscribe();
+      updateSub.unsubscribe();
     }
     signOut();
     navigate({ to: "/" });
