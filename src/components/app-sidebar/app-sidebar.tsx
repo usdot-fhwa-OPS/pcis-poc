@@ -143,7 +143,9 @@ export function AppSidebar() {
         next: ({ items }) => {
           setUserNotifications(items);
         },
-      });
+      }
+    )
+    return () => notisSub.unsubscribe();
     } else if (userAttributes.role == "Transportation Operator") {
       notisSub = client.models.Container.observeQuery(
         {
@@ -165,6 +167,7 @@ export function AppSidebar() {
           setUserNotifications(items);
         },
       });
+      return () => notisSub.unsubscribe();
     } else {
       notisSub = client.models.Container.observeQuery(
         {
@@ -179,6 +182,7 @@ export function AppSidebar() {
           setUserNotifications(items);
         },
       });
+      return () => notisSub.unsubscribe();
     }
     
   }, [userAttributes, updateSub]);
