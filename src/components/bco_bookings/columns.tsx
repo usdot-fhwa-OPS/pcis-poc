@@ -103,9 +103,9 @@ export const columns = (): ColumnDef<any>[] => {
 
         if (isMissing) {
           return (
-            <Dialog open={open} onOpenChange={handleOpen}>
+            <Dialog open={open} onOpenChange={setOpen}>
               <DialogTrigger asChild>
-                <Button variant="outline" className="bg-blue-600 text-white hover:bg-blue-700">Assign</Button>
+                <Button onClick={handleOpen} variant="outline" className="bg-blue-600 text-white hover:bg-blue-700">Assign</Button>
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
