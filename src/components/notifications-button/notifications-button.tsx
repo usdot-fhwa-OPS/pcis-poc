@@ -23,13 +23,13 @@ export function NotificationsButton({notifications, role}: NotificationsButtonPr
     if (role === "Beneficiary Cargo Owner") {
       switch (notification.bookingStatus) {
         case "Pickup Modification Requested":
-          return `Modified Booking for Container ${notification.containerID} has been requested by transportation operator. Awaiting approval by the terminal operator.`;
-        case "Pending Booking Approval":
-          return `Booking for Container ${notification.containerID} has been requested by transportation operator. Awaiting approval by the terminal operator.`;
+          return `Modified Reservation for Container ${notification.containerID} has been requested by transportation operator. Awaiting approval by the terminal operator.`;
+        case "Pending Reservation Approval":
+          return `Reservation for Container ${notification.containerID} has been requested by transportation operator. Awaiting approval by the terminal operator.`;
         case "Pending Pick Up":
-          return `Booking for Container ${notification.containerID} has been approved by the terminal operator.`;
+          return `Reservation for Container ${notification.containerID} has been approved by the terminal operator.`;
         case "unassigned":
-          return `Terminal Operator has denied the booking for Container ${notification.containerID}.`;
+          return `Terminal Operator has denied the reservation for Container ${notification.containerID}.`;
         case "Late for Pick Up":
           return `Terminal Operator has marked Late for Pick Up for Container ${notification.containerID}.`;
         
@@ -39,19 +39,19 @@ export function NotificationsButton({notifications, role}: NotificationsButtonPr
         case "Pending Transportation Operator Approval":
           return `Assignment of Container ${notification.containerID} requires your approval`;
         case "Pending Pick Up":
-          return `Booking for Container ${notification.containerID} has been approved by terminal operator.`;
+          return `Reservation for Container ${notification.containerID} has been approved by terminal operator.`;
         case "unassigned":
-          return `Terminal Operator has denied the booking for Container ${notification.containerID}.`;
+          return `Terminal Operator has denied the reservation for Container ${notification.containerID}.`;
         case "Late for Pick Up":
           return `Terminal Operator has marked Late for Pick Up for Container ${notification.containerID}.`;
         
       }
     } else {
       switch (notification.bookingStatus) {
-        case "Pending Booking Approval":
-          return `Booking for Container ${notification.containerID} requires your approval`;
+        case "Pending Reservation Approval":
+          return `Reservation for Container ${notification.containerID} requires your approval`;
         case "Pickup Modification Requested":
-          return `Modified Booking for Container ${notification.containerID} requires your approval`;
+          return `Modified Reservation for Container ${notification.containerID} requires your approval`;
         
       }
     } 
@@ -95,7 +95,7 @@ export function NotificationsButton({notifications, role}: NotificationsButtonPr
                       {formattedDate} • {formattedTime}
                     </p>
                   </div>
-                  <Link to="/booking" onClick={() => setOpen(false)} className="text-blue-500 hover:underline">
+                  <Link to="/reservation" onClick={() => setOpen(false)} className="text-blue-500 hover:underline">
                     View
                   </Link>
                 </div>

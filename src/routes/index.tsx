@@ -449,7 +449,7 @@ function Index() {
           authMode: 'apiKey',
           filter: {
             bookingStatus: {
-              eq: 'Pending Booking Approval'
+              eq: 'Pending Reservation Approval'
             }
           }
         });
@@ -525,7 +525,7 @@ function Index() {
                 isBCONotify: true,
                 isTerminalNotify: false,
               });
-            } else if (status === "Pending Booking Approval") {
+            } else if (status === "Pending Reservation Approval") {
               Object.assign(updatePayload, {
                 bookingDate,
                 bookingTime,

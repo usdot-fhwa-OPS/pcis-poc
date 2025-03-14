@@ -5,7 +5,7 @@ import { Flag } from "lucide-react";
 import {TerminalOperatorDataTableMeta} from './data-table.tsx'
 import { generateClient } from 'aws-amplify/data';
 import type { Schema } from '../../../amplify/data/resource';
-import { TermOperatorCompletedBookings } from "../../routes/booking"
+import { TermOperatorCompletedBookings } from "../../routes/reservation.tsx"
 import { Checkbox } from "../ui/checkbox.tsx";
 const client = generateClient<Schema>();
 export const columns = (status: string): ColumnDef<any>[] => {
@@ -213,19 +213,19 @@ export const CompletedColumn = (): ColumnDef<any>[] => {
     },
     {
       accessorKey: "bookingDate",
-      header: "Booking Date",
+      header: "Reservation Date",
     },
     {
       accessorKey: "bookingTime",
-      header: "Booking Time",
+      header: "Reservation Time",
     },
     {
       accessorKey: "bookingApprovalDate",
-      header: "Booking Approval Date",
+      header: "Reservation Approval Date",
     },
     {
       accessorKey: "bookingStatus",
-      header: "Booking Status",
+      header: "Reservation Status",
       cell: ({ row }) => {
         const status = row.original.bookingStatus; // Get status value
         const isLate = status === "Late"; // Check if status is "Late"
@@ -239,7 +239,7 @@ export const CompletedColumn = (): ColumnDef<any>[] => {
     },
     {
       accessorKey: "bookingPickupDate",
-      header: "Booking Pick Up Date",
+      header: "Reservation Pickup Date",
     },
   ];
 
