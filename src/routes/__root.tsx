@@ -83,7 +83,7 @@ function RootComponent() {
       <SidebarProvider>
         <AppSidebar />
         <div className="flex-1">
-          <Toaster position="bottom-right" richColors={true} />
+          <Toaster position="top-center" richColors={true} expand={true} />
           <div className="flex items-center justify-end p-4">
             <UserButton fullName={userAttributes.fullName} role={userAttributes.role} limit={bookingLimit ?? 0} />
           </div>
