@@ -201,6 +201,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
         const [time, setTime] = useState<string | undefined>(undefined)
         const [isCalendarOpen, setIsCalendarOpen] = useState(false)
         const [isDialogOpen, setIsDialogOpen] = useState(false)
+        const [isAtCapacity, setIsAtCapacity] = useState(false)
         
         
         const isDateTimeSelected = (): boolean => {
@@ -214,9 +215,11 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
           const bookingsLength = await (table.options.meta as TransOpDataTableMeta)?.getBookingsAmount(String(format(date!, "MM/dd/yyyy")))
           if (bookingsLength >= limit) {
             toast.error(`Port at capacity (Limit ${limit} per day). Please try a different date.`)
+            setIsAtCapacity(true);
           } else {
             (table.options.meta as TransOpDataTableMeta)?.updateTransOpBooking(row.original.containerID, "Pending Booking Approval", String(format(date!, "MM/dd/yyyy")), time ?? "")
             setIsDialogOpen(false)
+            setIsAtCapacity(false)
           }
         }
 
@@ -277,38 +280,38 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
                   {`Vessel ID: ${row.original.vesselID} | Container ID: ${row.original.containerID} | Origin: ${row.original.origin} | BCO: ${row.original.bcoName} | BCO Email: ${row.original.bcoEmail}`}
                 </div>
               </DialogHeader>
-              <div className="grid gap-4 py-4">
+                <div className="grid gap-4 py-4">
                 <div className="grid grid-cols-4 items-center gap-4">
                   <CalendarIcon className="h-4 w-4" />
                   <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
-                    <PopoverTrigger asChild>
-                      <Button
-                        variant={"outline"}
-                        className={cn("w-[280px] justify-start text-left font-normal", !date && "text-muted-foreground")}
-                        onClick={() => setIsCalendarOpen(true)}
-                      >
-                        <CalendarIcon className="mr-2 h-4 w-4" />
-                        {date ? format(date, "MM/dd/yyyy") : <span>Pick a date</span>}
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0">
-                      <Calendar mode="single" selected={date} disabled={{ before: new Date()}} onSelect={handleDateSelect} initialFocus />
-                    </PopoverContent>
+                  <PopoverTrigger asChild>
+                    <Button
+                    variant={"outline"}
+                    className={cn("w-[280px] justify-start text-left font-normal", !date && "text-muted-foreground", isAtCapacity && "border-red-500")}
+                    onClick={() => setIsCalendarOpen(true)}
+                    >
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {date ? format(date, "MM/dd/yyyy") : <span>Pick a date</span>}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0">
+                    <Calendar mode="single" selected={date} disabled={{ before: new Date()}} onSelect={handleDateSelect} initialFocus />
+                  </PopoverContent>
                   </Popover>
                 </div>
                 <div className="grid grid-cols-4 items-center gap-4">
                   <Clock className="h-4 w-4" />
                   <Select onValueChange={setTime}>
-                    <SelectTrigger className="w-[280px]">
-                      <SelectValue placeholder="Select time" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {timeOptions.map((timeOption) => (
-                        <SelectItem key={timeOption} value={timeOption}>
-                          {timeOption}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
+                  <SelectTrigger className={cn("w-[280px]", isAtCapacity && "border-red-500")}>
+                    <SelectValue placeholder="Select time" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {timeOptions.map((timeOption) => (
+                    <SelectItem key={timeOption} value={timeOption}>
+                      {timeOption}
+                    </SelectItem>
+                    ))}
+                  </SelectContent>
                   </Select>
                 </div>
               </div>
