@@ -185,43 +185,47 @@ export const CompletedColumn = (): ColumnDef<any>[] => {
   const baseColumns1: ColumnDef<TermOperatorCompletedBookings>[] = [
     {
       accessorKey: "vesselID",
-      header: () => <div className="text-center">Vessel ID</div>,
+      header: "Vessel ID",
     },
     {
       accessorKey: "containerID",
-      header: () => <div className="text-center">Container ID</div>,
+      header: "Container ID",
     },
     {
       accessorKey: "origin",
-      header: () => <div className="text-center">Origin</div>,
+      header: "Origin",
     },
     {
       accessorKey: "bcoName",
-      header: () => <div className="text-center">BCO</div>,
+      header: "BCO",
     },
     {
       accessorKey: "bcoEmail",
-      header: () => <div className="text-center">BCO Email</div>,
+      header: () => "BCO Email",
     },
     {
       accessorKey: "transopName",
-      header: () => <div className="text-center">Transportation Operator</div>,
+      header: "Transportation Operator",
     },
     {
       accessorKey: "transopEmail",
-      header: () => <div className="text-center">Transportation Operator Email</div>,
+      header: "Transportation Operator Email",
     },
     {
       accessorKey: "bookingDate",
-      header: () => <div className="text-center">Booking Date</div>,
+      header: "Booking Date",
+    },
+    {
+      accessorKey: "bookingTime",
+      header: "Booking Time",
     },
     {
       accessorKey: "bookingApprovalDate",
-      header: () => <div className="text-center">Booking Approval Date</div>,
+      header: "Booking Approval Date",
     },
     {
       accessorKey: "bookingStatus",
-      header: () => <div className="text-center">Booking Status</div>,
+      header: "Booking Status",
       cell: ({ row }) => {
         const status = row.original.bookingStatus; // Get status value
         const isLate = status === "Late"; // Check if status is "Late"
@@ -235,11 +239,7 @@ export const CompletedColumn = (): ColumnDef<any>[] => {
     },
     {
       accessorKey: "bookingPickupDate",
-      header: () => <div className="text-center">Booking Pickup Date</div>,
-    },
-    {
-      accessorKey: "bookingTime",
-      header: () => <div className="text-center">Booking Time</div>,
+      header: "Booking Pick Up Date",
     },
   ];
 

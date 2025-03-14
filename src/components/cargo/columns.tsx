@@ -27,35 +27,35 @@ export const columns: ColumnDef<UpcomingCargo>[] = [
   // Define the columns for the table based on the database items (refer to resources.ts for schema names)
   {
     accessorKey: "vesselID",
-    header: () => <div className="text-center">Vessel ID</div>,
+    header: "Vessel ID",
   },
   {
     accessorKey: "containerID",
-    header: () => <div className="text-center">Container ID</div>,
+    header: "Container ID",
   },
   {
     accessorKey: "origin",
-    header: () => <div className="text-center">Origin</div>,
+    header: "Origin",
   },
   {
     accessorKey: "bcoName",
-    header: () => <div className="text-center">BCO</div>,
+    header: "BCO",
   },
   {
     accessorKey: "bcoEmail",
-    header: () => <div className="text-center">BCO Email</div>,
+    header: "BCO Email",
   },
   {
     accessorKey: "transopName",
-    header: () => <div className="text-center">Transportation Operator</div>,
+    header: "Transportation Operator",
   },
   {
     accessorKey: "transopEmail",
-    header: () => <div className="text-center">Transportation Operator Email</div>,
+    header: "Transportation Operator Email",
   }, 
   {
     accessorKey: "containerStatus",
-    header: () => <div className="text-center">Cargo Status</div>,
+    header: "Container Status",
     cell: ({ row }) => {
       // Initialize local state with the current containerStatus.
       const [cargoStatus, setStatus] = useState<"On-Ship" | "On-Dock">(
@@ -97,7 +97,7 @@ export const columns: ColumnDef<UpcomingCargo>[] = [
   },
   {
     accessorKey: "flag",
-    header: () => <div className="text-center">Flag</div>,
+    header: "Flag",
     cell: ({ row }) => {
       // Initialize flagged state from the row data; fallback to false if undefined.
       const [flagged, setFlagged] = useState<boolean>(row.original.flag || false)
