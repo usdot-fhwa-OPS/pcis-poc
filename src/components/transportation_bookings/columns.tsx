@@ -258,7 +258,15 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
         }
 
         return row.original.bookingStatus === "Pending Booking" ? (
-          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+          <Dialog 
+            open={isDialogOpen} 
+            onOpenChange={(open) => {
+              setIsDialogOpen(open)
+              if(!open) {
+                setIsAtCapacity(false)
+              }
+            }}
+          >
             <DialogTrigger asChild>
             <TooltipProvider>
               <Tooltip delayDuration={300}>
