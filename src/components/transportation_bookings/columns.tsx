@@ -166,7 +166,7 @@ export const CompletedColumn = (): ColumnDef<any>[] => {
         const status = row.original.bookingStatus; // Get status value
         const isLate = status === "Late"; // Check if status is "Late"
         return (
-          <span className={`px-2 py-1 font-bold rounded-full bg-gray-300 ${isLate ? "text-red" : "text-black"} text-center inline-block`}>
+          <span className={`px-2 py-1 font-bold rounded-full bg-gray-300 ${isLate ? "text-red-500" : "text-black"} text-center inline-block`}>
             {status}
           </span>
         );
