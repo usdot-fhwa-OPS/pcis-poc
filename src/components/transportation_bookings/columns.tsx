@@ -41,7 +41,7 @@ export const columns = (): ColumnDef<any>[] => {
     { accessorKey: "assignmentDate", header: "Date Requested" },
     {
       accessorKey: "status",
-      header: () => <div style={{ minWidth: "150px"}}>Status</div>,
+      header: () => <div style={{ minWidth: "50px"}}>Status</div>,
       cell: ({ row, table }) => (
         <div className="flex space-x-8 ">
           <Button 
@@ -200,7 +200,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
     { accessorKey: "bookingTime", header: "Time Initiated" },
     {
       accessorKey: "status",
-      header: () => <div className="min-w-[200px]">Reservation Status</div>,
+      header: () => <div className="min-w-[150px]">Reservation Status</div>,
       cell: ({ row, table }) => {
 
         const [date, setDate] = useState<Date | undefined>(new Date())
