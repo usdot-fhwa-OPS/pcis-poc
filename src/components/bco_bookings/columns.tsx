@@ -225,14 +225,21 @@ export const CompletedColumn = (): ColumnDef<any>[] => {
     { accessorKey: "transopEmail", header: "Transportation Operator Email" },
     {
       accessorKey: "to_status",
-      header: () => <div className=" text-center min-w-[200px]">Reservation Status</div>,
+      header: () => <div className=" text-center min-w-[150px]">Reservation Status</div>,
       cell: ({ row }) => {
         const status = row.original.bookingStatus; // Get status value
     
+  
+        const isLate = status === "Late for Pick Up"; // Check if status is "Late"
+  
         return (
-          <span className="px-2 py-1 rounded-full bg-gray-300 text-black font-bold text-center min-w-[200px]">
-            {status}
-          </span>
+          <span
+          className={`text-center font-bold inline-flex items-center justify-center rounded-full px-2 py-1 ${
+            isLate ? "bg-gray-300 text-red-600" : "bg-gray-300 text-black"
+          }`}
+        >
+          {status}
+        </span>
         );
       },
       size: 200,
@@ -260,16 +267,19 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
     { accessorKey: "transopEmail", header: "Transportation Operator Email" },
     {
       accessorKey: "Booking Status",
-      header: () => <div className=" text-center min-w-[200px]"> Transportation Operator Status</div>,
+      header: () => <div className=" text-center min-w-[150px]"> Transportation Operator Status</div>,
       cell: ({ row }) => {
         const status = row.original.bookingStatus; // Get status value
-    
+        const isLate = status === "Late for Pick Up"; // Check if status is "Late"
+  
         return (
-    <span
-  className="px-2 py-1 rounded-full bg-gray-300 text-black font-bold text-center inline-block">
-      {status}
-    </span>
-
+          <span
+          className={`text-center font-bold inline-flex items-center justify-center rounded-full px-2 py-1 ${
+            isLate ? "bg-gray-300 text-red-600" : "bg-gray-300 text-black"
+          }`}
+        >
+          {status}
+        </span>
         );
       },
       size: 200,

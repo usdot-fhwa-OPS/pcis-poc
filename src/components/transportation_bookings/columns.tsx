@@ -359,11 +359,21 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
             </DialogContent>
           </Dialog>
         ) : (
-          <span className="px-2 py-1 font-bold text-black bg-gray-300 text-center inline-flex items-center justify-center rounded-full">
+          <span
+          className={`px-2 py-1 font-bold text-center inline-flex items-center justify-center rounded-full bg-gray-300 ${
+            row.original.bookingStatus === "Late for Pick Up" ? "text-red-600" : "text-black"
+          }`}
+        >
           {row.original.bookingStatus}
         </span>
         
           );
+
+          
+
+
+
+          
       },
       size: 200,
     },
