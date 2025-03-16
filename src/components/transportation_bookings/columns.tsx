@@ -161,7 +161,7 @@ export const CompletedColumn = (): ColumnDef<any>[] => {
     },
     {
       accessorKey: "bookingStatus",
-      header: () =><div className=" text-center min-w-[200px]">Reservation Status</div>,
+      header: () =><div className="min-w-[200px]">Reservation Status</div>,
       cell: ({ row }) => {
         const status = row.original.bookingStatus; // Get status value
         const isLate = status === "Late for Pick Up"; // Check if status is "Late"
@@ -201,7 +201,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
     { accessorKey: "bookingTime", header: "Time Initiated" },
     {
       accessorKey: "status",
-      header: () => <div className=" text-center min-w-[200px]">Reservation Status</div>,
+      header: () => <div className="min-w-[200px]">Reservation Status</div>,
       cell: ({ row, table }) => {
 
         const [date, setDate] = useState<Date | undefined>(new Date())
