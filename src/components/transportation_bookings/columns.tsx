@@ -352,7 +352,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
             </DialogContent>
           </Dialog>
         ) : (
-            <span className="font-bold text-black bg-gray-300  text-center min-w-[150px]">{row.original.bookingStatus}</span>
+            <span className="font-bold text-black bg-gray-300  text-center min-w-[200px]">{row.original.bookingStatus}</span>
           );
       },
     },
@@ -563,7 +563,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
   ];
   baseColumns1.push({
     accessorKey: "flag",
-    header: () => <div style={{ minWidth: "200px", textAlign: "center" }}>Flag</div>,
+    header: () => <div style={{ minWidth: "50x", textAlign: "center" }}>Flag</div>,
     cell: ({ row }) => {
       // Initialize flagged state from the row data; fallback to false if undefined.
         const [flagged, setFlagged] = useState<boolean>(row.original.flag || false)
