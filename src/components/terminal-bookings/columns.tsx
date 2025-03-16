@@ -65,7 +65,7 @@ export const columns = (status: string): ColumnDef<any>[] => {
       accessorKey: "status",
       header: () => <div className="text-center min-w-[200px]">Status</div>,
       cell: ({ row,table }) => (
-        <div className="flex space-x-4 min-w-[300px] justify-center">
+        <div className="flex space-x-4 min-w-[200px] justify-center">
           {/* Approve Button */}
 
           {/* Modify selection set to include modified time and date
@@ -102,7 +102,7 @@ export const columns = (status: string): ColumnDef<any>[] => {
         const isLate = status === "Late for Pick Up"; // Check if status is "Late"
   
         return (
-          <span className={`flex justify-center items-center px-4 py-2 rounded-md min-w-[300px]${isLate ? "bg-red-500 text-white" : "bg-gray-600 text-white"}`}>
+          <span className={`flex justify-center items-center px-4 py-2 rounded-md min-w-[200px]${isLate ? "bg-red-500 text-white" : "bg-gray-600 text-white"}`}>
             {status}
           </span>
         );
@@ -236,6 +236,7 @@ export const CompletedColumn = (): ColumnDef<any>[] => {
           </span>
         );
       },
+      size: 200,
     },
     {
       accessorKey: "bookingPickupDate",
