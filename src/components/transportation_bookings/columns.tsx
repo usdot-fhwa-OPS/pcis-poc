@@ -41,7 +41,7 @@ export const columns = (): ColumnDef<any>[] => {
     { accessorKey: "assignmentDate", header: "Date Requested" },
     {
       accessorKey: "status",
-      header: () => <div style={{ minWidth: "200px", textAlign: "center" }}>Status</div>,
+      header: () => <div style={{ minWidth: "150px"}}>Status</div>,
       cell: ({ row, table }) => (
         <div className="flex space-x-8 ">
           <Button 
@@ -161,7 +161,7 @@ export const CompletedColumn = (): ColumnDef<any>[] => {
     },
     {
       accessorKey: "bookingStatus",
-      header: () =><div className="min-w-[200px]">Reservation Status</div>,
+      header: () =><div className="min-w-[150px]">Reservation Status</div>,
       cell: ({ row }) => {
         const status = row.original.bookingStatus; // Get status value
         const isLate = status === "Late for Pick Up"; // Check if status is "Late"
@@ -178,7 +178,6 @@ export const CompletedColumn = (): ColumnDef<any>[] => {
         );
 
       },
-      size: 200,
     },
     {
       accessorKey: "bookingPickupDate",

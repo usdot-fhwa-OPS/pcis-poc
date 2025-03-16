@@ -95,7 +95,7 @@ export const columns = (status: string): ColumnDef<any>[] => {
   if (status === "Ongoing") {
     baseColumns.push({
       accessorKey: "bookingStatus",
-      header: () => <div className=" text-center min-w-[150px]">Status</div>,
+      header: () => <div className="min-w-[150px]">Status</div>,
      // Adjust width as needed
       cell: ({ row }) => {
         const status = row.original.bookingStatus; // Get status value
@@ -229,7 +229,7 @@ export const CompletedColumn = (): ColumnDef<any>[] => {
     },
     {
       accessorKey: "bookingStatus",
-      header: () => <div className=" text-center">Reservation Status</div>,
+      header: () => <div className="">Reservation Status</div>,
       cell: ({ row }) => {
         const status = row.original.bookingStatus; // Get status value
         const isLate = status === "Late for Pick Up"; // Check if status is "Late"
