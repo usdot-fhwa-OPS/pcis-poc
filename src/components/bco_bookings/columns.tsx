@@ -225,7 +225,7 @@ export const CompletedColumn = (): ColumnDef<any>[] => {
     { accessorKey: "transopEmail", header: "Transportation Operator Email" },
     {
       accessorKey: "to_status",
-      header: "Reservation Status",
+      header: () => <div className=" text-center min-w-[200px]">Reservation Status</div>,
       cell: ({ row }) => {
         const status = row.original.bookingStatus; // Get status value
     
@@ -260,7 +260,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
     { accessorKey: "transopEmail", header: "Transportation Operator Email" },
     {
       accessorKey: "Booking Status",
-      header: "Transportation Operator Status",
+      header: () => <div className=" text-center min-w-[200px]"> Transportation Operator Status</div>,
       cell: ({ row }) => {
         const status = row.original.bookingStatus; // Get status value
     
