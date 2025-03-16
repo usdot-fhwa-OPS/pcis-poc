@@ -102,9 +102,13 @@ export const columns = (status: string): ColumnDef<any>[] => {
         const isLate = status === "Late for Pick Up"; // Check if status is "Late"
   
         return (
-          <span className={`flex justify-center font-bold items-center px-4 py-2 rounded-md min-w-[200px]${isLate ? "bg-gray-300 text-red" : "bg-gray-300 text-black"}`}>
-            {status}
-          </span>
+          <span
+          className={`inline-flex justify-center font-bold items-center px-4 py-2 rounded-md ${
+            isLate ? "bg-gray-300 text-red-600" : "bg-gray-300 text-black"
+          }`}
+        >
+          {status}
+        </span>
         );
       },
     },
@@ -231,9 +235,13 @@ export const CompletedColumn = (): ColumnDef<any>[] => {
         const isLate = status === "Late"; // Check if status is "Late"
 
         return (
-          <span className={`px-2 py-1 rounded-md ${isLate ? "bg-gray-300 text-red" : "bg-gray-300 text-black"} text-center block`}>
-            {status}
-          </span>
+<span
+  className={`px-2 py-1 rounded-md text-center inline-block ${
+    isLate ? "bg-gray-300 text-red-600" : "bg-gray-300 text-black"
+  }`}
+>
+  {status}
+</span>
         );
       },
       size: 200,
