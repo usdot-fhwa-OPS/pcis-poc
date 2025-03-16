@@ -229,14 +229,14 @@ export const CompletedColumn = (): ColumnDef<any>[] => {
     },
     {
       accessorKey: "bookingStatus",
-      header: () => <div className=" text-center min-w-[200px]">Reservation Status</div>,
+      header: () => <div className=" text-center">Reservation Status</div>,
       cell: ({ row }) => {
         const status = row.original.bookingStatus; // Get status value
-        const isLate = status === "Late"; // Check if status is "Late"
+        const isLate = status === "Late for Pick Up"; // Check if status is "Late"
 
         return (
 <span
-  className={`text-center inline-flex items-center justify-center rounded-full px-4 py-2 ${
+  className={`text-center font-bold inline-flex items-center justify-center rounded-full px-4 py-2 ${
     isLate ? "bg-gray-300 text-red-600" : "bg-gray-300 text-black"
   }`}
 >

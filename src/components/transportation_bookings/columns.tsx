@@ -164,7 +164,7 @@ export const CompletedColumn = (): ColumnDef<any>[] => {
       header: () =><div className=" text-center min-w-[200px]">Reservation Status</div>,
       cell: ({ row }) => {
         const status = row.original.bookingStatus; // Get status value
-        const isLate = status === "Late"; // Check if status is "Late"
+        const isLate = status === "Late for Pick Up"; // Check if status is "Late"
         return (
           <td className="text-center">
           <span
