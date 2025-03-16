@@ -225,7 +225,7 @@ export const CompletedColumn = (): ColumnDef<any>[] => {
     { accessorKey: "transopEmail", header: "Transportation Operator Email" },
     {
       accessorKey: "to_status",
-      header: () => <div className=" text-center min-w-[150px]">Reservation Status</div>,
+      header: () => <div className="min-w-[150px]">Reservation Status</div>,
       cell: ({ row }) => {
         const status = row.original.bookingStatus; // Get status value
     
@@ -267,7 +267,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
     { accessorKey: "transopEmail", header: "Transportation Operator Email" },
     {
       accessorKey: "Booking Status",
-      header: () => <div className=" text-center min-w-[150px]"> Transportation Operator Status</div>,
+      header: () => <div className="min-w-[150px]"> Transportation Operator Status</div>,
       cell: ({ row }) => {
         const status = row.original.bookingStatus; // Get status value
         const isLate = status === "Late for Pick Up"; // Check if status is "Late"
