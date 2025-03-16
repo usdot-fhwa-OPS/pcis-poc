@@ -179,7 +179,7 @@ export const columns = (): ColumnDef<any>[] => {
 
 baseColumns.push({
   accessorKey: "flag",
-  header: () => <div style={{ minWidth: "200px", textAlign: "center" }}>Flag</div>,
+  header: () => <div style={{ minWidth: "50px", textAlign: "center" }}>Flag</div>,
   cell: ({ row }) => {
     // Initialize flagged state from the row data; fallback to false if undefined.
           const [flagged, setFlagged] = useState<boolean>(row.original.flag || false)
@@ -314,7 +314,7 @@ return (
 
 baseColumns1.push({
 accessorKey: "flag",
-header: () => <div style={{ minWidth: "200px", textAlign: "center" }}>Flag</div>,
+header: () => <div style={{ minWidth: "50px", textAlign: "center" }}>Flag</div>,
 cell: ({ row }) => (
   <div style={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100%" }}>
     <FlagComponent initialFlagged={row.original.flagged} />
