@@ -357,7 +357,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
             </DialogContent>
           </Dialog>
         ) : (
-          <span className="px-2 py-1 font-bold text-black bg-gray-300 text-center inline-block rounded-md">
+          <span className="px-2 py-1 font-bold text-black bg-gray-300 text-center inline-flex items-center justify-center rounded-full">
           {row.original.bookingStatus}
         </span>
         
