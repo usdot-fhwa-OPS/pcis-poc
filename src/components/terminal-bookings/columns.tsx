@@ -103,7 +103,7 @@ export const columns = (status: string): ColumnDef<any>[] => {
   
         return (
           <span
-          className={`text-center font-bold inline-flex items-center justify-center rounded-full px-4 py-2 ${
+          className={`text-center font-bold inline-flex items-center justify-center rounded-full px-2 py-1 ${
             isLate ? "bg-gray-300 text-red-600" : "bg-gray-300 text-black"
           }`}
         >
@@ -236,7 +236,7 @@ export const CompletedColumn = (): ColumnDef<any>[] => {
 
         return (
 <span
-  className={`text-center font-bold inline-flex items-center justify-center rounded-full px-4 py-2 ${
+  className={`text-center font-bold inline-flex items-center justify-center rounded-full px-2 py-1 ${
     isLate ? "bg-gray-300 text-red-600" : "bg-gray-300 text-black"
   }`}
 >
