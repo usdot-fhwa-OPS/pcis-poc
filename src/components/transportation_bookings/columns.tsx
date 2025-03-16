@@ -166,7 +166,7 @@ export const CompletedColumn = (): ColumnDef<any>[] => {
         const status = row.original.bookingStatus; // Get status value
         const isLate = status === "Late"; // Check if status is "Late"
         return (
-          <span className={`px-2 py-1 rounded-md ${isLate ? "bg-red-500 text-white" : "font-bold text-black bg-gray-300"} text-center block`}>
+          <span className={`px-2 py-1 rounded-md  min-w-[300px]${isLate ? "bg-red-500 text-white" : "font-bold text-black bg-gray-300"} text-center block`}>
             {status}
           </span>
         );
@@ -352,7 +352,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
             </DialogContent>
           </Dialog>
         ) : (
-            <span className="font-bold text-black bg-gray-300  text-center min-w-[200px]">{row.original.bookingStatus}</span>
+            <span className="font-bold text-black bg-gray-300  text-center min-w-[300px]">{row.original.bookingStatus}</span>
           );
       },
     },

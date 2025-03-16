@@ -230,7 +230,7 @@ export const CompletedColumn = (): ColumnDef<any>[] => {
         const status = row.original.bookingStatus; // Get status value
     
         return (
-          <span className="px-2 py-1 rounded-md bg-gray-300 text-black font-bold text-center block">
+          <span className="px-2 py-1 rounded-md bg-gray-300 text-black font-bold text-center min-w-[300px] block">
             {status}
           </span>
         );
@@ -264,7 +264,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
         const status = row.original.bookingStatus; // Get status value
     
         return (
-          <span className="px-2 py-1 rounded-md bg-gray-300 text-black font-bold text-center block">
+          <span className="px-2 py-1 min-w-[300px] rounded-md bg-gray-300 text-black font-bold text-center block">
             {status}
           </span>
         );
