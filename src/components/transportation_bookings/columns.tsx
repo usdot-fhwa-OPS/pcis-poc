@@ -289,7 +289,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
         };
 
         return (
-             <td className="w-[150px] flex justify-center">
+             <div className="w-[150px] flex justify-center">
               {row.original.bookingStatus === "Pending Reservation" ? (
 
 
@@ -377,7 +377,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
         </span>
         )
         }
-        </td>
+        </div>
           );
 
           
