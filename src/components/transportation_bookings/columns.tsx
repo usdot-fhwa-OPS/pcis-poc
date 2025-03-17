@@ -204,9 +204,9 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
     { accessorKey: "bookingTime", header: "Time Initiated" },
     {
       accessorKey: "status",
-      header: () =>  <th className="w-[150px] text-center">
+      header: () =><div className="w-[150px] text-center">
       Reservation Status
-    </th>,
+    </div>,
       cell: ({ row, table }) => {
 
         const [date, setDate] = useState<Date | undefined>(new Date())
