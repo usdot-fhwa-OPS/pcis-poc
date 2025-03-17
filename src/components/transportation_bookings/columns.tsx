@@ -31,17 +31,39 @@ import { toast } from "sonner";
 export const columns = (): ColumnDef<any>[] => {
   const baseColumns: ColumnDef<TransOpUpcomingBookings>[] = [
 
-    { accessorKey: "vesselID", header: "Vessel ID" },
-    { accessorKey: "containerID", header: "Container ID" },
-    { accessorKey: "origin", header: "Origin" },
-    { accessorKey: "bcoName", header: "BCO" },
-    { accessorKey: "bcoEmail", header: "BCO Email" },
-    { accessorKey: "transopName", header: "Transportation Operator" },
-    { accessorKey: "transopEmail", header: "Transportation Operator Email" },
-    { accessorKey: "assignmentDate", header: "Date Requested" },
+    {
+      accessorKey: "vesselID",
+      header: () => <div className="text-center">Vessel ID</div>,
+    },
+    {
+      accessorKey: "containerID",
+      header: () => <div className="text-center">Container ID</div>,
+    },
+    {
+      accessorKey: "origin",
+      header: () => <div className="text-center">Origin</div>,
+    },
+    {
+      accessorKey: "bcoName",
+      header: () => <div className="text-center">BCO</div>,
+    },
+    {
+      accessorKey: "bcoEmail",
+      header: () => <div className="text-center">BCO Email</div>,
+    },
+    {
+      accessorKey: "transopName",
+      header: () => <div className="text-center">Transportation Operator</div>,
+    },
+    {
+      accessorKey: "transopEmail",
+      header: () => <div className="text-center">Transportation Operator Email</div>,
+    },
+    { accessorKey: "assignmentDate", 
+      header: () => <div className="tex-center"> "Date Requested" </div>, },
     {
       accessorKey: "status",
-      header: () => <div style={{ minWidth: "200px", textAlign: "center" }}>Status</div>,
+      header: () => <div style={{ minWidth: "50px"}}>Status</div>,
       cell: ({ row, table }) => (
         <div className="flex space-x-8 ">
           <Button 
@@ -83,7 +105,7 @@ export const columns = (): ColumnDef<any>[] => {
 
 baseColumns.push({
   accessorKey: "flag",
-  header: () => <div style={{ minWidth: "200px", textAlign: "center" }}>Flag</div>,
+  header: () => <div style={{ minWidth: "50px", textAlign: "center" }}>Flag</div>,
   cell: ({ row }) => {
     // Initialize flagged state from the row data; fallback to false if undefined.
       const [flagged, setFlagged] = useState<boolean>(row.original.flag || false)
@@ -161,14 +183,24 @@ export const CompletedColumn = (): ColumnDef<any>[] => {
     },
     {
       accessorKey: "bookingStatus",
-      header: "Reservation Status",
+      header: () => (
+        <div className="w-[150px] text-center">
+          Reservation Status
+        </div>
+      ),
       cell: ({ row }) => {
         const status = row.original.bookingStatus; // Get status value
-        const isLate = status === "Late"; // Check if status is "Late"
+        const isLate = status === "Late for Pick Up"; // Check if status is "Late"
         return (
-          <span className={`px-2 py-1 rounded-md ${isLate ? "bg-red-500 text-white" : "font-bold text-black bg-gray-300"} text-center block`}>
-            {status}
-          </span>
+          <div className="w-[150px] flex justify-center">
+            <span
+              className={`px-2 py-1 text-sm font-bold rounded-md bg-gray-300 w-full ${
+                isLate ? "text-red-500" : "text-black"
+              } text-center whitespace-normal break-words`}
+            >
+              {status}
+            </span>
+          </div>
         );
 
       },
@@ -183,18 +215,20 @@ export const CompletedColumn = (): ColumnDef<any>[] => {
 
 export const OngoingColumn = (): ColumnDef<any>[] => {
   const baseColumns1: ColumnDef<TransOpOngoingBookings>[] = [
-    { accessorKey: "vesselID", header: "Vessel ID" },
-    { accessorKey: "containerID", header: "Container ID" },
-    { accessorKey: "origin", header: "Origin" },
-    { accessorKey: "bcoName", header: "BCO" },
-    { accessorKey: "bcoEmail", header: "BCO Email" },
-    { accessorKey: "transopName", header: "Transportation Operator" },
-    { accessorKey: "transopEmail", header: "Transportation Operator Email" },
-    { accessorKey: "bookingDate", header: "Date Initiated" },
-    { accessorKey: "bookingTime", header: "Time Initiated" },
+    { accessorKey: "vesselID", header: () => <div className="text-center">Vessel ID</div> },
+    { accessorKey: "containerID", header: () => <div className="text-center">Container ID</div> },
+    { accessorKey: "origin", header: () => <div className="text-center">Origin</div> },
+    { accessorKey: "bcoName", header: () => <div className="text-center">BCO</div> },
+    { accessorKey: "bcoEmail", header: () => <div className="text-center">BCO Email</div> },
+    { accessorKey: "transopName", header: () => <div className="text-center">Transportation Operator</div> },
+    { accessorKey: "transopEmail", header: () => <div className="text-center">Transportation Operator Email</div> },
+    { accessorKey: "bookingDate", header: () => <div className="text-center">Date Initiated</div> },
+    { accessorKey: "bookingTime", header: () => <div className="text-center">Time Initiated</div> },
     {
       accessorKey: "status",
-      header: "Reservation",
+      header: () =><div className="w-[150px] text-center">
+      Reservation Status
+    </div>,
       cell: ({ row, table }) => {
 
         const [date, setDate] = useState<Date | undefined>(new Date())
@@ -255,9 +289,11 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
           setDate(selectedDate)
           // Keep the calendar open after selection
           setIsCalendarOpen(true)
-        }
+        };
 
-        return row.original.bookingStatus === "Pending Reservation" ? (
+        return (
+             <div className="w-[150px] flex justify-center">
+              {row.original.bookingStatus === "Pending Reservation" ? (
           <Dialog 
             open={isDialogOpen} 
             onOpenChange={(open) => {
@@ -341,13 +377,29 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
             </DialogContent>
           </Dialog>
         ) : (
-            <span className="font-bold text-black bg-gray-300 px-2 py-1 rounded-md">{row.original.bookingStatus}</span>
+          <span
+          className={`px-2 py-1 text-sm font-bold rounded-md bg-gray-300 text-center whitespace-normal break-words w-full ${
+            row.original.bookingStatus === "Late for Pick Up" ? "text-red-600" : "text-black"
+          }`}
+        >
+          {row.original.bookingStatus}
+        </span>
+        )
+        }
+        </div>
           );
+
+          
+
+
+
+          
       },
+    
     },
     {
       id: "changepickupstatus",
-      header: "Mark as Picked Up",
+      header: () => <div className="text-center">Mark as Picked Up</div>,
       cell: ({ row, table}) => {
         const [isChecked, setIsChecked] = useState<boolean>(row.original.bookingStatus === "Picked Up");
   
@@ -378,7 +430,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
     },
     {
       accessorKey: "modifyBooking",
-      header: "Modify Reservation",
+      header:()=><div className="text-center">Modify Reservation</div>,
       cell: ({ row, table }) => {
         const [date, setDate] = useState<Date | undefined>(new Date())
         const [time, setTime] = useState<string | undefined>(undefined)
@@ -508,7 +560,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
     },
     {
       accessorKey: "contact_bco",
-      header: "Contact BCO",
+      header:()=><div className="text-center">Contact BCO</div>,
       cell: ({ row }) => {
         const email = row.original.bcoEmail
   
@@ -527,7 +579,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
   ];
   baseColumns1.push({
     accessorKey: "flag",
-    header: () => <div style={{ minWidth: "200px", textAlign: "center" }}>Flag</div>,
+    header: () => <div style={{ minWidth: "50x", textAlign: "center" }}>Flag</div>,
     cell: ({ row }) => {
       // Initialize flagged state from the row data; fallback to false if undefined.
         const [flagged, setFlagged] = useState<boolean>(row.original.flag || false)

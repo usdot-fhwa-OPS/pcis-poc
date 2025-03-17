@@ -173,7 +173,7 @@ export const columns = (): ColumnDef<any>[] => {
         const isOnShip = status === "On-Ship"; // Check if status is "Late"
 
         return (
-          <span className={`px-2 py-1 rounded-md ${isOnShip ? "bg-blue-500 text-black rounded-full font-bold" : "font-bold text-black bg-purple-500 rounded-full"} text-center block`}>
+          <span className={`px-2 py-1 rounded-md ${isOnShip ? "bg-blue-500 text-black rounded-md font-bold" : "font-bold text-black bg-purple-500 rounded-md"} text-center block`}>
 
             {status}
           </span>
@@ -187,7 +187,7 @@ export const columns = (): ColumnDef<any>[] => {
 
 baseColumns.push({
   accessorKey: "flag",
-  header: () => <div style={{ minWidth: "200px", textAlign: "center" }}>Flag</div>,
+  header: () => <div style={{ minWidth: "50px", textAlign: "center" }}>Flag</div>,
   cell: ({ row }) => {
     // Initialize flagged state from the row data; fallback to false if undefined.
           const [flagged, setFlagged] = useState<boolean>(row.original.flag || false)
@@ -233,16 +233,25 @@ export const CompletedColumn = (): ColumnDef<any>[] => {
     { accessorKey: "transopEmail", header: "Transportation Operator Email" },
     {
       accessorKey: "to_status",
-      header: "Reservation Status",
+      header: () => <div className="w-[150px] text-center">Reservation Status</div>,
       cell: ({ row }) => {
         const status = row.original.bookingStatus; // Get status value
     
+  
+        const isLate = status === "Late for Pick Up"; // Check if status is "Late"
+  
         return (
-          <span className="px-2 py-1 rounded-md bg-gray-300 text-black font-bold text-center block">
+          <div className="w-[150px] flex justify-center">
+          <span
+            className={`px-2 py-1 text-sm font-bold rounded-md bg-gray-300 w-full ${
+              isLate ? "text-red-500" : "text-black"
+            } text-center whitespace-normal break-words`}
+          >
             {status}
           </span>
+        </div>
         );
-      }
+      },
     },
     
     { accessorKey: "bookingDate", header: "Date Initiated" },
@@ -267,16 +276,23 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
     { accessorKey: "transopEmail", header: "Transportation Operator Email" },
     {
       accessorKey: "Booking Status",
-      header: "Transportation Operator Status",
+      header: () => <div className="min-w-[150px] text-center "> Transportation Operator Status</div>,
       cell: ({ row }) => {
         const status = row.original.bookingStatus; // Get status value
-    
+        const isLate = status === "Late for Pick Up"; // Check if status is "Late"
+  
         return (
-          <span className="px-2 py-1 rounded-md bg-gray-300 text-black font-bold text-center block">
+          <div className="w-[150px] flex justify-center">
+          <span
+            className={`px-2 py-1 text-sm font-bold rounded-md bg-gray-300 w-full ${
+              isLate ? "text-red-500" : "text-black"
+            } text-center whitespace-normal break-words`}
+          >
             {status}
           </span>
+        </div>
         );
-      }
+      },
     },
    
     {
@@ -331,7 +347,7 @@ return (
 
 baseColumns1.push({
 accessorKey: "flag",
-header: () => <div style={{ minWidth: "200px", textAlign: "center" }}>Flag</div>,
+header: () => <div style={{ minWidth: "50px", textAlign: "center" }}>Flag</div>,
 cell: ({ row }) => (
   <div style={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100%" }}>
     <FlagComponent initialFlagged={row.original.flagged} />
