@@ -161,20 +161,20 @@ export const CompletedColumn = (): ColumnDef<any>[] => {
     },
     {
       accessorKey: "bookingStatus",
-      header: () =><div className="min-w-[150px]">Reservation Status</div>,
+      header: () => <div className="min-w-[150px] text-center">Reservation Status</div>,
       cell: ({ row }) => {
         const status = row.original.bookingStatus; // Get status value
         const isLate = status === "Late for Pick Up"; // Check if status is "Late"
         return (
           <td className="text-center">
-          <span
-          className={`px-2 py-1  font-bold rounded-md bg-gray-300 ${
-            isLate ? "text-red-500" : "text-black"
-          } text-center inline-flex items-center justify-center`}
-        >
-          {status}
-        </span>
-        </td>
+            <span
+              className={`px-3 py-1 text-sm font-bold rounded-md bg-gray-300 ${
+                isLate ? "text-red-500" : "text-black"
+              } text-center inline-flex items-center justify-center min-w-[50px] max-w-[150px] whitespace-normal break-words`}
+            >
+              {status}
+            </span>
+          </td>
         );
 
       },
