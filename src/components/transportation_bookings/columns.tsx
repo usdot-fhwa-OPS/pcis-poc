@@ -41,7 +41,7 @@ export const columns = (): ColumnDef<any>[] => {
     { accessorKey: "assignmentDate", header: "Date Requested" },
     {
       accessorKey: "status",
-      header: () => <div style={{ minWidth: "50px"}}>Status</div>,
+      header: () => <div style={{ minWidth: "50git stat px"}}>Status</div>,
       cell: ({ row, table }) => (
         <div className="flex space-x-8 ">
           <Button 
@@ -168,7 +168,7 @@ export const CompletedColumn = (): ColumnDef<any>[] => {
         return (
           <td className="text-center">
           <span
-          className={`px-2 py-1  font-bold rounded-full bg-gray-300 ${
+          className={`px-2 py-1  font-bold rounded-md bg-gray-300 ${
             isLate ? "text-red-500" : "text-black"
           } text-center inline-flex items-center justify-center`}
         >
@@ -359,7 +359,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
           </Dialog>
         ) : (
           <span
-          className={`px-2 py-1 font-bold text-center inline-flex items-center justify-center rounded-full bg-gray-300 ${
+          className={`px-2 py-1 font-bold text-center inline-flex items-center justify-center rounded-md bg-gray-300 ${
             row.original.bookingStatus === "Late for Pick Up" ? "text-red-600" : "text-black"
           }`}
         >

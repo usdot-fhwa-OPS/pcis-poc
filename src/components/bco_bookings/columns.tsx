@@ -165,7 +165,7 @@ export const columns = (): ColumnDef<any>[] => {
         const isOnShip = status === "On-Ship"; // Check if status is "Late"
 
         return (
-          <span className={`px-2 py-1 rounded-md ${isOnShip ? "bg-blue-500 text-black rounded-full font-bold" : "font-bold text-black bg-purple-500 rounded-full"} text-center block`}>
+          <span className={`px-2 py-1 rounded-md ${isOnShip ? "bg-blue-500 text-black rounded-md font-bold" : "font-bold text-black bg-purple-500 rounded-md"} text-center block`}>
 
             {status}
           </span>
@@ -234,7 +234,7 @@ export const CompletedColumn = (): ColumnDef<any>[] => {
   
         return (
           <span
-          className={`text-center font-bold inline-flex items-center justify-center rounded-full px-2 py-1 ${
+          className={`text-center font-bold inline-flex items-center justify-center rounded-md px-2 py-1 ${
             isLate ? "bg-gray-300 text-red-600" : "bg-gray-300 text-black"
           }`}
         >
@@ -242,7 +242,6 @@ export const CompletedColumn = (): ColumnDef<any>[] => {
         </span>
         );
       },
-      size: 200,
     },
     
     { accessorKey: "bookingDate", header: "Date Initiated" },
@@ -274,7 +273,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
   
         return (
           <span
-          className={`text-center font-bold inline-flex items-center justify-center rounded-full px-2 py-1 ${
+          className={`text-center font-bold inline-flex items-center justify-center rounded-md px-2 py-1 ${
             isLate ? "bg-gray-300 text-red-600" : "bg-gray-300 text-black"
           }`}
         >
@@ -282,7 +281,6 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
         </span>
         );
       },
-      size: 200,
     },
    
     {

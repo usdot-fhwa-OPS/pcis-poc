@@ -103,7 +103,7 @@ export const columns = (status: string): ColumnDef<any>[] => {
   
         return (
           <span
-          className={`text-center font-bold inline-flex items-center justify-center rounded-full px-2 py-1 ${
+          className={`text-center font-bold inline-flex items-center justify-center rounded-md px-2 py-1 ${
             isLate ? "bg-gray-300 text-red-600" : "bg-gray-300 text-black"
           }`}
         >
@@ -229,14 +229,14 @@ export const CompletedColumn = (): ColumnDef<any>[] => {
     },
     {
       accessorKey: "bookingStatus",
-      header: () => <div className="">Reservation Status</div>,
+      header: () => <div className="min-w-[50px]">Reservation Status</div>,
       cell: ({ row }) => {
         const status = row.original.bookingStatus; // Get status value
         const isLate = status === "Late for Pick Up"; // Check if status is "Late"
 
         return (
 <span
-  className={`text-center font-bold inline-flex items-center justify-center rounded-full px-2 py-1 ${
+  className={`text-center font-bold inline-flex items-center justify-center rounded-md px-2 py-1 ${
     isLate ? "bg-gray-300 text-red-600" : "bg-gray-300 text-black"
   }`}
 >
