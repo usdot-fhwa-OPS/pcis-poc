@@ -225,7 +225,7 @@ export const CompletedColumn = (): ColumnDef<any>[] => {
     { accessorKey: "transopEmail", header: "Transportation Operator Email" },
     {
       accessorKey: "to_status",
-      header: () => <div className="min-w-[50px]">Reservation Status</div>,
+      header: () => <div className="w-[150px] text-center">Reservation Status</div>,
       cell: ({ row }) => {
         const status = row.original.bookingStatus; // Get status value
     
@@ -233,13 +233,15 @@ export const CompletedColumn = (): ColumnDef<any>[] => {
         const isLate = status === "Late for Pick Up"; // Check if status is "Late"
   
         return (
+          <div className="w-[150px] flex justify-center">
           <span
-          className={`text-center font-bold inline-flex items-center justify-center rounded-md px-2 py-1 ${
-            isLate ? "bg-gray-300 text-red-600" : "bg-gray-300 text-black"
-          }`}
-        >
-          {status}
-        </span>
+            className={`px-2 py-1 text-sm font-bold rounded-md bg-gray-300 w-full ${
+              isLate ? "text-red-500" : "text-black"
+            } text-center whitespace-normal break-words`}
+          >
+            {status}
+          </span>
+        </div>
         );
       },
     },
@@ -266,19 +268,21 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
     { accessorKey: "transopEmail", header: "Transportation Operator Email" },
     {
       accessorKey: "Booking Status",
-      header: () => <div className="min-w-[150px]"> Transportation Operator Status</div>,
+      header: () => <div className="min-w-[150px] text-center "> Transportation Operator Status</div>,
       cell: ({ row }) => {
         const status = row.original.bookingStatus; // Get status value
         const isLate = status === "Late for Pick Up"; // Check if status is "Late"
   
         return (
+          <div className="w-[150px] flex justify-center">
           <span
-          className={`text-center font-bold inline-flex items-center justify-center rounded-md px-2 py-1 ${
-            isLate ? "bg-gray-300 text-red-600" : "bg-gray-300 text-black"
-          }`}
-        >
-          {status}
-        </span>
+            className={`px-2 py-1 text-sm font-bold rounded-md bg-gray-300 w-full ${
+              isLate ? "text-red-500" : "text-black"
+            } text-center whitespace-normal break-words`}
+          >
+            {status}
+          </span>
+        </div>
         );
       },
     },
