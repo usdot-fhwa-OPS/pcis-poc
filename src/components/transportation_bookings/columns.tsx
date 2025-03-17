@@ -172,7 +172,7 @@ export const CompletedColumn = (): ColumnDef<any>[] => {
         return (
           <div className="w-[150px] flex justify-center">
             <span
-              className={`px-2 py-1 text-sm font-bold rounded-md bg-gray-300 ${
+              className={`px-2 py-1 text-sm font-bold rounded-md bg-gray-300 w-full ${
                 isLate ? "text-red-500" : "text-black"
               } text-center whitespace-normal break-words`}
             >
@@ -369,7 +369,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
           </Dialog>
         ) : (
           <span
-          className={`px-2 py-1 text-sm font-bold rounded-md bg-gray-300 text-center whitespace-normal break-words ${
+          className={`px-2 py-1 text-sm font-bold rounded-md bg-gray-300 text-center whitespace-normal break-words w-full ${
             row.original.bookingStatus === "Late for Pick Up" ? "text-red-600" : "text-black"
           }`}
         >
@@ -451,6 +451,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
               }
             }
           ).subscribe({  
+
             next: ({ items }) => {
               setBookingsLength(items.length);
             },
