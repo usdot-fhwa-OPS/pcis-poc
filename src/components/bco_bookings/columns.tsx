@@ -5,6 +5,12 @@ import { Flag, Loader2 } from "lucide-react";
 import { Label } from "../ui/label"
 import { Input } from "../ui/input"
 import { BCODataTableMeta } from "./data-table.tsx";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "../ui/tooltip"
 
 //Four Imports needed for Amplify Data Queries and CRUD methods
 
@@ -83,7 +89,19 @@ export const columns = (): ColumnDef<any>[] => {
           return (
             <Dialog open={open} onOpenChange={setOpen}>
               <DialogTrigger asChild>
-                <Button onClick={handleOpen} variant="outline" disabled={row.original.containerStatus === "On-Ship"} className="bg-blue-600 text-white hover:bg-blue-700">Assign</Button>
+                
+                <TooltipProvider>
+                  <Tooltip delayDuration={300}>
+                    <TooltipTrigger>
+                     <Button onClick={handleOpen} variant="outline" disabled={row.original.containerStatus === "On-Ship"} className="bg-blue-600 text-white hover:bg-blue-700">Assign</Button>
+                    </TooltipTrigger>
+                    {row.original.containerStatus === "On-Ship" && (
+                      <TooltipContent>
+                        <p>Container still on ship. Cannot assign operator yet.</p>
+                      </TooltipContent>
+                    )}
+                  </Tooltip>
+                </TooltipProvider>
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
