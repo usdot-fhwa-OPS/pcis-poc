@@ -59,7 +59,8 @@ export const columns = (): ColumnDef<any>[] => {
       accessorKey: "transopEmail",
       header: () => <div className="text-center">Transportation Operator Email</div>,
     },
-    { accessorKey: "assignmentDate", header: "Date Requested" },
+    { accessorKey: "assignmentDate", 
+      header: () => <div className="tex-center"> "Date Requested" </div>, },
     {
       accessorKey: "status",
       header: () => <div style={{ minWidth: "50px"}}>Status</div>,
@@ -214,15 +215,15 @@ export const CompletedColumn = (): ColumnDef<any>[] => {
 
 export const OngoingColumn = (): ColumnDef<any>[] => {
   const baseColumns1: ColumnDef<TransOpOngoingBookings>[] = [
-    { accessorKey: "vesselID", header: "Vessel ID" },
-    { accessorKey: "containerID", header: "Container ID" },
-    { accessorKey: "origin", header: "Origin" },
-    { accessorKey: "bcoName", header: "BCO" },
-    { accessorKey: "bcoEmail", header: "BCO Email" },
-    { accessorKey: "transopName", header: "Transportation Operator" },
-    { accessorKey: "transopEmail", header: "Transportation Operator Email" },
-    { accessorKey: "bookingDate", header: "Date Initiated" },
-    { accessorKey: "bookingTime", header: "Time Initiated" },
+    { accessorKey: "vesselID", header: () => <div className="text-center">Vessel ID</div> },
+    { accessorKey: "containerID", header: () => <div className="text-center">Container ID</div> },
+    { accessorKey: "origin", header: () => <div className="text-center">Origin</div> },
+    { accessorKey: "bcoName", header: () => <div className="text-center">BCO</div> },
+    { accessorKey: "bcoEmail", header: () => <div className="text-center">BCO Email</div> },
+    { accessorKey: "transopName", header: () => <div className="text-center">Transportation Operator</div> },
+    { accessorKey: "transopEmail", header: () => <div className="text-center">Transportation Operator Email</div> },
+    { accessorKey: "bookingDate", header: () => <div className="text-center">Date Initiated</div> },
+    { accessorKey: "bookingTime", header: () => <div className="text-center">Time Initiated</div> },
     {
       accessorKey: "status",
       header: () =><div className="w-[150px] text-center">
@@ -411,7 +412,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
     },
     {
       id: "changepickupstatus",
-      header: "Mark as Picked Up",
+      header: () => <div className="text-center">Mark as Picked Up</div>,
       cell: ({ row, table}) => {
         const [isChecked, setIsChecked] = useState<boolean>(row.original.bookingStatus === "Picked Up");
   
@@ -598,7 +599,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
     },
     {
       accessorKey: "contact_bco",
-      header: "Contact BCO",
+      header:()=><div className="text-center">Contact BCO</div>,
       cell: ({ row }) => {
         const email = row.original.bcoEmail
   
