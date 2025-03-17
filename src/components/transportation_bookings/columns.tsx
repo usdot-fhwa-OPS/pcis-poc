@@ -289,7 +289,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
         };
 
         return (
-             <td className="w-[150px] px-2 py-1 border-gray-300 text-center">
+             <td className="w-[150px] flex justify-center">
               {row.original.bookingStatus === "Pending Reservation" ? (
 
 
@@ -369,7 +369,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
           </Dialog>
         ) : (
           <span
-          className={`px-2 py-1 font-bold items-center justify-center text-center whitespace-normal w-[150px] break-words rounded-md bg-gray-300 ${
+          className={`px-2 py-1 text-sm font-bold rounded-md bg-gray-300 text-center whitespace-normal break-words ${
             row.original.bookingStatus === "Late for Pick Up" ? "text-red-600" : "text-black"
           }`}
         >
