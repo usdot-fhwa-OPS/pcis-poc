@@ -11,15 +11,16 @@ const client = generateClient<Schema>();
 export const columns = (status: string): ColumnDef<any>[] => {
   const baseColumns: ColumnDef<any>[] = [
 
-    { accessorKey: "vesselID", header: "Vessel ID" },
-    { accessorKey: "containerID", header: "Container ID" },
-    { accessorKey: "origin", header: "Origin" },
-    { accessorKey: "bcoName", header: "BCO" },
-    { accessorKey: "bcoEmail", header: "BCO Email" },
-    { accessorKey: "transopName", header: "Transportation Operator" },
-    { accessorKey: "transopEmail", header: "Transportation Operator Email" },
-    { accessorKey: "bookingDate", header: "Original Date Requested" },
-    { accessorKey: "bookingTime", header: "Original Time Requested" },
+    { accessorKey: "vesselID", header: () => <div className="text-center">Vessel ID</div> },
+    { accessorKey: "containerID", header: () => <div className="text-center">Container ID</div> },
+    { accessorKey: "origin", header: () => <div className="text-center">Origin</div> },
+    { accessorKey: "bcoName", header: () => <div className="text-center">BCO</div> },
+    { accessorKey: "bcoEmail", header: () => <div className="text-center">BCO Email</div> },
+    { accessorKey: "transopName", header: () => <div className="text-center">Transportation Operator</div> },
+    { accessorKey: "transopEmail", header: () => <div className="text-center">Transportation Operator Email</div> },
+    { accessorKey: "bookingDate", header: () => <div className="text-center">Original Date Requested</div> },
+    { accessorKey: "bookingTime", header: () => <div className="text-center">Original Time Requested</div> },
+  
 
   ];
 
@@ -65,7 +66,7 @@ export const columns = (status: string): ColumnDef<any>[] => {
       accessorKey: "status",
       header: () => <div className="text-center min-w-[200px]">Status</div>,
       cell: ({ row,table }) => (
-        <div className="flex space-x-4 justify-center">
+        <div className="flex space-x-4 min-w-[200px] justify-center">
           {/* Approve Button */}
 
           {/* Modify selection set to include modified time and date
@@ -95,16 +96,22 @@ export const columns = (status: string): ColumnDef<any>[] => {
   if (status === "Ongoing") {
     baseColumns.push({
       accessorKey: "bookingStatus",
-      header: () => <div className="text-center min-w-[150px]">Status</div>,
+      header: () => <div className="w-[150px] text-center ">Status</div>,
      // Adjust width as needed
       cell: ({ row }) => {
         const status = row.original.bookingStatus; // Get status value
         const isLate = status === "Late for Pick Up"; // Check if status is "Late"
   
         return (
-          <span className={`flex justify-center items-center px-4 py-2 rounded-md ${isLate ? "bg-red-500 text-white" : "bg-gray-600 text-white"}`}>
+          <div className="w-[150px] flex justify-center">
+          <span
+            className={`px-2 py-1 text-sm font-bold rounded-md bg-gray-300 w-full ${
+              isLate ? "text-red-500" : "text-black"
+            } text-center whitespace-normal break-words`}
+          >
             {status}
           </span>
+        </div>
         );
       },
     },
@@ -143,7 +150,7 @@ export const columns = (status: string): ColumnDef<any>[] => {
 
   baseColumns.push({
     accessorKey: "flag",
-    header: () => <div style={{ minWidth: "200px", textAlign: "center" }}>Flag</div>,
+    header: () => <div style={{ minWidth: "50px", textAlign: "center" }}>Flag</div>,
     cell: ({ row }) => {
       
 
@@ -225,17 +232,25 @@ export const CompletedColumn = (): ColumnDef<any>[] => {
     },
     {
       accessorKey: "bookingStatus",
-      header: () => <div className="text-center">Reservation Status</div>,
+      header: () => <div className="w-[150px] text-center ">Reservation Status</div>,
       cell: ({ row }) => {
         const status = row.original.bookingStatus; // Get status value
-        const isLate = status === "Late"; // Check if status is "Late"
+        const isLate = status === "Late for Pick Up"; // Check if status is "Late"
 
         return (
-          <span className={`px-2 py-1 rounded-md ${isLate ? "bg-red-500 text-white" : "bg-gray-200"} text-center block`}>
+          <div className="w-[150px] flex justify-center">
+          <span
+            className={`px-2 py-1 text-sm font-bold rounded-md bg-gray-300 w-full ${
+              isLate ? "text-red-500" : "text-black"
+            } text-center whitespace-normal break-words`}
+          >
             {status}
           </span>
+        </div>
+
         );
       },
+      size: 200,
     },
     {
       accessorKey: "bookingPickupDate",
