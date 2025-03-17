@@ -57,6 +57,7 @@ export const columns = (): ColumnDef<any>[] => {
         const [tempName, setTempName] = useState("")
         const [tempEmail, setTempEmail] = useState("")
         const [isLoading, setIsLoading] = useState(true)
+        const [isDialogOpen, setIsDialogOpen] = useState(false)
 
         // If either operator OR email is missing, show "Book" button
         const isMissing = !row.original.transopName?.trim() || !row.original.transopEmail?.trim()
@@ -70,6 +71,7 @@ export const columns = (): ColumnDef<any>[] => {
         const [data, setData] = useState<User[]>([])
         
         const handleOpen = async () => {
+          setIsDialogOpen(true)
           const result = await (table.options.meta as BCODataTableMeta)?.fetchTransportationOperators();
           setData(result)
           setIsLoading(false)
@@ -87,9 +89,14 @@ export const columns = (): ColumnDef<any>[] => {
 
         if (isMissing) {
           return (
-            <Dialog open={open} onOpenChange={setOpen}>
-              <DialogTrigger asChild>
+            <Dialog 
+              open={isDialogOpen} 
+              onOpenChange={(open) => {
+                setIsDialogOpen(open)
                 
+              }}
+            >
+              <DialogTrigger asChild>
                 <TooltipProvider>
                   <Tooltip delayDuration={300}>
                     <TooltipTrigger>
