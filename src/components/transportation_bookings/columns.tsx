@@ -31,13 +31,34 @@ import { toast } from "sonner";
 export const columns = (): ColumnDef<any>[] => {
   const baseColumns: ColumnDef<TransOpUpcomingBookings>[] = [
 
-    { accessorKey: "vesselID", header: "Vessel ID" },
-    { accessorKey: "containerID", header: "Container ID" },
-    { accessorKey: "origin", header: "Origin" },
-    { accessorKey: "bcoName", header: "BCO" },
-    { accessorKey: "bcoEmail", header: "BCO Email" },
-    { accessorKey: "transopName", header: "Transportation Operator" },
-    { accessorKey: "transopEmail", header: "Transportation Operator Email" },
+    {
+      accessorKey: "vesselID",
+      header: () => <div className="text-center">Vessel ID</div>,
+    },
+    {
+      accessorKey: "containerID",
+      header: () => <div className="text-center">Container ID</div>,
+    },
+    {
+      accessorKey: "origin",
+      header: () => <div className="text-center">Origin</div>,
+    },
+    {
+      accessorKey: "bcoName",
+      header: () => <div className="text-center">BCO</div>,
+    },
+    {
+      accessorKey: "bcoEmail",
+      header: () => <div className="text-center">BCO Email</div>,
+    },
+    {
+      accessorKey: "transopName",
+      header: () => <div className="text-center">Transportation Operator</div>,
+    },
+    {
+      accessorKey: "transopEmail",
+      header: () => <div className="text-center">Transportation Operator Email</div>,
+    },
     { accessorKey: "assignmentDate", header: "Date Requested" },
     {
       accessorKey: "status",
