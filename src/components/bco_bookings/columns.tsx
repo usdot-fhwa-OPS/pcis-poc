@@ -53,7 +53,6 @@ export const columns = (): ColumnDef<any>[] => {
       header: "Transportation  Operator",
       cell: ({ row, table }) => {
 
-        const [open, setOpen] = useState(false)
         const [tempName, setTempName] = useState("")
         const [tempEmail, setTempEmail] = useState("")
         const [isLoading, setIsLoading] = useState(true)
@@ -65,7 +64,7 @@ export const columns = (): ColumnDef<any>[] => {
         function handleSubmit() {
           // Use the parent's updateCargo method:
           (table.options.meta as BCODataTableMeta)?.assignTransOp(row.original.containerID, tempName, tempEmail, "Pending Transportation Operator Approval")
-          setOpen(false)
+          setIsDialogOpen(false)
         }
 
         const [data, setData] = useState<User[]>([])
@@ -150,7 +149,7 @@ export const columns = (): ColumnDef<any>[] => {
                   </div>
                 </div>
                 <DialogFooter>
-                  <Button variant="outline" onClick={() => setOpen(false)}>
+                  <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
                     Cancel
                   </Button>
                   <Button onClick={handleSubmit} disabled={!tempName.trim() || !tempEmail.trim()}>
