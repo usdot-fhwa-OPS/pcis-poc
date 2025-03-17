@@ -232,11 +232,7 @@ export const CompletedColumn = (): ColumnDef<any>[] => {
     },
     {
       accessorKey: "bookingStatus",
-<<<<<<< HEAD
       header: "Reservation Status",
-=======
-      header: () => <div className="w-[150px] text-center ">Reservation Status</div>,
->>>>>>> 53b9a1883ed3c14b96044606c05ddd6d1ad1aece
       cell: ({ row }) => {
         const status = row.original.bookingStatus; // Get status value
         const isLate = status === "Late for Pick Up"; // Check if status is "Late"
