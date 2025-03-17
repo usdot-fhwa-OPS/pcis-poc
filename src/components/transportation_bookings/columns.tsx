@@ -204,7 +204,9 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
     { accessorKey: "bookingTime", header: "Time Initiated" },
     {
       accessorKey: "status",
-      header: () => <div className="w-[150px] text-center ">Reservation Status</div>,
+      header: () =>  <th className="w-[150px] text-center">
+      Reservation Status
+    </th>,
       cell: ({ row, table }) => {
 
         const [date, setDate] = useState<Date | undefined>(new Date())
@@ -284,9 +286,13 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
           setDate(selectedDate)
           // Keep the calendar open after selection
           setIsCalendarOpen(true)
-        }
+        };
 
-        return row.original.bookingStatus === "Pending Reservation" ? (
+        return (
+             <td className="w-[150px] px-2 py-1 border-gray-300 text-center">
+              {row.original.bookingStatus === "Pending Reservation" ? (
+
+
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
             <TooltipProvider>
@@ -369,7 +375,9 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
         >
           {row.original.bookingStatus}
         </span>
-        
+        )
+        }
+        </td>
           );
 
           
@@ -378,7 +386,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
 
           
       },
-      size: 200,
+    
     },
     {
       id: "changepickupstatus",
