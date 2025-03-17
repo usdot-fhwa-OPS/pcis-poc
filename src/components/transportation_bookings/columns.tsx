@@ -41,7 +41,7 @@ export const columns = (): ColumnDef<any>[] => {
     { accessorKey: "assignmentDate", header: "Date Requested" },
     {
       accessorKey: "status",
-      header: () => <div style={{ minWidth: "50git stat px"}}>Status</div>,
+      header: () => <div style={{ minWidth: "50px"}}>Status</div>,
       cell: ({ row, table }) => (
         <div className="flex space-x-8 ">
           <Button 
