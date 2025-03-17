@@ -443,7 +443,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
     },
     {
       accessorKey: "modifyBooking",
-      header: "Modify Reservation",
+      header:()=><div className="text-center">Modify Reservation</div>,
       cell: ({ row, table }) => {
         const [date, setDate] = useState<Date | undefined>(new Date())
         const [time, setTime] = useState<string | undefined>(undefined)
