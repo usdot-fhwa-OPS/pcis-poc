@@ -21,7 +21,7 @@ export function NotificationsButton({notifications, role}: NotificationsButtonPr
 
   const getNotificationMessage = (role: string, notification: Notifications) => {
     if (role === "Beneficiary Cargo Owner") {
-      switch (notification.bookingStatus) {
+      switch (notification.reservationStatus) {
         case "Pickup Modification Requested":
           return `Modified Reservation for Container ${notification.containerID} has been requested by transportation operator. Awaiting approval by the terminal operator.`;
         case "Pending Reservation Approval":
@@ -36,7 +36,7 @@ export function NotificationsButton({notifications, role}: NotificationsButtonPr
         
       }
     } else if (role === "Transportation Operator") {
-      switch (notification.bookingStatus) {
+      switch (notification.reservationStatus) {
         case "Pending Transportation Operator Approval":
           return `Assignment of Container ${notification.containerID} requires your approval`;
         case "Pending Pick Up":
@@ -48,7 +48,7 @@ export function NotificationsButton({notifications, role}: NotificationsButtonPr
         
       }
     } else {
-      switch (notification.bookingStatus) {
+      switch (notification.reservationStatus) {
         case "Pending Reservation Approval":
           return `Reservation for Container ${notification.containerID} requires your approval`;
         case "Pickup Modification Requested":

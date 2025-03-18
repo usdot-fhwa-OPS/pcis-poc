@@ -235,7 +235,7 @@ export const CompletedColumn = (): ColumnDef<any>[] => {
       accessorKey: "to_status",
       header: () => <div className="w-[150px] text-center">Reservation Status</div>,
       cell: ({ row }) => {
-        const status = row.original.bookingStatus; // Get status value
+        const status = row.original.reservationStatus; // Get status value
     
   
         const isLate = status === "Late for Pick Up"; // Check if status is "Late"
@@ -254,9 +254,9 @@ export const CompletedColumn = (): ColumnDef<any>[] => {
       },
     },
     
-    { accessorKey: "bookingDate", header: "Date Initiated" },
-    { accessorKey: "bookingApprovalDate", header: "Date Approved" },
-    { accessorKey: "bookingPickupDate", header: "Date Picked Up" },
+    { accessorKey: "reservationDate", header: "Date Initiated" },
+    { accessorKey: "resApprovalDate", header: "Date Approved" },
+    { accessorKey: "resPickupDate", header: "Date Picked Up" },
   ]
   return baseColumns;
 };
@@ -278,7 +278,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
       accessorKey: "Booking Status",
       header: () => <div className="min-w-[150px] text-center "> Transportation Operator Status</div>,
       cell: ({ row }) => {
-        const status = row.original.bookingStatus; // Get status value
+        const status = row.original.reservationStatus; // Get status value
         const isLate = status === "Late for Pick Up"; // Check if status is "Late"
   
         return (

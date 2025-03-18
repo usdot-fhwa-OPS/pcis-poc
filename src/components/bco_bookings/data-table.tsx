@@ -21,7 +21,7 @@ import {
 } from "../ui/table.tsx"
 
 export interface BCODataTableMeta {
-  assignTransOp: (containerID: string, newName: string, newEmail: string, bookingStatus: string) => Promise<boolean>;
+  assignTransOp: (containerID: string, newName: string, newEmail: string, reservationStatus: string) => Promise<boolean>;
   fetchTransportationOperators: () => Promise<any>
 }
 

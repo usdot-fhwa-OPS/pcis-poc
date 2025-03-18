@@ -170,26 +170,26 @@ export const CompletedColumn = (): ColumnDef<any>[] => {
       header: "Transportation Operator Email",
     },
     {
-      accessorKey: "bookingDate",
+      accessorKey: "reservationDate",
       header: "Reservation Date",
     },
     {
-      accessorKey: "bookingTime",
+      accessorKey: "reservationTime",
       header: "Reservation Time",
     },
     {
-      accessorKey: "bookingApprovalDate",
+      accessorKey: "resApprovalDate",
       header: "Reservation Approval Date",
     },
     {
-      accessorKey: "bookingStatus",
+      accessorKey: "reservationStatus",
       header: () => (
         <div className="w-[150px] text-center">
           Reservation Status
         </div>
       ),
       cell: ({ row }) => {
-        const status = row.original.bookingStatus; // Get status value
+        const status = row.original.reservationStatus; // Get status value
         const isLate = status === "Late for Pick Up"; // Check if status is "Late"
         return (
           <div className="w-[150px] flex justify-center">
@@ -206,7 +206,7 @@ export const CompletedColumn = (): ColumnDef<any>[] => {
       },
     },
     {
-      accessorKey: "bookingPickupDate",
+      accessorKey: "resPickupDate",
       header: "Reservation Pickup Date",
     },
   ];
@@ -215,6 +215,7 @@ export const CompletedColumn = (): ColumnDef<any>[] => {
 
 export const OngoingColumn = (): ColumnDef<any>[] => {
   const baseColumns1: ColumnDef<TransOpOngoingBookings>[] = [
+<<<<<<< HEAD
     { accessorKey: "vesselID", header: "Vessel ID" },
     { accessorKey: "containerID", header: "Container ID" },
     { accessorKey: "origin", header: "Origin" },
@@ -224,6 +225,17 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
     { accessorKey: "transopEmail", header: "Transportation Operator Email" },
     { accessorKey: "bookingDate", header: "Date Initiated" },
     { accessorKey: "bookingTime", header: "Time Initiated" },
+=======
+    { accessorKey: "vesselID", header: () => <div className="text-center">Vessel ID</div> },
+    { accessorKey: "containerID", header: () => <div className="text-center">Container ID</div> },
+    { accessorKey: "origin", header: () => <div className="text-center">Origin</div> },
+    { accessorKey: "bcoName", header: () => <div className="text-center">BCO</div> },
+    { accessorKey: "bcoEmail", header: () => <div className="text-center">BCO Email</div> },
+    { accessorKey: "transopName", header: () => <div className="text-center">Transportation Operator</div> },
+    { accessorKey: "transopEmail", header: () => <div className="text-center">Transportation Operator Email</div> },
+    { accessorKey: "reservationDate", header: () => <div className="text-center">Date Initiated</div> },
+    { accessorKey: "reservationTime", header: () => <div className="text-center">Time Initiated</div> },
+>>>>>>> changed backend fields with reservation nomenclature
     {
       accessorKey: "status",
       header: () =><div className="w-[150px] text-center">
@@ -293,7 +305,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
 
         return (
              <div className="w-[150px] flex justify-center">
-              {row.original.bookingStatus === "Pending Reservation" ? (
+              {row.original.reservationStatus === "Pending Reservation" ? (
           <Dialog 
             open={isDialogOpen} 
             onOpenChange={(open) => {
@@ -379,10 +391,10 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
         ) : (
           <span
           className={`px-2 py-1 text-sm font-bold rounded-md bg-gray-300 text-center whitespace-normal break-words w-full ${
-            row.original.bookingStatus === "Late for Pick Up" ? "text-red-600" : "text-black"
+            row.original.reservationStatus === "Late for Pick Up" ? "text-red-600" : "text-black"
           }`}
         >
-          {row.original.bookingStatus}
+          {row.original.reservationStatus}
         </span>
         )
         }
@@ -401,7 +413,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
       id: "changepickupstatus",
       header: () => <div className="text-center">Mark as Picked Up</div>,
       cell: ({ row, table}) => {
-        const [isChecked, setIsChecked] = useState<boolean>(row.original.bookingStatus === "Picked Up");
+        const [isChecked, setIsChecked] = useState<boolean>(row.original.reservationStatus === "Picked Up");
   
         const handlePickUp = async () => {
           const success = await (table.options.meta as TransOpDataTableMeta)?.updateTransOpBooking(
@@ -419,7 +431,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
 
         return (
           <Checkbox
-            disabled={row.original.bookingStatus !== "Pending Pick Up" && row.original.bookingStatus !== "Late for Pick Up"}
+            disabled={row.original.reservationStatus !== "Pending Pick Up" && row.original.reservationStatus !== "Late for Pick Up"}
             checked={isChecked}
             onCheckedChange={handlePickUp}
           />
@@ -489,7 +501,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
         return (
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
-            <Button variant="ghost" className="p-2" onClick={() => setIsDialogOpen(true)} disabled={row.original.bookingStatus !== "Pending Pick Up" && row.original.bookingStatus !== "Late for Pick Up"}>
+            <Button variant="ghost" className="p-2" onClick={() => setIsDialogOpen(true)} disabled={row.original.reservationStatus !== "Pending Pick Up" && row.original.reservationStatus !== "Late for Pick Up"}>
               <Pencil />
             </Button>
           </DialogTrigger>
@@ -497,7 +509,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
             <DialogHeader>
               <DialogTitle>Modify Container Pick-Up Reservation</DialogTitle>
               <div className="text-sm">
-                {`Original Reservation: ${row.original.bookingDate} at  ${row.original.bookingTime}`}
+                {`Original Reservation: ${row.original.reservationDate} at  ${row.original.reservationTime}`}
               </div>
               <div className="text-sm text-muted-foreground">
                 {`Vessel ID: ${row.original.vesselID} | Container ID: ${row.original.containerID} | Origin: ${row.original.origin} | BCO: ${row.original.bcoName} | BCO Email: ${row.original.bcoEmail}`}

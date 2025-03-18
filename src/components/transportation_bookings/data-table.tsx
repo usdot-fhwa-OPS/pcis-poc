@@ -22,14 +22,14 @@ import {
 export interface TransOpDataTableMeta {
   updateTransOpBooking: (
     containerID: string, 
-    bookingStatus: string, 
-    bookingDate?: string, 
-    bookingTime?: string
+    reservationStatus: string, 
+    reservationDate?: string, 
+    reservationTime?: string
   ) => Promise<boolean>;
   
   getPortCapacity: () => Promise<number>;
   getBookingsAmount: (
-    bookingDate: string,
+    reservationDate: string,
   ) => Promise<number>;
 }
 
