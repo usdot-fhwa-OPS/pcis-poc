@@ -13,7 +13,7 @@ import { useAuthenticator } from "@aws-amplify/ui-react";
 import { generateClient, SelectionSet } from 'aws-amplify/data';
 import type { Schema } from '../../amplify/data/resource';
 
-const client = generateClient<Schema>()
+const client = generateClient<Schema>();
 
 export const Route = createFileRoute('/reservation')({
   component: RouteComponent,
@@ -142,7 +142,7 @@ function RouteComponent() {
             authMode: 'apiKey',
           }
         );
-
+        
         if (limit) {
           return limit.portCapacity;
         }
@@ -168,7 +168,7 @@ function RouteComponent() {
   }
 
   const [refresh, setRefresh] = useState(0);
-
+  
     // Subscribe to updates and trigger refresh.
     useEffect(() => {
       const updateSubscription = client.models.Container.onUpdate().subscribe({
@@ -192,12 +192,12 @@ function RouteComponent() {
       });
       return () => createSubscription.unsubscribe();
     }, []);
-
+    
 
   // State for Transportation Operator Completed bookings
   const [Transportation_CompletedData, setTransportation_CompletedData] = useState<TransOperatorCompletedBookings[]>([]);
-
-
+  
+  
   async function fetchTransOperatorCBookingsContainers() {
     if (userAttributes.role === 'Transportation Operator' && userAttributes.email) {
       try {
@@ -228,11 +228,11 @@ function RouteComponent() {
       fetchTransOperatorCBookingsContainers();
     }
   }, [userAttributes.role, userAttributes.email, refresh]);  // Updates when email changes
-
+  
 
   // State for Terminal Operator Completed bookings
   const [Terminal_CompletedData, setTerminal_CompletedData] = useState<TermOperatorCompletedBookings[]>([]);
-
+  
   async function fetchTermOperatorCBookingsContainers() {
     if (userAttributes.role === 'Terminal Operator') {
       try {
@@ -260,10 +260,10 @@ function RouteComponent() {
   }, [userAttributes.role, refresh]);
 
   // State for BCO upcoming bookings
-  const [bcoUpcomingBookings, setBcoUpcomingBookings] = useState<BCOUpcomingBookings[]>([]);
-
-  // Move fetchContainers outside of useEffect so it can be reused
-  async function fetchContainers() {
+   const [bcoUpcomingBookings, setBcoUpcomingBookings] = useState<BCOUpcomingBookings[]>([]);
+  
+   // Move fetchContainers outside of useEffect so it can be reused
+   async function fetchContainers() {
     if (userAttributes.role === 'Beneficiary Cargo Owner') {
       try {
         const { data: cargo } = await client.models.Container.list({
@@ -295,37 +295,37 @@ function RouteComponent() {
 
   // Move fetchContainers outside of useEffect so it can be reused
   async function fetch_bco_completed() {
-
-      try{
-      const { data: cargo } = await client.models.Container.list({
-        selectionSet:selectionSetBCOCompleted ,
-        authMode: 'apiKey',
-        filter: {
-
-          and: [
-            {
-              bcoEmail: { eq: userAttributes.email }
-            },
-            {
-              bookingStatus: {
-                eq: 'Picked Up'
-              }
+       
+          try{
+          const { data: cargo } = await client.models.Container.list({
+            selectionSet:selectionSetBCOCompleted ,
+            authMode: 'apiKey',
+            filter: {
+    
+              and: [
+                {
+                  bcoEmail: { eq: userAttributes.email }
+                },
+                {
+                  bookingStatus: {
+                    eq: 'Picked Up'
+                  }
+                }
+              ]
+         
             }
-          ]
-
+          });
+          setBcoCompletedBookings(cargo);
         }
-      });
-      setBcoCompletedBookings(cargo);
-    }
-    catch(error )
-    {console.error('Error fetching BCO Completed:', error);
-
-    }
-
-
-    //Fetch the data on the first render
-
-  }
+        catch(error )
+        {console.error('Error fetching BCO Completed:', error);
+    
+        }
+        
+      
+        //Fetch the data on the first render
+    
+      }
 
 
   // Fetch containers on initial mount and when role/email changes
@@ -406,7 +406,7 @@ function RouteComponent() {
       toast.error("No internet connection. Update not submitted. Please check your connection and try again.");
       return false; // Explicitly return false when offline
     }
-
+  
     try {
       const { data: assignTransportationOp } = await client.models.Container.update({
         containerID: containerID,
@@ -418,13 +418,13 @@ function RouteComponent() {
         isBCONotify: false,
         isTerminalNotify: false,
       });
-
+  
       console.log("Updated container status:", assignTransportationOp);
       toast.success("Transportation Operator assigned successfully");
-
+  
       // Refetch data to reflect changes
       await fetchContainers();
-
+  
       return true;
     } catch (error) {
       console.error("Error updating container status:", error);
@@ -432,7 +432,7 @@ function RouteComponent() {
       return false; // Explicitly return false when the update fails
     }
   }
-
+  
 
   //getting Data
   const [terminalopBookingsupcoming, setData] = useState<TerminalOPOngoingBookings[]>([])
@@ -445,7 +445,7 @@ function RouteComponent() {
       authMode: 'apiKey',
       filter: {
         bookingStatus: {
-          eq: 'Pending Booking Approval'
+          eq: 'Pending Reservation Approval'
         }
       }
     });
@@ -476,7 +476,7 @@ function RouteComponent() {
       const { data: cargo } = await client.models.Container.list({
         selectionSet:selectionSetTerminalOPOngoing ,
         authMode: 'apiKey',
-
+       
         filter: {
           or: [
             {
@@ -490,12 +490,12 @@ function RouteComponent() {
       });
       set_terminal_ongoing(cargo);
     }
-
+  
     //Fetch the data on the first render
     useEffect(() => {
       fetchterminal_operator_ongoing();
     }, [refresh])
-
+    
     async function  markBookingLate(id: string, status: string){  
       try {
 
@@ -516,7 +516,7 @@ function RouteComponent() {
         return false;
       }
     }
-
+    
 //Update Transporation Operator Booking
 
     async function updateTransOpBooking(
@@ -532,7 +532,7 @@ function RouteComponent() {
       }
       try {
         let updatePayload = { containerID: id, bookingStatus: status, isTransportationNotify: false, isBCONotify: false, isTerminalNotify: false };
-
+    
         if (status === "unassigned") {
           Object.assign(updatePayload, {
             transopName: "",
@@ -565,15 +565,15 @@ function RouteComponent() {
             isTransportationNotify: false,
           });
         }
-
+        
         const { data: updatedContainerStatus } = await client.models.Container.update(updatePayload);
         console.log("Updated container status:", updatedContainerStatus);
         toast.success("Container status updated successfully");
-
+    
         // Refresh data after successful update
         await fetchTransOpUpcoming();
         await fetchTransOpOngoing();
-
+        
         return true; // Update succeeded
       } catch (error) {
         console.error("Error updating container:", error);
@@ -631,7 +631,7 @@ async function updateBooking(id: string, status: string, bookingDate?: string, b
     }
 
     const { data: updatedContainerStatus } = await client.models.Container.update(updatePayload);
-
+    
     console.log("Updated booking status:", updatedContainerStatus);
     toast.success("Booking status updated successfully");
 
@@ -646,13 +646,13 @@ async function updateBooking(id: string, status: string, bookingDate?: string, b
     return false; // Explicitly return false when the update fails
   }
 }
-
+       
 
 const [BCOOngoingData, setBCOOngoingBookings] = useState<BCOOngoingBooking[]>([]);
 
 // Move fetchContainers outside of useEffect so it can be reused
 async function fetch_bco_ongoing() {
-
+ 
     try{
     const { data: cargo } = await client.models.Container.list({
       selectionSet:selectionSetBCOOngoing ,
@@ -677,7 +677,7 @@ async function fetch_bco_ongoing() {
   {console.error('Error fetching BCO OnGoing', error);
 
   }
-
+  
 
   //Fetch the data on the first render
 
@@ -727,7 +727,7 @@ useEffect(() => {
   if (userAttributes.role === "Transportation Operator") {
     return (
     <div className="w-full">
-
+    
     <Tabs defaultValue="upcoming">
       <TabsList className="mb-4 flex w-full justify-start gap-x-4">
         <TabsTrigger value="upcoming">Upcoming</TabsTrigger>
@@ -768,14 +768,14 @@ useEffect(() => {
   {
     return (
       <div className="w-full">
-
+      
       <Tabs defaultValue="upcoming">
         <TabsList className="mb-4 flex w-full justify-start gap-x-4">
           <TabsTrigger value="upcoming">Upcoming</TabsTrigger>
           <TabsTrigger value="ongoing">Ongoing</TabsTrigger>
           <TabsTrigger value="completed">Completed</TabsTrigger>
         </TabsList>
-
+  
         <TabsContent value="upcoming">
           <BcoBookingsTableUpcoming
             data={bcoUpcomingBookings}
@@ -783,7 +783,7 @@ useEffect(() => {
             meta={{ assignTransOp, fetchTransportationOperators }}
           />
         </TabsContent>
-
+  
         <TabsContent value="ongoing">
           <BcoBookingsTableOngoing
             data={ BCOOngoingData}
@@ -791,7 +791,7 @@ useEffect(() => {
             status="Ongoing"
           />
         </TabsContent>
-
+  
         <TabsContent value="completed">
         <BcoBookingsTableCompleted
             data={bcocompletedBookings}
@@ -804,3 +804,4 @@ useEffect(() => {
   );
 }
 }
+
