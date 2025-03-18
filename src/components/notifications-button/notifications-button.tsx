@@ -29,7 +29,8 @@ export function NotificationsButton({notifications, role}: NotificationsButtonPr
         case "Pending Pick Up":
           return `Reservation for Container ${notification.containerID} has been approved by the terminal operator.`;
         case "unassigned":
-          return `Terminal Operator has denied the reservation for Container ${notification.containerID}.`;
+          if (notification.isBCONotify && notification.isTransportationNotify) return `Terminal Operator has denied the reservation for Container ${notification.containerID}.`;
+          else return `Transportation Operator has denied the assignment for Container ${notification.containerID}.`
         case "Late for Pick Up":
           return `Terminal Operator has marked Late for Pick Up for Container ${notification.containerID}.`;
         
