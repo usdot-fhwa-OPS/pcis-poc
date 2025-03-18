@@ -541,7 +541,7 @@ function RouteComponent() {
             isBCONotify: true,
             isTerminalNotify: false,
           });
-        } else if (status === "Pending Booking Approval") {
+        } else if (status === "Pending Reservation Approval") {
           Object.assign(updatePayload, {
             bookingDate,
             bookingTime,
