@@ -11,7 +11,6 @@ const client = generateClient<Schema>();
 export const columns = (status: string): ColumnDef<any>[] => {
   const baseColumns: ColumnDef<any>[] = [
 
-<<<<<<< HEAD
     { accessorKey: "vesselID", header: "Vessel ID" },
     { accessorKey: "containerID", header: "Container ID" },
     { accessorKey: "origin", header: "Origin" },
@@ -21,17 +20,6 @@ export const columns = (status: string): ColumnDef<any>[] => {
     { accessorKey: "transopEmail", header: "Transportation Operator Email" },
     { accessorKey: "bookingDate", header: "Original Date Requested" },
     { accessorKey: "bookingTime", header: "Original Time Requested" },
-=======
-    { accessorKey: "vesselID", header: () => <div className="text-center">Vessel ID</div> },
-    { accessorKey: "containerID", header: () => <div className="text-center">Container ID</div> },
-    { accessorKey: "origin", header: () => <div className="text-center">Origin</div> },
-    { accessorKey: "bcoName", header: () => <div className="text-center">BCO</div> },
-    { accessorKey: "bcoEmail", header: () => <div className="text-center">BCO Email</div> },
-    { accessorKey: "transopName", header: () => <div className="text-center">Transportation Operator</div> },
-    { accessorKey: "transopEmail", header: () => <div className="text-center">Transportation Operator Email</div> },
-    { accessorKey: "reservationDate", header: () => <div className="text-center">Original Date Requested</div> },
-    { accessorKey: "reservationTime", header: () => <div className="text-center">Original Time Requested</div> },
->>>>>>> changed backend fields with reservation nomenclature
   
 
   ];

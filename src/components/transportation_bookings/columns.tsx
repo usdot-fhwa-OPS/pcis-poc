@@ -215,7 +215,6 @@ export const CompletedColumn = (): ColumnDef<any>[] => {
 
 export const OngoingColumn = (): ColumnDef<any>[] => {
   const baseColumns1: ColumnDef<TransOpOngoingBookings>[] = [
-<<<<<<< HEAD
     { accessorKey: "vesselID", header: "Vessel ID" },
     { accessorKey: "containerID", header: "Container ID" },
     { accessorKey: "origin", header: "Origin" },
@@ -225,17 +224,6 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
     { accessorKey: "transopEmail", header: "Transportation Operator Email" },
     { accessorKey: "bookingDate", header: "Date Initiated" },
     { accessorKey: "bookingTime", header: "Time Initiated" },
-=======
-    { accessorKey: "vesselID", header: () => <div className="text-center">Vessel ID</div> },
-    { accessorKey: "containerID", header: () => <div className="text-center">Container ID</div> },
-    { accessorKey: "origin", header: () => <div className="text-center">Origin</div> },
-    { accessorKey: "bcoName", header: () => <div className="text-center">BCO</div> },
-    { accessorKey: "bcoEmail", header: () => <div className="text-center">BCO Email</div> },
-    { accessorKey: "transopName", header: () => <div className="text-center">Transportation Operator</div> },
-    { accessorKey: "transopEmail", header: () => <div className="text-center">Transportation Operator Email</div> },
-    { accessorKey: "reservationDate", header: () => <div className="text-center">Date Initiated</div> },
-    { accessorKey: "reservationTime", header: () => <div className="text-center">Time Initiated</div> },
->>>>>>> changed backend fields with reservation nomenclature
     {
       accessorKey: "status",
       header: () =><div className="w-[150px] text-center">
