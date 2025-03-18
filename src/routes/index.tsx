@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useAuthenticator } from '@aws-amplify/ui-react';
-import { fetchUserAttributes } from 'aws-amplify/auth';
+import { fetchAuthSession, fetchUserAttributes } from 'aws-amplify/auth';
 import { useEffect, useState } from 'react';
 import {TerminalBookingsTable,TerminalBookingsCompleted} from "../components/terminal-bookings/terminal-bookings-table.tsx"
 import {TransportationBookingsTableUpcoming,  TransportationBookingsTableCompleted,TransportationBookingsTableOngoing} from "../components/transportation_bookings/transportation-bookings-table.tsx"
@@ -41,7 +41,7 @@ export type TerminalOPUpcomingBookings= SelectionSet<Schema['Container']['type']
 
 export type TerminalOPOngoingBookings= SelectionSet<Schema['Container']['type'], typeof selectionSetTerminalOPOngoing >
 
-const selectionSetBCOOngoing = ['vesselID', 'containerID', 'origin','destination', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail','bookingDate','bookingApprovalDate','bookingStatus', 'bookingPickupDate','flag'] as const;
+const selectionSetBCOOngoing = ['vesselID', 'containerID', 'origin','destination', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail','bookingDate','bookingApprovalDate','bookingStatus', 'bookingPickupDate','flag', 'updatedAt'] as const;
 
 export type BCOOngoingBooking= SelectionSet<Schema['Container']['type'], typeof selectionSetBCOOngoing>
 
@@ -126,6 +126,82 @@ function Index() {
         getUserAttributes();
       }
     }, [user]);
+    
+    async function fetchTransportationOperators() {
+        try {
+          const session = await fetchAuthSession();
+          const response = await fetch("https://xlj2x9eurh.execute-api.us-east-1.amazonaws.com/dev/", {
+            method: 'GET',
+            headers: {
+              "Authorization": `Bearer ${session.tokens?.accessToken?.toString()}`,
+              "Content-Type": "application/json",
+              "Accept": "*/*"
+            }
+          });
+          const result = await response.json();
+          return result
+        } catch (error) {
+    
+        }
+      }
+
+    async function getPortCapacity() {
+      try {
+        const { data: limit } = await client.models.Limit.get(
+          {id: '7bde2cc5-23dc-4f46-b6d9-502133cc2e8c'},
+          {
+            authMode: 'apiKey',
+          }
+        );
+        
+        if (limit) {
+          return limit.portCapacity;
+        }
+      } catch (error) {
+        console.error('Error fetching booking limit', error);
+      }
+  }
+
+  async function getBookingsAmount(bookingDate: string) {
+    try {
+      const { data: bookings } = await client.models.Container.list({
+        authMode: 'apiKey',
+        filter: {
+          bookingDate: {eq: bookingDate}
+        },  
+      });
+      if (bookings) {
+        return bookings.length;
+      }
+    } catch (error) {
+      console.error('Error fetching bookings', error);
+    }
+  }
+
+    const [refresh, setRefresh] = useState(0);
+      
+    // Subscribe to updates and trigger refresh.
+    useEffect(() => {
+      const updateSubscription = client.models.Container.onUpdate().subscribe({
+        next: () => {
+          // Increment the refresh counter to trigger re-running the observeQuery.
+          setRefresh((prev) => prev + 1);
+        },
+        error: (error) => console.warn(error),
+      });
+      return () => updateSubscription.unsubscribe();
+    }, []);
+    
+    useEffect(() => {
+          const createSubscription = client.models.Container.onCreate().subscribe({
+            next: () => {
+              // Increment the refresh counter to trigger re-running the observeQuery.
+              setRefresh((prev) => prev + 1);
+            },
+            error: (error) => console.warn(error),
+          });
+          return () => createSubscription.unsubscribe();
+        }, []);
 
     const dateString = new Date().toLocaleString('en-US', {
       weekday: 'long',
@@ -136,6 +212,7 @@ function Index() {
       minute: '2-digit',
       timeZoneName: 'short',
     });
+
     const [Transportation_CompletedData, setTransportation_CompletedData] = useState<TransOperatorCompletedBookings[]>([]);
       
       
@@ -168,7 +245,7 @@ function Index() {
         if (userAttributes.email) {
           fetchTransOperatorCBookingsContainers();
         }
-      }, [userAttributes.role, userAttributes.email]);  // Updates when email changes
+      }, [userAttributes.role, userAttributes.email, refresh]);  // Updates when email changes
       
     
       // State for Terminal Operator Completed bookings
@@ -198,7 +275,7 @@ function Index() {
         if (userAttributes.role) {
           fetchTermOperatorCBookingsContainers();
         }
-      }, [userAttributes.role]);
+      }, [userAttributes.role, refresh]);
     
       // State for BCO upcoming bookings
       const [bcoUpcomingBookings, setBcoUpcomingBookings] = useState<BCOUpcomingBookings[]>([]);
@@ -274,7 +351,7 @@ function Index() {
         fetchContainers();
         fetch_bco_completed();
         fetchterminal_operator_requested();
-      }, [userAttributes.role]);
+      }, [userAttributes.role, refresh]);
     
       const [transOpUpcomingBookings, setTransOpUpcomingBookings] = useState<TransOpUpcomingBookings[]>([]);
     
@@ -303,7 +380,7 @@ function Index() {
       }
       useEffect(() => {
         fetchTransOpUpcoming();
-      }, [userAttributes.role]);
+      }, [userAttributes.role, refresh]);
     
       const [transOpOngoingBookings, setTransOpOngoingBookings] = useState<TransOpOngoingBookings[]>([]);
     
@@ -317,23 +394,13 @@ function Index() {
                     transopEmail: { eq: userAttributes.email }
                   },
                   {
-                    or: [
-                      {
-                        bookingStatus: { eq: 'Pending Reservation' }
-                      },
-                      {
-                        bookingStatus: { eq: 'Pending Reservation Approval' }
-                      },
-                      {
-                        bookingStatus: { eq: 'Pending Pick Up' }
-                      },
-                      {
-                        bookingStatus: { eq: 'Late for Pick Up' }
-                      },
-                      {
-                        bookingStatus: { eq: 'Picked Up' }
-                      },
-                    ]
+                    bookingStatus: { ne: 'unassigned' }
+                  },
+                  {
+                    bookingStatus: { ne: 'Pending Transportation Operator Approval' }
+                  },
+                  {
+                    bookingStatus: { ne: 'Picked Up'}
                   }
                 ]
               },
@@ -348,7 +415,7 @@ function Index() {
       }
       useEffect(() => {
         fetchTransOpOngoing();
-      }, [userAttributes.role]);
+      }, [userAttributes.role, refresh]);
        
       // Update container then refetch containers
       async function assignTransOp(containerID: string, newName: string, newEmail: string, bookingStatus: string) {
@@ -431,7 +498,7 @@ function Index() {
         //Fetch the data on the first render
         useEffect(() => {
           fetchterminal_operator_ongoing();
-        }, [])
+        }, [refresh])
     
         //Update Terminal Operator Booking
     
@@ -500,15 +567,20 @@ function Index() {
         }
         
     
-    async function updateBooking(id: string, status: string, bookingDate?: string, bookingTime?: string) {  
+    async function updateBooking(id: string, status: string, bookingDate?: string, bookingTime?: string): Promise<boolean> {
+      if (!navigator.onLine) {
+        console.error("No internet connection. Update not submitted. Please check your connection and try again.");
+        toast.error("No internet connection. Update not submitted. Please check your connection and try again.");
+        return false; // Explicitly return false when offline
+      }
+    
       try {
+        let updatePayload: any = { containerID: id, bookingStatus: status };
+    
         if (status === "unassigned") {
-          //Denying a Booking -> unassigned
-          const { data: updatedContainerStatus } = await client.models.Container.update({
-            containerID: id,
-            bookingStatus: status,
-            transopName:"",
-            transopEmail:"",
+          Object.assign(updatePayload, {
+            transopName: "",
+            transopEmail: "",
             assignmentDate: "",
             bookingDate: "",
             bookingTime: "",
@@ -520,39 +592,41 @@ function Index() {
             isTransportationNotify: true,
             isBCONotify: true,
           });
-          console.log("Updated flag with transop details:", updatedContainerStatus);
-          await fetchterminal_operator_requested();
         } else if (bookingDate) {
-          //Approving a Booking -> Pending Pick Up
-          const { data: updatedContainerStatus } = await client.models.Container.update({
-            containerID: id,
-            bookingStatus: status,
-            bookingApprovalDate: new Date().toLocaleDateString('en-US'),
-            bookingDate: bookingDate,
-            bookingTime: bookingTime,
+          Object.assign(updatePayload, {
+            bookingApprovalDate: new Date().toLocaleDateString("en-US"),
+            bookingDate,
+            bookingTime,
             modifiedBookingDate: "",
             modifiedBookingTime: "",
             isTerminalNotify: false,
             isBCONotify: true,
             isTransportationNotify: true,
           });
-          console.log("Updated flag:", updatedContainerStatus);
-          await fetchTerminalOperatorModified();
         } else {
           //Approving a Booking -> Pending Pick Up
-          const { data: updatedContainerStatus } = await client.models.Container.update({
-            containerID: id,
-            bookingStatus: status,
-            bookingApprovalDate: new Date().toLocaleDateString('en-US'),
+          Object.assign(updatePayload, {
+            bookingApprovalDate: new Date().toLocaleDateString("en-US"),
             isTerminalNotify: false,
             isBCONotify: true,
             isTransportationNotify: true,
           });
-          console.log("Updated flag:", updatedContainerStatus);
-          await fetchterminal_operator_requested();
         }
+    
+        const { data: updatedContainerStatus } = await client.models.Container.update(updatePayload);
+        
+        console.log("Updated booking status:", updatedContainerStatus);
+        toast.success("Booking status updated successfully");
+    
+        // Refresh relevant data after successful update
+        await fetchterminal_operator_requested();
+        await fetchTerminalOperatorModified();
+    
+        return true;
       } catch (error) {
-        console.error("Error updating flag:", error);
+        console.error("Error updating booking status:", error);
+        toast.error("Error updating booking status. Please try again.");
+        return false; // Explicitly return false when the update fails
       }
     }
     
@@ -621,7 +695,7 @@ function Index() {
       fetch_bco_ongoing();
       fetchterminal_operator_requested();
       fetchTerminalOperatorModified();
-    }, [userAttributes.role]);
+    }, [userAttributes.role, refresh]);
   
     if (userAttributes.role === "Terminal Operator") {
       return (
@@ -741,7 +815,7 @@ function Index() {
           <TransportationBookingsTableOngoing
             data={transOpOngoingBookings}
             status="Ongoing"
-            meta={{updateTransOpBooking}}
+            meta={{updateTransOpBooking, getPortCapacity, getBookingsAmount}}
           />
         </TabsContent>
   
@@ -805,7 +879,7 @@ function Index() {
             <BcoBookingsTableUpcoming
               data={bcoUpcomingBookings}
               status="Upcoming"
-              meta={{ assignTransOp }}
+              meta={{ assignTransOp, fetchTransportationOperators }}
             />
           </TabsContent>
     

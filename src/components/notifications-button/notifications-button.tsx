@@ -7,6 +7,7 @@ import { ScrollArea } from "../ui/scroll-area"
 import { SidebarMenuItem, SidebarMenuButton, SidebarMenuBadge } from "../ui/sidebar"
 import { Notifications } from "../app-sidebar/app-sidebar"
 import { Link } from "@tanstack/react-router"
+import { format } from "date-fns"
 
 interface NotificationsButtonProps {
     notifications: Notifications[]
@@ -14,7 +15,7 @@ interface NotificationsButtonProps {
 }
 
 
-export function NotificationsButton({notifications, role }: NotificationsButtonProps) {
+export function NotificationsButton({notifications, role}: NotificationsButtonProps) {
   const [open, setOpen] = useState(false)
   const unreadCount = notifications.length
 
@@ -28,7 +29,8 @@ export function NotificationsButton({notifications, role }: NotificationsButtonP
         case "Pending Pick Up":
           return `Reservation for Container ${notification.containerID} has been approved by the terminal operator.`;
         case "unassigned":
-          return `Terminal Operator has denied the reservation for Container ${notification.containerID}.`;
+          if (notification.isBCONotify && notification.isTransportationNotify) return `Terminal Operator has denied the reservation for Container ${notification.containerID}.`;
+          else return `Transportation Operator has denied the assignment for Container ${notification.containerID}.`
         case "Late for Pick Up":
           return `Terminal Operator has marked Late for Pick Up for Container ${notification.containerID}.`;
         
@@ -73,23 +75,33 @@ export function NotificationsButton({notifications, role }: NotificationsButtonP
           <DialogHeader className="p-4 border-b">
             <div className="flex items-center gap-2">
               <h2 className="text-lg font-semibold">Notifications</h2>
-              <span className="rounded-full bg-red-500 px-2 py-0.5 text-xs text-white">{unreadCount} unread</span>
+              {unreadCount > 0 && (
+                <span className="rounded-full bg-red-500 px-2 py-0.5 text-xs text-white">{unreadCount} Notifications</span>
+              )}
             </div>
           </DialogHeader>
           <ScrollArea className="h-[calc(80vh-100px)]">
-            {notifications.map((notification) => (
-              <div
-                key={notification.containerID}
-                className="flex items-start justify-between gap-4 p-4 border-b last:border-b-0"
-              >
-                <div className="space-y-1">
-                  <p className="text-sm">{getNotificationMessage(role, notification)}</p>
+            {notifications.map((notification) => {
+              const dateObj = new Date(notification.updatedAt);
+              const formattedDate = format(dateObj, 'MM/dd/yyyy');
+              const formattedTime = format(dateObj, 'hh:mm a'); 
+              return (
+                <div
+                  key={notification.containerID}
+                  className="flex items-start justify-between gap-4 p-4 border-b last:border-b-0"
+                >
+                  <div className="space-y-1">
+                    <p className="text-sm">{getNotificationMessage(role, notification)}</p>
+                    <p className="text-xs text-muted-foreground">
+                      {formattedDate} • {formattedTime}
+                    </p>
+                  </div>
+                  <Link to="/reservation" onClick={() => setOpen(false)} className="text-blue-500 hover:underline">
+                    View
+                  </Link>
                 </div>
-                <Link to="/reservation" onClick={() => setOpen(false)} className="text-blue-500 hover:underline">
-                  View
-                </Link>
-              </div>
-            ))}
+              )
+            })}
           </ScrollArea>
         </DialogContent>
       </Dialog>

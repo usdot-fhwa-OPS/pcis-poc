@@ -1,6 +1,6 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "../ui/button.tsx";
-import { useState, useEffect} from "react";
+import { useState } from "react";
 import { Flag, CalendarIcon, Clock, Pencil} from "lucide-react";
 //import { Checkbox } from "../ui/checkbox.tsx"
 import { Calendar } from "../ui/calendar"
@@ -33,34 +33,34 @@ export const columns = (): ColumnDef<any>[] => {
 
     {
       accessorKey: "vesselID",
-      header: () => <div className="text-center">Vessel ID</div>,
+      header: "Vessel ID",
     },
     {
       accessorKey: "containerID",
-      header: () => <div className="text-center">Container ID</div>,
+      header: "Container ID",
     },
     {
       accessorKey: "origin",
-      header: () => <div className="text-center">Origin</div>,
+      header: "Origin",
     },
     {
       accessorKey: "bcoName",
-      header: () => <div className="text-center">BCO</div>,
+      header: "BCO",
     },
     {
       accessorKey: "bcoEmail",
-      header: () => <div className="text-center">BCO Email</div>,
+      header: "BCO Email",
     },
     {
       accessorKey: "transopName",
-      header: () => <div className="text-center">Transportation Operator</div>,
+      header: "Transportation Operator",
     },
     {
       accessorKey: "transopEmail",
-      header: () => <div className="text-center">Transportation Operator Email</div>,
+      header: "Transportation Operator Email",
     },
     { accessorKey: "assignmentDate", 
-      header: () => <div className="tex-center"> "Date Requested" </div>, },
+      header: "Assignment Date", },
     {
       accessorKey: "status",
       header: () => <div style={{ minWidth: "50px"}}>Status</div>,
@@ -121,7 +121,7 @@ baseColumns.push({
             containerID: row.original.containerID,
             flag: newFlag,
           })
-          console.log("Updated flag:", updatedContainerStatus)
+          console.log("Updated container status:", updatedContainerStatus);
         } catch (error) {
           console.error("Error updating flag:", error);
         }
@@ -143,43 +143,43 @@ export const CompletedColumn = (): ColumnDef<any>[] => {
   const baseColumns: ColumnDef<TransOperatorCompletedBookings>[] = [
     {
       accessorKey: "vesselID",
-      header: () => <div className="text-center">Vessel ID</div>,
+      header: "Vessel ID",
     },
     {
       accessorKey: "containerID",
-      header: () => <div className="text-center">Container ID</div>,
+      header: "Container ID",
     },
     {
       accessorKey: "origin",
-      header: () => <div className="text-center">Origin</div>,
+      header: "Origin",
     },
     {
       accessorKey: "bcoName",
-      header: () => <div className="text-center">BCO</div>,
+      header: "BCO",
     },
     {
       accessorKey: "bcoEmail",
-      header: () => <div className="text-center">BCO Email</div>,
+      header: "BCO Email",
     },
     {
       accessorKey: "transopName",
-      header: () => <div className="text-center">Transportation Operator</div>,
+      header: "Transportation Operator",
     },
     {
       accessorKey: "transopEmail",
-      header: () => <div className="text-center">Transportation Operator Email</div>,
+      header: "Transportation Operator Email",
     },
     {
       accessorKey: "bookingDate",
-      header: () => <div className="text-center">Reservation Date</div>,
+      header: "Reservation Date",
     },
     {
       accessorKey: "bookingTime",
-      header: () => <div className="text-center">Reservation Time</div>,
+      header: "Reservation Time",
     },
     {
       accessorKey: "bookingApprovalDate",
-      header: () => <div className="text-center">Reservation Approval Date</div>,
+      header: "Reservation Approval Date",
     },
     {
       accessorKey: "bookingStatus",
@@ -207,7 +207,7 @@ export const CompletedColumn = (): ColumnDef<any>[] => {
     },
     {
       accessorKey: "bookingPickupDate",
-      header: () => <div className="text-center">Reservation Pickup Date</div>,
+      header: "Reservation Pickup Date",
     },
   ];
   return baseColumns;
@@ -215,15 +215,15 @@ export const CompletedColumn = (): ColumnDef<any>[] => {
 
 export const OngoingColumn = (): ColumnDef<any>[] => {
   const baseColumns1: ColumnDef<TransOpOngoingBookings>[] = [
-    { accessorKey: "vesselID", header: () => <div className="text-center">Vessel ID</div> },
-    { accessorKey: "containerID", header: () => <div className="text-center">Container ID</div> },
-    { accessorKey: "origin", header: () => <div className="text-center">Origin</div> },
-    { accessorKey: "bcoName", header: () => <div className="text-center">BCO</div> },
-    { accessorKey: "bcoEmail", header: () => <div className="text-center">BCO Email</div> },
-    { accessorKey: "transopName", header: () => <div className="text-center">Transportation Operator</div> },
-    { accessorKey: "transopEmail", header: () => <div className="text-center">Transportation Operator Email</div> },
-    { accessorKey: "bookingDate", header: () => <div className="text-center">Date Initiated</div> },
-    { accessorKey: "bookingTime", header: () => <div className="text-center">Time Initiated</div> },
+    { accessorKey: "vesselID", header: "Vessel ID" },
+    { accessorKey: "containerID", header: "Container ID" },
+    { accessorKey: "origin", header: "Origin" },
+    { accessorKey: "bcoName", header: "BCO" },
+    { accessorKey: "bcoEmail", header: "BCO Name" },
+    { accessorKey: "transopName", header: "Transportation Operator" },
+    { accessorKey: "transopEmail", header: "Transportation Operator Email" },
+    { accessorKey: "bookingDate", header: "Date Initiated" },
+    { accessorKey: "bookingTime", header: "Time Initiated" },
     {
       accessorKey: "status",
       header: () =><div className="w-[150px] text-center">
@@ -235,45 +235,26 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
         const [time, setTime] = useState<string | undefined>(undefined)
         const [isCalendarOpen, setIsCalendarOpen] = useState(false)
         const [isDialogOpen, setIsDialogOpen] = useState(false)
-        const [limit, setLimit] = useState<number>();
-        const [bookingsLength, setBookingsLength] = useState<number>(0);
+        const [isAtCapacity, setIsAtCapacity] = useState(false)
+        
         
         const isDateTimeSelected = (): boolean => {
           return !!date && !!time
         }
 
-        useEffect(() => {
-          const limitSub = client.models.Limit.observeQuery().subscribe({
-            next: ({ items }) => {
-              setLimit(items[0].portCapacity);
-            },
-          });
-          return () => limitSub.unsubscribe();
-        }, []);
-
-        useEffect(() => {
-          const bookingSub = client.models.Container.observeQuery(
-            {
-              filter: {
-                bookingDate: {eq: String(format(date!, "MM/dd/yyyy"))}
-              }
-            }
-          ).subscribe({  
-            next: ({ items }) => {
-              setBookingsLength(items.length);
-            },
-          });
-          return () => bookingSub.unsubscribe();
-        }, [date]);
+        
 
         const handleBooking = async () => {
-          if (bookingsLength >= limit!) {
+          const limit = await (table.options.meta as TransOpDataTableMeta)?.getPortCapacity()
+          const bookingsLength = await (table.options.meta as TransOpDataTableMeta)?.getBookingsAmount(String(format(date!, "MM/dd/yyyy")))
+          if (bookingsLength >= limit) {
+            setIsAtCapacity(true);
             toast.error(`Port at capacity (Limit ${limit} per day). Please try a different date.`)
           } else {
             (table.options.meta as TransOpDataTableMeta)?.updateTransOpBooking(row.original.containerID, "Pending Reservation Approval", String(format(date!, "MM/dd/yyyy")), time ?? "")
             setIsDialogOpen(false)
+            setIsAtCapacity(false)
           }
-          
         }
 
         const timeOptions = [
@@ -313,9 +294,15 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
         return (
              <div className="w-[150px] flex justify-center">
               {row.original.bookingStatus === "Pending Reservation" ? (
-
-
-          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+          <Dialog 
+            open={isDialogOpen} 
+            onOpenChange={(open) => {
+              setIsDialogOpen(open)
+              if(!open) {
+                setIsAtCapacity(false)
+              }
+            }}
+          >
             <DialogTrigger asChild>
             <TooltipProvider>
               <Tooltip delayDuration={300}>
@@ -337,38 +324,38 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
                   {`Vessel ID: ${row.original.vesselID} | Container ID: ${row.original.containerID} | Origin: ${row.original.origin} | BCO: ${row.original.bcoName} | BCO Email: ${row.original.bcoEmail}`}
                 </div>
               </DialogHeader>
-              <div className="grid gap-4 py-4">
+                <div className="grid gap-4 py-4">
                 <div className="grid grid-cols-4 items-center gap-4">
                   <CalendarIcon className="h-4 w-4" />
                   <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
-                    <PopoverTrigger asChild>
-                      <Button
-                        variant={"outline"}
-                        className={cn("w-[280px] justify-start text-left font-normal", !date && "text-muted-foreground")}
-                        onClick={() => setIsCalendarOpen(true)}
-                      >
-                        <CalendarIcon className="mr-2 h-4 w-4" />
-                        {date ? format(date, "MM/dd/yyyy") : <span>Pick a date</span>}
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0">
-                      <Calendar mode="single" selected={date} disabled={{ before: new Date()}} onSelect={handleDateSelect} initialFocus />
-                    </PopoverContent>
+                  <PopoverTrigger asChild>
+                    <Button
+                    variant={"outline"}
+                    className={cn("w-[280px] justify-start text-left font-normal", !date && "text-muted-foreground", isAtCapacity && "border-red-500")}
+                    onClick={() => setIsCalendarOpen(true)}
+                    >
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {date ? format(date, "MM/dd/yyyy") : <span>Pick a date</span>}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0">
+                    <Calendar mode="single" selected={date} disabled={{ before: new Date()}} onSelect={handleDateSelect} initialFocus />
+                  </PopoverContent>
                   </Popover>
                 </div>
                 <div className="grid grid-cols-4 items-center gap-4">
                   <Clock className="h-4 w-4" />
                   <Select onValueChange={setTime}>
-                    <SelectTrigger className="w-[280px]">
-                      <SelectValue placeholder="Select time" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {timeOptions.map((timeOption) => (
-                        <SelectItem key={timeOption} value={timeOption}>
-                          {timeOption}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
+                  <SelectTrigger className={cn("w-[280px]", isAtCapacity && "border-red-500")}>
+                    <SelectValue placeholder="Select time" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {timeOptions.map((timeOption) => (
+                    <SelectItem key={timeOption} value={timeOption}>
+                      {timeOption}
+                    </SelectItem>
+                    ))}
+                  </SelectContent>
                   </Select>
                 </div>
               </div>
@@ -432,7 +419,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
 
         return (
           <Checkbox
-            disabled={row.original.bookingStatus !== "Pending Pick Up"}
+            disabled={row.original.bookingStatus !== "Pending Pick Up" && row.original.bookingStatus !== "Late for Pick Up"}
             checked={isChecked}
             onCheckedChange={handlePickUp}
           />
@@ -449,46 +436,20 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
         const [time, setTime] = useState<string | undefined>(undefined)
         const [isCalendarOpen, setIsCalendarOpen] = useState(false)
         const [isDialogOpen, setIsDialogOpen] = useState(false)
-        const [limit, setLimit] = useState<number>();
-        const [bookingsLength, setBookingsLength] = useState<number>(0);
         
         const isDateTimeSelected = (): boolean => {
           return !!date && !!time
         }
 
-        useEffect(() => {
-          const limitSub = client.models.Limit.observeQuery().subscribe({
-            next: ({ items }) => {
-              setLimit(items[0].portCapacity);
-            },
-          });
-          return () => limitSub.unsubscribe();
-        }, []);
-
-        useEffect(() => {
-          const bookingSub = client.models.Container.observeQuery(
-            {
-              filter: {
-                bookingDate: {eq: String(format(date!, "MM/dd/yyyy"))}
-              }
-            }
-          ).subscribe({  
-
-            next: ({ items }) => {
-              setBookingsLength(items.length);
-            },
-          });
-          return () => bookingSub.unsubscribe();
-        }, [date]);
-
         const handleBooking = async () => {
-          if (bookingsLength >= limit!) {
+          const limit = await (table.options.meta as TransOpDataTableMeta)?.getPortCapacity()
+          const bookingsLength = await (table.options.meta as TransOpDataTableMeta)?.getBookingsAmount(String(format(date!, "MM/dd/yyyy")))
+          if (bookingsLength >= limit) {
             toast.error(`Port at capacity (Limit ${limit} per day). Please try a different date.`)
           } else {
             (table.options.meta as TransOpDataTableMeta)?.updateTransOpBooking(row.original.containerID, "Pickup Modification Requested", String(format(date!, "MM/dd/yyyy")), time ?? "")
             setIsDialogOpen(false)
           }
-          
         }
 
         const timeOptions = [

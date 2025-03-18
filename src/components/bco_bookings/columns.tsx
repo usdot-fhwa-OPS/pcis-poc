@@ -1,10 +1,16 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "../ui/button.tsx";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Flag, Loader2 } from "lucide-react";
 import { Label } from "../ui/label"
 import { Input } from "../ui/input"
 import { BCODataTableMeta } from "./data-table.tsx";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "../ui/tooltip"
 
 //Four Imports needed for Amplify Data Queries and CRUD methods
 
@@ -22,6 +28,7 @@ import {
   DialogTrigger,
   DialogFooter,
 } from "../ui/dialog"  
+import { format } from "date-fns";
 
 import {
   Select,
@@ -32,7 +39,6 @@ import {
   SelectValue,
 } from "../ui/select"
 import { User } from "../users/columns.tsx";
-import { fetchAuthSession } from "aws-amplify/auth";
 
 export const columns = (): ColumnDef<any>[] => {
   const baseColumns: ColumnDef<any>[] = [
@@ -47,10 +53,10 @@ export const columns = (): ColumnDef<any>[] => {
       header: "Transportation  Operator",
       cell: ({ row, table }) => {
 
-        const [open, setOpen] = useState(false)
         const [tempName, setTempName] = useState("")
         const [tempEmail, setTempEmail] = useState("")
         const [isLoading, setIsLoading] = useState(true)
+        const [isDialogOpen, setIsDialogOpen] = useState(false)
 
         // If either operator OR email is missing, show "Book" button
         const isMissing = !row.original.transopName?.trim() || !row.original.transopEmail?.trim()
@@ -58,32 +64,17 @@ export const columns = (): ColumnDef<any>[] => {
         function handleSubmit() {
           // Use the parent's updateCargo method:
           (table.options.meta as BCODataTableMeta)?.assignTransOp(row.original.containerID, tempName, tempEmail, "Pending Transportation Operator Approval")
-          setOpen(false)
+          setIsDialogOpen(false)
         }
 
         const [data, setData] = useState<User[]>([])
         
-        useEffect(() => {
-          async function fetchData() {
-            try {
-              const session = await fetchAuthSession();
-              const response = await fetch("https://xlj2x9eurh.execute-api.us-east-1.amazonaws.com/dev/", {
-                method: 'GET',
-                headers: {
-                  "Authorization": `Bearer ${session.tokens?.accessToken?.toString()}`,
-                  "Content-Type": "application/json",
-                  "Accept": "*/*"
-                }
-              });
-              const result = await response.json();
-              setData(result);
-              setIsLoading(false)
-            } catch (error) {
-              throw new Error(`Failed to fetch data: ${error}`);
-            }
-          }
-          fetchData();
-        }, [])
+        const handleOpen = async () => {
+          setIsDialogOpen(true)
+          const result = await (table.options.meta as BCODataTableMeta)?.fetchTransportationOperators();
+          setData(result)
+          setIsLoading(false)
+        }
 
         const handleOperatorSelect = (value: string) => {
           setTempName(value);
@@ -97,9 +88,26 @@ export const columns = (): ColumnDef<any>[] => {
 
         if (isMissing) {
           return (
-            <Dialog open={open} onOpenChange={setOpen}>
+            <Dialog 
+              open={isDialogOpen} 
+              onOpenChange={(open) => {
+                setIsDialogOpen(open)
+                
+              }}
+            >
               <DialogTrigger asChild>
-                <Button variant="outline" className="bg-blue-600 text-white hover:bg-blue-700">Assign</Button>
+                <TooltipProvider>
+                  <Tooltip delayDuration={300}>
+                    <TooltipTrigger>
+                     <Button onClick={handleOpen} variant="outline" disabled={row.original.containerStatus === "On-Ship"} className="bg-blue-600 text-white hover:bg-blue-700">Assign</Button>
+                    </TooltipTrigger>
+                    {row.original.containerStatus === "On-Ship" && (
+                      <TooltipContent>
+                        <p>Container still on ship. Cannot assign operator yet.</p>
+                      </TooltipContent>
+                    )}
+                  </Tooltip>
+                </TooltipProvider>
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
@@ -141,7 +149,7 @@ export const columns = (): ColumnDef<any>[] => {
                   </div>
                 </div>
                 <DialogFooter>
-                  <Button variant="outline" onClick={() => setOpen(false)}>
+                  <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
                     Cancel
                   </Button>
                   <Button onClick={handleSubmit} disabled={!tempName.trim() || !tempEmail.trim()}>
@@ -289,7 +297,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
    
     {
       accessorKey: "contact_to",
-      header: "Contact Trasnportation Operator",
+      header: "Contact Transportation Operator",
       cell: ({ row }) => {
         const email = row.original.transopEmail
   
@@ -303,6 +311,15 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
         )
       },
     },
+    { accessorKey: "updatedAt", 
+      header: "Last Updated",
+      cell: ({ row }) => {
+        const rawDate = row.original.updatedAt;
+        if (!rawDate) return null;
+        const formattedDate = format(new Date(rawDate), "MM/dd/yyyy");
+        return formattedDate;
+      }
+    }
     
 
   ];

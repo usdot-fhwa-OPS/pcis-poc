@@ -8,6 +8,7 @@ import {
   useReactTable,
   ColumnFiltersState,
   getFilteredRowModel,
+  getSortedRowModel,
 } from "@tanstack/react-table"
 
 import {
@@ -21,6 +22,7 @@ import {
 
 export interface BCODataTableMeta {
   assignTransOp: (containerID: string, newName: string, newEmail: string, bookingStatus: string) => Promise<boolean>;
+  fetchTransportationOperators: () => Promise<any>
 }
 
 interface DataTableProps<TData, TValue> {
@@ -40,6 +42,12 @@ export function DataTable<TData, TValue>({ columns, data, meta }: DataTableProps
     getFilteredRowModel: getFilteredRowModel(),
     onColumnFiltersChange: setColumnFilters,
     state: { columnFilters },
+    initialState: {
+      sorting: [
+        {id: "updatedAt", desc:true }
+      ],
+    },
+    getSortedRowModel: getSortedRowModel(),
   })
 
   return (

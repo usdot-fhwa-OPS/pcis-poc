@@ -16,31 +16,31 @@ export type User = {
 export const columns : ColumnDef<User>[] = [
     {
         accessorKey: "given_name",
-        header: () => <div className="text-center">First Name</div>,
+        header: "First Name",
     },
     {
         accessorKey: "family_name",
-        header: () => <div className="text-center">Last Name</div>,
+        header: "Last Name",
     },
     {
         accessorKey: "custom:role",
-        header: () => <div className="text-center">Role</div>,
+        header: "Role",
     },
     {
         accessorKey: "custom:organization",
-        header: () => <div className="text-center">Organization</div>,
+        header: "Organization",
     },
     {
         accessorKey: "email",
-        header: () => <div className="text-center">Email</div>,
+        header: "Email",
     },
     {
         accessorKey: "phone_number",
-        header: () => <div className="text-center">Phone Number</div>,
+        header: "Phone Number",
     },
     {
         accessorKey: "verification_status",
-        header: () => <div className="text-center">Status</div>,
+        header: "Status",
         cell: ({row}) => { 
             return <Badge variant="outline">{row.original.verification_status}</Badge>
         },

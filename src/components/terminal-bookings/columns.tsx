@@ -11,15 +11,15 @@ const client = generateClient<Schema>();
 export const columns = (status: string): ColumnDef<any>[] => {
   const baseColumns: ColumnDef<any>[] = [
 
-    { accessorKey: "vesselID", header: () => <div className="text-center">Vessel ID</div> },
-    { accessorKey: "containerID", header: () => <div className="text-center">Container ID</div> },
-    { accessorKey: "origin", header: () => <div className="text-center">Origin</div> },
-    { accessorKey: "bcoName", header: () => <div className="text-center">BCO</div> },
-    { accessorKey: "bcoEmail", header: () => <div className="text-center">BCO Email</div> },
-    { accessorKey: "transopName", header: () => <div className="text-center">Transportation Operator</div> },
-    { accessorKey: "transopEmail", header: () => <div className="text-center">Transportation Operator Email</div> },
-    { accessorKey: "bookingDate", header: () => <div className="text-center">Original Date Requested</div> },
-    { accessorKey: "bookingTime", header: () => <div className="text-center">Original Time Requested</div> },
+    { accessorKey: "vesselID", header: "Vessel ID" },
+    { accessorKey: "containerID", header: "Container ID" },
+    { accessorKey: "origin", header: "Origin" },
+    { accessorKey: "bcoName", header: "BCO" },
+    { accessorKey: "bcoEmail", header: "BCO Email" },
+    { accessorKey: "transopName", header: "Transportation Operator" },
+    { accessorKey: "transopEmail", header: "Transportation Operator Email" },
+    { accessorKey: "bookingDate", header: "Original Date Requested" },
+    { accessorKey: "bookingTime", header: "Original Time Requested" },
   
 
   ];
@@ -192,47 +192,47 @@ export const CompletedColumn = (): ColumnDef<any>[] => {
   const baseColumns1: ColumnDef<TermOperatorCompletedBookings>[] = [
     {
       accessorKey: "vesselID",
-      header: () => <div className="text-center">Vessel ID</div>,
+      header: "Vessel ID",
     },
     {
       accessorKey: "containerID",
-      header: () => <div className="text-center">Container ID</div>,
+      header: "Container ID",
     },
     {
       accessorKey: "origin",
-      header: () => <div className="text-center">Origin</div>,
+      header: "Origin",
     },
     {
       accessorKey: "bcoName",
-      header: () => <div className="text-center">BCO</div>,
+      header: "BCO",
     },
     {
       accessorKey: "bcoEmail",
-      header: () => <div className="text-center">BCO Email</div>,
+      header: () => "BCO Email",
     },
     {
       accessorKey: "transopName",
-      header: () => <div className="text-center">Transportation Operator</div>,
+      header: "Transportation Operator",
     },
     {
       accessorKey: "transopEmail",
-      header: () => <div className="text-center">Transportation Operator Email</div>,
+      header: "Transportation Operator Email",
     },
     {
       accessorKey: "bookingDate",
-      header: () => <div className="text-center">Reservation Date</div>,
+      header: "Reservation Date",
     },
     {
       accessorKey: "bookingTime",
-      header: () => <div className="text-center">Reservation Time</div>,
+      header: "Reservation Time",
     },
     {
       accessorKey: "bookingApprovalDate",
-      header: () => <div className="text-center">Reservation Approval Date</div>,
+      header: "Reservation Approval Date",
     },
     {
       accessorKey: "bookingStatus",
-      header: () => <div className="w-[150px] text-center ">Reservation Status</div>,
+      header: "Reservation Status",
       cell: ({ row }) => {
         const status = row.original.bookingStatus; // Get status value
         const isLate = status === "Late for Pick Up"; // Check if status is "Late"
@@ -254,7 +254,7 @@ export const CompletedColumn = (): ColumnDef<any>[] => {
     },
     {
       accessorKey: "bookingPickupDate",
-      header: () => <div className="text-center">Reservation Pickup Date</div>,
+      header: "Reservation Pickup Date",
     },
   ];
 
