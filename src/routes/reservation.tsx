@@ -695,7 +695,7 @@ useEffect(() => {
 
   if (userAttributes.role === "Terminal Operator") {
     return (
-      <div className="w-full">
+      <div className="w-xl max-w-9/10">
       <Tabs defaultValue="requested" className="">
         <div>
       <TabsList className="mb-4 flex w-full justify-start gap-x-4">
@@ -705,7 +705,7 @@ useEffect(() => {
           <TabsTrigger value="completed">Completed</TabsTrigger>
         </TabsList>
         </div>
-        <div>
+        <div className="w-xl max-w-9/10">
         <TabsContent value="requested">
           <TerminalBookingsTable data={terminalopBookingsupcoming} status="Requested" meta={{updateBooking}} />
         </TabsContent>
