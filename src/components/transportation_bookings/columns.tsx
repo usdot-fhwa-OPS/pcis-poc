@@ -222,8 +222,8 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
     { accessorKey: "bcoEmail", header: "BCO Name" },
     { accessorKey: "transopName", header: "Transportation Operator" },
     { accessorKey: "transopEmail", header: "Transportation Operator Email" },
-    { accessorKey: "bookingDate", header: "Date Initiated" },
-    { accessorKey: "bookingTime", header: "Time Initiated" },
+    { accessorKey: "reservationDate", header: "Date Initiated" },
+    { accessorKey: "reservationTime", header: "Time Initiated" },
     {
       accessorKey: "status",
       header: () =><div className="w-[150px] text-center">

@@ -18,8 +18,8 @@ export const columns = (status: string): ColumnDef<any>[] => {
     { accessorKey: "bcoEmail", header: "BCO Email" },
     { accessorKey: "transopName", header: "Transportation Operator" },
     { accessorKey: "transopEmail", header: "Transportation Operator Email" },
-    { accessorKey: "bookingDate", header: "Original Date Requested" },
-    { accessorKey: "bookingTime", header: "Original Time Requested" },
+    { accessorKey: "reservationDate", header: "Original Date Requested" },
+    { accessorKey: "reservationTime", header: "Original Time Requested" },
   
 
   ];
