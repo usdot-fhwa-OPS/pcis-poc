@@ -2,7 +2,7 @@
 
 Create a Lambda Function for recieving the list of Transportation Operators users within your AWS Cognito User Pool. For this you'll need the Cognito User Pool ID that was created by AWS Amplify. It can be found within the Cognito console.
 
-Using the python code, located in the ListCognitoUsers.zip file, create a Lambda function in AWS. Replace line 56 of the Lambda's code with the User Pool ID with your own.
+Using the python code, located in the **ListCognitoUsers.zip file** within the same folder, create a Lambda function in AWS. Replace line 56 of the Lambda's code with the User Pool ID with your own.
 
 The Lambda function should have an AWS API Gateway trigger. First, create an API Gateway. Within the API Gateway console, follow these steps:
 
