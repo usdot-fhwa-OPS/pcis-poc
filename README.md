@@ -28,7 +28,7 @@ npm install
 ## Instructions for Full AWS Deployment
 **Step 1: Attain Codebase**
 
-Fork this repository, [create a repository from this template](https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-repository-from-a-template)(recommended), or download this repository as a .zip file
+Fork this repository, [create a repository from this template](https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-repository-from-a-template) (recommended), or download this repository as a .zip file
 
 ```
 https://github.com/usdot-fhwa-OPS/pcis-poc.git
