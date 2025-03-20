@@ -79,7 +79,7 @@ Install the AWS CLI.
 
 **Step 3:**
 
-Access your AWS account via the AWS CLI by running the following commandm in terminal: 
+Access your AWS account via the AWS CLI by running the following command in terminal: 
 ```
 aws configure sso
 ```
@@ -113,7 +113,7 @@ To use this profile, specify the profile name using --profile, as shown:
 aws s3 ls --profile default
 ```
 
-*[Read more](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
+* [Read more](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
 
 **Step 4:**
 
