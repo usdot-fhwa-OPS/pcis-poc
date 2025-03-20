@@ -767,7 +767,7 @@ useEffect(() => {
   if (userAttributes.role==="Beneficiary Cargo Owner")
   {
     return (
-      <div className="w-full max-w-9/10">
+      <div className="w-xl max-w-9/10">
       
       <Tabs defaultValue="upcoming">
         <TabsList className="mb-4 flex w-full justify-start gap-x-4">
