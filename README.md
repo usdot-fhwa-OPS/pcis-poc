@@ -1,4 +1,8 @@
 # PCIS-POC
+The U.S. Department of Transportation's (USDOT) Intelligent Transportation Systems Joint Program Office (ITS JPO) works to strengthen supply chain resilience by supporting projects that develop cross-modal tools and technologies. This project, the Port Community Information Sharing System (PCIS) demonstration system, is a U.S. DOT’s initiative, in collaboration with Federal Highway Administration (FHWA), Maritime Administration (MARAD), and Volpe National Transportation Systems Center (Volpe) to improve supply chain transparency through real-time data exchange. 
+
+This project examined how real-time visibility, and connectivity can enhance system efficiency and explored opportunities for expanding and integrating the demonstration system, highlighting how emerging technologies like cloud computing and serverless applications can improve real-time data sharing, decision-making, and optimization of supply chain processes. This project output multiple resources and artifacts including written documentation of the user centered design process, a code base and software design document for the demonstration system, and a final report exploring future work that could contribute to the development of more efficient and resilient transportation networks.
+
 This is a public repository that contains web application code and configuration files related to Amazon Web Services.
 
 ## Prerequisites
@@ -21,18 +25,50 @@ Go to project root and execute the following command in console to install the r
 npm install
 ```
 
+## Instructions for Full AWS Deployment
+**Step 1:**
+Fork this repository, create a repository from this template, or download this repository as a .zip file
+
+```
+https://github.com/usdot-fhwa-OPS/pcis-poc.git
+```
+
+**Step 2:**
+Access the AWS Amplify Console within your account and choose "Create new app." Follow the instructions to deploy a new application using your repository or .zip file.
+
+[Read AWS Amplify Documentation](https://docs.amplify.aws/react/start/quickstart/)
+**Step 3:**
+Set up the dynamic port capacity with AWS and the project. First, in the Amplify console, click into the deployment branch (in this case **develop**) > select **Data** in the left-hand menu > **Data manager** to see your database data. Click **Select table** > select **Limit** > select **Create Limit** > enter number.
+
+You should now see a record populated within the table. Copy your newly created record's full **id**. Using that **id**, update the following lines of code within the project:
+
+1. src/components/settings/settingsButton.tsx, line 41.
+2. src/routes/__root.tsx, line 67.
+3. src/routes/index.tsx, line 151.
+4. src/routes/reservation.tsx, line 140.
+
+Ensure that these changes make it to the develop branch. Within the Amplify console, click into the deployment branch > click **Redeploy this version**.
+
+**Step 4:**
+
+
+
+**Step 5:**
+
+
+
 ## Instructions for Local Deployment
 **Step 1:**
 
 Request an AWS account with the `AmplifyBackendDeployFullAccess` managed policy, ensuring you retrieve the username, session url, and region.
 
-[Read more](https://docs.amplify.aws/react/start/account-setup/)
+[Read AWS Amplify Documentation](https://docs.amplify.aws/react/start/account-setup/)
 
 **Step 2:**
 
 Install the AWS CLI.
 
-[Read more](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
+[Read AWS Amplify Documentation](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
 
 **Step 3:**
 
