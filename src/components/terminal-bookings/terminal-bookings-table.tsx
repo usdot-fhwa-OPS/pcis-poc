@@ -25,7 +25,7 @@ export function TerminalBookingModification({ data, status, meta }: TerminalBook
 
   export function TerminalBookingsCompleted({ data}: TerminalBookingsTableProps) {
     return (
-      <div className="container mx-w-s p-10 overflow-x-auto">
+      <div className="container w-xl max-w-9/10 p-10 overflow-x-auto">
         <DataTable columns={CompletedColumn()} data={data} />
       </div>
     );
