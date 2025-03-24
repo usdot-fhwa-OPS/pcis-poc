@@ -18,8 +18,8 @@ export const columns = (status: string): ColumnDef<any>[] => {
     { accessorKey: "bcoEmail", header: "BCO Email" },
     { accessorKey: "transopName", header: "Transportation Operator" },
     { accessorKey: "transopEmail", header: "Transportation Operator Email" },
-    { accessorKey: "bookingDate", header: "Original Date Requested" },
-    { accessorKey: "bookingTime", header: "Original Time Requested" },
+    { accessorKey: "reservationDate", header: "Original Date Requested" },
+    { accessorKey: "reservationTime", header: "Original Time Requested" },
   
 
   ];
@@ -55,11 +55,11 @@ export const columns = (status: string): ColumnDef<any>[] => {
 
   if (status === "Modified") {
     baseColumns.push({
-      accessorKey: "modifiedBookingDate",
+      accessorKey: "modifiedReservationDate",
       header: "Modified Date Requested",
     });
     baseColumns.push({
-      accessorKey: "modifiedBookingTime",
+      accessorKey: "modifiedReservationTime",
       header: "Modified Time Requested",
     });
     baseColumns.push({
@@ -76,7 +76,7 @@ export const columns = (status: string): ColumnDef<any>[] => {
           <Button
             variant="outline"
             className="text-green-700"
-            onClick={() =>  (table.options.meta as TerminalOperatorDataTableMeta)?.updateBooking(row.original.containerID, "Pending Pick Up", row.original.modifiedBookingDate, row.original.modifiedBookingTime)}
+            onClick={() =>  (table.options.meta as TerminalOperatorDataTableMeta)?.updateBooking(row.original.containerID, "Pending Pick Up", row.original.modifiedReservationDate, row.original.modifiedReservationTime)}
           >
             Approve
           </Button>
@@ -95,11 +95,11 @@ export const columns = (status: string): ColumnDef<any>[] => {
 
   if (status === "Ongoing") {
     baseColumns.push({
-      accessorKey: "bookingStatus",
+      accessorKey: "reservationStatus",
       header: () => <div className="w-[150px] text-center ">Status</div>,
      // Adjust width as needed
       cell: ({ row }) => {
-        const status = row.original.bookingStatus; // Get status value
+        const status = row.original.reservationStatus; // Get status value
         const isLate = status === "Late for Pick Up"; // Check if status is "Late"
   
         return (
@@ -119,7 +119,7 @@ export const columns = (status: string): ColumnDef<any>[] => {
       id: "changepickupstatus",
       header: "Mark as Late for Pick Up",
       cell: ({ row, table}) => {
-        const [isChecked, setIsChecked] = useState<boolean>(row.original.bookingStatus === "Late for Pick Up");
+        const [isChecked, setIsChecked] = useState<boolean>(row.original.reservationStatus === "Late for Pick Up");
   
         const markLateforPickup = async () => {
           const success = await (table.options.meta as TerminalOperatorDataTableMeta)?.markBookingLate(
@@ -136,7 +136,7 @@ export const columns = (status: string): ColumnDef<any>[] => {
 
         return (
           <Checkbox
-            disabled={row.original.bookingStatus == "Late for Pick Up"}
+            disabled={row.original.reservationStatus == "Late for Pick Up"}
             checked={isChecked}
             onCheckedChange={markLateforPickup}
           />
@@ -219,22 +219,22 @@ export const CompletedColumn = (): ColumnDef<any>[] => {
       header: "Transportation Operator Email",
     },
     {
-      accessorKey: "bookingDate",
+      accessorKey: "reservationDate",
       header: "Reservation Date",
     },
     {
-      accessorKey: "bookingTime",
+      accessorKey: "reservationTime",
       header: "Reservation Time",
     },
     {
-      accessorKey: "bookingApprovalDate",
+      accessorKey: "resApprovalDate",
       header: "Reservation Approval Date",
     },
     {
-      accessorKey: "bookingStatus",
+      accessorKey: "reservationStatus",
       header: "Reservation Status",
       cell: ({ row }) => {
-        const status = row.original.bookingStatus; // Get status value
+        const status = row.original.reservationStatus; // Get status value
         const isLate = status === "Late for Pick Up"; // Check if status is "Late"
 
         return (
@@ -253,7 +253,7 @@ export const CompletedColumn = (): ColumnDef<any>[] => {
       size: 200,
     },
     {
-      accessorKey: "bookingPickupDate",
+      accessorKey: "resPickupDate",
       header: "Reservation Pickup Date",
     },
   ];

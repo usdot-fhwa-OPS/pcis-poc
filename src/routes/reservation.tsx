@@ -20,23 +20,23 @@ export const Route = createFileRoute('/reservation')({
 })
 
 //Define the selection of data that will be used for the table
-const selectionSetTransOpUpcomingBookings = ['vesselID', 'containerID', 'origin', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail', 'assignmentDate', 'bookingStatus','flag'] as const;
+const selectionSetTransOpUpcomingBookings = ['vesselID', 'containerID', 'origin', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail', 'assignmentDate', 'reservationStatus','flag'] as const;
 //Create a type based on your selectionSet that will be later used for the columns.tsx file of the able
 export type TransOpUpcomingBookings = SelectionSet<Schema['Container']['type'], typeof selectionSetTransOpUpcomingBookings>
 
-const selectionSetTransOpOngoingBookings = ['vesselID', 'containerID', 'origin', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail', 'bookingDate', 'bookingTime', 'bookingStatus', 'flag', 'containerStatus'] as const;
+const selectionSetTransOpOngoingBookings = ['vesselID', 'containerID', 'origin', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail', 'reservationDate', 'reservationTime', 'reservationStatus', 'flag', 'containerStatus'] as const;
 export type TransOpOngoingBookings = SelectionSet<Schema['Container']['type'], typeof selectionSetTransOpOngoingBookings>
 
-const selectionSetTerminalOPUpcoming = ['vesselID', 'containerID', 'origin', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail','bookingDate','bookingTime','bookingStatus', 'flag'] as const;
+const selectionSetTerminalOPUpcoming = ['vesselID', 'containerID', 'origin', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail','reservationDate','reservationTime','reservationStatus', 'flag'] as const;
 
-const selectionSetTerminalOpModified = ['vesselID', 'containerID', 'origin', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail','bookingDate','bookingTime', 'bookingStatus', 'modifiedBookingDate', 'modifiedBookingTime'] as const;
+const selectionSetTerminalOpModified = ['vesselID', 'containerID', 'origin', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail','reservationDate','reservationTime', 'reservationStatus', 'modifiedReservationDate', 'modifiedReservationTime'] as const;
 
 export type TerminalOpModifiedBookings = SelectionSet<Schema['Container']['type'], typeof selectionSetTerminalOpModified>
 //Define the selection of data that will be used for the table
 const selectionSetBCOUpcomingBookings = ['vesselID', 'containerID', 'origin', 'destination', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail', 'containerStatus','arrivalDate', 'flag'] as const;
 //Create a type based on your selectionSet that will be later used for the columns.tsx file of the able
 
-const selectionSetTerminalOPOngoing = ['vesselID', 'containerID', 'origin', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail','bookingDate','bookingTime','bookingStatus', 'flag'] as const;
+const selectionSetTerminalOPOngoing = ['vesselID', 'containerID', 'origin', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail','reservationDate','reservationTime','reservationStatus', 'flag'] as const;
 export type BCOUpcomingBookings = SelectionSet<Schema['Container']['type'], typeof selectionSetBCOUpcomingBookings>
 
 //Create a type based on your selectionSet that will be later used for the columns.tsx file of the able
@@ -44,11 +44,11 @@ export type TerminalOPUpcomingBookings= SelectionSet<Schema['Container']['type']
 
 export type TerminalOPOngoingBookings= SelectionSet<Schema['Container']['type'], typeof selectionSetTerminalOPOngoing >
 
-const selectionSetBCOOngoing = ['vesselID', 'containerID', 'origin','destination', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail','bookingDate','bookingApprovalDate','bookingStatus', 'bookingPickupDate','flag', 'updatedAt'] as const;
+const selectionSetBCOOngoing = ['vesselID', 'containerID', 'origin','destination', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail','reservationDate','resApprovalDate','reservationStatus', 'resPickupDate','flag', 'updatedAt'] as const;
 
 export type BCOOngoingBooking= SelectionSet<Schema['Container']['type'], typeof selectionSetBCOOngoing>
 
-const selectionSetBCOCompleted = ['vesselID', 'containerID', 'origin', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail','bookingDate','bookingApprovalDate','bookingStatus','destination', 'bookingPickupDate','flag'] as const;
+const selectionSetBCOCompleted = ['vesselID', 'containerID', 'origin', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail','reservationDate','resApprovalDate','reservationStatus','destination', 'resPickupDate','flag'] as const;
 
 export type BCOCompletedBooking= SelectionSet<Schema['Container']['type'], typeof selectionSetBCOCompleted>
 
@@ -61,11 +61,11 @@ const selectionSetTransportation_CompletedData = [
   'bcoEmail',
   'transopName',
   'transopEmail',
-  'bookingDate',
-  'bookingApprovalDate',
-  'bookingStatus',
-  'bookingPickupDate',
-  'bookingTime',
+  'reservationDate',
+  'resApprovalDate',
+  'reservationStatus',
+  'resPickupDate',
+  'reservationTime',
 ] as const;
 
 //Define the selection of data that will be used for the table
@@ -77,11 +77,11 @@ const selectionSetTerminal_CompletedData = [
   'bcoEmail',
   'transopName',
   'transopEmail',
-  'bookingDate',
-  'bookingApprovalDate',
-  'bookingStatus',
-  'bookingPickupDate',
-  'bookingTime',
+  'reservationDate',
+  'resApprovalDate',
+  'reservationStatus',
+  'resPickupDate',
+  'reservationTime',
 ] as const;
 
 //Create a type based on your selectionSet that will be later used for the columns.tsx file of the able
@@ -151,12 +151,12 @@ function RouteComponent() {
       }
   }
 
-  async function getBookingsAmount(bookingDate: string) {
+  async function getBookingsAmount(reservationDate: string) {
     try {
       const { data: bookings } = await client.models.Container.list({
         authMode: 'apiKey',
         filter: {
-          bookingDate: {eq: bookingDate}
+          reservationDate: {eq: reservationDate}
         },  
       });
       if (bookings) {
@@ -210,7 +210,7 @@ function RouteComponent() {
                 transopEmail: { eq: userAttributes.email }
               },
               {
-                bookingStatus: { eq: 'Picked Up' }
+                reservationStatus: { eq: 'Picked Up' }
               }
             ]
           },
@@ -240,7 +240,7 @@ function RouteComponent() {
           selectionSet:selectionSetTerminal_CompletedData,
           authMode: 'apiKey',
           filter: {
-                bookingStatus: { 
+                reservationStatus: { 
                   eq: 'Picked Up' 
                 }
           },
@@ -273,7 +273,7 @@ function RouteComponent() {
                 bcoEmail: { eq: userAttributes.email }
               },
               {
-                bookingStatus: { eq: 'unassigned' }
+                reservationStatus: { eq: 'unassigned' }
               }
             ]
           },
@@ -307,7 +307,7 @@ function RouteComponent() {
                   bcoEmail: { eq: userAttributes.email }
                 },
                 {
-                  bookingStatus: {
+                  reservationStatus: {
                     eq: 'Picked Up'
                   }
                 }
@@ -347,7 +347,7 @@ function RouteComponent() {
                 transopEmail: { eq: userAttributes.email }
               },
               {
-                bookingStatus: { eq: 'Pending Transportation Operator Approval' }
+                reservationStatus: { eq: 'Pending Transportation Operator Approval' }
               }
             ]
           },
@@ -376,13 +376,13 @@ function RouteComponent() {
                 transopEmail: { eq: userAttributes.email }
               },
               {
-                bookingStatus: { ne: 'unassigned' }
+                reservationStatus: { ne: 'unassigned' }
               },
               {
-                bookingStatus: { ne: 'Pending Transportation Operator Approval' }
+                reservationStatus: { ne: 'Pending Transportation Operator Approval' }
               },
               {
-                bookingStatus: { ne: 'Picked Up'}
+                reservationStatus: { ne: 'Picked Up'}
               }
             ]
           },
@@ -400,7 +400,7 @@ function RouteComponent() {
   }, [userAttributes.role, refresh]);
 
 
-  async function assignTransOp(containerID: string, newName: string, newEmail: string, bookingStatus: string): Promise<boolean> {
+  async function assignTransOp(containerID: string, newName: string, newEmail: string, reservationStatus: string): Promise<boolean> {
     if (!navigator.onLine) {
       console.error("No internet connection. Update not submitted. Please check your connection and try again.");
       toast.error("No internet connection. Update not submitted. Please check your connection and try again.");
@@ -412,7 +412,7 @@ function RouteComponent() {
         containerID: containerID,
         transopName: newName,
         transopEmail: newEmail,
-        bookingStatus: bookingStatus,
+        reservationStatus: reservationStatus,
         assignmentDate: new Date().toLocaleDateString('en-US'),
         isTransportationNotify: true,
         isBCONotify: false,
@@ -444,7 +444,7 @@ function RouteComponent() {
       selectionSet:selectionSetTerminalOPUpcoming ,
       authMode: 'apiKey',
       filter: {
-        bookingStatus: {
+        reservationStatus: {
           eq: 'Pending Reservation Approval'
         }
       }
@@ -459,7 +459,7 @@ function RouteComponent() {
       selectionSet: selectionSetTerminalOpModified,
       authMode: 'apiKey',
       filter: {
-        bookingStatus: {
+        reservationStatus: {
           eq: 'Pickup Modification Requested'
         }
       }
@@ -480,10 +480,10 @@ function RouteComponent() {
         filter: {
           or: [
             {
-              bookingStatus: { eq: 'Pending Pick Up' }
+              reservationStatus: { eq: 'Pending Pick Up' }
             },
             {
-              bookingStatus: { eq: 'Late for Pick Up' }
+              reservationStatus: { eq: 'Late for Pick Up' }
             }
           ]
         }
@@ -501,7 +501,7 @@ function RouteComponent() {
 
           const { data: updatedContainerStatus } = await client.models.Container.update({
             containerID: id,
-            bookingStatus: status,
+            reservationStatus: status,
             isTransportationNotify: true,
             isBCONotify: true,
             isTerminalNotify: false,
@@ -522,8 +522,8 @@ function RouteComponent() {
     async function updateTransOpBooking(
       id: string,
       status: string,
-      bookingDate?: string,
-      bookingTime?: string
+      reservationDate?: string,
+      reservationTime?: string
     ): Promise<boolean> {
       if (!navigator.onLine) {
         console.error("No internet connection. Update not submitted. Please check your connection and try again.");
@@ -531,7 +531,7 @@ function RouteComponent() {
         return false; // Explicitly return false when offline
       }
       try {
-        let updatePayload = { containerID: id, bookingStatus: status, isTransportationNotify: false, isBCONotify: false, isTerminalNotify: false };
+        let updatePayload = { containerID: id, reservationStatus: status, isTransportationNotify: false, isBCONotify: false, isTerminalNotify: false };
     
         if (status === "unassigned") {
           Object.assign(updatePayload, {
@@ -543,23 +543,23 @@ function RouteComponent() {
           });
         } else if (status === "Pending Reservation Approval") {
           Object.assign(updatePayload, {
-            bookingDate,
-            bookingTime,
+            reservationDate,
+            reservationTime,
             isTerminalNotify: true,
             isBCONotify: true,
             isTransportationNotify: false,
           });
         } else if (status === "Picked Up") {
           Object.assign(updatePayload, {
-            bookingPickupDate: bookingDate,
+            resPickupDate: reservationDate,
             isTransportationNotify: false,
             isBCONotify:false,
             isTerminalNotify: false
           });
         } else if (status === "Pickup Modification Requested") {
           Object.assign(updatePayload, {
-            modifiedBookingDate: bookingDate,
-            modifiedBookingTime: bookingTime,
+            modifiedReservationDate: reservationDate,
+            modifiedReservationTime: reservationTime,
             isTerminalNotify: true,
             isBCONotify: true,
             isTransportationNotify: false,
@@ -584,7 +584,7 @@ function RouteComponent() {
 
 //Update Terminal Operator Booking
 
-async function updateBooking(id: string, status: string, bookingDate?: string, bookingTime?: string): Promise<boolean> {
+async function updateBooking(id: string, status: string, reservationDate?: string, reservationTime?: string): Promise<boolean> {
   if (!navigator.onLine) {
     console.error("No internet connection. Update not submitted. Please check your connection and try again.");
     toast.error("No internet connection. Update not submitted. Please check your connection and try again.");
@@ -592,30 +592,30 @@ async function updateBooking(id: string, status: string, bookingDate?: string, b
   }
 
   try {
-    let updatePayload: any = { containerID: id, bookingStatus: status };
+    let updatePayload: any = { containerID: id, reservationStatus: status };
 
     if (status === "unassigned") {
       Object.assign(updatePayload, {
         transopName: "",
         transopEmail: "",
         assignmentDate: "",
-        bookingDate: "",
-        bookingTime: "",
-        bookingApprovalDate: "",
-        bookingLatestUpdateDate: "",
-        modifiedBookingDate: "",
-        modifiedBookingTime:"",
+        reservationDate: "",
+        reservationTime: "",
+        resApprovalDate: "",
+        resLatestUpdateDate: "",
+        modifiedReservationDate: "",
+        modifiedReservationTime:"",
         isTerminalNotify: false,
         isTransportationNotify: true,
         isBCONotify: true,
       });
-    } else if (bookingDate) {
+    } else if (reservationDate) {
       Object.assign(updatePayload, {
-        bookingApprovalDate: new Date().toLocaleDateString("en-US"),
-        bookingDate,
-        bookingTime,
-        modifiedBookingDate: "",
-        modifiedBookingTime: "",
+        resApprovalDate: new Date().toLocaleDateString("en-US"),
+        reservationDate,
+        reservationTime,
+        modifiedReservationDate: "",
+        modifiedReservationTime: "",
         isTerminalNotify: false,
         isBCONotify: true,
         isTransportationNotify: true,
@@ -623,7 +623,7 @@ async function updateBooking(id: string, status: string, bookingDate?: string, b
     } else {
       //Approving a Booking -> Pending Pick Up
       Object.assign(updatePayload, {
-        bookingApprovalDate: new Date().toLocaleDateString("en-US"),
+        resApprovalDate: new Date().toLocaleDateString("en-US"),
         isTerminalNotify: false,
         isBCONotify: true,
         isTransportationNotify: true,
@@ -663,10 +663,10 @@ async function fetch_bco_ongoing() {
             bcoEmail: { eq: userAttributes.email }
           },
           {
-            bookingStatus: { ne: 'unassigned' }
+            reservationStatus: { ne: 'unassigned' }
           },
           {
-            bookingStatus: { ne: 'Picked Up' }
+            reservationStatus: { ne: 'Picked Up' }
           }
         ]
       },
@@ -695,7 +695,7 @@ useEffect(() => {
 
   if (userAttributes.role === "Terminal Operator") {
     return (
-      <div className="w-full">
+      <div className="w-xl max-w-9/10">
       <Tabs defaultValue="requested" className="">
         <div>
       <TabsList className="mb-4 flex w-full justify-start gap-x-4">
@@ -705,7 +705,7 @@ useEffect(() => {
           <TabsTrigger value="completed">Completed</TabsTrigger>
         </TabsList>
         </div>
-        <div>
+        <div className="w-xl max-w-9/10">
         <TabsContent value="requested">
           <TerminalBookingsTable data={terminalopBookingsupcoming} status="Requested" meta={{updateBooking}} />
         </TabsContent>
@@ -767,7 +767,7 @@ useEffect(() => {
   if (userAttributes.role==="Beneficiary Cargo Owner")
   {
     return (
-      <div className="w-full">
+      <div className="w-xl max-w-9/10">
       
       <Tabs defaultValue="upcoming">
         <TabsList className="mb-4 flex w-full justify-start gap-x-4">
