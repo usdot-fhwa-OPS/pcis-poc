@@ -12,6 +12,6 @@ const backend = defineBackend({
   storage
 });
 
-// backend.data.resources.cfnResources.cfnApiKey?.overrideLogicalId(
-//   `recoverApiKey${new Date().getTime()}`
-// );
+backend.data.resources.cfnResources.cfnApiKey?.overrideLogicalId(
+  `recoverApiKey${new Date().getTime()}`
+);
