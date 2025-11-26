@@ -27,4 +27,3 @@ dist-ssr
 .amplify
 amplify_outputs*
 amplifyconfiguration*
-amplify.yml*
