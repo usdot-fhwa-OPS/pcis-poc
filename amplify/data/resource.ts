@@ -34,12 +34,12 @@ const schema = a.schema({
       isTerminalNotify: a.boolean().default(false),
     })
     .identifier(['containerID'])
-    .authorization((allow) => [allow.authenticated(),]),
+    .authorization((allow) => [allow.publicApiKey(),]),
   Limit: a
     .model({
       portCapacity: a.integer().required().default(3),
     })
-    .authorization((allow) => [allow.authenticated(),]),
+    .authorization((allow) => [allow.publicApiKey(),]),
 });
 
 export type Schema = ClientSchema<typeof schema>;
@@ -47,7 +47,7 @@ export type Schema = ClientSchema<typeof schema>;
 export const data = defineData({
   schema,
   authorizationModes: {
-    defaultAuthorizationMode: 'userPool',
+    defaultAuthorizationMode: 'apiKey',
   },
 });
 

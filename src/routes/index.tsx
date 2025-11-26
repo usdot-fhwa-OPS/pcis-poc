@@ -150,7 +150,7 @@ function Index() {
         const { data: limit } = await client.models.Limit.get(
           {id: '7bde2cc5-23dc-4f46-b6d9-502133cc2e8c'},
           {
-            authMode: 'userPool',
+            authMode: 'apiKey',
           }
         );
         
@@ -165,7 +165,7 @@ function Index() {
   async function getBookingsAmount(reservationDate: string) {
     try {
       const { data: bookings } = await client.models.Container.list({
-        authMode: 'userPool',
+        authMode: 'apiKey',
         filter: {
           reservationDate: {eq: reservationDate}
         },  
@@ -221,7 +221,7 @@ function Index() {
           try {
             const { data: cargo } = await client.models.Container.list({
               selectionSet:selectionSetTransportation_CompletedData,
-              authMode: 'userPool',
+              authMode: 'apiKey',
               filter: {
                 and: [
                   {
@@ -256,7 +256,7 @@ function Index() {
           try {
             const { data: cargo } = await client.models.Container.list({
               selectionSet:selectionSetTerminal_CompletedData,
-              authMode: 'userPool',
+              authMode: 'apiKey',
               filter: {
                     reservationStatus: { 
                       eq: 'Picked Up' 
@@ -296,7 +296,7 @@ function Index() {
                 ]
               },
               selectionSet: selectionSetBCOUpcomingBookings,
-              authMode: 'userPool',
+              authMode: 'apiKey',
             });
             setBcoUpcomingBookings(cargo);
           } catch (error) {
@@ -317,7 +317,7 @@ function Index() {
           try{
           const { data: cargo } = await client.models.Container.list({
             selectionSet:selectionSetBCOCompleted ,
-            authMode: 'userPool',
+            authMode: 'apiKey',
             filter: {
     
               and: [
@@ -370,7 +370,7 @@ function Index() {
                 ]
               },
               selectionSet: selectionSetTransOpUpcomingBookings,
-              authMode: 'userPool',
+              authMode: 'apiKey',
             });
             setTransOpUpcomingBookings(cargo);
           } catch (error) {
@@ -405,7 +405,7 @@ function Index() {
                 ]
               },
               selectionSet: selectionSetTransOpOngoingBookings,
-              authMode: 'userPool',
+              authMode: 'apiKey',
               });
             setTransOpOngoingBookings(cargo);
           } catch (error) {
@@ -443,10 +443,10 @@ function Index() {
     
       //Fetch the data from the database
       const fetchterminal_operator_requested = async () => {
-        //Query the data from the database with selection set and auth mode (always userPool)
+        //Query the data from the database with selection set and auth mode (always apiKey)
         const { data: cargo } = await client.models.Container.list({
           selectionSet:selectionSetTerminalOPUpcoming ,
-          authMode: 'userPool',
+          authMode: 'apiKey',
           filter: {
             reservationStatus: {
               eq: 'Pending Reservation Approval'
@@ -461,7 +461,7 @@ function Index() {
       const fetchTerminalOperatorModified = async() => {
         const { data: cargo } = await client.models.Container.list({
           selectionSet: selectionSetTerminalOpModified,
-          authMode: 'userPool',
+          authMode: 'apiKey',
           filter: {
             reservationStatus: {
               eq: 'Pickup Modification Requested'
@@ -476,10 +476,10 @@ function Index() {
         //Fetch the data from the database
         const [terminalopBookingongoing, set_terminal_ongoing] = useState<TerminalOPOngoingBookings[]>([])
         const fetchterminal_operator_ongoing = async () => {
-          //Query the data from the database with selection set and auth mode (always userPool)
+          //Query the data from the database with selection set and auth mode (always apiKey)
           const { data: cargo } = await client.models.Container.list({
             selectionSet:selectionSetTerminalOPOngoing ,
-            authMode: 'userPool',
+            authMode: 'apiKey',
            
             filter: {
               or: [
@@ -662,7 +662,7 @@ function Index() {
         try{
         const { data: cargo } = await client.models.Container.list({
           selectionSet:selectionSetBCOOngoing ,
-          authMode: 'userPool',
+          authMode: 'apiKey',
           filter: {
             and: [
               {
