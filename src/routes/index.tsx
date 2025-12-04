@@ -12,6 +12,7 @@ import { toast } from "sonner"
 //Three Imports needed for Amplify Data Queries and CRUD methods
 import { generateClient, SelectionSet } from 'aws-amplify/data';
 import type { Schema } from '../../amplify/data/resource';
+import { Selfhelp } from '../components/self-help/self-help.tsx';
 
 const client = generateClient<Schema>();
 
@@ -757,6 +758,7 @@ function Index() {
           </TabsContent>
           </div>
         </Tabs>
+        <Selfhelp role={userAttributes.role}/>
       </div>
       );
     }
@@ -827,6 +829,7 @@ function Index() {
           />
         </TabsContent>
       </Tabs>
+      <Selfhelp role={userAttributes.role}/>
     </div>
   );
     }
@@ -899,7 +902,12 @@ function Index() {
             />
           </TabsContent>
         </Tabs>
+
+        <Selfhelp role={userAttributes.role}/> 
+        
       </div>
+ 
+
     );
   }
 }
