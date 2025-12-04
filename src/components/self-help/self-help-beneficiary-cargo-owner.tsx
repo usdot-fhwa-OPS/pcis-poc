@@ -1,7 +1,7 @@
 import { Button } from "../ui/button"
-import { Popover, PopoverAnchor, PopoverClose, PopoverContent, PopoverTrigger } from "../ui/popover"
+import { Popover, PopoverClose, PopoverContent, PopoverTrigger } from "../ui/popover"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "../ui/accordion"
-import { CrosshairIcon, CrossIcon, LucideCrosshair, PanelRightCloseIcon, X } from "lucide-react"
+import { X } from "lucide-react"
 
 export const BeneficiaryCargoOwnerSelfHelp = () => {
     return (
