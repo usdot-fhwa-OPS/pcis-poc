@@ -1,6 +1,7 @@
 import { Button } from "../ui/button"
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover"
+import { Popover, PopoverClose, PopoverContent, PopoverTrigger } from "../ui/popover"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "../ui/accordion"
+import { X } from "lucide-react"
 
 export const TerminalOperatorSelfHelp = () => {
     return (
@@ -9,56 +10,45 @@ export const TerminalOperatorSelfHelp = () => {
                 <Button variant="outline">Self Help</Button>
             </PopoverTrigger>
             <PopoverContent className="w-80">
+                <div><PopoverClose
+					className="absolute right-[5px] top-[5px] inline-flex size-[25px] cursor-default items-center justify-center rounded-full text-violet11 outline-none hover:bg-violet4 focus:shadow-[0_0_0_2px] focus:shadow-violet7"
+					aria-label="Close">
+					<X />
+				</PopoverClose></div>
+                <div></div>
+                <div></div>
                 <Accordion
                     type="single"
                     collapsible
                     className="w-full"
-                    defaultValue="item-1"
+                    
                 >
                     <AccordionItem value="item-1">
-                        <AccordionTrigger>Terminal Operator Product Information</AccordionTrigger>
+                        <AccordionTrigger>Where can I manage users?</AccordionTrigger>
                         <AccordionContent className="flex flex-col gap-4 text-balance">
-                            <p>
-                                Our flagship product combines cutting-edge technology with sleek
-                                design. Built with premium materials, it offers unparalleled
-                                performance and reliability.
-                            </p>
-                            <p>
-                                Key features include advanced processing capabilities, and an
-                                intuitive user interface designed for both beginners and experts.
-                            </p>
+                            Where can I manage users?
                         </AccordionContent>
                     </AccordionItem>
                     <AccordionItem value="item-2">
-                        <AccordionTrigger>Terminal Operator Shipping Details</AccordionTrigger>
+                        <AccordionTrigger>Where can I find my upconming cargo?</AccordionTrigger>
                         <AccordionContent className="flex flex-col gap-4 text-balance">
-                            <p>
-                                We offer worldwide shipping through trusted courier partners.
-                                Standard delivery takes 3-5 business days, while express shipping
-                                ensures delivery within 1-2 business days.
-                            </p>
-                            <p>
-                                All orders are carefully packaged and fully insured. Track your
-                                shipment in real-time through our dedicated tracking portal.
-                            </p>
+                            Where can I find my upconming cargo?
                         </AccordionContent>
                     </AccordionItem>
                     <AccordionItem value="item-3">
-                        <AccordionTrigger>Terminal Operator Return Policy</AccordionTrigger>
+                        <AccordionTrigger>How can I flag the upcoming carge?</AccordionTrigger>
                         <AccordionContent className="flex flex-col gap-4 text-balance">
-                            <p>
-                                We stand behind our products with a comprehensive 30-day return
-                                policy. If you&apos;re not completely satisfied, simply return the
-                                item in its original condition.
-                            </p>
-                            <p>
-                                Our hassle-free return process includes free return shipping and
-                                full refunds processed within 48 hours of receiving the returned
-                                item.
-                            </p>
+                            How can I flag the upcoming carge?
+                        </AccordionContent>
+                    </AccordionItem>
+                    <AccordionItem value="item-4">
+                        <AccordionTrigger>How can I manage my profile?</AccordionTrigger>
+                        <AccordionContent className="flex flex-col gap-4 text-balance">
+                            How can I manage my profile?
                         </AccordionContent>
                     </AccordionItem>
                 </Accordion>
+                 
             </PopoverContent>
         </Popover>
     )

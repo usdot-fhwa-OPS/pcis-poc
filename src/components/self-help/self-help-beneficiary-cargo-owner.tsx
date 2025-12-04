@@ -1,10 +1,12 @@
 import { Button } from "../ui/button"
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover"
+import { Popover, PopoverAnchor, PopoverClose, PopoverContent, PopoverTrigger } from "../ui/popover"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "../ui/accordion"
+import { CrosshairIcon, CrossIcon, LucideCrosshair, PanelRightCloseIcon, X } from "lucide-react"
 
 export const BeneficiaryCargoOwnerSelfHelp = () => {
     return (
         <Popover>
+           
             <PopoverTrigger asChild>
                 <Button variant="outline">Self Help</Button>
             </PopoverTrigger>
@@ -59,6 +61,12 @@ export const BeneficiaryCargoOwnerSelfHelp = () => {
                         </AccordionContent>
                     </AccordionItem>
                 </Accordion>
+                    <PopoverClose
+					className="absolute right-[5px] top-[5px] inline-flex size-[25px] cursor-default items-center justify-center rounded-full text-violet11 outline-none hover:bg-violet4 focus:shadow-[0_0_0_2px] focus:shadow-violet7"
+					aria-label="Close">
+					<X />
+				</PopoverClose>
+  
             </PopoverContent>
         </Popover>
     )
