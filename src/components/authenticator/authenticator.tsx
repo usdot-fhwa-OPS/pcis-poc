@@ -5,7 +5,7 @@ import outputs from '../../../amplify_outputs.json';
 
 import '@aws-amplify/ui-react/styles.css';
 import './authStyles.css';
-import { MouseEvent, useState } from 'react';
+import { useState } from 'react';
 
 Amplify.configure(outputs);
 I18n.putVocabularies(translations);
