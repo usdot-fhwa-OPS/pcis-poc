@@ -68,7 +68,7 @@ function Organization() {
     {isPredefined &&<SelectField className="amplify-field" label="Your Organization" name="custom:organization" required>
                   {orgOptions}
                 </SelectField>}
-      <Button onClick={toggle}>{(isPredefined && 'Add Organization if not listed') || (!isPredefined && 'Pick Organization from the list')}</Button>
+      <Button onClick={toggle}>{(isPredefined && 'Enter Organization if not listed') || (!isPredefined && 'Pick Organization from the list')}</Button>
       {!isPredefined && <TextField className="amplify-field" label="Your Organization" name="custom:organization" required>
 
                 </TextField>}
