@@ -1,14 +1,19 @@
-import { Button } from "../ui/button"
 import { Popover, PopoverClose, PopoverContent, PopoverTrigger } from "../ui/popover"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "../ui/accordion"
 import { X } from "lucide-react"
+import { Label } from "@radix-ui/react-label"
 
 export const BeneficiaryCargoOwnerSelfHelp = () => {
     return (
         <Popover>
            
             <PopoverTrigger asChild>
-                <Button variant="outline">Self Help</Button>
+                <div className="self-help-right">
+                    <Label className="self-help">
+                        Help
+                    </Label>
+
+                </div>
             </PopoverTrigger>
             <PopoverContent className="w-80">
                 <Accordion

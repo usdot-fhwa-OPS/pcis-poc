@@ -1,13 +1,19 @@
-import { Button } from "../ui/button"
 import { Popover, PopoverClose, PopoverContent, PopoverTrigger } from "../ui/popover"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "../ui/accordion"
-import { Flag, Ship, SquareChartGantt, User, X } from "lucide-react"
+import { X } from "lucide-react"
+import { Label } from "@radix-ui/react-label"
 
 export const TerminalOperatorSelfHelp = () => {
     return (
          <Popover>
             <PopoverTrigger asChild>
-                <Button variant="outline">Self Help</Button>
+                <div className="self-help-right">
+                    <Label className="self-help">
+                        Help
+                    </Label>
+
+                </div>
+
             </PopoverTrigger>
             <PopoverContent className="w-80">
                 <PopoverClose
@@ -22,25 +28,25 @@ export const TerminalOperatorSelfHelp = () => {
                     
                 >
                     <AccordionItem value="item-1">
-                        <AccordionTrigger><User />Where can I manage users?</AccordionTrigger>
+                        <AccordionTrigger>Where can I manage users?</AccordionTrigger>
                         <AccordionContent className="flex flex-col gap-4 text-balance">
                             Where can I manage users?
                         </AccordionContent>
                     </AccordionItem>
                     <AccordionItem value="item-2">
-                        <AccordionTrigger><Ship />Where can I find my upconming cargo?</AccordionTrigger>
+                        <AccordionTrigger>Where can I find my upconming cargo?</AccordionTrigger>
                         <AccordionContent className="flex flex-col gap-4 text-balance">
                             Where can I find my upconming cargo?
                         </AccordionContent>
                     </AccordionItem>
                     <AccordionItem value="item-3">
-                        <AccordionTrigger><Flag />How can I flag the upcoming carge?</AccordionTrigger>
+                        <AccordionTrigger>How can I flag the upcoming carge?</AccordionTrigger>
                         <AccordionContent className="flex flex-col gap-4 text-balance">
                             How can I flag the upcoming carge?
                         </AccordionContent>
                     </AccordionItem>
                     <AccordionItem value="item-4">
-                        <AccordionTrigger><SquareChartGantt />How can I manage my profile?</AccordionTrigger>
+                        <AccordionTrigger>How can I manage my profile?</AccordionTrigger>
                         <AccordionContent className="flex flex-col gap-4 text-balance">
                             How can I manage my profile?
                         </AccordionContent>
