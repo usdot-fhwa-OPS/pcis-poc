@@ -88,18 +88,22 @@ function RootComponent() {
     <div className="flex min-h-screen bg-background">
       <SidebarProvider>
         <AppSidebar />
+        {userSecurityAttrubutes.given_name && <UserContext.Provider value={userSecurityAttrubutes} >  
         <div className="flex-1">
           <Toaster position="top-center" richColors={true} expand={true} />
           <div className="flex items-center justify-end p-4">
             <UserButton fullName={userAttributes.fullName} role={userAttributes.role} limit={bookingLimit ?? 0} />
+             <Selfhelp/>
           </div>
-          {userSecurityAttrubutes.given_name && <UserContext.Provider value={userSecurityAttrubutes} >  
+         
+          
             <Outlet /> 
-            <Selfhelp/>
-            </UserContext.Provider>}
+            
+            
           
          
         </div>
+        </UserContext.Provider>}
       </SidebarProvider>
     </div>
   )

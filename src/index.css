@@ -168,6 +168,8 @@ button:focus-visible {
 
 .self-help-right {
   display: flex;
-  justify-content: right;
-  padding-right: 5%;
+  justify-content: flex-end;
+  align-items: flex-end;
+  padding-right: 1%;
+  height: fit-content;
 }
