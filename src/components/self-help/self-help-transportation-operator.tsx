@@ -19,7 +19,6 @@ export const TransportationOperatorSelfHelp = () => {
                         type="single"
                         collapsible
                         className="w-full"
-                        defaultValue="item-1"
                     >
                         <AccordionItem value="item-1">
                             <AccordionTrigger>
