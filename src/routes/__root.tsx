@@ -14,7 +14,7 @@ import { UserContext } from '../AppContext';
 import { Selfhelp } from '../components/self-help/self-help';
 
 
-interface UserAttributes {
+export interface UserAttributes {
   given_name?: string;
   family_name?: string;
   'custom:role'?: string;
@@ -39,6 +39,7 @@ function RootComponent() {
   const [userAttributes, setUserAttributes] = useState<{ fullName: string; role: string }>({ fullName: "", role: "" })
   const [bookingLimit, setBookingLimit] = useState<number>(0);
 
+  const [userSecurityAttrubutes, setUserSecurityAttrubutes] = useState<UserAttributes>({});
   
   useEffect(() => {
     const getUserAttributes = async () => {
@@ -54,6 +55,7 @@ function RootComponent() {
           fullName,
           role: attributes["custom:role"] ?? "No role assigned",
         })
+        setUserSecurityAttrubutes({...attributes});
       } catch (error) {
         console.error("Error fetching user attributes:", error)
       }
@@ -91,7 +93,7 @@ function RootComponent() {
           <div className="flex items-center justify-end p-4">
             <UserButton fullName={userAttributes.fullName} role={userAttributes.role} limit={bookingLimit ?? 0} />
           </div>
-          {userAttributes.fullName && <UserContext.Provider value={userAttributes} >  
+          {userSecurityAttrubutes.given_name && <UserContext.Provider value={userSecurityAttrubutes} >  
             <Outlet /> 
             <Selfhelp/>
             </UserContext.Provider>}

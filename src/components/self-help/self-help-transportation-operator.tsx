@@ -4,7 +4,7 @@ import { Label } from "@radix-ui/react-label"
 
 export const TransportationOperatorSelfHelp = () => {
     return (
-         <Popover>
+        <Popover>
             <PopoverTrigger asChild>
                 <div className="self-help-right">
                     <Label className="self-help">
@@ -21,8 +21,11 @@ export const TransportationOperatorSelfHelp = () => {
                     defaultValue="item-1"
                 >
                     <AccordionItem value="item-1">
-                        <AccordionTrigger>Transportation Operator Product Information</AccordionTrigger>
+                        <AccordionTrigger>
+                            {/* TODO Transportation Operator  help title 1*/}
+                            Transportation Operator Product Information</AccordionTrigger>
                         <AccordionContent className="flex flex-col gap-4 text-balance">
+                            {/* TODO Transportation Operator  help delatis 1*/}
                             <p>
                                 Our flagship product combines cutting-edge technology with sleek
                                 design. Built with premium materials, it offers unparalleled
@@ -35,8 +38,12 @@ export const TransportationOperatorSelfHelp = () => {
                         </AccordionContent>
                     </AccordionItem>
                     <AccordionItem value="item-2">
-                        <AccordionTrigger>Transportation Operator Shipping Details</AccordionTrigger>
+                        <AccordionTrigger>
+                            {/* TODO Transportation Operator  help title 2*/}
+                            Transportation Operator Shipping Details
+                        </AccordionTrigger>
                         <AccordionContent className="flex flex-col gap-4 text-balance">
+                            {/* TODO Transportation Operator  help delatis 2*/}
                             <p>
                                 We offer worldwide shipping through trusted courier partners.
                                 Standard delivery takes 3-5 business days, while express shipping
@@ -49,8 +56,12 @@ export const TransportationOperatorSelfHelp = () => {
                         </AccordionContent>
                     </AccordionItem>
                     <AccordionItem value="item-3">
-                        <AccordionTrigger>Transportation Operator Return Policy</AccordionTrigger>
+                        <AccordionTrigger>
+                            {/* TODO Transportation Operator  help title 3*/}
+                            Transportation Operator Return Policy
+                        </AccordionTrigger>
                         <AccordionContent className="flex flex-col gap-4 text-balance">
+                            {/* TODO Transportation Operator  help delatis 3*/}
                             <p>
                                 We stand behind our products with a comprehensive 30-day return
                                 policy. If you&apos;re not completely satisfied, simply return the

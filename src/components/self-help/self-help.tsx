@@ -8,20 +8,21 @@ import { UserContext } from "../../AppContext"
 export const Selfhelp = () => {
 
     const userContext = useContext(UserContext);
+    const userRole = userContext["custom:role"];
 
-    if ('Transportation Operator' == userContext.role) {
+    if ('Transportation Operator' == userRole) {
 
         return <TransportationOperatorSelfHelp />
 
-    } else if ('Beneficiary Cargo Owner' == userContext.role) {
+    } else if ('Beneficiary Cargo Owner' == userRole) {
 
         return <BeneficiaryCargoOwnerSelfHelp />
-        
-    }else if ('Terminal Operator' == userContext.role) {
+
+    } else if ('Terminal Operator' == userRole) {
 
         return <TerminalOperatorSelfHelp />
-        
-    }else{
+
+    } else {
         return <div></div>
     }
 }

@@ -6,7 +6,7 @@ import { Label } from "@radix-ui/react-label"
 export const BeneficiaryCargoOwnerSelfHelp = () => {
     return (
         <Popover>
-           
+
             <PopoverTrigger asChild>
                 <div className="self-help-right">
                     <Label className="self-help">
@@ -23,8 +23,13 @@ export const BeneficiaryCargoOwnerSelfHelp = () => {
                     defaultValue="item-1"
                 >
                     <AccordionItem value="item-1">
-                        <AccordionTrigger>Beneficiary Cargo Owner Product Information</AccordionTrigger>
+
+                        <AccordionTrigger>
+                            {/* TODO Beneficiary Cargo Owner  help title 1*/}
+                            Beneficiary Cargo Owner Product Information
+                        </AccordionTrigger>
                         <AccordionContent className="flex flex-col gap-4 text-balance">
+                            {/* TODO Beneficiary Cargo Owner  help details 1*/}
                             <p>
                                 Our flagship product combines cutting-edge technology with sleek
                                 design. Built with premium materials, it offers unparalleled
@@ -37,8 +42,13 @@ export const BeneficiaryCargoOwnerSelfHelp = () => {
                         </AccordionContent>
                     </AccordionItem>
                     <AccordionItem value="item-2">
-                        <AccordionTrigger>Beneficiary Cargo Owner Shipping Details</AccordionTrigger>
+
+                        <AccordionTrigger>
+                            {/* TODO Beneficiary Cargo Owner  help title 2*/}
+                            Beneficiary Cargo Owner Shipping Details
+                        </AccordionTrigger>
                         <AccordionContent className="flex flex-col gap-4 text-balance">
+                            {/* TODO Beneficiary Cargo Owner  help details 2*/}
                             <p>
                                 We offer worldwide shipping through trusted courier partners.
                                 Standard delivery takes 3-5 business days, while express shipping
@@ -51,8 +61,13 @@ export const BeneficiaryCargoOwnerSelfHelp = () => {
                         </AccordionContent>
                     </AccordionItem>
                     <AccordionItem value="item-3">
-                        <AccordionTrigger>Beneficiary Cargo Owner Return Policy</AccordionTrigger>
+
+                        <AccordionTrigger>
+                            {/* TODO Beneficiary Cargo Owner  help title 3*/}
+                            Beneficiary Cargo Owner Return Policy
+                        </AccordionTrigger>
                         <AccordionContent className="flex flex-col gap-4 text-balance">
+                            {/* TODO Beneficiary Cargo Owner  help details 3*/}
                             <p>
                                 We stand behind our products with a comprehensive 30-day return
                                 policy. If you&apos;re not completely satisfied, simply return the
@@ -66,12 +81,12 @@ export const BeneficiaryCargoOwnerSelfHelp = () => {
                         </AccordionContent>
                     </AccordionItem>
                 </Accordion>
-                    <PopoverClose
-					className="absolute right-[5px] top-[5px] inline-flex size-[25px] cursor-default items-center justify-center rounded-full text-violet11 outline-none hover:bg-violet4 focus:shadow-[0_0_0_2px] focus:shadow-violet7"
-					aria-label="Close">
-					<X />
-				</PopoverClose>
-  
+                <PopoverClose
+                    className="absolute right-[5px] top-[5px] inline-flex size-[25px] cursor-default items-center justify-center rounded-full text-violet11 outline-none hover:bg-violet4 focus:shadow-[0_0_0_2px] focus:shadow-violet7"
+                    aria-label="Close">
+                    <X />
+                </PopoverClose>
+
             </PopoverContent>
         </Popover>
     )
