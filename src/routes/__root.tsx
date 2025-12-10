@@ -11,7 +11,6 @@ import { Toaster } from 'sonner';
 import { generateClient } from 'aws-amplify/data';
 import type { Schema } from '../../amplify/data/resource';
 import { UserContext } from '../AppContext';
-import { Selfhelp } from '../components/self-help/self-help';
 
 
 export interface UserAttributes {
