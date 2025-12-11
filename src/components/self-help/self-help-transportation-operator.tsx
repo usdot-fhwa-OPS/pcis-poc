@@ -17,7 +17,7 @@ export const TransportationOperatorSelfHelp = () => {
                 </PopoverTrigger>
                 <PopoverContent className="w-80">
                     <PopoverClose
-                        className="absolute right-[5px] top-[5px] inline-flex size-[25px] cursor-default items-center justify-center rounded-full text-violet11 outline-none hover:bg-violet4 focus:shadow-[0_0_0_2px] focus:shadow-violet7"
+                        className="absolute right-[5px] top-[5px] inline-flex size-[25px] cursor-default items-center justify-center"
                         aria-label="Close">
                         <X />
                     </PopoverClose>
