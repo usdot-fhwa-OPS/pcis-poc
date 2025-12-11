@@ -102,7 +102,6 @@ export const Route = createFileRoute('/')({
 function Index() {
   const { user } = useAuthenticator();
     const [userAttributes, setUserAttributes] = useState<{ fullName: string; role: string, email: string }>({ fullName: '', role: '', email: '' });
-    
     useEffect(() => {
       const getUserAttributes = async () => {
         try {
@@ -757,6 +756,7 @@ function Index() {
           </TabsContent>
           </div>
         </Tabs>
+        
       </div>
       );
     }
@@ -827,6 +827,7 @@ function Index() {
           />
         </TabsContent>
       </Tabs>
+     
     </div>
   );
     }
@@ -899,7 +900,12 @@ function Index() {
             />
           </TabsContent>
         </Tabs>
+
+        
+        
       </div>
+ 
+
     );
   }
 }

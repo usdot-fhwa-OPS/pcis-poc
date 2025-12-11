@@ -153,3 +153,23 @@ button:focus-visible {
     @apply bg-background text-foreground;
   }
 }
+.self-help {
+  background-color: #007AFF;
+  border-top-right-radius: 20px;
+  border-top-left-radius: 20px;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+  width: 75px;
+  height: 55px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.self-help-right {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+  padding-right: 1%;
+  height: fit-content;
+}
