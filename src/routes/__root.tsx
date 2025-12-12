@@ -2,7 +2,7 @@ import { createRootRoute, Link, Outlet } from '@tanstack/react-router'
 import '../App.css';
 import { useAuthenticator } from '@aws-amplify/ui-react';
 import { fetchUserAttributes } from 'aws-amplify/auth';
-import { useEffect, useState } from 'react';
+import  { useEffect, useState } from 'react';
 import { SidebarProvider } from "../components/ui/sidebar";
 import { AppSidebar } from "../components/app-sidebar/app-sidebar"
 import UserButton from '../components/userButton/userButton';
@@ -10,8 +10,10 @@ import '../index.css';
 import { Toaster } from 'sonner';
 import { generateClient } from 'aws-amplify/data';
 import type { Schema } from '../../amplify/data/resource';
+import { UserContext } from '../AppContext';
 
-interface UserAttributes {
+
+export interface UserAttributes {
   given_name?: string;
   family_name?: string;
   'custom:role'?: string;
@@ -36,6 +38,8 @@ function RootComponent() {
   const [userAttributes, setUserAttributes] = useState<{ fullName: string; role: string }>({ fullName: "", role: "" })
   const [bookingLimit, setBookingLimit] = useState<number>(0);
 
+  const [userSecurityAttrubutes, setUserSecurityAttrubutes] = useState<UserAttributes>({});
+  
   useEffect(() => {
     const getUserAttributes = async () => {
       try {
@@ -50,6 +54,7 @@ function RootComponent() {
           fullName,
           role: attributes["custom:role"] ?? "No role assigned",
         })
+        setUserSecurityAttrubutes({...attributes});
       } catch (error) {
         console.error("Error fetching user attributes:", error)
       }
@@ -82,13 +87,21 @@ function RootComponent() {
     <div className="flex min-h-screen bg-background">
       <SidebarProvider>
         <AppSidebar />
+        {userSecurityAttrubutes.given_name && <UserContext.Provider value={userSecurityAttrubutes} >  
         <div className="flex-1">
           <Toaster position="top-center" richColors={true} expand={true} />
           <div className="flex items-center justify-end p-4">
             <UserButton fullName={userAttributes.fullName} role={userAttributes.role} limit={bookingLimit ?? 0} />
           </div>
-          <Outlet />
+         
+          
+            <Outlet /> 
+            
+            
+          
+         
         </div>
+        </UserContext.Provider>}
       </SidebarProvider>
     </div>
   )

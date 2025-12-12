@@ -1,25 +1,31 @@
 import { TransportationOperatorSelfHelp } from "./self-help-transportation-operator"
 import { BeneficiaryCargoOwnerSelfHelp } from "./self-help-beneficiary-cargo-owner"
 import { TerminalOperatorSelfHelp } from "./self-help-terminal-operator"
+import { useContext } from "react"
+import { UserContext } from "../../AppContext"
 
 
-export const Selfhelp = (props: { role: string }) => {
+export const Selfhelp = () => {
 
-    if ('Transportation Operator' == props.role) {
+    const userContext = useContext(UserContext);
+    const userRole = userContext["custom:role"];
+
+    if ('Transportation Operator' == userRole) {
 
         return <TransportationOperatorSelfHelp />
 
-    } else if ('Beneficiary Cargo Owner' == props.role) {
+    } else if ('Beneficiary Cargo Owner' == userRole) {
 
         return <BeneficiaryCargoOwnerSelfHelp />
-        
-    }else if ('Terminal Operator' == props.role) {
+
+    } else if ('Terminal Operator' == userRole) {
 
         return <TerminalOperatorSelfHelp />
-        
-    }else{
+
+    } else {
         return <div></div>
     }
 }
+
 
 
