@@ -49,8 +49,8 @@ const orgOptions = [
 	<option key="Union Pacific"							value="Union Pacific">Union Pacific</option>,
 	<option key="CSX"									      value="CSX">CSX</option>,
 	<option key="Heart of Georgia Railroad (HOG)" 		  value="Heart of Georgia Railroad (HOG)">Heart of Georgia Railroad (HOG)</option>,
-	<option key="Illinois and Midland Railroad (IMRR)"	value="Illinois and Midland Railroad (IMRR)">Illinois and Midland Rilroad (IMRR)</option>,
-	<option key="ABC Drayage"						value="ABC Drayage">ABC Drayae</option>,
+	<option key="Illinois and Midland Railroad (IMRR)"	value="Illinois and Midland Railroad (IMRR)">Illinois and Midland Railroad (IMRR)</option>,
+	<option key="ABC Drayage"						value="ABC Drayage">ABC Drayage</option>,
 	<option key="XYZ 3PL"								value="XYZ 3PL">XYZ 3PL</option>,
 	<option key="Leidos" 								value="Leidos">Leidos</option>
 
