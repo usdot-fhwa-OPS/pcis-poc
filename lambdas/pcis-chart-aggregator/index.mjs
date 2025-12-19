@@ -40,17 +40,24 @@ function getClaims(event) {
 function getRole(event) {
   const claims = getClaims(event);
   const raw = claims?.["custom:role"];
-  return raw ? raw.toString().trim().toLowerCase() : "";
+  if (!raw) return "";
+  return normalizeSpaces(raw.toString().toLowerCase());
 }
 
+
 function isSupportedRole(role) {
+  // tolerate capitalization + extra spaces; match by keywords
   return (
-    role === "Terminal Operator" ||
-    role === "Trucking Operator" ||
-    role === "Transportation Operator" ||
-    role === "Beneficial Cargo Owner" ||
-    role === "Rail Operator"
+    role.includes("terminal") ||
+    role.includes("trucking") ||
+    role.includes("transportation") ||
+    role.includes("cargo owner") ||  // covers Beneficial Cargo Owner
+    role.includes("rail")
   );
+}
+
+function normalizeSpaces(s) {
+  return s.replace(/\s+/g, " ").trim();
 }
 
 // -------- Aggregation --------
