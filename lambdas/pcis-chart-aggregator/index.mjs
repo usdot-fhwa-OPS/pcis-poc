@@ -1,8 +1,3 @@
-// index.mjs — SIMPLE FINAL (Node.js 24.x)
-// - API Gateway validates JWT (Cognito) and injects claims
-// - Lambda reads ONLY claims["custom:role"]
-// - Scans the whole table (no GSIs yet)
-// - Returns role-specific aggregated data (no capacity logic, no scoping)
 
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocumentClient, ScanCommand } from "@aws-sdk/lib-dynamodb";
