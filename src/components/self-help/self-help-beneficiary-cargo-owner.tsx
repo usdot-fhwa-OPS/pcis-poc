@@ -31,58 +31,61 @@ export const BeneficiaryCargoOwnerSelfHelp = () => {
                         <AccordionItem value="item-1">
 
                             <AccordionTrigger>
-                                {/* TODO Beneficiary Cargo Owner  help title 1*/}
-                                Beneficiary Cargo Owner Product Information
+                                {/* Beneficiary Cargo Owner help title 1*/}
+                                How do I view the status of cargo?
                             </AccordionTrigger>
                             <AccordionContent className="flex flex-col gap-4 text-balance">
-                                {/* TODO Beneficiary Cargo Owner  help details 1*/}
+                                {/* Beneficiary Cargo Owner help details 1*/}
                                 <p>
-                                    Our flagship product combines cutting-edge technology with sleek
-                                    design. Built with premium materials, it offers unparalleled
-                                    performance and reliability.
-                                </p>
-                                <p>
-                                    Key features include advanced processing capabilities, and an
-                                    intuitive user interface designed for both beginners and experts.
+                                    The home page contains all Cargo Units, which are separated into
+                                    three tabs based on status: Upcoming, Ongoing, and Completed.
+                                    Select the appropriate tab to view the respective Cargo Units.
                                 </p>
                             </AccordionContent>
                         </AccordionItem>
                         <AccordionItem value="item-2">
 
                             <AccordionTrigger>
-                                {/* TODO Beneficiary Cargo Owner  help title 2*/}
-                                Beneficiary Cargo Owner Shipping Details
+                                {/* Beneficiary Cargo Owner help title 2*/}
+                                How do I assign a Transportation Operator for cargo?
                             </AccordionTrigger>
                             <AccordionContent className="flex flex-col gap-4 text-balance">
-                                {/* TODO Beneficiary Cargo Owner  help details 2*/}
+                                {/* Beneficiary Cargo Owner help details 2*/}
                                 <p>
-                                    We offer worldwide shipping through trusted courier partners.
-                                    Standard delivery takes 3-5 business days, while express shipping
-                                    ensures delivery within 1-2 business days.
-                                </p>
-                                <p>
-                                    All orders are carefully packaged and fully insured. Track your
-                                    shipment in real-time through our dedicated tracking portal.
+                                    In the Upcoming tab, Cargo Units that have not been assigned to a
+                                    Transportation Operator will appear. Once the Cargo Unit status is
+                                    updated to On-Dock by the Terminal Operator, the Assign button
+                                    becomes available to assign a Transportation Operator for the
+                                    Cargo Unit.
                                 </p>
                             </AccordionContent>
                         </AccordionItem>
                         <AccordionItem value="item-3">
 
                             <AccordionTrigger>
-                                {/* TODO Beneficiary Cargo Owner  help title 3*/}
-                                Beneficiary Cargo Owner Return Policy
+                                {/* Beneficiary Cargo Owner help title 3*/}
+                                How do I contact a Transportation Operator for an assigned cargo pickup?
                             </AccordionTrigger>
                             <AccordionContent className="flex flex-col gap-4 text-balance">
-                                {/* TODO Beneficiary Cargo Owner  help details 3*/}
+                                {/* Beneficiary Cargo Owner help details 3*/}
                                 <p>
-                                    We stand behind our products with a comprehensive 30-day return
-                                    policy. If you&apos;re not completely satisfied, simply return the
-                                    item in its original condition.
+                                    In the Ongoing tab there is a Contact button for each Cargo Unit
+                                    that can be used to contact the Transportation Operator for
+                                    assigned pickups.
                                 </p>
+                            </AccordionContent>
+                        </AccordionItem>
+                        <AccordionItem value="item-4">
+
+                            <AccordionTrigger>
+                                {/* Beneficiary Cargo Owner help title 4*/}
+                                How do I view a history of completed cargo pickups?
+                            </AccordionTrigger>
+                            <AccordionContent className="flex flex-col gap-4 text-balance">
+                                {/* Beneficiary Cargo Owner help details 4*/}
                                 <p>
-                                    Our hassle-free return process includes free return shipping and
-                                    full refunds processed within 48 hours of receiving the returned
-                                    item.
+                                    Select the Completed tab to view previously picked up Cargo Units and
+                                    the date of the pickup.
                                 </p>
                             </AccordionContent>
                         </AccordionItem>
