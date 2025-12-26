@@ -35,10 +35,12 @@ import {
   SelectContent,
   SelectGroup,
   SelectItem,
+  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "../ui/select"
 import { User } from "../users/columns.tsx";
+import { SelectItemText } from "@radix-ui/react-select";
 
 export const columns = (): ColumnDef<any>[] => {
   const baseColumns: ColumnDef<any>[] = [
@@ -77,12 +79,12 @@ export const columns = (): ColumnDef<any>[] => {
         }
 
         const handleOperatorSelect = (value: string) => {
-          setTempName(value);
+          setTempEmail(value);
           const selectedUser = data.find(
-            (user) => `${user.given_name} ${user.family_name}` === value
+            (user) => `${user.email}` === value
           );
           if (selectedUser) {
-            setTempEmail(selectedUser.email);
+            setTempName( `${selectedUser.given_name} ${selectedUser.family_name}`);
           }
         };
 
@@ -119,22 +121,71 @@ export const columns = (): ColumnDef<any>[] => {
                 <div className="space-y-2 py-2">
                   <div>
                     <Label>Transportation Operator Name</Label>
-                    <Select value={tempName} onValueChange={handleOperatorSelect} disabled={isLoading}>
+                    <Select value={tempEmail} onValueChange={handleOperatorSelect} disabled={isLoading}>
                       <SelectTrigger className="w-full">
                         <div className="flex items-center gap-2">
                           {isLoading && <Loader2 className="h-4 w-4 animate-spin" />}
-                          <SelectValue placeholder="Select operator" />
+                          <SelectValue placeholder="Select operator" >
+                          {tempName}  
+                          </SelectValue>
                         </div>
                       </SelectTrigger>
                       <SelectContent>
                         <SelectGroup>
+                          <SelectLabel>Trucking Operators</SelectLabel>
                           {data.map(user => {
                             const fullName = `${user.given_name} ${user.family_name}`;
-                            return (
-                              <SelectItem key={user.email} value={fullName}>
-                                {fullName}
-                              </SelectItem>
-                            );
+                            if ('Trucking Operator' === `${user["custom:role"]}`) {
+
+                              return (
+
+                                <SelectItem value={user.email}>
+                                  <SelectItemText>
+                                    {user["custom:organization"] ? user["custom:organization"] : fullName}
+                                  </SelectItemText>
+
+                                </SelectItem>
+
+                              );
+                            }
+                          })}
+                        </SelectGroup>
+                        <SelectGroup>
+                          <SelectLabel>Rail Operators</SelectLabel>
+                          {data.map(user => {
+                            const fullName = `${user.given_name} ${user.family_name}`;
+                            if ('Rail Operator' === `${user["custom:role"]}`) {
+
+                              return (
+
+                                <SelectItem value={user.email}>
+                                  <SelectItemText>
+                                    {user["custom:organization"] ? user["custom:organization"] : fullName}
+                                  </SelectItemText>
+
+                                </SelectItem>
+
+                              );
+                            }
+                          })}
+                        </SelectGroup>
+                        <SelectGroup>
+                          <SelectLabel>Third Party Logistic Providers</SelectLabel>
+                          {data.map(user => {
+                            const fullName = `${user.given_name} ${user.family_name}`;
+                            if ('Third Party Logistics Provider' === `${user["custom:role"]}`) {
+
+                              return (
+
+                                <SelectItem value={user.email}>
+                                  <SelectItemText>
+                                    {user["custom:organization"] ? user["custom:organization"] : fullName}
+                                  </SelectItemText>
+
+                                </SelectItem>
+
+                              );
+                            }
                           })}
                         </SelectGroup>
                       </SelectContent>
