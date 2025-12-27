@@ -88,6 +88,20 @@ export const columns = (): ColumnDef<any>[] => {
           }
         };
 
+        const getSelectItem = (user: User) => {
+          const fullName = `${user.given_name} ${user.family_name}`;
+          return (
+
+            <SelectItem value={user.email}>
+              <SelectItemText>
+                {user["custom:organization"] ? user["custom:organization"] : fullName}
+              </SelectItemText>
+
+            </SelectItem>
+
+          );
+        };
+
         if (isMissing) {
           return (
             <Dialog 
@@ -134,57 +148,25 @@ export const columns = (): ColumnDef<any>[] => {
                         <SelectGroup>
                           <SelectLabel>Trucking Operators</SelectLabel>
                           {data.map(user => {
-                            const fullName = `${user.given_name} ${user.family_name}`;
                             if ('Trucking Operator' === `${user["custom:role"]}`) {
-
-                              return (
-
-                                <SelectItem value={user.email}>
-                                  <SelectItemText>
-                                    {user["custom:organization"] ? user["custom:organization"] : fullName}
-                                  </SelectItemText>
-
-                                </SelectItem>
-
-                              );
+                                  return getSelectItem(user);
                             }
                           })}
                         </SelectGroup>
                         <SelectGroup>
                           <SelectLabel>Rail Operators</SelectLabel>
                           {data.map(user => {
-                            const fullName = `${user.given_name} ${user.family_name}`;
                             if ('Rail Operator' === `${user["custom:role"]}`) {
-
-                              return (
-
-                                <SelectItem value={user.email}>
-                                  <SelectItemText>
-                                    {user["custom:organization"] ? user["custom:organization"] : fullName}
-                                  </SelectItemText>
-
-                                </SelectItem>
-
-                              );
+                                  return getSelectItem(user);
                             }
                           })}
                         </SelectGroup>
                         <SelectGroup>
                           <SelectLabel>Third Party Logistic Providers</SelectLabel>
                           {data.map(user => {
-                            const fullName = `${user.given_name} ${user.family_name}`;
+                            
                             if ('Third Party Logistics Provider' === `${user["custom:role"]}`) {
-
-                              return (
-
-                                <SelectItem value={user.email}>
-                                  <SelectItemText>
-                                    {user["custom:organization"] ? user["custom:organization"] : fullName}
-                                  </SelectItemText>
-
-                                </SelectItem>
-
-                              );
+                                  return getSelectItem(user);
                             }
                           })}
                         </SelectGroup>
