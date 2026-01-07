@@ -43,7 +43,7 @@ import { User } from "../users/columns.tsx";
 export const columns = (): ColumnDef<any>[] => {
   const baseColumns: ColumnDef<any>[] = [
     { accessorKey: "vesselID", header: "Vessel ID" },
-    { accessorKey: "cargoUnitID", header: "Cargo unit ID" }, // changed containerID and Container ID to cargoUnitID and Cargo ubit ID
+    { accessorKey: "cargoUnitID", header: "Cargo Unit ID" }, // changed containerID and Container ID to cargoUnitID and Cargo ubit ID
     { accessorKey: "origin", header: "Origin" },
     { accessorKey: "destination", header: "Destination" },
     { accessorKey: "bcoName", header: "BCO" },
@@ -224,7 +224,7 @@ baseColumns.push({
 export const CompletedColumn = (): ColumnDef<any>[] => {
   const baseColumns: ColumnDef<any>[] = [
     { accessorKey: "vesselID", header: "Vessel ID" },
-    { accessorKey: "cargoUnitID", header: "Cargo unit ID" }, // changed containerID and Container ID to cargoUnitID and Cargo unit ID
+    { accessorKey: "cargoUnitID", header: "Cargo Unit ID" }, // changed containerID and Container ID to cargoUnitID and Cargo unit ID
     { accessorKey: "origin", header: "Origin" },
     { accessorKey: "destination", header: "Destination" },
     { accessorKey: "bcoName", header: "BCO" },

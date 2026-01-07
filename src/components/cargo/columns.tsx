@@ -78,7 +78,7 @@ export const columns: ColumnDef<UpcomingCargo>[] = [
                 try {
                   // Call the Amplify update method (must always contain containerID)
                   const { data: updatedContainerStatus } = await client.models.Container.update({
-                    containerID: row.original.cargoUnitID, // changed containerID to cargoUnitID
+                    cargoUnitID: row.original.cargoUnitID, // changed containerID to cargoUnitID
                     containerStatus: val,
                   })
                   console.log("Updated container status:", updatedContainerStatus)

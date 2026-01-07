@@ -12,7 +12,7 @@ export const columns = (status: string): ColumnDef<any>[] => {
   const baseColumns: ColumnDef<any>[] = [
 
     { accessorKey: "vesselID", header: "Vessel ID" },
-    { accessorKey: "cargoUnitID", header: "Cargo unit ID" }, // changed containerID and ContainerID to cargoUnitID and Cargo unit ID
+    { accessorKey: "cargoUnitID", header: "Cargo Unit ID" }, // changed containerID and ContainerID to cargoUnitID and Cargo unit ID
     { accessorKey: "origin", header: "Origin" },
     { accessorKey: "bcoName", header: "BCO" },
     { accessorKey: "bcoEmail", header: "BCO Email" },
@@ -196,7 +196,7 @@ export const CompletedColumn = (): ColumnDef<any>[] => {
     },
     {
       accessorKey: "cargoUnitID", // changed containerID and Contianer ID to cargoUnitID and Cargo unit ID
-      header: "Cargo unit ID",
+      header: "Cargo Unit ID",
     },
     {
       accessorKey: "origin",
