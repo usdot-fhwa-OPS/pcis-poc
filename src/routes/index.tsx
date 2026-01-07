@@ -19,35 +19,35 @@ const client = generateClient<Schema>();
 //Define the selection of data that will be used for the table
 const selectionSetTransOpUpcomingBookings = ['vesselID', 'cargoUnitID', 'origin', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail', 'assignmentDate', 'reservationStatus','flag'] as const; // changed containerID to cargoUnitID
 //Create a type based on your selectionSet that will be later used for the columns.tsx file of the able
-export type TransOpUpcomingBookings = SelectionSet<Schema['Cargo unit']['type'], typeof selectionSetTransOpUpcomingBookings>
+export type TransOpUpcomingBookings = SelectionSet<Schema['Container']['type'], typeof selectionSetTransOpUpcomingBookings>
 
 const selectionSetTransOpOngoingBookings = ['vesselID', 'cargoUnitID', 'origin', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail', 'reservationDate', 'reservationTime', 'reservationStatus', 'flag', 'containerStatus'] as const; // changed containerID to cargoUnitID
-export type TransOpOngoingBookings = SelectionSet<Schema['Cargo unit']['type'], typeof selectionSetTransOpOngoingBookings>
+export type TransOpOngoingBookings = SelectionSet<Schema['Container']['type'], typeof selectionSetTransOpOngoingBookings>
 
 const selectionSetTerminalOPUpcoming = ['vesselID', 'cargoUnitID', 'origin', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail','reservationDate','reservationTime','reservationStatus', 'flag'] as const; // changed containerID to cargoUnitID
 
 const selectionSetTerminalOpModified = ['vesselID', 'cargoUnitID', 'origin', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail','reservationDate','reservationTime', 'reservationStatus', 'modifiedReservationDate', 'modifiedReservationTime'] as const; // changed containerID to cargoUnitID
 
-export type TerminalOpModifiedBookings = SelectionSet<Schema['Cargo unit']['type'], typeof selectionSetTerminalOpModified>
+export type TerminalOpModifiedBookings = SelectionSet<Schema['Container']['type'], typeof selectionSetTerminalOpModified>
 //Define the selection of data that will be used for the table
 const selectionSetBCOUpcomingBookings = ['vesselID', 'cargoUnitID', 'origin', 'destination', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail', 'containerStatus','arrivalDate', 'flag'] as const; // changed containerID to cargoUnitID
 //Create a type based on your selectionSet that will be later used for the columns.tsx file of the able
 
 const selectionSetTerminalOPOngoing = ['vesselID', 'cargoUnitID', 'origin', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail','reservationDate','reservationTime','reservationStatus', 'flag'] as const; // changed containerID to cargoUnitID
-export type BCOUpcomingBookings = SelectionSet<Schema['Cargo unit']['type'], typeof selectionSetBCOUpcomingBookings> 
+export type BCOUpcomingBookings = SelectionSet<Schema['Container']['type'], typeof selectionSetBCOUpcomingBookings> 
 
 //Create a type based on your selectionSet that will be later used for the columns.tsx file of the able
-export type TerminalOPUpcomingBookings= SelectionSet<Schema['Cargo unit']['type'], typeof selectionSetTerminalOPUpcoming>
+export type TerminalOPUpcomingBookings= SelectionSet<Schema['Container']['type'], typeof selectionSetTerminalOPUpcoming>
 
-export type TerminalOPOngoingBookings= SelectionSet<Schema['Cargo unit']['type'], typeof selectionSetTerminalOPOngoing >
+export type TerminalOPOngoingBookings= SelectionSet<Schema['Container']['type'], typeof selectionSetTerminalOPOngoing >
 
 const selectionSetBCOOngoing = ['vesselID', 'cargoUnitID', 'origin','destination', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail','reservationDate','resApprovalDate','reservationStatus', 'resPickupDate','flag', 'updatedAt'] as const; // changed containerID to cargoUnitID
 
-export type BCOOngoingBooking= SelectionSet<Schema['Cargo unit']['type'], typeof selectionSetBCOOngoing>
+export type BCOOngoingBooking= SelectionSet<Schema['Container']['type'], typeof selectionSetBCOOngoing>
 
 const selectionSetBCOCompleted = ['vesselID', 'cargoUnitID', 'origin', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail','reservationDate','resApprovalDate','reservationStatus','destination', 'resPickupDate','flag'] as const; // changed containerID to cargoUnitID
 
-export type BCOCompletedBooking= SelectionSet<Schema['Cargo unit']['type'], typeof selectionSetBCOCompleted>
+export type BCOCompletedBooking= SelectionSet<Schema['Container']['type'], typeof selectionSetBCOCompleted>
 
 //Define the selection of data that will be used for the table
 const selectionSetTransportation_CompletedData = [ 
