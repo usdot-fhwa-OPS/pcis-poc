@@ -87,7 +87,7 @@ export function NotificationsButton({notifications, role}: NotificationsButtonPr
               const formattedTime = format(dateObj, 'hh:mm a'); 
               return (
                 <div
-                  key={notification.containerID}
+                  key={notification.cargoUnitID}
                   className="flex items-start justify-between gap-4 p-4 border-b last:border-b-0"
                 >
                   <div className="space-y-1">
