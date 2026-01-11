@@ -2,7 +2,6 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "../ui/button.tsx";
 import { useState } from "react";
 import { Flag } from "lucide-react";
-import { BCODataTableMeta } from "./data-table.tsx";
 
 //Four Imports needed for Amplify Data Queries and CRUD methods
 
@@ -13,11 +12,6 @@ const client = generateClient<Schema>();
 
 import { format } from "date-fns";
 
-import {
-  SelectItem,
-} from "../ui/select"
-import { User } from "../users/columns.tsx";
-import { SelectItemText } from "@radix-ui/react-select";
 import { assignTransportationOperator } from "./assign_transportation_operator.tsx";
 
 export const columns = (): ColumnDef<any>[] => {
@@ -33,58 +27,12 @@ export const columns = (): ColumnDef<any>[] => {
       header: "Transportation  Operator",
       cell: ({ row, table }) => {
 
-        const [tempName, setTempName] = useState("")
-        const [tempEmail, setTempEmail] = useState("")
-        const [isLoading, setIsLoading] = useState(true)
-        const [isDialogOpen, setIsDialogOpen] = useState(false)
 
         // If either operator OR email is missing, show "Book" button
         const isMissing = !row.original.transopName?.trim() || !row.original.transopEmail?.trim()
-
-        function handleSubmit() {
-          // Use the parent's updateCargo method:
-          (table.options.meta as BCODataTableMeta)?.assignTransOp(row.original.containerID, tempName, tempEmail, "Pending Transportation Operator Approval")
-          setIsDialogOpen(false)
-        }
-
-        const [data, setData] = useState<User[]>([])
-        
-        const handleOpen = async () => {
-          setIsDialogOpen(true)
-          const result = await (table.options.meta as BCODataTableMeta)?.fetchTransportationOperators();
-          setData(result)
-          setIsLoading(false)
-        }
-
-        const handleOperatorSelect = (value: string) => {
-          setTempEmail(value);
-          const selectedUser = data.find(
-            (user) => `${user.email}` === value
-          );
-          if (selectedUser) {
-            setTempName( `${selectedUser.given_name} ${selectedUser.family_name}`);
-          }
-        };
-
-        const getSelectItem = (user: User) => {
-          const fullName = `${user.given_name} ${user.family_name}`;
-          return (
-
-            <SelectItem value={user.email}>
-              <SelectItemText>
-                {user["custom:organization"] ? user["custom:organization"] : fullName}
-              </SelectItemText>
-
-            </SelectItem>
-
-          );
-        };
-
         if (isMissing) {
           return (
-            assignTransportationOperator(isDialogOpen, row, handleOpen,setIsDialogOpen, tempEmail, tempName,
-                    isLoading, handleOperatorSelect, data,getSelectItem, handleSubmit
-            )
+            assignTransportationOperator( table, row)
           )
         }
 
