@@ -2,11 +2,12 @@ import { Dialog } from "@radix-ui/react-dialog";
 import { DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
 import { Button } from "../ui/button";
-import { Label, Input } from "@aws-amplify/ui-react";
+import { Input } from "@aws-amplify/ui-react";
 import { User } from "../users/columns";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "../ui/accordion";
 import { useState } from "react";
 import { BCODataTableMeta } from "./data-table";
+import { Label } from "../ui/label";
 
 
 export const assignTransportationOperator = (table: any, row: any) => {
@@ -41,10 +42,11 @@ export const assignTransportationOperator = (table: any, row: any) => {
         const getSelectItem = (user: User) => {
             const fullName = `${user.given_name} ${user.family_name}`;
             return (
-                <p>
-                    <Label  onClick={()=>handleOperatorSelect(user.email)}>{user["custom:organization"] ? user["custom:organization"] : fullName}</Label>
+                <div className="flex">
+                    <svg  width="15" height="25" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><path className="padding-top-2" d="M9.875 7.5C9.875 8.81168 8.81168 9.875 7.5 9.875C6.18832 9.875 5.125 8.81168 5.125 7.5C5.125 6.18832 6.18832 5.125 7.5 5.125C8.81168 5.125 9.875 6.18832 9.875 7.5Z" fill="currentColor"></path></svg>
+                    <Label  onClick={()=>handleOperatorSelect(user.email)} className="clickable-item hover:underline" >{user["custom:organization"] ? user["custom:organization"] : fullName}</Label>
                     
-                </p>
+                </div>
 
             );
         };
