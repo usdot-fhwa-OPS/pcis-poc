@@ -43,7 +43,7 @@ export const assignTransportationOperator = (table: any, row: any) => {
             const fullName = `${user.given_name} ${user.family_name}`;
             return (
                 <div className="flex">
-                    <svg  width="15" height="25" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><path className="padding-top-2" d="M9.875 7.5C9.875 8.81168 8.81168 9.875 7.5 9.875C6.18832 9.875 5.125 8.81168 5.125 7.5C5.125 6.18832 6.18832 5.125 7.5 5.125C8.81168 5.125 9.875 6.18832 9.875 7.5Z" fill="currentColor"></path></svg>
+                    <svg  width="15" height="35" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><path className="padding-top-2" d="M9.875 7.5C9.875 8.81168 8.81168 9.875 7.5 9.875C6.18832 9.875 5.125 8.81168 5.125 7.5C5.125 6.18832 6.18832 5.125 7.5 5.125C8.81168 5.125 9.875 6.18832 9.875 7.5Z" fill="currentColor"></path></svg>
                     <Button  style={{ width: '50%', display: 'block' }} onClick={()=>handleOperatorSelect(user.email)} >{user["custom:organization"] ? user["custom:organization"] : fullName}</Button>
                     
                 </div>
