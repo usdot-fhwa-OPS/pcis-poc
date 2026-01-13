@@ -20,7 +20,9 @@ function RouteComponent() {
         <div className="mt-8">
           <h2 className="text-xl font-semibold tracking-tight">Start Stow Plan Data Import</h2>
           <p className="mt-2 text-sm text-muted-foreground">
-            Upload and process your Stow Plan file for your container planning and management.
+            Upload and process your Stow Plan file for your container planning and management.<br />
+            Required columns (in order): cargoUnitID, arrivalDate (M/DD/YYYY format), bcoEmail, bcoName, containerStatus 
+            (On-Dock/On-Ship), destination, origin
           </p>
           <FileUploader
             acceptedFileTypes={[
