@@ -4,10 +4,10 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/
 import { Button } from "../ui/button";
 import { Input } from "@aws-amplify/ui-react";
 import { User } from "../users/columns";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "../ui/accordion";
 import { useState } from "react";
 import { BCODataTableMeta } from "./data-table";
 import { Label } from "../ui/label";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuPortal, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger } from "../ui/dropdown-menu";
 
 
 export const assignTransportationOperator = (table: any, row: any) => {
@@ -39,12 +39,12 @@ export const assignTransportationOperator = (table: any, row: any) => {
           setIsDialogOpen(false)
         }
 
-        const getSelectItem = (user: User) => {
+        
+                const getMenuItem = (user: User) => {
             const fullName = `${user.given_name} ${user.family_name}`;
             return (
                 <div className="flex">
-                    <svg  width="15" height="35" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><path className="padding-top-2" d="M9.875 7.5C9.875 8.81168 8.81168 9.875 7.5 9.875C6.18832 9.875 5.125 8.81168 5.125 7.5C5.125 6.18832 6.18832 5.125 7.5 5.125C8.81168 5.125 9.875 6.18832 9.875 7.5Z" fill="currentColor"></path></svg>
-                    <Button  style={{ width: '50%', display: 'block' }} onClick={()=>handleOperatorSelect(user.email)} >{user["custom:organization"] ? user["custom:organization"] : fullName}</Button>
+                    <DropdownMenuItem  onClick={()=>handleOperatorSelect(user.email)} >{user["custom:organization"] ? user["custom:organization"] : fullName}</DropdownMenuItem>
                     
                 </div>
 
@@ -53,7 +53,8 @@ export const assignTransportationOperator = (table: any, row: any) => {
 
     return (
         <>
-            
+
+
             <Dialog
                 open={isDialogOpen}
                 onOpenChange={(open) => {
@@ -79,67 +80,47 @@ export const assignTransportationOperator = (table: any, row: any) => {
                     <DialogHeader>
                         <DialogTitle>Assign Transportation Operator</DialogTitle>
                         <DialogDescription>
-                            Enter a Transportation Operator name and email to assign this container.
+                            Select a Transportation Operator name and email to assign this container.
                         </DialogDescription>
                     </DialogHeader>
                     <div className="space-y-2 py-2">
                         <div>
-                            <Label>Transportation Operator</Label>
-                            <Accordion
-                                type="single"
-                                collapsible
-                                className="w-full"
-                            >
-                                <AccordionItem value="item-1">
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <Button variant="outline" disabled={row.original.containerStatus === "On-Ship"} className="bg-blue-600 text-white hover:bg-blue-700" >List Transportation Operator</Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent className="w-56" align="start">
+                                    <DropdownMenuLabel>Trucking Operators</DropdownMenuLabel>
+                                    <DropdownMenuGroup>
+                                        {data.map(user => {
+                                            if ('Trucking Operator' === `${user["custom:role"]}`) {
+                                                return getMenuItem(user)
+                                            }
+                                        })}
 
+                                    </DropdownMenuGroup>
+                                    <DropdownMenuSeparator />
+                                    <DropdownMenuLabel>Rail Operators</DropdownMenuLabel>
+                                    <DropdownMenuGroup>
+                                        {data.map(user => {
+                                            if ('Rail Operator' === `${user["custom:role"]}`) {
+                                                return getMenuItem(user)
+                                            }
+                                        })}
 
-                                    <AccordionTrigger>
-                                        Trucking Operators
-                                    </AccordionTrigger>
-                                    <AccordionContent className="flex flex-col gap-4 text-balance">
-                                        <p>
-                                            {data.map(user => {
-                                                if ('Trucking Operator' === `${user["custom:role"]}`) {
-                                                    return getSelectItem(user);
-                                                }
-                                            })}
-                                        </p>
-                                    </AccordionContent>
-                                </AccordionItem>
-                                <AccordionItem value="item-2">
+                                    </DropdownMenuGroup>
+                                    <DropdownMenuSeparator />
+                                    <DropdownMenuLabel>Third Party Logistic Providers</DropdownMenuLabel>
+                                    <DropdownMenuGroup>
+                                        {data.map(user => {
+                                            if ('Third Party Logistics Provider' === `${user["custom:role"]}`) {
+                                                return getMenuItem(user)
+                                            }
+                                        })}
 
-                                    <AccordionTrigger>
-                                        Rail Operators
-                                    </AccordionTrigger>
-                                    <AccordionContent className="flex flex-col gap-4 text-balance">
-
-                                        <p>
-                                            {data.map(user => {
-                                                if ('Rail Operator' === `${user["custom:role"]}`) {
-                                                    return getSelectItem(user);
-                                                }
-                                            })}
-                                        </p>
-                                    </AccordionContent>
-                                </AccordionItem>
-                                <AccordionItem value="item-3">
-
-                                    <AccordionTrigger>
-                                        Third Party Logistic Providers
-                                    </AccordionTrigger>
-                                    <AccordionContent className="flex flex-col gap-4 text-balance">
-                                        <p>
-                                            {data.map(user => {
-
-                                                if ('Third Party Logistics Provider' === `${user["custom:role"]}`) {
-                                                    return getSelectItem(user);
-                                                }
-                                            })}
-                                        </p>
-                                    </AccordionContent>
-                                </AccordionItem>
-
-                            </Accordion>
+                                    </DropdownMenuGroup>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
                         </div>
                         <div>
                             <Label>Transportation Operator Email</Label>
