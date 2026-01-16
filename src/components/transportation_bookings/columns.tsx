@@ -500,7 +500,8 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
                 {`Original Reservation: ${row.original.reservationDate} at  ${row.original.reservationTime}`}
               </div>
               <div className="text-sm text-muted-foreground">
-                {`Vessel ID: ${row.original.vesselID} | Cargo Unit ID: ${row.original.cargoUnitID} | Origin: ${row.original.origin} | BCO: ${row.original.bcoName} | BCO Email: ${row.original.bcoEmail}`}  /* changed containerID and Container ID to cargoUnitID and Cargo unit ID */
+                {/* changed containerID and Container ID to cargoUnitID and Cargo unit ID */}
+                {`Vessel ID: ${row.original.vesselID} | Cargo Unit ID: ${row.original.cargoUnitID} | Origin: ${row.original.origin} | BCO: ${row.original.bcoName} | BCO Email: ${row.original.bcoEmail}`} 
               </div>
             </DialogHeader>
             <div className="grid gap-4 py-4">
