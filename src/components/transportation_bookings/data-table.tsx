@@ -21,7 +21,7 @@ import {
 
 export interface TransOpDataTableMeta {
   updateTransOpBooking: (
-    containerID: string, 
+    cargoUnitID: string, 
     reservationStatus: string, 
     reservationDate?: string, 
     reservationTime?: string

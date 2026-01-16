@@ -321,7 +321,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
               <DialogHeader>
                 <DialogTitle>Reserve Container Pick-Up</DialogTitle>
                 <div className="text-sm text-muted-foreground">
-                  {`Vessel ID: ${row.original.vesselID} | Cargo Unit ID: ${row.original.cargoUnitID} | Origin: ${row.original.origin} | BCO: ${row.original.bcoName} | BCO Email: ${row.original.bcoEmail}`}  // changed containerID and Container ID to cargoUnitID and Caro unit ID
+                  {`Vessel ID: ${row.original.vesselID} | Cargo Unit ID: ${row.original.cargoUnitID} | Origin: ${row.original.origin} | BCO: ${row.original.bcoName} | BCO Email: ${row.original.bcoEmail}`}  /* changed containerID and Container ID to cargoUnitID and Cargo unit ID */
                 </div>
               </DialogHeader>
                 <div className="grid gap-4 py-4">
@@ -500,7 +500,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
                 {`Original Reservation: ${row.original.reservationDate} at  ${row.original.reservationTime}`}
               </div>
               <div className="text-sm text-muted-foreground">
-                {`Vessel ID: ${row.original.vesselID} | Cargo Unit ID: ${row.original.cargoUnitID} | Origin: ${row.original.origin} | BCO: ${row.original.bcoName} | BCO Email: ${row.original.bcoEmail}`}  // changed containerID and Container ID to cargoUnitID and Cargo unit ID
+                {`Vessel ID: ${row.original.vesselID} | Cargo Unit ID: ${row.original.cargoUnitID} | Origin: ${row.original.origin} | BCO: ${row.original.bcoName} | BCO Email: ${row.original.bcoEmail}`}  /* changed containerID and Container ID to cargoUnitID and Cargo unit ID */
               </div>
             </DialogHeader>
             <div className="grid gap-4 py-4">
