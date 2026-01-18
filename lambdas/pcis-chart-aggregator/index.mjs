@@ -110,7 +110,9 @@ function isSupportedRole(roleNorm) {
     roleNorm.includes("trucking") ||
     roleNorm.includes("transportation") ||
     roleNorm.includes("cargo owner") || // covers Beneficial Cargo Owner
-    roleNorm.includes("rail")
+    roleNorm.includes("rail") ||
+    roleNorm.includes("logistics") ||
+    roleNorm.includes("3pl")
   );
 }
 
@@ -149,9 +151,16 @@ function getDestination(event, claims) {
 function roleKind(roleNorm) {
   if (roleNorm.includes("terminal")) return "terminal";
   if (roleNorm.includes("cargo owner")) return "bco";
-  if (roleNorm.includes("rail")) return "transop"; // treat rail like transop in your GSI list
-  if (roleNorm.includes("trucking") || roleNorm.includes("transportation"))
+  // Transportation Operator, Trucking Operator, Rail Operator, Third Party Logistics Provider
+  if (
+    roleNorm.includes("rail") ||
+    roleNorm.includes("trucking") ||
+    roleNorm.includes("transportation") ||
+    roleNorm.includes("logistics") ||
+    roleNorm.includes("3pl")
+  ) {
     return "transop";
+  }
   return "unknown";
 }
 
@@ -346,7 +355,9 @@ function shapeByRole(roleNorm, agg) {
   if (
     roleNorm.includes("trucking") ||
     roleNorm.includes("transportation") ||
-    roleNorm.includes("rail")
+    roleNorm.includes("rail") ||
+    roleNorm.includes("logistics") ||
+    roleNorm.includes("3pl")
   ) {
     return {
       workloadByStatus: agg.bookingStatusDistribution,
