@@ -7,7 +7,7 @@ import { User } from "../users/columns";
 import { useState } from "react";
 import { BCODataTableMeta } from "./data-table";
 import { Label } from "../ui/label";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "../ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuPortal, DropdownMenuSeparator, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger } from "../ui/dropdown-menu";
 
 
 export const assignTransportationOperator = (table: any, row: any) => {
@@ -87,37 +87,50 @@ export const assignTransportationOperator = (table: any, row: any) => {
                         <div>
                             <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
-                                    <Button variant="outline" disabled={row.original.containerStatus === "On-Ship"} className="bg-blue-600 text-white hover:bg-blue-700" >List Transportation Operator</Button>
+                                    <Button variant="outline" disabled={row.original.containerStatus === "On-Ship"} className="bg-blue-600 text-white hover:bg-blue-700" >Select Transportation Operator</Button>
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent className="w-56" align="start">
-                                    <DropdownMenuLabel>Trucking Operators</DropdownMenuLabel>
                                     <DropdownMenuGroup>
-                                        {data.map(user => {
-                                            if ('Trucking Operator' === `${user["custom:role"]}`) {
-                                                return getMenuItem(user)
-                                            }
-                                        })}
+                                        <DropdownMenuSub>
+                                            <DropdownMenuSubTrigger>Trucking Operators</DropdownMenuSubTrigger>
+                                            <DropdownMenuPortal>
+                                                <DropdownMenuSubContent>
+                                                    {data.map(user => {
+                                                        if ('Trucking Operator' === `${user["custom:role"]}`) {
+                                                            return getMenuItem(user)
+                                                        }
+                                                    })}
+                                                </DropdownMenuSubContent>
+                                            </DropdownMenuPortal>
+                                        </DropdownMenuSub>
+                                        <DropdownMenuSeparator />
+                                        <DropdownMenuSub>
+                                            <DropdownMenuSubTrigger>Rail Operators</DropdownMenuSubTrigger>
+                                            <DropdownMenuPortal>
+                                                <DropdownMenuSubContent>
+                                                    {data.map(user => {
+                                                        if ('Rail Operator' === `${user["custom:role"]}`) {
+                                                            return getMenuItem(user)
+                                                        }
+                                                    })}
 
-                                    </DropdownMenuGroup>
-                                    <DropdownMenuSeparator />
-                                    <DropdownMenuLabel>Rail Operators</DropdownMenuLabel>
-                                    <DropdownMenuGroup>
-                                        {data.map(user => {
-                                            if ('Rail Operator' === `${user["custom:role"]}`) {
-                                                return getMenuItem(user)
-                                            }
-                                        })}
-
-                                    </DropdownMenuGroup>
-                                    <DropdownMenuSeparator />
-                                    <DropdownMenuLabel>Third Party Logistic Providers</DropdownMenuLabel>
-                                    <DropdownMenuGroup>
-                                        {data.map(user => {
-                                            if ('Third Party Logistics Provider' === `${user["custom:role"]}`) {
-                                                return getMenuItem(user)
-                                            }
-                                        })}
-
+                                                </DropdownMenuSubContent>
+                                            </DropdownMenuPortal>
+                                        </DropdownMenuSub>
+                                        <DropdownMenuSeparator />
+                                        <DropdownMenuSub>
+                                            <DropdownMenuSubTrigger>Third Party Logistic Providers</DropdownMenuSubTrigger>
+                                            <DropdownMenuPortal>
+                                                <DropdownMenuSubContent>
+                                                    {data.map(user => {
+                                                        if ('Third Party Logistics Provider' === `${user["custom:role"]}`) {
+                                                            return getMenuItem(user)
+                                                        }
+                                                    })}
+                                                </DropdownMenuSubContent>
+                                            </DropdownMenuPortal>
+                                        </DropdownMenuSub>
+                                        <DropdownMenuSeparator />
                                     </DropdownMenuGroup>
                                 </DropdownMenuContent>
                             </DropdownMenu>
