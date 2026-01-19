@@ -1,0 +1,14 @@
+{
+  "name": "pcis-chart-aggregator",
+  "version": "0.1.0",
+  "description": "Lambda that aggregates Container DynamoDB data for charts (PCIS)",
+  "type": "module",
+  "main": "index.mjs",
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.705.0",
+    "@aws-sdk/lib-dynamodb": "^3.705.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
