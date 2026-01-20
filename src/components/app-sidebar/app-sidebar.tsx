@@ -27,8 +27,8 @@ import { useNavigate } from "@tanstack/react-router";
 
 const client = generateClient<Schema>();
 
-const selectionSet = ['containerID', 'reservationStatus', "updatedAt", "isBCONotify", "isTransportationNotify"] as const;
-export type Notifications = SelectionSet<Schema['Container']['type'], typeof selectionSet>
+const selectionSet = ['cargoUnitID', 'reservationStatus', "updatedAt", "isBCONotify", "isTransportationNotify"] as const; // changed containerID to cargoUnitID
+export type Notifications = SelectionSet<Schema['Container']['type'], typeof selectionSet> 
 
 
 // Menu items.

@@ -36,8 +36,8 @@ export const columns = (): ColumnDef<any>[] => {
       header: "Vessel ID",
     },
     {
-      accessorKey: "containerID",
-      header: "Container ID",
+      accessorKey: "cargoUnitID", // changed containerID and Container ID to cargoUnitID and Cargo unit ID
+      header: "Cargo Unit ID",
     },
     {
       accessorKey: "origin",
@@ -69,14 +69,14 @@ export const columns = (): ColumnDef<any>[] => {
           <Button 
             variant="outline" 
             className="text-green-700"
-            onClick={() => (table.options.meta as TransOpDataTableMeta)?.updateTransOpBooking(row.original.containerID, "Pending Reservation")}
+            onClick={() => (table.options.meta as TransOpDataTableMeta)?.updateTransOpBooking(row.original.cargoUnitID, "Pending Reservation")} // changed containerID to cargoUnitID
           >
             Approve
           </Button>
 
           <Button 
             variant="destructive"
-            onClick={() => (table.options.meta as TransOpDataTableMeta)?.updateTransOpBooking(row.original.containerID, "unassigned")}
+            onClick={() => (table.options.meta as TransOpDataTableMeta)?.updateTransOpBooking(row.original.cargoUnitID, "unassigned")} // changed containerID to cargoUnitID
           >
               Deny
           </Button>
@@ -118,7 +118,7 @@ baseColumns.push({
         try {
           // Call the Amplify update method for the flag (again must always contain containerID)
           const { data: updatedContainerStatus } = await client.models.Container.update({
-            containerID: row.original.containerID,
+            cargoUnitID: row.original.cargoUnitID, // changed containerID to cargoUnitID
             flag: newFlag,
           })
           console.log("Updated container status:", updatedContainerStatus);
@@ -146,8 +146,8 @@ export const CompletedColumn = (): ColumnDef<any>[] => {
       header: "Vessel ID",
     },
     {
-      accessorKey: "containerID",
-      header: "Container ID",
+      accessorKey: "cargoUnitID", // changed containerID and Container ID to cargoUnitID and Cargo unit ID
+      header: "Cargo Unit ID",
     },
     {
       accessorKey: "origin",
@@ -216,7 +216,7 @@ export const CompletedColumn = (): ColumnDef<any>[] => {
 export const OngoingColumn = (): ColumnDef<any>[] => {
   const baseColumns1: ColumnDef<TransOpOngoingBookings>[] = [
     { accessorKey: "vesselID", header: "Vessel ID" },
-    { accessorKey: "containerID", header: "Container ID" },
+    { accessorKey: "cargoUnitID", header: "Cargo Unit ID" }, // changed containerID and Container ID  to cargoUnitID and Cargo unit ID
     { accessorKey: "origin", header: "Origin" },
     { accessorKey: "bcoName", header: "BCO" },
     { accessorKey: "bcoEmail", header: "BCO Name" },
@@ -251,7 +251,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
             setIsAtCapacity(true);
             toast.error(`Terminal at capacity (Limit ${limit} per day). Please try a different date.`)
           } else {
-            (table.options.meta as TransOpDataTableMeta)?.updateTransOpBooking(row.original.containerID, "Pending Reservation Approval", String(format(date!, "MM/dd/yyyy")), time ?? "")
+            (table.options.meta as TransOpDataTableMeta)?.updateTransOpBooking(row.original.cargoUnitID, "Pending Reservation Approval", String(format(date!, "MM/dd/yyyy")), time ?? "") // changed containerID to cargoUnitID
             setIsDialogOpen(false)
             setIsAtCapacity(false)
           }
@@ -321,7 +321,8 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
               <DialogHeader>
                 <DialogTitle>Reserve Container Pick-Up</DialogTitle>
                 <div className="text-sm text-muted-foreground">
-                  {`Vessel ID: ${row.original.vesselID} | Container ID: ${row.original.containerID} | Origin: ${row.original.origin} | BCO: ${row.original.bcoName} | BCO Email: ${row.original.bcoEmail}`}
+                  {/* changed containerID and Container ID to cargoUnitID and Cargo unit ID */}
+                  {`Vessel ID: ${row.original.vesselID} | Cargo Unit ID: ${row.original.cargoUnitID} | Origin: ${row.original.origin} | BCO: ${row.original.bcoName} | BCO Email: ${row.original.bcoEmail}`}  
                 </div>
               </DialogHeader>
                 <div className="grid gap-4 py-4">
@@ -405,7 +406,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
   
         const handlePickUp = async () => {
           const success = await (table.options.meta as TransOpDataTableMeta)?.updateTransOpBooking(
-            row.original.containerID,
+            row.original.cargoUnitID, // changed containerID to cargoUnitID
             "Picked Up",
             new Date().toLocaleDateString('en-US')
           );
@@ -447,7 +448,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
           if (bookingsLength >= limit) {
             toast.error(`Terminal at capacity (Limit ${limit} per day). Please try a different date.`) // changed port to terminal
           } else {
-            (table.options.meta as TransOpDataTableMeta)?.updateTransOpBooking(row.original.containerID, "Pickup Modification Requested", String(format(date!, "MM/dd/yyyy")), time ?? "")
+            (table.options.meta as TransOpDataTableMeta)?.updateTransOpBooking(row.original.cargoUnitID, "Pickup Modification Requested", String(format(date!, "MM/dd/yyyy")), time ?? "") // changed containerID to cargoUnitID
             setIsDialogOpen(false)
           }
         }
@@ -500,7 +501,8 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
                 {`Original Reservation: ${row.original.reservationDate} at  ${row.original.reservationTime}`}
               </div>
               <div className="text-sm text-muted-foreground">
-                {`Vessel ID: ${row.original.vesselID} | Container ID: ${row.original.containerID} | Origin: ${row.original.origin} | BCO: ${row.original.bcoName} | BCO Email: ${row.original.bcoEmail}`}
+                {/* changed containerID and Container ID to cargoUnitID and Cargo unit ID */}
+                {`Vessel ID: ${row.original.vesselID} | Cargo Unit ID: ${row.original.cargoUnitID} | Origin: ${row.original.origin} | BCO: ${row.original.bcoName} | BCO Email: ${row.original.bcoEmail}`} 
               </div>
             </DialogHeader>
             <div className="grid gap-4 py-4">
@@ -592,7 +594,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
           try {
             // Call the Amplify update method for the flag (again must always contain containerID)
             const { data: updatedContainerStatus } = await client.models.Container.update({
-              containerID: row.original.containerID,
+              cargoUnitID: row.original.cargoUnitID, // changed containerID to cargoUnitID
               flag: newFlag,
             })
             console.log("Updated flag:", updatedContainerStatus)
