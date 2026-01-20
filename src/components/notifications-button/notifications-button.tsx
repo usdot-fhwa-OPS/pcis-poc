@@ -23,36 +23,36 @@ export function NotificationsButton({notifications, role}: NotificationsButtonPr
     if (role === "Beneficiary Cargo Owner") {
       switch (notification.reservationStatus) {
         case "Pickup Modification Requested":
-          return `Modified Reservation for Container ${notification.containerID} has been requested by transportation operator. Awaiting approval by the terminal operator.`;
+          return `Modified Reservation for Cargo Unit ${notification.cargoUnitID} has been requested by transportation operator. Awaiting approval by the terminal operator.`; // changed containerID to cargoUnitID
         case "Pending Reservation Approval":
-          return `Reservation for Container ${notification.containerID} has been requested by transportation operator. Awaiting approval by the terminal operator.`;
+          return `Reservation for Cargo Unit ${notification.cargoUnitID} has been requested by transportation operator. Awaiting approval by the terminal operator.`; // changed containerID to cargoUnitID
         case "Pending Pick Up":
-          return `Reservation for Container ${notification.containerID} has been approved by the terminal operator.`;
+          return `Reservation for Cargo Unit ${notification.cargoUnitID} has been approved by the terminal operator.`; // changed containerID to cargoUnitID
         case "unassigned":
-          if (notification.isBCONotify && notification.isTransportationNotify) return `Terminal Operator has denied the reservation for Container ${notification.containerID}.`;
-          else return `Transportation Operator has denied the assignment for Container ${notification.containerID}.`
+          if (notification.isBCONotify && notification.isTransportationNotify) return `Terminal Operator has denied the reservation for Cargo unit ${notification.cargoUnitID}.`; // changed containerID to cargoUnitID
+          else return `Transportation Operator has denied the assignment for Cargo unit ${notification.cargoUnitID}.`// changed containerID to cargoUnitID
         case "Late for Pick Up":
-          return `Terminal Operator has marked Late for Pick Up for Container ${notification.containerID}.`;
+          return `Terminal Operator has marked Late for Pick Up for Cargo Unit ${notification.cargoUnitID}.`; // changed containerID to cargoUnitID
         
       }
     } else if (role === "Transportation Operator") {
       switch (notification.reservationStatus) {
         case "Pending Transportation Operator Approval":
-          return `Assignment of Container ${notification.containerID} requires your approval`;
+          return `Assignment of Cargo Unit ${notification.cargoUnitID} requires your approval`; // changed containerID to cargoUnitID
         case "Pending Pick Up":
-          return `Reservation for Container ${notification.containerID} has been approved by terminal operator.`;
+          return `Reservation for Cargo Unit ${notification.cargoUnitID} has been approved by terminal operator.`; // changed containerID to cargoUnitID
         case "unassigned":
-          return `Terminal Operator has denied the reservation for Container ${notification.containerID}.`;
+          return `Terminal Operator has denied the reservation for Cargo Unit ${notification.cargoUnitID}.`; // changed containerID to cargoUnitID
         case "Late for Pick Up":
-          return `Terminal Operator has marked Late for Pick Up for Container ${notification.containerID}.`;
+          return `Terminal Operator has marked Late for Pick Up for Cargo Unit ${notification.cargoUnitID}.`; // changed containerID to cargoUnitID
         
       }
     } else {
       switch (notification.reservationStatus) {
         case "Pending Reservation Approval":
-          return `Reservation for Container ${notification.containerID} requires your approval`;
+          return `Reservation for Cargo Unit ${notification.cargoUnitID} requires your approval`; // changed containerID to cargoUnitID
         case "Pickup Modification Requested":
-          return `Modified Reservation for Container ${notification.containerID} requires your approval`;
+          return `Modified Reservation for Cargo Unit ${notification.cargoUnitID} requires your approval`; // changed containerID to cargoUnitID
         
       }
     } 
@@ -87,7 +87,7 @@ export function NotificationsButton({notifications, role}: NotificationsButtonPr
               const formattedTime = format(dateObj, 'hh:mm a'); 
               return (
                 <div
-                  key={notification.containerID}
+                  key={notification.cargoUnitID}
                   className="flex items-start justify-between gap-4 p-4 border-b last:border-b-0"
                 >
                   <div className="space-y-1">

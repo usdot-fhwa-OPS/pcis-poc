@@ -43,7 +43,7 @@ import { User } from "../users/columns.tsx";
 export const columns = (): ColumnDef<any>[] => {
   const baseColumns: ColumnDef<any>[] = [
     { accessorKey: "vesselID", header: "Vessel ID" },
-    { accessorKey: "containerID", header: "Container ID" },
+    { accessorKey: "cargoUnitID", header: "Cargo Unit ID" }, // changed containerID and Container ID to cargoUnitID and Cargo ubit ID
     { accessorKey: "origin", header: "Origin" },
     { accessorKey: "destination", header: "Destination" },
     { accessorKey: "bcoName", header: "BCO" },
@@ -63,7 +63,7 @@ export const columns = (): ColumnDef<any>[] => {
 
         function handleSubmit() {
           // Use the parent's updateCargo method:
-          (table.options.meta as BCODataTableMeta)?.assignTransOp(row.original.containerID, tempName, tempEmail, "Pending Transportation Operator Approval")
+          (table.options.meta as BCODataTableMeta)?.assignTransOp(row.original.cargoUnitID, tempName, tempEmail, "Pending Transportation Operator Approval") // changed containerID to cargoUnitID
           setIsDialogOpen(false)
         }
 
@@ -200,7 +200,7 @@ baseColumns.push({
             try {
               // Call the Amplify update method for the flag (again must always contain containerID)
               const { data: updatedContainerStatus } = await client.models.Container.update({
-                containerID: row.original.containerID,
+                cargoUnitID: row.original.cargoUnitID, // changed containerID to cargoUnitID
                 flag: newFlag,
               })
               console.log("Updated flag:", updatedContainerStatus)
@@ -224,7 +224,7 @@ baseColumns.push({
 export const CompletedColumn = (): ColumnDef<any>[] => {
   const baseColumns: ColumnDef<any>[] = [
     { accessorKey: "vesselID", header: "Vessel ID" },
-    { accessorKey: "containerID", header: "Container ID" },
+    { accessorKey: "cargoUnitID", header: "Cargo Unit ID" }, // changed containerID and Container ID to cargoUnitID and Cargo unit ID
     { accessorKey: "origin", header: "Origin" },
     { accessorKey: "destination", header: "Destination" },
     { accessorKey: "bcoName", header: "BCO" },
@@ -266,7 +266,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
     
     // { accessorKey: "terminalId", header: "Terminal ID" },
     { accessorKey: "vesselID", header: "Vessel ID" },
-    { accessorKey: "containerID", header: "Container ID" },
+    { accessorKey: "cargoUnitID", header: "Cargo Unit ID" }, // changed containerID and Container ID to cargoUnitID and Cargo unit ID
     { accessorKey: "origin", header: "Origin" },
     { accessorKey: "destination", header: "Destination" },
     { accessorKey: "bcoName", header: "BCO" },

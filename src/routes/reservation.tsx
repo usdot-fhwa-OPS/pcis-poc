@@ -20,42 +20,42 @@ export const Route = createFileRoute('/reservation')({
 })
 
 //Define the selection of data that will be used for the table
-const selectionSetTransOpUpcomingBookings = ['vesselID', 'containerID', 'origin', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail', 'assignmentDate', 'reservationStatus','flag'] as const;
+const selectionSetTransOpUpcomingBookings = ['vesselID', 'cargoUnitID', 'origin', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail', 'assignmentDate', 'reservationStatus','flag'] as const; // changed containerID to cargoUnitID
 //Create a type based on your selectionSet that will be later used for the columns.tsx file of the able
 export type TransOpUpcomingBookings = SelectionSet<Schema['Container']['type'], typeof selectionSetTransOpUpcomingBookings>
 
-const selectionSetTransOpOngoingBookings = ['vesselID', 'containerID', 'origin', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail', 'reservationDate', 'reservationTime', 'reservationStatus', 'flag', 'containerStatus'] as const;
+const selectionSetTransOpOngoingBookings = ['vesselID', 'cargoUnitID', 'origin', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail', 'reservationDate', 'reservationTime', 'reservationStatus', 'flag', 'containerStatus'] as const; // changed containerID to cargoUnitID
 export type TransOpOngoingBookings = SelectionSet<Schema['Container']['type'], typeof selectionSetTransOpOngoingBookings>
 
-const selectionSetTerminalOPUpcoming = ['vesselID', 'containerID', 'origin', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail','reservationDate','reservationTime','reservationStatus', 'flag'] as const;
+const selectionSetTerminalOPUpcoming = ['vesselID', 'cargoUnitID', 'origin', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail','reservationDate','reservationTime','reservationStatus', 'flag'] as const; // changed containerID to cargoUnitID
 
-const selectionSetTerminalOpModified = ['vesselID', 'containerID', 'origin', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail','reservationDate','reservationTime', 'reservationStatus', 'modifiedReservationDate', 'modifiedReservationTime'] as const;
+const selectionSetTerminalOpModified = ['vesselID', 'cargoUnitID', 'origin', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail','reservationDate','reservationTime', 'reservationStatus', 'modifiedReservationDate', 'modifiedReservationTime'] as const; // changed containerID to cargoUnitID
 
 export type TerminalOpModifiedBookings = SelectionSet<Schema['Container']['type'], typeof selectionSetTerminalOpModified>
 //Define the selection of data that will be used for the table
-const selectionSetBCOUpcomingBookings = ['vesselID', 'containerID', 'origin', 'destination', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail', 'containerStatus','arrivalDate', 'flag'] as const;
+const selectionSetBCOUpcomingBookings = ['vesselID', 'cargoUnitID', 'origin', 'destination', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail', 'containerStatus','arrivalDate', 'flag'] as const; // changed containerID to cargoUnitID
 //Create a type based on your selectionSet that will be later used for the columns.tsx file of the able
 
-const selectionSetTerminalOPOngoing = ['vesselID', 'containerID', 'origin', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail','reservationDate','reservationTime','reservationStatus', 'flag'] as const;
+const selectionSetTerminalOPOngoing = ['vesselID', 'cargoUnitID', 'origin', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail','reservationDate','reservationTime','reservationStatus', 'flag'] as const; // changed containerID to cargoUnitID
 export type BCOUpcomingBookings = SelectionSet<Schema['Container']['type'], typeof selectionSetBCOUpcomingBookings>
 
 //Create a type based on your selectionSet that will be later used for the columns.tsx file of the able
 export type TerminalOPUpcomingBookings= SelectionSet<Schema['Container']['type'], typeof selectionSetTerminalOPUpcoming>
 
 export type TerminalOPOngoingBookings= SelectionSet<Schema['Container']['type'], typeof selectionSetTerminalOPOngoing >
-
-const selectionSetBCOOngoing = ['vesselID', 'containerID', 'origin','destination', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail','reservationDate','resApprovalDate','reservationStatus', 'resPickupDate','flag', 'updatedAt'] as const;
+ 
+const selectionSetBCOOngoing = ['vesselID', 'cargoUnitID', 'origin','destination', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail','reservationDate','resApprovalDate','reservationStatus', 'resPickupDate','flag', 'updatedAt'] as const; // changed containerID to cargoUnitID
 
 export type BCOOngoingBooking= SelectionSet<Schema['Container']['type'], typeof selectionSetBCOOngoing>
 
-const selectionSetBCOCompleted = ['vesselID', 'containerID', 'origin', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail','reservationDate','resApprovalDate','reservationStatus','destination', 'resPickupDate','flag'] as const;
+const selectionSetBCOCompleted = ['vesselID', 'cargoUnitID', 'origin', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail','reservationDate','resApprovalDate','reservationStatus','destination', 'resPickupDate','flag'] as const; // changed containerID to cargoUnitID
 
 export type BCOCompletedBooking= SelectionSet<Schema['Container']['type'], typeof selectionSetBCOCompleted>
 
 //Define the selection of data that will be used for the table
 const selectionSetTransportation_CompletedData = [ 
   'vesselID',
-  'containerID',
+  'cargoUnitID',  // changed containerID to cargoUnitID
   'origin',
   'bcoName',
   'bcoEmail',
@@ -71,7 +71,7 @@ const selectionSetTransportation_CompletedData = [
 //Define the selection of data that will be used for the table
 const selectionSetTerminal_CompletedData = [ 
   'vesselID',
-  'containerID',
+  'cargoUnitID',  // changed containerID to cargoUnitID
   'origin',
   'bcoName',
   'bcoEmail',
@@ -400,7 +400,7 @@ function RouteComponent() {
   }, [userAttributes.role, refresh]);
 
 
-  async function assignTransOp(containerID: string, newName: string, newEmail: string, reservationStatus: string): Promise<boolean> {
+  async function assignTransOp(cargoUnitID: string, newName: string, newEmail: string, reservationStatus: string): Promise<boolean> { // changed containerID to cargoUnitID
     if (!navigator.onLine) {
       console.error("No internet connection. Update not submitted. Please check your connection and try again.");
       toast.error("No internet connection. Update not submitted. Please check your connection and try again.");
@@ -409,7 +409,7 @@ function RouteComponent() {
   
     try {
       const { data: assignTransportationOp } = await client.models.Container.update({
-        containerID: containerID,
+        cargoUnitID: cargoUnitID,  // changed containerID to cargoUnitID
         transopName: newName,
         transopEmail: newEmail,
         reservationStatus: reservationStatus,
@@ -500,7 +500,7 @@ function RouteComponent() {
       try {
 
           const { data: updatedContainerStatus } = await client.models.Container.update({
-            containerID: id,
+            cargoUnitID: id,   // changed containerID to cargoUnitID
             reservationStatus: status,
             isTransportationNotify: true,
             isBCONotify: true,
@@ -531,7 +531,7 @@ function RouteComponent() {
         return false; // Explicitly return false when offline
       }
       try {
-        let updatePayload = { containerID: id, reservationStatus: status, isTransportationNotify: false, isBCONotify: false, isTerminalNotify: false };
+        let updatePayload = { cargoUnitID: id, reservationStatus: status, isTransportationNotify: false, isBCONotify: false, isTerminalNotify: false }; // changed containerID to cargoUnitID
     
         if (status === "unassigned") {
           Object.assign(updatePayload, {
@@ -592,7 +592,7 @@ async function updateBooking(id: string, status: string, reservationDate?: strin
   }
 
   try {
-    let updatePayload: any = { containerID: id, reservationStatus: status };
+    let updatePayload: any = { cargoUnitID: id, reservationStatus: status };
 
     if (status === "unassigned") {
       Object.assign(updatePayload, {

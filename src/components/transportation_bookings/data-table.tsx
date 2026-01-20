@@ -21,7 +21,7 @@ import {
 
 export interface TransOpDataTableMeta {
   updateTransOpBooking: (
-    containerID: string, 
+    cargoUnitID: string, 
     reservationStatus: string, 
     reservationDate?: string, 
     reservationTime?: string
@@ -56,10 +56,10 @@ export function DataTable<TData, TValue>({ columns, data, meta }: DataTableProps
     
           <div className="mb-4 w-full px-3 py-2 border rounded-md">
         <Input
-          placeholder="Filter by Container ID"
-          value={(table.getColumn("containerID")?.getFilterValue() as string) ?? ""}
+          placeholder="Filter by Cargo Unit ID" // changed Container ID to Cargo unit ID
+          value={(table.getColumn("cargoUnitID")?.getFilterValue() as string) ?? ""} // changed containerID to cargoUnitID
           onChange={(event) =>
-            table.getColumn("containerID")?.setFilterValue(event.target.value)
+            table.getColumn("cargoUnitID")?.setFilterValue(event.target.value) // changed containerID to cargoUnitID
           }
           className="max-w-sm"
         />
