@@ -24,10 +24,10 @@ interface SettingsDialogProps {
 
 export default function SettingsButton({ role, limit }: SettingsDialogProps) {
     const [open, setOpen] = useState(false)
-    const [portCapacity, setPortCapacity] = useState(limit)
+    const [terminalCapacity, setTerminalCapacity] = useState(limit) //changed portCapacity and setPortCapacity to terminalCapacity and setTerminalCapacity
 
     useEffect(() => {
-      setPortCapacity(limit);
+      setTerminalCapacity(limit); // changed setPortCapacity to setTerminalCapacity
     }, [limit]);
 
     // If user is not a Terminal Operator, don't render anything
@@ -37,15 +37,15 @@ export default function SettingsButton({ role, limit }: SettingsDialogProps) {
   
     const handleSubmit = async () => {
       try {
-        const { data: updatePortCapacity } = await client.models.Limit.update({
+        const { data: updateTerminalCapacity } = await client.models.Limit.update({ // changed updatePortCapacity to updateTerminalCapacity
           id: '7bde2cc5-23dc-4f46-b6d9-502133cc2e8c',
-          portCapacity: portCapacity,
+          terminalCapacity: terminalCapacity, // changed portCapacity to terminalCapacity
         }, {
           authMode: 'apiKey',
         })
-        console.log("updated port capacity", updatePortCapacity)
+        console.log("updated terminal capacity", updateTerminalCapacity) // changed port to terminal
       } catch (error) {
-        console.error ("error updating port capacity", error);
+        console.error ("error updating terminal capacity", error); // changed port to terminal
       }
       setOpen(false)
     }
@@ -66,14 +66,15 @@ export default function SettingsButton({ role, limit }: SettingsDialogProps) {
             </DialogHeader>
             <div className="grid gap-4 py-4">
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="portCapacity" className="text-right">
-                  Port Capacity
+                {/* changed port to terminal */}
+                <Label htmlFor="terminalCapacity" className="text-right"> 
+                  Terminal Capacity
                 </Label>
                 <Input
-                  id="portCapacity"
+                  id="terminalCapacity"
                   type="number"
-                  value={portCapacity}
-                  onChange={(e) => setPortCapacity(Number(e.target.value))}
+                  value={terminalCapacity}
+                  onChange={(e) => setTerminalCapacity(Number(e.target.value))}
                   className="col-span-3"
                   min="0"
                   step="1"

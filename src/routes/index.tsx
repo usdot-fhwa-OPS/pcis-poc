@@ -9,7 +9,7 @@ import {BcoBookingsTableUpcoming,  BcoBookingsTableCompleted,BcoBookingsTableOng
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs.tsx"
 import { toast } from "sonner"
 
-//Three Imports needed for Amplify Data Queries and CRUD methods
+//Three Imports needed for Amplify Data Queries and CRUD methods 
 import { generateClient, SelectionSet } from 'aws-amplify/data';
 import type { Schema } from '../../amplify/data/resource';
 
@@ -144,7 +144,7 @@ function Index() {
         }
       }
 
-    async function getPortCapacity() {
+    async function getTerminalCapacity() { // changed port to terminal
       try {
         const { data: limit } = await client.models.Limit.get(
           {id: '7bde2cc5-23dc-4f46-b6d9-502133cc2e8c'},
@@ -154,7 +154,7 @@ function Index() {
         );
         
         if (limit) {
-          return limit.portCapacity;
+          return limit.terminalCapacity; // changed port to terminal
         }
       } catch (error) {
         console.error('Error fetching booking limit', error);
@@ -815,7 +815,7 @@ function Index() {
           <TransportationBookingsTableOngoing
             data={transOpOngoingBookings}
             status="Ongoing"
-            meta={{updateTransOpBooking, getPortCapacity, getBookingsAmount}}
+            meta={{updateTransOpBooking, getTerminalCapacity, getBookingsAmount}} // changed port to terminal
           />
         </TabsContent>
   

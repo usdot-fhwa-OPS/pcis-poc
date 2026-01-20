@@ -37,7 +37,7 @@ const schema = a.schema({
     .authorization((allow) => [allow.publicApiKey(),]),
   Limit: a
     .model({
-      portCapacity: a.integer().required().default(3),
+      terminalCapacity: a.integer().required().default(3), // changed portCapacity to terminalCapacity
     })
     .authorization((allow) => [allow.publicApiKey(),]),
 });
