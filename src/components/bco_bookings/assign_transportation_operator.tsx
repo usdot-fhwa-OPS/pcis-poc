@@ -8,6 +8,7 @@ import { useState } from "react";
 import { BCODataTableMeta } from "./data-table";
 import { Label } from "../ui/label";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuPortal, DropdownMenuSeparator, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger } from "../ui/dropdown-menu";
+import { LucideChevronDown, LucideTramFront, LucideTruck, LucideUsers } from "lucide-react";
 
 
 export const assignTransportationOperator = (table: any, row: any) => {
@@ -44,7 +45,7 @@ export const assignTransportationOperator = (table: any, row: any) => {
             const fullName = `${user.given_name} ${user.family_name}`;
             return (
                 <div className="flex">
-                    <DropdownMenuItem  onClick={()=>handleOperatorSelect(user.email)} >{user["custom:organization"] ? user["custom:organization"] : fullName}</DropdownMenuItem>
+                    <DropdownMenuItem  onClick={()=>handleOperatorSelect(user.email)} > &nbsp;&nbsp;&nbsp;&nbsp;{user["custom:organization"] ? user["custom:organization"] : fullName} </DropdownMenuItem>
                     
                 </div>
 
@@ -87,25 +88,13 @@ export const assignTransportationOperator = (table: any, row: any) => {
                         <div>
                             <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
-                                    <Button variant="outline" disabled={row.original.containerStatus === "On-Ship"} className="bg-blue-600 text-white hover:bg-blue-700" >Select Transportation Operator</Button>
+                                    <Button variant="outline" disabled={row.original.containerStatus === "On-Ship"}  >Select Transportation Operator <LucideChevronDown />
+</Button>
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent className="w-56" align="start">
                                     <DropdownMenuGroup>
                                         <DropdownMenuSub>
-                                            <DropdownMenuSubTrigger>Trucking Operators</DropdownMenuSubTrigger>
-                                            <DropdownMenuPortal>
-                                                <DropdownMenuSubContent>
-                                                    {data.map(user => {
-                                                        if ('Trucking Operator' === `${user["custom:role"]}`) {
-                                                            return getMenuItem(user)
-                                                        }
-                                                    })}
-                                                </DropdownMenuSubContent>
-                                            </DropdownMenuPortal>
-                                        </DropdownMenuSub>
-                                        <DropdownMenuSeparator />
-                                        <DropdownMenuSub>
-                                            <DropdownMenuSubTrigger>Rail Operators</DropdownMenuSubTrigger>
+                                            <DropdownMenuSubTrigger  ><LucideTramFront />Rail Operators</DropdownMenuSubTrigger>
                                             <DropdownMenuPortal>
                                                 <DropdownMenuSubContent>
                                                     {data.map(user => {
@@ -119,11 +108,24 @@ export const assignTransportationOperator = (table: any, row: any) => {
                                         </DropdownMenuSub>
                                         <DropdownMenuSeparator />
                                         <DropdownMenuSub>
-                                            <DropdownMenuSubTrigger>Third Party Logistic Providers</DropdownMenuSubTrigger>
+                                            <DropdownMenuSubTrigger><LucideUsers /> Third Party Logistic Providers</DropdownMenuSubTrigger>
                                             <DropdownMenuPortal>
                                                 <DropdownMenuSubContent>
                                                     {data.map(user => {
                                                         if ('Third Party Logistics Provider' === `${user["custom:role"]}`) {
+                                                            return getMenuItem(user)
+                                                        }
+                                                    })}
+                                                </DropdownMenuSubContent>
+                                            </DropdownMenuPortal>
+                                        </DropdownMenuSub>
+                                        <DropdownMenuSeparator />
+                                        <DropdownMenuSub>
+                                            <DropdownMenuSubTrigger><LucideTruck /> Trucking Operators</DropdownMenuSubTrigger>
+                                            <DropdownMenuPortal>
+                                                <DropdownMenuSubContent>
+                                                    {data.map(user => {
+                                                        if ('Trucking Operator' === `${user["custom:role"]}`) {
                                                             return getMenuItem(user)
                                                         }
                                                     })}
