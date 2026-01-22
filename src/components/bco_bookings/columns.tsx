@@ -1,16 +1,7 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "../ui/button.tsx";
 import { useState } from "react";
-import { Flag, Loader2 } from "lucide-react";
-import { Label } from "../ui/label"
-import { Input } from "../ui/input"
-import { BCODataTableMeta } from "./data-table.tsx";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "../ui/tooltip"
+import { Flag } from "lucide-react";
 
 //Four Imports needed for Amplify Data Queries and CRUD methods
 
@@ -19,26 +10,9 @@ import type { Schema } from '../../../amplify/data/resource';
 
 const client = generateClient<Schema>();
 
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-  DialogFooter,
-} from "../ui/dialog"  
 import { format } from "date-fns";
 
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../ui/select"
-import { User } from "../users/columns.tsx";
+import { assignTransportationOperator } from "./assign_transportation_operator.tsx";
 
 export const columns = (): ColumnDef<any>[] => {
   const baseColumns: ColumnDef<any>[] = [
@@ -53,111 +27,12 @@ export const columns = (): ColumnDef<any>[] => {
       header: "Transportation  Operator",
       cell: ({ row, table }) => {
 
-        const [tempName, setTempName] = useState("")
-        const [tempEmail, setTempEmail] = useState("")
-        const [isLoading, setIsLoading] = useState(true)
-        const [isDialogOpen, setIsDialogOpen] = useState(false)
 
         // If either operator OR email is missing, show "Book" button
         const isMissing = !row.original.transopName?.trim() || !row.original.transopEmail?.trim()
-
-        function handleSubmit() {
-          // Use the parent's updateCargo method:
-          (table.options.meta as BCODataTableMeta)?.assignTransOp(row.original.cargoUnitID, tempName, tempEmail, "Pending Transportation Operator Approval") // changed containerID to cargoUnitID
-          setIsDialogOpen(false)
-        }
-
-        const [data, setData] = useState<User[]>([])
-        
-        const handleOpen = async () => {
-          setIsDialogOpen(true)
-          const result = await (table.options.meta as BCODataTableMeta)?.fetchTransportationOperators();
-          setData(result)
-          setIsLoading(false)
-        }
-
-        const handleOperatorSelect = (value: string) => {
-          setTempName(value);
-          const selectedUser = data.find(
-            (user) => `${user.given_name} ${user.family_name}` === value
-          );
-          if (selectedUser) {
-            setTempEmail(selectedUser.email);
-          }
-        };
-
         if (isMissing) {
           return (
-            <Dialog 
-              open={isDialogOpen} 
-              onOpenChange={(open) => {
-                setIsDialogOpen(open)
-                
-              }}
-            >
-              <DialogTrigger asChild>
-                <TooltipProvider>
-                  <Tooltip delayDuration={300}>
-                    <TooltipTrigger>
-                     <Button onClick={handleOpen} variant="outline" disabled={row.original.containerStatus === "On-Ship"} className="bg-blue-600 text-white hover:bg-blue-700">Assign</Button>
-                    </TooltipTrigger>
-                    {row.original.containerStatus === "On-Ship" && (
-                      <TooltipContent>
-                        <p>Container still on ship. Cannot assign operator yet.</p>
-                      </TooltipContent>
-                    )}
-                  </Tooltip>
-                </TooltipProvider>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Assign Transportation Operator</DialogTitle>
-                  <DialogDescription>
-                  Enter a Transportation Operator name and email to assign this container.
-                  </DialogDescription>
-                </DialogHeader>
-                <div className="space-y-2 py-2">
-                  <div>
-                    <Label>Transportation Operator Name</Label>
-                    <Select value={tempName} onValueChange={handleOperatorSelect} disabled={isLoading}>
-                      <SelectTrigger className="w-full">
-                        <div className="flex items-center gap-2">
-                          {isLoading && <Loader2 className="h-4 w-4 animate-spin" />}
-                          <SelectValue placeholder="Select operator" />
-                        </div>
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectGroup>
-                          {data.map(user => {
-                            const fullName = `${user.given_name} ${user.family_name}`;
-                            return (
-                              <SelectItem key={user.email} value={fullName}>
-                                {fullName}
-                              </SelectItem>
-                            );
-                          })}
-                        </SelectGroup>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div>
-                    <Label>Transportation Operator Email</Label>
-                    <Input
-                      value={tempEmail}
-                      disabled={true}
-                    />
-                  </div>
-                </div>
-                <DialogFooter>
-                  <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
-                    Cancel
-                  </Button>
-                  <Button onClick={handleSubmit} disabled={!tempName.trim() || !tempEmail.trim()}>
-                    Submit
-                    </Button>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
+            assignTransportationOperator( table, row)
           )
         }
 
