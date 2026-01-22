@@ -216,9 +216,9 @@ function Index() {
       
       
       async function fetchTransOperatorCBookingsContainers() {
-        if ((userAttributes.role === 'Trucking Operator') 
+        if (((userAttributes.role === 'Trucking Operator') 
           || (userAttributes.role === 'Rail Operator')
-          || (userAttributes.role === 'Third Party Logistics Provider') && userAttributes.email) {
+          || (userAttributes.role === 'Third Party Logistics Provider')) && userAttributes.email) {
           try {
             const { data: cargo } = await client.models.Container.list({
               selectionSet:selectionSetTransportation_CompletedData,
