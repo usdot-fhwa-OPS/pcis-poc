@@ -137,7 +137,7 @@ function RouteComponent() {
     async function getTerminalCapacity() { // changed port to terminal
       try {
         const { data: limit } = await client.models.Limit.get(
-          {id: '7bde2cc5-23dc-4f46-b6d9-502133cc2e8c'},
+          {id: '240f1ba3-a8dd-4482-89dc-bba67fe620b7'},
           {
             authMode: 'apiKey',
           }
