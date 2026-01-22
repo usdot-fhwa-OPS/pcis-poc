@@ -26,7 +26,9 @@ export default function Operators() {
           }
         });
         const result = await response.json();
-        const filteredData = result.filter((user: User) => user["custom:role"] === "Transportation Operator");
+        const filteredData = result.filter((user: User) => (( user["custom:role"] === 'Trucking Operator') 
+          || ( user["custom:role"] === 'Rail Operator')
+          || ( user["custom:role"] === 'Third Party Logistics Provider')));
         setData(filteredData);
       } catch (error) {
         throw new Error(`Failed to fetch data: ${error}`);

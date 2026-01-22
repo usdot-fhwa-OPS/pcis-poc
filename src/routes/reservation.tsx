@@ -730,7 +730,9 @@ useEffect(() => {
     );
   }
 
-  if (userAttributes.role === "Transportation Operator") {
+  if((userAttributes.role === 'Trucking Operator') 
+          || (userAttributes.role === 'Rail Operator')
+          || (userAttributes.role === 'Third Party Logistics Provider')){
     return (
     <div className="w-full">
     
