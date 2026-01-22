@@ -27,7 +27,7 @@ export interface TransOpDataTableMeta {
     reservationTime?: string
   ) => Promise<boolean>;
   
-  getTerninalCapacity: () => Promise<number>; // changed port to terminal
+  getTerminalCapacity: () => Promise<number>; // changed port to terminal
   getBookingsAmount: (
     reservationDate: string,
   ) => Promise<number>;
