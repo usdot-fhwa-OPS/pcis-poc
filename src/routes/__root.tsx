@@ -76,7 +76,7 @@ function RootComponent() {
       );
       
       if (limit) {
-        setBookingLimit(limit.portCapacity);
+        setBookingLimit(limit.terminalCapacity); // changed port to terminal
       }
     } catch (error) {
       console.error('Error fetching booking limit', error);
