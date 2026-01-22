@@ -36,7 +36,7 @@ export const assignTransportationOperator = (table: any, row: any) => {
 
         function handleSubmit() {
           // Use the parent's updateCargo method:
-          (table.options.meta as BCODataTableMeta)?.assignTransOp(row.original.containerID, tempName, tempEmail, "Pending Transportation Operator Approval")
+          (table.options.meta as BCODataTableMeta)?.assignTransOp(row.original.cargoUnitID, tempName, tempEmail, "Pending Transportation Operator Approval")
           setIsDialogOpen(false)
         }
 
