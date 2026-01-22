@@ -35,7 +35,9 @@ export function NotificationsButton({notifications, role}: NotificationsButtonPr
           return `Terminal Operator has marked Late for Pick Up for Cargo Unit ${notification.cargoUnitID}.`; // changed containerID to cargoUnitID
         
       }
-    } else if (role === "Transportation Operator") {
+    } else if ((role === 'Trucking Operator') 
+          || (role === 'Rail Operator')
+          || (role === 'Third Party Logistics Provider')) {
       switch (notification.reservationStatus) {
         case "Pending Transportation Operator Approval":
           return `Assignment of Cargo Unit ${notification.cargoUnitID} requires your approval`; // changed containerID to cargoUnitID

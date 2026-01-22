@@ -199,7 +199,9 @@ function RouteComponent() {
   
   
   async function fetchTransOperatorCBookingsContainers() {
-    if (userAttributes.role === 'Transportation Operator' && userAttributes.email) {
+    if (((userAttributes.role === 'Trucking Operator') 
+          || (userAttributes.role === 'Rail Operator')
+          || (userAttributes.role === 'Third Party Logistics Provider')) && userAttributes.email) {
       try {
         const { data: cargo } = await client.models.Container.list({
           selectionSet:selectionSetTransportation_CompletedData,
@@ -338,7 +340,9 @@ function RouteComponent() {
   const [transOpUpcomingBookings, setTransOpUpcomingBookings] = useState<TransOpUpcomingBookings[]>([]);
 
   async function fetchTransOpUpcoming() {
-    if (userAttributes.role === 'Transportation Operator') {
+    if ((userAttributes.role === 'Trucking Operator') 
+          || (userAttributes.role === 'Rail Operator')
+          || (userAttributes.role === 'Third Party Logistics Provider')) {
       try {
         const { data: cargo } = await client.models.Container.list({
           filter: {
@@ -367,7 +371,9 @@ function RouteComponent() {
   const [transOpOngoingBookings, setTransOpOngoingBookings] = useState<TransOpOngoingBookings[]>([]);
 
   async function fetchTransOpOngoing() {
-    if (userAttributes.role === 'Transportation Operator') {
+    if ((userAttributes.role === 'Trucking Operator') 
+          || (userAttributes.role === 'Rail Operator')
+          || (userAttributes.role === 'Third Party Logistics Provider')) {
       try {
         const { data: cargo } = await client.models.Container.list({
           filter: {
@@ -724,7 +730,9 @@ useEffect(() => {
     );
   }
 
-  if (userAttributes.role === "Transportation Operator") {
+  if((userAttributes.role === 'Trucking Operator') 
+          || (userAttributes.role === 'Rail Operator')
+          || (userAttributes.role === 'Third Party Logistics Provider')){
     return (
     <div className="w-full">
     

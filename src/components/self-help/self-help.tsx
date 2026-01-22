@@ -10,7 +10,9 @@ export const Selfhelp = () => {
     const userContext = useContext(UserContext);
     const userRole = userContext["custom:role"];
 
-    if ('Transportation Operator' == userRole) {
+    if ((userRole === 'Trucking Operator') 
+          || (userRole === 'Rail Operator')
+          || (userRole === 'Third Party Logistics Provider')) {
 
         return <TransportationOperatorSelfHelp />
 
