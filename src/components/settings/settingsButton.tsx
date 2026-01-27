@@ -24,10 +24,10 @@ interface SettingsDialogProps {
 
 export default function SettingsButton({ role, limit }: SettingsDialogProps) {
     const [open, setOpen] = useState(false)
-    const [terminalCapacity, setTerminalCapacity] = useState(limit) //changed portCapacity and setPortCapacity to terminalCapacity and setTerminalCapacity
+    const [terminalCapacity, setTerminalCapacity] = useState(limit) 
 
     useEffect(() => {
-      setTerminalCapacity(limit); // changed setPortCapacity to setTerminalCapacity
+      setTerminalCapacity(limit); 
     }, [limit]);
 
     // If user is not a Terminal Operator, don't render anything
@@ -37,15 +37,15 @@ export default function SettingsButton({ role, limit }: SettingsDialogProps) {
   
     const handleSubmit = async () => {
       try {
-        const { data: updateTerminalCapacity } = await client.models.Limit.update({ // changed updatePortCapacity to updateTerminalCapacity
-          id: '240f1ba3-a8dd-4482-89dc-bba67fe620b7',
-          terminalCapacity: terminalCapacity, // changed portCapacity to terminalCapacity
+        const { data: updateTerminalCapacity } = await client.models.Limit.update({ 
+          id: '7bde2cc5-23dc-4f46-b6d9-502133cc2e8c',
+          terminalCapacity: terminalCapacity, 
         }, {
           authMode: 'apiKey',
         })
-        console.log("updated terminal capacity", updateTerminalCapacity) // changed port to terminal
+        console.log("updated terminal capacity", updateTerminalCapacity) 
       } catch (error) {
-        console.error ("error updating terminal capacity", error); // changed port to terminal
+        console.error ("error updating terminal capacity", error); 
       }
       setOpen(false)
     }

@@ -10,7 +10,7 @@ const schema = a.schema({
   Container: a
     .model({
       vesselID: a.string(),
-      cargoUnitID: a.string().required(), // changed containerID to cargoUnitID
+      cargoUnitID: a.string().required(), 
       bcoName: a.string(),
       bcoEmail: a.string(),
       origin: a.string(),
@@ -33,11 +33,11 @@ const schema = a.schema({
       isBCONotify: a.boolean().default(false),
       isTerminalNotify: a.boolean().default(false),
     })
-    .identifier(['cargoUnitID']) // changed containerID to cargoUnitID
+    .identifier(['cargoUnitID']) 
     .authorization((allow) => [allow.publicApiKey(),]),
   Limit: a
     .model({
-      terminalCapacity: a.integer().required().default(3), // changed portCapacity to terminalCapacity
+      terminalCapacity: a.integer().required().default(3), 
     })
     .authorization((allow) => [allow.publicApiKey(),]),
 });

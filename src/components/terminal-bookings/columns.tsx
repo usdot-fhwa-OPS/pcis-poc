@@ -12,7 +12,7 @@ export const columns = (status: string): ColumnDef<any>[] => {
   const baseColumns: ColumnDef<any>[] = [
 
     { accessorKey: "vesselID", header: "Vessel ID" },
-    { accessorKey: "cargoUnitID", header: "Cargo Unit ID" }, // changed containerID and ContainerID to cargoUnitID and Cargo unit ID
+    { accessorKey: "cargoUnitID", header: "Cargo Unit ID" }, 
     { accessorKey: "origin", header: "Origin" },
     { accessorKey: "bcoName", header: "BCO" },
     { accessorKey: "bcoEmail", header: "BCO Email" },
@@ -36,7 +36,7 @@ export const columns = (status: string): ColumnDef<any>[] => {
           <Button
             variant="outline"
             className="text-green-700"
-            onClick={() =>  (table.options.meta as TerminalOperatorDataTableMeta)?.updateBooking(row.original.cargoUnitID, "Pending Pick Up")} // changed containerID to cargoUnitID
+            onClick={() =>  (table.options.meta as TerminalOperatorDataTableMeta)?.updateBooking(row.original.cargoUnitID, "Pending Pick Up")} 
           >
             Approve
           </Button>
@@ -44,7 +44,7 @@ export const columns = (status: string): ColumnDef<any>[] => {
           {/* Deny Button */}
           <Button
             variant="destructive"
-            onClick={() => (table.options.meta as TerminalOperatorDataTableMeta)?.updateBooking(row.original.cargoUnitID, "unassigned")} // changed containerID to cargoUnitID
+            onClick={() => (table.options.meta as TerminalOperatorDataTableMeta)?.updateBooking(row.original.cargoUnitID, "unassigned")} 
           >
             Deny
           </Button>
@@ -76,7 +76,7 @@ export const columns = (status: string): ColumnDef<any>[] => {
           <Button
             variant="outline"
             className="text-green-700"
-            onClick={() =>  (table.options.meta as TerminalOperatorDataTableMeta)?.updateBooking(row.original.cargoUnitID, "Pending Pick Up", row.original.modifiedReservationDate, row.original.modifiedReservationTime)} // changed containerID to cargoUnitID
+            onClick={() =>  (table.options.meta as TerminalOperatorDataTableMeta)?.updateBooking(row.original.cargoUnitID, "Pending Pick Up", row.original.modifiedReservationDate, row.original.modifiedReservationTime)} 
           >
             Approve
           </Button>
@@ -84,7 +84,7 @@ export const columns = (status: string): ColumnDef<any>[] => {
           {/* Deny Button */}
           <Button
             variant="destructive"
-            onClick={() => (table.options.meta as TerminalOperatorDataTableMeta)?.updateBooking(row.original.cargoUnitID, "unassigned")} // changed containerID to cargoUnitID
+            onClick={() => (table.options.meta as TerminalOperatorDataTableMeta)?.updateBooking(row.original.cargoUnitID, "unassigned")} 
           >
             Deny
           </Button>
@@ -123,7 +123,7 @@ export const columns = (status: string): ColumnDef<any>[] => {
   
         const markLateforPickup = async () => {
           const success = await (table.options.meta as TerminalOperatorDataTableMeta)?.markBookingLate(
-            row.original.cargoUnitID,  // changed containerID to cargoUnitID
+            row.original.cargoUnitID,  
             "Late for Pick Up",
           );
           
@@ -166,7 +166,7 @@ export const columns = (status: string): ColumnDef<any>[] => {
               try {
                 // Call the Amplify update method for the flag (again must always contain containerID)
                 const { data: updatedContainerStatus } = await client.models.Container.update({
-                  cargoUnitID: row.original.cargoUnitID, // changed containerID to cargoUnitID
+                  cargoUnitID: row.original.cargoUnitID, 
                   flag: newFlag,
                 })
                 console.log("Updated flag:", updatedContainerStatus)
@@ -195,7 +195,7 @@ export const CompletedColumn = (): ColumnDef<any>[] => {
       header: "Vessel ID",
     },
     {
-      accessorKey: "cargoUnitID", // changed containerID and Contianer ID to cargoUnitID and Cargo unit ID
+      accessorKey: "cargoUnitID", 
       header: "Cargo Unit ID",
     },
     {

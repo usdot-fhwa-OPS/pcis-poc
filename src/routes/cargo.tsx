@@ -15,7 +15,7 @@ export const Route = createFileRoute('/cargo')({
 })
 
 //Define the selection of data that will be used for the table
-const selectionSet = ['vesselID', 'cargoUnitID', 'origin', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail', 'containerStatus', 'flag'] as const; // changed containerID to cargoUnitID
+const selectionSet = ['vesselID', 'cargoUnitID', 'origin', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail', 'containerStatus', 'flag'] as const; 
 
 //Create a type based on your selectionSet that will be later used for the columns.tsx file of the able
 export type UpcomingCargo = SelectionSet<Schema['Container']['type'], typeof selectionSet>
@@ -40,10 +40,10 @@ export default function Cargo() {
   }, [])
 
   // The function that updates a row’s operator name/email.
-  function updateCargo(cargoUnitID: string, newName: string, newEmail: string) { // changed containerID to cargoUnitID
+  function updateCargo(cargoUnitID: string, newName: string, newEmail: string) { 
     setData((prev) =>
       prev.map((cargo) =>
-        cargo.cargoUnitID === cargoUnitID // changed containerID to cargoUnitID
+        cargo.cargoUnitID === cargoUnitID 
           ? { ...cargo, operator: newName, operator_email: newEmail }
           : cargo
       )

@@ -69,14 +69,14 @@ function RootComponent() {
   async function fetchBookingLimit() {
     try {
       const { data: limit } = await client.models.Limit.get(
-        {id: '240f1ba3-a8dd-4482-89dc-bba67fe620b7'},
+        {id: '7bde2cc5-23dc-4f46-b6d9-502133cc2e8c'},
         {
           authMode: 'apiKey',
         }
       );
       
       if (limit) {
-        setBookingLimit(limit.terminalCapacity); // changed port to terminal
+        setBookingLimit(limit.terminalCapacity); 
       }
     } catch (error) {
       console.error('Error fetching booking limit', error);

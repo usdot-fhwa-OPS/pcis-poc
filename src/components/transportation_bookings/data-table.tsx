@@ -27,7 +27,7 @@ export interface TransOpDataTableMeta {
     reservationTime?: string
   ) => Promise<boolean>;
   
-  getTerminalCapacity: () => Promise<number>; // changed port to terminal
+  getTerminalCapacity: () => Promise<number>; 
   getBookingsAmount: (
     reservationDate: string,
   ) => Promise<number>;
@@ -56,10 +56,10 @@ export function DataTable<TData, TValue>({ columns, data, meta }: DataTableProps
     
           <div className="mb-4 w-full px-3 py-2 border rounded-md">
         <Input
-          placeholder="Filter by Cargo Unit ID" // changed Container ID to Cargo unit ID
-          value={(table.getColumn("cargoUnitID")?.getFilterValue() as string) ?? ""} // changed containerID to cargoUnitID
+          placeholder="Filter by Cargo Unit ID" 
+          value={(table.getColumn("cargoUnitID")?.getFilterValue() as string) ?? ""} 
           onChange={(event) =>
-            table.getColumn("cargoUnitID")?.setFilterValue(event.target.value) // changed containerID to cargoUnitID
+            table.getColumn("cargoUnitID")?.setFilterValue(event.target.value) 
           }
           className="max-w-sm"
         />
