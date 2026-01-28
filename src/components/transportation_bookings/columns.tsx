@@ -508,7 +508,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
             <div className="grid gap-4 py-4">
               <div className="grid grid-cols-4 items-center gap-4">
                 <CalendarIcon className="h-4 w-4" />
-                <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
+                <Popover modal={true} open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
                   <PopoverTrigger asChild>
                     <Button
                       variant={"outline"}
