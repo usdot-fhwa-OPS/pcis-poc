@@ -311,7 +311,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
                 </TooltipTrigger>
                 {row.original.containerStatus === "On-Ship" && (
                   <TooltipContent>
-                    <p>Container still on ship. Cannot reserve.</p>
+                    <p>Cargo Unit still on ship. Cannot reserve.</p>
                   </TooltipContent>
                 )}
               </Tooltip>
@@ -319,7 +319,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
               <DialogHeader>
-                <DialogTitle>Reserve Container Pick-Up</DialogTitle>
+                <DialogTitle>Reserve Cargo Unit Pick-Up</DialogTitle>
                 <div className="text-sm text-muted-foreground">
                   
                   {`Vessel ID: ${row.original.vesselID} | Cargo Unit ID: ${row.original.cargoUnitID} | Origin: ${row.original.origin} | BCO: ${row.original.bcoName} | BCO Email: ${row.original.bcoEmail}`}  
@@ -496,7 +496,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
           </DialogTrigger>
           <DialogContent className="sm:max-w-[425px]">
             <DialogHeader>
-              <DialogTitle>Modify Container Pick-Up Reservation</DialogTitle>
+              <DialogTitle>Modify Cargo Unit Pick-Up Reservation</DialogTitle>
               <div className="text-sm">
                 {`Original Reservation: ${row.original.reservationDate} at  ${row.original.reservationTime}`}
               </div>
