@@ -17,7 +17,7 @@ import { assignTransportationOperator } from "./assign_transportation_operator.t
 export const columns = (): ColumnDef<any>[] => {
   const baseColumns: ColumnDef<any>[] = [
     { accessorKey: "vesselID", header: "Vessel ID" },
-    { accessorKey: "cargoUnitID", header: "Cargo Unit ID" }, // changed containerID and Container ID to cargoUnitID and Cargo ubit ID
+    { accessorKey: "cargoUnitID", header: "Cargo Unit ID" }, 
     { accessorKey: "origin", header: "Origin" },
     { accessorKey: "destination", header: "Destination" },
     { accessorKey: "bcoName", header: "BCO" },
@@ -75,7 +75,7 @@ baseColumns.push({
             try {
               // Call the Amplify update method for the flag (again must always contain containerID)
               const { data: updatedContainerStatus } = await client.models.Container.update({
-                cargoUnitID: row.original.cargoUnitID, // changed containerID to cargoUnitID
+                cargoUnitID: row.original.cargoUnitID, 
                 flag: newFlag,
               })
               console.log("Updated flag:", updatedContainerStatus)
@@ -99,7 +99,7 @@ baseColumns.push({
 export const CompletedColumn = (): ColumnDef<any>[] => {
   const baseColumns: ColumnDef<any>[] = [
     { accessorKey: "vesselID", header: "Vessel ID" },
-    { accessorKey: "cargoUnitID", header: "Cargo Unit ID" }, // changed containerID and Container ID to cargoUnitID and Cargo unit ID
+    { accessorKey: "cargoUnitID", header: "Cargo Unit ID" }, 
     { accessorKey: "origin", header: "Origin" },
     { accessorKey: "destination", header: "Destination" },
     { accessorKey: "bcoName", header: "BCO" },
@@ -141,7 +141,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
     
     // { accessorKey: "terminalId", header: "Terminal ID" },
     { accessorKey: "vesselID", header: "Vessel ID" },
-    { accessorKey: "cargoUnitID", header: "Cargo Unit ID" }, // changed containerID and Container ID to cargoUnitID and Cargo unit ID
+    { accessorKey: "cargoUnitID", header: "Cargo Unit ID" }, 
     { accessorKey: "origin", header: "Origin" },
     { accessorKey: "destination", header: "Destination" },
     { accessorKey: "bcoName", header: "BCO" },

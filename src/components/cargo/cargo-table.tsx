@@ -23,7 +23,7 @@ import {
 import { Input } from "../ui/input"
 
 export interface CargoTableMeta {
-  updateCargo: (cargoUnitID: string, newName: string, newEmail: string) => void // changed containerID to cargoUnitID
+  updateCargo: (cargoUnitID: string, newName: string, newEmail: string) => void 
 }
 
 interface DataTableProps<TData, TValue> {
@@ -60,10 +60,10 @@ export function DataTable<TData, TValue>({
   return (
     <div className="mb-4 w-full px-3 py-2 border rounded-md">
         <Input
-          placeholder="Filter by Cargo Unit ID..." // changed Container ID to Cargo unit ID
-          value={(table.getColumn("cargoUnitID")?.getFilterValue() as string) ?? ""} // changed containerID to cargoUnitID
+          placeholder="Filter by Cargo Unit ID..." 
+          value={(table.getColumn("cargoUnitID")?.getFilterValue() as string) ?? ""} 
           onChange={(event) =>
-            table.getColumn("cargoUnitID")?.setFilterValue(event.target.value) // changed containerID to cargoUnitID
+            table.getColumn("cargoUnitID")?.setFilterValue(event.target.value) 
           }
           className="max-w-sm"
         />
