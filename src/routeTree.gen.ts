@@ -16,6 +16,7 @@ import { Route as OperatorsImport } from './routes/operators'
 import { Route as NotificationsImport } from './routes/notifications'
 import { Route as ImportImport } from './routes/import'
 import { Route as CargoImport } from './routes/cargo'
+import { Route as AnalyticsImport } from './routes/analytics'
 import { Route as IndexImport } from './routes/index'
 
 // Create/Update Routes
@@ -50,6 +51,12 @@ const CargoRoute = CargoImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const AnalyticsRoute = AnalyticsImport.update({
+  id: '/analytics',
+  path: '/analytics',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
@@ -65,6 +72,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/analytics': {
+      id: '/analytics'
+      path: '/analytics'
+      fullPath: '/analytics'
+      preLoaderRoute: typeof AnalyticsImport
       parentRoute: typeof rootRoute
     }
     '/cargo': {
@@ -109,6 +123,7 @@ declare module '@tanstack/react-router' {
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/analytics': typeof AnalyticsRoute
   '/cargo': typeof CargoRoute
   '/import': typeof ImportRoute
   '/notifications': typeof NotificationsRoute
@@ -118,6 +133,7 @@ export interface FileRoutesByFullPath {
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/analytics': typeof AnalyticsRoute
   '/cargo': typeof CargoRoute
   '/import': typeof ImportRoute
   '/notifications': typeof NotificationsRoute
@@ -128,6 +144,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
+  '/analytics': typeof AnalyticsRoute
   '/cargo': typeof CargoRoute
   '/import': typeof ImportRoute
   '/notifications': typeof NotificationsRoute
@@ -139,6 +156,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/analytics'
     | '/cargo'
     | '/import'
     | '/notifications'
@@ -147,6 +165,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/analytics'
     | '/cargo'
     | '/import'
     | '/notifications'
@@ -155,6 +174,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/analytics'
     | '/cargo'
     | '/import'
     | '/notifications'
@@ -165,6 +185,7 @@ export interface FileRouteTypes {
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AnalyticsRoute: typeof AnalyticsRoute
   CargoRoute: typeof CargoRoute
   ImportRoute: typeof ImportRoute
   NotificationsRoute: typeof NotificationsRoute
@@ -174,6 +195,7 @@ export interface RootRouteChildren {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AnalyticsRoute: AnalyticsRoute,
   CargoRoute: CargoRoute,
   ImportRoute: ImportRoute,
   NotificationsRoute: NotificationsRoute,
@@ -192,6 +214,7 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
+        "/analytics",
         "/cargo",
         "/import",
         "/notifications",
@@ -201,6 +224,9 @@ export const routeTree = rootRoute
     },
     "/": {
       "filePath": "index.tsx"
+    },
+    "/analytics": {
+      "filePath": "analytics.tsx"
     },
     "/cargo": {
       "filePath": "cargo.tsx"

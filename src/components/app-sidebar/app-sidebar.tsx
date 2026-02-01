@@ -1,4 +1,4 @@
-import { FileUp, Home, Ship, User , CalendarClock } from "lucide-react"
+import { FileUp, Home, Ship, User , CalendarClock, BarChart } from "lucide-react"
 
 import {
   Sidebar,
@@ -57,6 +57,11 @@ const items = [
     title: "Reservation Status",
     url: "/reservation",
     icon: CalendarClock,
+  },
+  {
+    title: "Analytics",
+    url: "/analytics",
+    icon: BarChart,
   },
 ]
 
