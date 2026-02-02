@@ -38,7 +38,7 @@ export default function SettingsButton({ role, limit }: SettingsDialogProps) {
     const handleSubmit = async () => {
       try {
         const { data: updateTerminalCapacity } = await client.models.Limit.update({ 
-          id: '7bde2cc5-23dc-4f46-b6d9-502133cc2e8c',
+          id: '0c1aee99-e95e-4c61-920d-52faea4dbbd5',
           terminalCapacity: terminalCapacity, 
         }, {
           authMode: 'apiKey',
