@@ -108,7 +108,7 @@ export const TerminalOperatorSelfHelp = () => {
                             <AccordionContent className="flex flex-col gap-4 text-balance">
                                 {/* Terminal Operator help details 7*/}
                                 Select the Available Operators options in the navigation menu on the left side of the screen 
-                                to view Transportation Operators that are registered in the system.
+                                to view Transportation Coordinator and dispatcher that are registered in the system.
                             </AccordionContent>
                         </AccordionItem>
                     </Accordion>

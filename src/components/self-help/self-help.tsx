@@ -1,4 +1,4 @@
-import { TransportationOperatorSelfHelp } from "./self-help-transportation-operator"
+import { TransportationCoordinatorAndDispatcherSelfHelp } from "./self-help-transportation-operator"
 import { BeneficiaryCargoOwnerSelfHelp } from "./self-help-beneficiary-cargo-owner"
 import { TerminalOperatorSelfHelp } from "./self-help-terminal-operator"
 import { useContext } from "react"
@@ -14,7 +14,7 @@ export const Selfhelp = () => {
           || (userRole === 'Rail Operator')
           || (userRole === 'Third Party Logistics Provider')) {
 
-        return <TransportationOperatorSelfHelp />
+        return <TransportationCoordinatorAndDispatcherSelfHelp />
 
     } else if ('Beneficiary Cargo Owner' == userRole) {
 

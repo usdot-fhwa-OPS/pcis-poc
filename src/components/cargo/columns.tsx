@@ -47,11 +47,11 @@ export const columns: ColumnDef<UpcomingCargo>[] = [
   },
   {
     accessorKey: "transopName",
-    header: "Transportation Operator",
+    header: "Transportation Coordinator and Dispatcher",
   },
   {
     accessorKey: "transopEmail",
-    header: "Transportation Operator Email",
+    header: "Transportation Coordinator and Dispatcher Email",
   }, 
   {
     accessorKey: "containerStatus",

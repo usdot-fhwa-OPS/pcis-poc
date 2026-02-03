@@ -3,7 +3,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "..
 import { Button } from "../ui/button"
 import { X } from "lucide-react"
 
-export const TransportationOperatorSelfHelp = () => {
+export const TransportationCoordinatorAndDispatcherSelfHelp = () => {
     return (
         <div className="self-help-right">
             <Popover>

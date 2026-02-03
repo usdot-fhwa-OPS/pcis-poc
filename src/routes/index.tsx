@@ -126,7 +126,7 @@ function Index() {
       }
     }, [user]);
     
-    async function fetchTransportationOperators() {
+    async function fetchTransportationCoordinatorAndDispatchers() {
         try {
           const session = await fetchAuthSession();
           const response = await fetch("https://xlj2x9eurh.execute-api.us-east-1.amazonaws.com/dev/", {
@@ -368,7 +368,7 @@ function Index() {
                     transopEmail: { eq: userAttributes.email }
                   },
                   {
-                    reservationStatus: { eq: 'Pending Transportation Operator Approval' }
+                    reservationStatus: { eq: 'Pending Transportation Coordinator and dispatcher Approval' }
                   }
                 ]
               },
@@ -402,7 +402,7 @@ function Index() {
                     reservationStatus: { ne: 'unassigned' }
                   },
                   {
-                    reservationStatus: { ne: 'Pending Transportation Operator Approval' }
+                    reservationStatus: { ne: 'Pending Transportation Coordinator and dispatcher Approval' }
                   },
                   {
                     reservationStatus: { ne: 'Picked Up'}
@@ -888,7 +888,7 @@ function Index() {
             <BcoBookingsTableUpcoming
               data={bcoUpcomingBookings}
               status="Upcoming"
-              meta={{ assignTransOp, fetchTransportationOperators }}
+              meta={{ assignTransOp, fetchTransportationCoordinatorAndDispatchers }}
             />
           </TabsContent>
     

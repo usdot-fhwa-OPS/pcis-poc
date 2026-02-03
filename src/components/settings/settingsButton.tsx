@@ -68,7 +68,6 @@ export default function SettingsButton({ role, limit }: SettingsDialogProps) {
             </DialogHeader>
             <div className="grid gap-4 py-4">
               <div className="grid grid-cols-4 items-center gap-4">
-                {/* changed port to terminal */}
                 <Label htmlFor="terminalCapacity" className="text-right"> 
                   Terminal Capacity
                 </Label>
