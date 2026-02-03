@@ -20,7 +20,7 @@ export const assignTransportationCoordinatorAndDispatcher = (table: any, row: an
        
         const handleOpen = async () => {
           setIsDialogOpen(true)
-          const result = await (table.options.meta as BCODataTableMeta)?.fetchTransportationCoordinatorAndDispatcher();
+          const result = await (table.options.meta as BCODataTableMeta)?.fetchTransportationCoordinatorAndDispatchers();
           setData(result)
         }
 
