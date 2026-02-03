@@ -23,14 +23,14 @@ export function NotificationsButton({notifications, role}: NotificationsButtonPr
     if (role === "Beneficiary Cargo Owner") {
       switch (notification.reservationStatus) {
         case "Pickup Modification Requested":
-          return `Modified Reservation for Cargo Unit ${notification.cargoUnitID} has been requested by transportation Coordinator and dispatcher. Awaiting approval by the terminal operator.`; 
+          return `Modified Reservation for Cargo Unit ${notification.cargoUnitID} has been requested by transportation Coordinator and Dispatcher. Awaiting approval by the terminal operator.`; 
         case "Pending Reservation Approval":
-          return `Reservation for Cargo Unit ${notification.cargoUnitID} has been requested by transportation Coordinator and dispatcher. Awaiting approval by the terminal operator.`; 
+          return `Reservation for Cargo Unit ${notification.cargoUnitID} has been requested by transportation Coordinator and Dispatcher. Awaiting approval by the terminal operator.`; 
         case "Pending Pick Up":
           return `Reservation for Cargo Unit ${notification.cargoUnitID} has been approved by the terminal operator.`; 
         case "unassigned":
           if (notification.isBCONotify && notification.isTransportationNotify) return `Terminal Operator has denied the reservation for Cargo unit ${notification.cargoUnitID}.`; 
-          else return `Transportation Coordinator and dispatcher has denied the assignment for Cargo unit ${notification.cargoUnitID}.`
+          else return `Transportation Coordinator and Dispatcher has denied the assignment for Cargo unit ${notification.cargoUnitID}.`
         case "Late for Pick Up":
           return `Terminal Operator has marked Late for Pick Up for Cargo Unit ${notification.cargoUnitID}.`; 
         
@@ -39,7 +39,7 @@ export function NotificationsButton({notifications, role}: NotificationsButtonPr
           || (role === 'Rail Operator')
           || (role === 'Third Party Logistics Provider')) {
       switch (notification.reservationStatus) {
-        case "Pending Transportation Coordinator and dispatcher Approval":
+        case "Pending Transportation Coordinator and Dispatcher Approval":
           return `Assignment of Cargo Unit ${notification.cargoUnitID} requires your approval`; 
         case "Pending Pick Up":
           return `Reservation for Cargo Unit ${notification.cargoUnitID} has been approved by terminal operator.`; 

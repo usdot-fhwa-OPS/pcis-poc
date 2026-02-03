@@ -16,8 +16,8 @@ export const columns = (status: string): ColumnDef<any>[] => {
     { accessorKey: "origin", header: "Origin" },
     { accessorKey: "bcoName", header: "BCO" },
     { accessorKey: "bcoEmail", header: "BCO Email" },
-    { accessorKey: "transopName", header: "Transportation Coordinator and dispatcher" },
-    { accessorKey: "transopEmail", header: "Transportation Coordinator and dispatcher Email" },
+    { accessorKey: "transopName", header: "Transportation Coordinator and Dispatcher" },
+    { accessorKey: "transopEmail", header: "Transportation Coordinator and Dispatcher Email" },
     { accessorKey: "reservationDate", header: "Original Date Requested" },
     { accessorKey: "reservationTime", header: "Original Time Requested" },
   
@@ -212,11 +212,11 @@ export const CompletedColumn = (): ColumnDef<any>[] => {
     },
     {
       accessorKey: "transopName",
-      header: "Transportation Coordinator and dispatcher",
+      header: "Transportation Coordinator and Dispatcher",
     },
     {
       accessorKey: "transopEmail",
-      header: "Transportation Coordinator and dispatcher Email",
+      header: "Transportation Coordinator and Dispatcher Email",
     },
     {
       accessorKey: "reservationDate",

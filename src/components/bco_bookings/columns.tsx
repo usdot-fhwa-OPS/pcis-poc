@@ -24,7 +24,7 @@ export const columns = (): ColumnDef<any>[] => {
     { accessorKey: "bcoEmail", header: "BCO Email" },
     { 
       accessorKey: "transopName", 
-      header: "Transportation Coordinator and dispatcher",
+      header: "Transportation Coordinator and Dispatcher",
       cell: ({ row, table }) => {
 
 
@@ -104,8 +104,8 @@ export const CompletedColumn = (): ColumnDef<any>[] => {
     { accessorKey: "destination", header: "Destination" },
     { accessorKey: "bcoName", header: "BCO" },
     { accessorKey: "bcoEmail", header: "BCO Email" },
-    { accessorKey: "transopName", header: "Transportation Coordinator and dispatcher Name" },
-    { accessorKey: "transopEmail", header: "Transportation Coordinator and dispatcher Email" },
+    { accessorKey: "transopName", header: "Transportation Coordinator and Dispatcher Name" },
+    { accessorKey: "transopEmail", header: "Transportation Coordinator and Dispatcher Email" },
     {
       accessorKey: "to_status",
       header: () => <div className="w-[150px] text-center">Reservation Status</div>,
@@ -147,11 +147,11 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
     { accessorKey: "bcoName", header: "BCO" },
     { accessorKey: "bcoEmail", header: "BCO Email" },
   //  { accessorKey: "termopName", header: "Assigned Terminal Operator" },
-    { accessorKey: "transopName", header: "Transportation Coordinator and dispatcher Name" },
-    { accessorKey: "transopEmail", header: "Transportation Coordinator and dispatcher Email" },
+    { accessorKey: "transopName", header: "Transportation Coordinator and Dispatcher Name" },
+    { accessorKey: "transopEmail", header: "Transportation Coordinator and Dispatcher Email" },
     {
       accessorKey: "Booking Status",
-      header: () => <div className="min-w-[150px] text-center "> Transportation Coordinator and dispatcher Status</div>,
+      header: () => <div className="min-w-[150px] text-center "> Transportation Coordinator and Dispatcher Status</div>,
       cell: ({ row }) => {
         const status = row.original.reservationStatus; // Get status value
         const isLate = status === "Late for Pick Up"; // Check if status is "Late"
@@ -172,7 +172,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
    
     {
       accessorKey: "contact_to",
-      header: "Contact Transportation Coordinator and dispatcher",
+      header: "Contact Transportation Coordinator and Dispatcher",
       cell: ({ row }) => {
         const email = row.original.transopEmail
   

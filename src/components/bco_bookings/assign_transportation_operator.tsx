@@ -36,7 +36,7 @@ export const assignTransportationCoordinatorAndDispatcher = (table: any, row: an
 
         function handleSubmit() {
           // Use the parent's updateCargo method:
-          (table.options.meta as BCODataTableMeta)?.assignTransOp(row.original.cargoUnitID, tempName, tempEmail, "Pending Transportation Coordinator and dispatcher Approval")
+          (table.options.meta as BCODataTableMeta)?.assignTransOp(row.original.cargoUnitID, tempName, tempEmail, "Pending Transportation Coordinator and Dispatcher Approval")
           setIsDialogOpen(false)
         }
 
@@ -79,16 +79,16 @@ export const assignTransportationCoordinatorAndDispatcher = (table: any, row: an
                 </DialogTrigger>
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle>Assign Transportation Coordinator and dispatcher</DialogTitle>
+                        <DialogTitle>Assign Transportation Coordinator and Dispatcher</DialogTitle>
                         <DialogDescription>
-                            Select a Transportation Coordinator and dispatcher name and email to assign this container.
+                            Select a Transportation Coordinator and Dispatcher name and email to assign this container.
                         </DialogDescription>
                     </DialogHeader>
                     <div className="space-y-2 py-2">
                         <div>
                             <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
-                                    <Button variant="outline" disabled={row.original.containerStatus === "On-Ship"}  >Select Transportation Coordinator and dispatcher <LucideChevronDown />
+                                    <Button variant="outline" disabled={row.original.containerStatus === "On-Ship"}  >Select Transportation Coordinator and Dispatcher <LucideChevronDown />
                                     </Button>
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent className="w-56" align="start">
@@ -138,7 +138,7 @@ export const assignTransportationCoordinatorAndDispatcher = (table: any, row: an
                             </DropdownMenu>
                         </div>
                         <div>
-                            <Label>Transportation Coordinator and dispatcher Email</Label>
+                            <Label>Transportation Coordinator and Dispatcher Email</Label>
                             <Input
                                 value={tempEmail}
                                 disabled={true}

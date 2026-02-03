@@ -368,7 +368,7 @@ function Index() {
                     transopEmail: { eq: userAttributes.email }
                   },
                   {
-                    reservationStatus: { eq: 'Pending Transportation Coordinator and dispatcher Approval' }
+                    reservationStatus: { eq: 'Pending Transportation Coordinator and Dispatcher Approval' }
                   }
                 ]
               },
@@ -402,7 +402,7 @@ function Index() {
                     reservationStatus: { ne: 'unassigned' }
                   },
                   {
-                    reservationStatus: { ne: 'Pending Transportation Coordinator and dispatcher Approval' }
+                    reservationStatus: { ne: 'Pending Transportation Coordinator and Dispatcher Approval' }
                   },
                   {
                     reservationStatus: { ne: 'Picked Up'}

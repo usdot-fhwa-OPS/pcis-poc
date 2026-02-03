@@ -47,15 +47,15 @@ export const BeneficiaryCargoOwnerSelfHelp = () => {
 
                             <AccordionTrigger>
                                 {/* Beneficiary Cargo Owner help title 2*/}
-                                How do I assign a Transportation Coordinator and dispatcher for cargo?
+                                How do I assign a Transportation Coordinator and Dispatcher for cargo?
                             </AccordionTrigger>
                             <AccordionContent className="flex flex-col gap-4 text-balance">
                                 {/* Beneficiary Cargo Owner help details 2*/}
                                 <p>
                                     In the Upcoming tab, Cargo Units that have not been assigned to a
-                                    Transportation Coordinator and dispatcher will appear. Once the Cargo Unit status is
+                                    Transportation Coordinator and Dispatcher will appear. Once the Cargo Unit status is
                                     updated to On-Dock by the Terminal Operator, the Assign button
-                                    becomes available to assign a Transportation Coordinator and dispatcher for the
+                                    becomes available to assign a Transportation Coordinator and Dispatcher for the
                                     Cargo Unit.
                                 </p>
                             </AccordionContent>
@@ -64,13 +64,13 @@ export const BeneficiaryCargoOwnerSelfHelp = () => {
 
                             <AccordionTrigger>
                                 {/* Beneficiary Cargo Owner help title 3*/}
-                                How do I contact a Transportation Coordinator and dispatcher for an assigned cargo pickup?
+                                How do I contact a Transportation Coordinator and Dispatcher for an assigned cargo pickup?
                             </AccordionTrigger>
                             <AccordionContent className="flex flex-col gap-4 text-balance">
                                 {/* Beneficiary Cargo Owner help details 3*/}
                                 <p>
                                     In the Ongoing tab there is a Contact button for each Cargo Unit
-                                    that can be used to contact the Transportation Coordinator and dispatcher for
+                                    that can be used to contact the Transportation Coordinator and Dispatcher for
                                     assigned pickups.
                                 </p>
                             </AccordionContent>

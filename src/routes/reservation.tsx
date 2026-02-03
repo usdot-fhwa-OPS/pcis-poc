@@ -55,7 +55,7 @@ export type BCOCompletedBooking= SelectionSet<Schema['Container']['type'], typeo
 //Define the selection of data that will be used for the table
 const selectionSetTransportation_CompletedData = [ 
   'vesselID',
-  'cargoUnitID',  // changed containerID to cargoUnitID
+  'cargoUnitID', 
   'origin',
   'bcoName',
   'bcoEmail',
@@ -71,7 +71,7 @@ const selectionSetTransportation_CompletedData = [
 //Define the selection of data that will be used for the table
 const selectionSetTerminal_CompletedData = [ 
   'vesselID',
-  'cargoUnitID',  // changed containerID to cargoUnitID
+  'cargoUnitID',  
   'origin',
   'bcoName',
   'bcoEmail',
@@ -351,7 +351,7 @@ function RouteComponent() {
                 transopEmail: { eq: userAttributes.email }
               },
               {
-                reservationStatus: { eq: 'Pending Transportation Coordinator and dispatcher Approval' }
+                reservationStatus: { eq: 'Pending Transportation Coordinator and Dispatcher Approval' }
               }
             ]
           },
@@ -385,7 +385,7 @@ function RouteComponent() {
                 reservationStatus: { ne: 'unassigned' }
               },
               {
-                reservationStatus: { ne: 'Pending Transportation Coordinator and dispatcher Approval' }
+                reservationStatus: { ne: 'Pending Transportation Coordinator and Dispatcher Approval' }
               },
               {
                 reservationStatus: { ne: 'Picked Up'}
@@ -426,7 +426,7 @@ function RouteComponent() {
       });
   
       console.log("Updated container status:", assignTransportationOp);
-      toast.success("Transportation Coordinator and dispatcher assigned successfully");
+      toast.success("Transportation Coordinator and Dispatcher assigned successfully");
   
       // Refetch data to reflect changes
       await fetchContainers();
@@ -434,7 +434,7 @@ function RouteComponent() {
       return true;
     } catch (error) {
       console.error("Error updating container status:", error);
-      toast.error("Error assigning Transportation Coordinator and dispatcher. Please try again.");
+      toast.error("Error assigning Transportation Coordinator and Dispatcher. Please try again.");
       return false; // Explicitly return false when the update fails
     }
   }
@@ -755,7 +755,7 @@ useEffect(() => {
         <TransportationBookingsTableOngoing
           data={transOpOngoingBookings}
           status="Ongoing"
-          meta={{updateTransOpBooking, getTerminalCapacity, getBookingsAmount}} // changed port to terminal
+          meta={{updateTransOpBooking, getTerminalCapacity, getBookingsAmount}} 
         />
       </TabsContent>
 
