@@ -6,7 +6,7 @@ import outputs from '../../../amplify_outputs.json';
 import '@aws-amplify/ui-react/styles.css';
 import './authStyles.css';
 
-Amplify.configure(outputs);
+//Amplify.configure(outputs);
 I18n.putVocabularies(translations);
 I18n.setLanguage('en');
 
