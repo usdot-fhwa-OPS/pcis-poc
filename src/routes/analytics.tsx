@@ -254,16 +254,16 @@ function Analytics() {
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-3xl font-bold">Analytics Dashboard</h1>
         <div className="flex items-center gap-2">
-          <span className="text-sm text-gray-600">{context.email}</span>
+          <span className="text-sm text-gray-600">{context?.email}</span>
           <Badge variant="outline">{userAttributes.role}</Badge>
-          {context.destination && (
+          {context?.destination && (
             <Badge variant="secondary">Terminal: {context.destination}</Badge>
           )}
         </div>
       </div>
 
       <div className="mb-4 flex items-center gap-4 text-sm text-gray-600">
-        <span>Total Items: <strong>{context.itemCount}</strong></span>
+        <span>Total Items: <strong>{context?.itemCount}</strong></span>
         <span>Role: <strong>{analyticsData.role}</strong></span>
       </div>
 
