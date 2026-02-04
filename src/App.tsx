@@ -9,7 +9,7 @@ function App() {
     <SidebarProvider>
       <AppSidebar />
       <main>
-        <h3>Home</h3>
+        <h3>Home - Dave</h3>
       </main>
     </SidebarProvider>
   );
