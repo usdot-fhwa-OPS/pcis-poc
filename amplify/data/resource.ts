@@ -18,7 +18,7 @@ const schema = a.schema({
       arrivalDate: a.string(),
       transopName: a.string(),
       transopEmail: a.string(),
-      containerStatus: a.string().default('On-Ship'),
+      cargoUnitStatus: a.string().default('On-Ship'),
       assignmentDate: a.string(),
       reservationStatus: a.string().default('unassigned'),
       reservationDate: a.string(),

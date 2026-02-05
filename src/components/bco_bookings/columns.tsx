@@ -41,10 +41,10 @@ export const columns = (): ColumnDef<any>[] => {
       },
     },
     {
-      accessorKey: "containerStatus",
-      header: "Container Status",
+      accessorKey: "cargoUnitStatus",
+      header: "Cargo Unit Status",
       cell: ({ row }) => {
-        const status = row.original.containerStatus; // Get status value
+        const status = row.original.cargoUnitStatus; // Get status value
         const isOnShip = status === "On-Ship"; // Check if status is "Late"
 
         return (
@@ -74,11 +74,11 @@ baseColumns.push({
             setFlagged(newFlag)
             try {
               // Call the Amplify update method for the flag (again must always contain containerID)
-              const { data: updatedContainerStatus } = await client.models.Container.update({
+              const { data: updatedCargoUnitStatus } = await client.models.Container.update({
                 cargoUnitID: row.original.cargoUnitID, 
                 flag: newFlag,
               })
-              console.log("Updated flag:", updatedContainerStatus)
+              console.log("Updated flag:", updatedCargoUnitStatus)
             } catch (error) {
               console.error("Error updating flag:", error);
             }

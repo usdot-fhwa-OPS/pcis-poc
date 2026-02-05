@@ -69,7 +69,7 @@ export const assignTransportationCoordinatorAndDispatcher = (table: any, row: an
                             <TooltipTrigger>
                                 <Button onClick={handleOpen} variant="outline" disabled={row.original.containerStatus === "On-Ship"} className="bg-blue-600 text-white hover:bg-blue-700">Assign</Button>
                             </TooltipTrigger>
-                            {row.original.containerStatus === "On-Ship" && (
+                            {row.original.cargoUnitStatus === "On-Ship" && (
                                 <TooltipContent>
                                     <p>Container still on ship. Cannot assign operator yet.</p>
                                 </TooltipContent>
@@ -88,7 +88,7 @@ export const assignTransportationCoordinatorAndDispatcher = (table: any, row: an
                         <div>
                             <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
-                                    <Button variant="outline" disabled={row.original.containerStatus === "On-Ship"}  >Select Transportation Coordinator and Dispatcher <LucideChevronDown />
+                                    <Button variant="outline" disabled={row.original.cargoUnitStatus === "On-Ship"}  >Select Transportation Coordinator and Dispatcher <LucideChevronDown />
                                     </Button>
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent className="w-56" align="start">

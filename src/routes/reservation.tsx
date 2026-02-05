@@ -33,7 +33,7 @@ const selectionSetTerminalOpModified = ['vesselID', 'cargoUnitID', 'origin', 'bc
 
 export type TerminalOpModifiedBookings = SelectionSet<Schema['Container']['type'], typeof selectionSetTerminalOpModified>
 //Define the selection of data that will be used for the table
-const selectionSetBCOUpcomingBookings = ['vesselID', 'cargoUnitID', 'origin', 'destination', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail', 'containerStatus','arrivalDate', 'flag'] as const; 
+const selectionSetBCOUpcomingBookings = ['vesselID', 'cargoUnitID', 'origin', 'destination', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail', 'cargoUnitStatus','arrivalDate', 'flag'] as const; 
 //Create a type based on your selectionSet that will be later used for the columns.tsx file of the able
 
 const selectionSetTerminalOPOngoing = ['vesselID', 'cargoUnitID', 'origin', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail','reservationDate','reservationTime','reservationStatus', 'flag'] as const; 
@@ -425,7 +425,7 @@ function RouteComponent() {
         isTerminalNotify: false,
       });
   
-      console.log("Updated container status:", assignTransportationOp);
+      console.log("Updated Cargo Unit Status:", assignTransportationOp);
       toast.success("Transportation Coordinator and Dispatcher assigned successfully");
   
       // Refetch data to reflect changes
@@ -433,7 +433,7 @@ function RouteComponent() {
   
       return true;
     } catch (error) {
-      console.error("Error updating container status:", error);
+      console.error("Error updating Cargo Unit Status:", error);
       toast.error("Error assigning Transportation Coordinator and Dispatcher. Please try again.");
       return false; // Explicitly return false when the update fails
     }
@@ -505,7 +505,7 @@ function RouteComponent() {
     async function  markBookingLate(id: string, status: string){  
       try {
 
-          const { data: updatedContainerStatus } = await client.models.Container.update({
+          const { data: updatedCargoUnitStatus } = await client.models.Container.update({
             cargoUnitID: id,   
             reservationStatus: status,
             isTransportationNotify: true,
@@ -513,7 +513,7 @@ function RouteComponent() {
             isTerminalNotify: false,
 
           });
-          console.log("Marked Booking status Late for Pick Up:", updatedContainerStatus);
+          console.log("Marked Booking status Late for Pick Up:", updatedCargoUnitStatus);
           await fetchterminal_operator_ongoing();
           return true; 
         } 
@@ -572,9 +572,9 @@ function RouteComponent() {
           });
         }
         
-        const { data: updatedContainerStatus } = await client.models.Container.update(updatePayload);
-        console.log("Updated container status:", updatedContainerStatus);
-        toast.success("Container status updated successfully");
+        const { data: updatedcargoUnitStatus } = await client.models.Container.update(updatePayload);
+        console.log("Updated Cargo Unit Status:", updatedcargoUnitStatus);
+        toast.success("Cargo Unit Status updated successfully");
     
         // Refresh data after successful update
         await fetchTransOpUpcoming();
@@ -636,9 +636,9 @@ async function updateBooking(id: string, status: string, reservationDate?: strin
       });
     }
 
-    const { data: updatedContainerStatus } = await client.models.Container.update(updatePayload);
+    const { data: updatedCargoUnitStatus } = await client.models.Container.update(updatePayload);
     
-    console.log("Updated booking status:", updatedContainerStatus);
+    console.log("Updated booking status:", updatedCargoUnitStatus);
     toast.success("Booking status updated successfully");
 
     // Refresh relevant data after successful update
