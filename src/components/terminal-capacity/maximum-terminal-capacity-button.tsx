@@ -19,13 +19,13 @@ import { Label } from "../ui/label"
 //import type { Schema } from '../../../amplify/data/resource';
 //const client = generateClient<Schema>();
 interface SettingsDialogProps {
-  role: string
-//  limit: number
+  role: string,
+  limit: number
 }
 
-export function MaximumTerminalCapacityButton({ role }: SettingsDialogProps) {
+export function MaximumTerminalCapacityButton({ role, limit}: SettingsDialogProps) {
     const [open, setOpen] = useState(false)
-    // const [portCapacity, setPortCapacity] = useState(limit)
+    const [portCapacity, setPortCapacity] = useState(limit)
 
     // useEffect(() => {
     //   setPortCapacity(limit);
@@ -70,6 +70,12 @@ export function MaximumTerminalCapacityButton({ role }: SettingsDialogProps) {
                 <Label htmlFor="portCapacity" className="text-right">
                   Maximum Terminal Capacity
                 </Label>
+                <input type="number" min={0} max={limit} value={portCapacity}
+                       onChange={(e) =>
+                         setPortCapacity(Number(e.target.value))
+                       }
+                       style={{ width:"60px"}}
+                />
 {/*                 <Input
                   id="portCapacity"
                   type="number"
