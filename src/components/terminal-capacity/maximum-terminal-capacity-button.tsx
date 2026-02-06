@@ -1,35 +1,30 @@
 "use client"
 
-//import { useState, useEffect } from "react"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Settings } from "lucide-react"
 import { Button } from "../ui/button"
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "../ui/dialog"
-//import { Input } from "../ui/input"
 import { Label } from "../ui/label"
-//import { generateClient } from 'aws-amplify/data';
-//import type { Schema } from '../../../amplify/data/resource';
-//const client = generateClient<Schema>();
+
 interface SettingsDialogProps {
-  role: string,
-  limit: number
+  role: string;
+  limit: number;
 }
 
 export function MaximumTerminalCapacityButton({ role, limit}: SettingsDialogProps) {
     const [open, setOpen] = useState(false)
     const [portCapacity, setPortCapacity] = useState(limit)
 
-    // useEffect(() => {
-    //   setPortCapacity(limit);
-    // }, [limit]);
+    useEffect(() => {
+       setPortCapacity(limit);
+    }, [limit]);
 
     // If user is not a Terminal Operator, don't render anything
     if (role !== "Terminal Operator") {
@@ -63,28 +58,20 @@ export function MaximumTerminalCapacityButton({ role, limit}: SettingsDialogProp
           <form onSubmit={handleSubmit}>
             <DialogHeader>
               <DialogTitle>Maximum Terminal Capacity</DialogTitle>
-              <DialogDescription>Adjust your application settings here.</DialogDescription>
             </DialogHeader>
             <div className="grid gap-4 py-4">
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="portCapacity" className="text-right">
                   Maximum Terminal Capacity
                 </Label>
-                <input type="number" min={0} max={limit} value={portCapacity}
+                <input id="portCapacity" type="number" min={0} max={limit} value={portCapacity}
                        onChange={(e) =>
                          setPortCapacity(Number(e.target.value))
                        }
-                       style={{ width:"60px"}}
+                       className="col-span-3"
+                       step="1"
                 />
-{/*                 <Input
-                  id="portCapacity"
-                  type="number"
-                  value={portCapacity}
-                  onChange={(e) => setPortCapacity(Number(e.target.value))}
-                  className="col-span-3"
-                  min="0"
-                  step="1"
-                /> */}
+                reservations per Day
               </div>
             </div>
             <DialogFooter>
