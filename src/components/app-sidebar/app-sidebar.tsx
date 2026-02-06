@@ -198,7 +198,7 @@ export function AppSidebar() {
                 </SidebarMenuItem>
               ))}
               <NotificationsButton notifications={userNotifications} role={userAttributes.role} />
-              <MaximumTerminalCapacityButton notifications={userNotifications} role={userAttributes.role} />
+              <MaximumTerminalCapacityButton role={userAttributes.role} />
           </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
