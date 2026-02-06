@@ -62,7 +62,7 @@ export function MaximumTerminalCapacityButton({ role }: SettingsDialogProps) {
         <DialogContent>
           <form onSubmit={handleSubmit}>
             <DialogHeader>
-              <DialogTitle>Settings</DialogTitle>
+              <DialogTitle>Maximum Terminal Capacity</DialogTitle>
               <DialogDescription>Adjust your application settings here.</DialogDescription>
             </DialogHeader>
             <div className="grid gap-4 py-4">
