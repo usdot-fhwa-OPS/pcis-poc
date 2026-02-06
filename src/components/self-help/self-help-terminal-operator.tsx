@@ -103,12 +103,12 @@ export const TerminalOperatorSelfHelp = () => {
 
                             <AccordionTrigger>
                                 {/* Terminal Operator help title 7*/}
-                                How do I view the list of available Transportation Coordinator and Dispatcher?
+                                How do I view the list of available Transportation Coordinator?
                             </AccordionTrigger>
                             <AccordionContent className="flex flex-col gap-4 text-balance">
                                 {/* Terminal Operator help details 7*/}
                                 Select the Available Operators options in the navigation menu on the left side of the screen 
-                                to view Transportation Coordinator and Dispatcher that are registered in the system.
+                                to view Transportation Coordinator that are registered in the system.
                             </AccordionContent>
                         </AccordionItem>
                     </Accordion>

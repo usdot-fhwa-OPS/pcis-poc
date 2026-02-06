@@ -116,7 +116,7 @@ function RouteComponent() {
     getUserAttributes();
   }, [user]);
 
-  async function fetchTransportationCoordinatorAndDispatchers() {
+  async function fetchTransportationCoordinators() {
     try {
       const session = await fetchAuthSession();
       const response = await fetch("https://xlj2x9eurh.execute-api.us-east-1.amazonaws.com/dev/", {
@@ -351,7 +351,7 @@ function RouteComponent() {
                 transopEmail: { eq: userAttributes.email }
               },
               {
-                reservationStatus: { eq: 'Pending Transportation Coordinator and Dispatcher Approval' }
+                reservationStatus: { eq: 'Pending Transportation Coordinator Approval' }
               }
             ]
           },
@@ -385,7 +385,7 @@ function RouteComponent() {
                 reservationStatus: { ne: 'unassigned' }
               },
               {
-                reservationStatus: { ne: 'Pending Transportation Coordinator and Dispatcher Approval' }
+                reservationStatus: { ne: 'Pending Transportation Coordinator Approval' }
               },
               {
                 reservationStatus: { ne: 'Picked Up'}
@@ -426,7 +426,7 @@ function RouteComponent() {
       });
   
       console.log("Updated container status:", assignTransportationOp);
-      toast.success("Transportation Coordinator and Dispatcher assigned successfully");
+      toast.success("Transportation Coordinator assigned successfully");
   
       // Refetch data to reflect changes
       await fetchContainers();
@@ -434,7 +434,7 @@ function RouteComponent() {
       return true;
     } catch (error) {
       console.error("Error updating container status:", error);
-      toast.error("Error assigning Transportation Coordinator and Dispatcher. Please try again.");
+      toast.error("Error assigning Transportation Coordinator. Please try again.");
       return false; // Explicitly return false when the update fails
     }
   }
@@ -788,7 +788,7 @@ useEffect(() => {
           <BcoBookingsTableUpcoming
             data={bcoUpcomingBookings}
             status="Upcoming"
-            meta={{ assignTransOp, fetchTransportationCoordinatorAndDispatchers }}
+            meta={{ assignTransOp, fetchTransportationCoordinators }}
           />
         </TabsContent>
   
