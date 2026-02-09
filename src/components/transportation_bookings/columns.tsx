@@ -117,11 +117,11 @@ baseColumns.push({
         setFlagged(newFlag)
         try {
           // Call the Amplify update method for the flag (again must always contain containerID)
-          const { data: updatedContainerStatus } = await client.models.Container.update({
+          const { data: updatedCargoUnitStatus } = await client.models.Container.update({
             cargoUnitID: row.original.cargoUnitID, 
             flag: newFlag,
           })
-          console.log("Updated container status:", updatedContainerStatus);
+          console.log("Updated Cargo Unit Status:", updatedCargoUnitStatus);
         } catch (error) {
           console.error("Error updating flag:", error);
         }
@@ -307,9 +307,9 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
             <TooltipProvider>
               <Tooltip delayDuration={300}>
                 <TooltipTrigger>
-                  <Button variant="outline" onClick={() => setIsDialogOpen(true)} disabled={row.original.containerStatus === "On-Ship"}>Reserve</Button>
+                  <Button variant="outline" onClick={() => setIsDialogOpen(true)} disabled={row.original.cargoUnitStatus === "On-Ship"}>Reserve</Button>
                 </TooltipTrigger>
-                {row.original.containerStatus === "On-Ship" && (
+                {row.original.cargoUnitStatus === "On-Ship" && (
                   <TooltipContent>
                     <p>Cargo Unit still on ship. Cannot reserve.</p>
                   </TooltipContent>
@@ -593,11 +593,11 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
           setFlagged(newFlag)
           try {
             // Call the Amplify update method for the flag (again must always contain containerID)
-            const { data: updatedContainerStatus } = await client.models.Container.update({
+            const { data: updatedCargoUnitStatus } = await client.models.Container.update({
               cargoUnitID: row.original.cargoUnitID, 
               flag: newFlag,
             })
-            console.log("Updated flag:", updatedContainerStatus)
+            console.log("Updated flag:", updatedCargoUnitStatus)
           } catch (error) {
             console.error("Error updating flag:", error);
           }
