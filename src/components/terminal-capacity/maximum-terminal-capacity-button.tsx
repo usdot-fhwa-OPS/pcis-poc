@@ -59,21 +59,21 @@ export function MaximumTerminalCapacityButton({ role, limit}: SettingsDialogProp
             <DialogHeader>
               <DialogTitle>Update Terminal Capacity</DialogTitle>
             </DialogHeader>
-            {/* <div className="grid gap-4 py-4"> */}
-              <div className="grid grid-cols-3 items-center gap-4">
-                <Label htmlFor="portCapacity" className="text-right">
-                   Terminal Capacity
-                </Label>
-                <input id="portCapacity" type="number" min={0} max={limit} value={portCapacity}
-                       onChange={(e) =>
-                         setPortCapacity(Number(e.target.value))
-                       }
-                       className="col-span-3"
-                       step="1"
-                />
-                reservations per Day
+              <div className="dialog-content">
+                <div className="terminal-row">
+                  <Label htmlFor="portCapacity">
+                    Terminal Capacity
+                  </Label>
+                  <input id="portCapacity" type="number" min={0} max={limit} value={portCapacity}
+                        onChange={(e) =>
+                          setPortCapacity(Number(e.target.value))
+                        }
+                        className="col-span-3"
+                        step="1"
+                  />
+                  reservations per Day
+                </div>
               </div>
-            {/* </div> */}
             <DialogFooter>
               <Button type="button" variant="outline" onClick={() => setOpen(false)}>
                 Cancel
