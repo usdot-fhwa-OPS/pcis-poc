@@ -8,17 +8,13 @@ import { AppSidebar } from "../components/app-sidebar/app-sidebar"
 import UserButton from '../components/userButton/userButton';
 import '../index.css';
 import { Toaster } from 'sonner';
-import { generateClient } from 'aws-amplify/data';
-import type { Schema } from '../../amplify/data/resource';
 import { UserContext } from '../AppContext';
-
 
 export interface UserAttributes {
   given_name?: string;
   family_name?: string;
   'custom:role'?: string;
 }
-
 
 export const Route = createRootRoute({
   component: RootComponent,
@@ -31,12 +27,10 @@ export const Route = createRootRoute({
     )
   },
 })
-const client = generateClient<Schema>();
 
 function RootComponent() {
   const { user } = useAuthenticator()
   const [userAttributes, setUserAttributes] = useState<{ fullName: string; role: string }>({ fullName: "", role: "" })
-  const [bookingLimit, setBookingLimit] = useState<number>(0);
 
   const [userSecurityAttrubutes, setUserSecurityAttrubutes] = useState<UserAttributes>({});
   
@@ -62,26 +56,8 @@ function RootComponent() {
 
     if (user) {
       getUserAttributes()
-      fetchBookingLimit();
     }
   }, [user])
-
-  async function fetchBookingLimit() {
-    try {
-      const { data: limit } = await client.models.Limit.get(
-        {id: '7bde2cc5-23dc-4f46-b6d9-502133cc2e8c'},
-        {
-          authMode: 'apiKey',
-        }
-      );
-      
-      if (limit) {
-        setBookingLimit(limit.terminalCapacity); 
-      }
-    } catch (error) {
-      console.error('Error fetching booking limit', error);
-    }
-  }
 
   return (
     <div className="flex min-h-screen bg-background">
@@ -94,12 +70,8 @@ function RootComponent() {
             <UserButton fullName={userAttributes.fullName} role={userAttributes.role} />
           </div>
          
-          
             <Outlet /> 
             
-            
-          
-         
         </div>
         </UserContext.Provider>}
       </SidebarProvider>
