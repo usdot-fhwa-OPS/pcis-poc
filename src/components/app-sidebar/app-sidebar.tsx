@@ -20,7 +20,7 @@ import { fetchUserAttributes } from 'aws-amplify/auth';
 import { useEffect, useState } from "react";
 import { NotificationsButton } from "../notifications-button/notifications-button";
 
-import { MaximumTerminalCapacityButton } from "../terminal-capacity/maximum-terminal-capacity-button";
+import { MaximumTerminalCapacityButton } from "../terminal-capacity/update-terminal-capacity-button";
 
 import { generateClient, SelectionSet } from 'aws-amplify/data';
 import type { Schema } from '../../../amplify/data/resource';

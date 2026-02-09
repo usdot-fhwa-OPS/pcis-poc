@@ -12,6 +12,7 @@ import {
   DialogTrigger,
 } from "../ui/dialog"
 import { Label } from "../ui/label"
+import "./terminal-capacity.css"
 
 interface SettingsDialogProps {
   role: string;
@@ -70,6 +71,7 @@ export function MaximumTerminalCapacityButton({ role, limit}: SettingsDialogProp
                               setPortCapacity(Number(e.target.value))
                            }
                            step="1"
+                           className="five-chars"
                     />
                      &nbsp;reservations per day
                   </div>
