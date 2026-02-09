@@ -36,7 +36,7 @@ const client = generateClient<Schema>();
 function RootComponent() {
   const { user } = useAuthenticator()
   const [userAttributes, setUserAttributes] = useState<{ fullName: string; role: string }>({ fullName: "", role: "" })
-  const [bookingLimit, setBookingLimit] = useState<number>(0);
+  //const [bookingLimit, setBookingLimit] = useState<number>(0);
 
   const [userSecurityAttrubutes, setUserSecurityAttrubutes] = useState<UserAttributes>({});
   
