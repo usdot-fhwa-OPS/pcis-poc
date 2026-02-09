@@ -47,15 +47,15 @@ export default function TerminalCapacityComponent() {
   }, [])
 
   // The function that updates a row’s operator name/email.
-  function updateTerminalCapacity(terminalCapacityUnitID: string, newName: string, newEmail: string) { 
-    // setData((prev) =>
-    //   prev.map((terminalCapacity) =>
-    //     terminalCapacity.capacityId === capacityId 
-    //       ? { ...terminalCapacity, operator: newName, operator_email: newEmail }
-    //       : terminalCapacity
-    //   )
-    // )
-  }
+  // function updateTerminalCapacity(terminalCapacityUnitID: string, newName: string, newEmail: string) { 
+  //   // setData((prev) =>
+  //   //   prev.map((terminalCapacity) =>
+  //   //     terminalCapacity.capacityId === capacityId 
+  //   //       ? { ...terminalCapacity, operator: newName, operator_email: newEmail }
+  //   //       : terminalCapacity
+  //   //   )
+  //   // )
+  // }
 
   return (
     <div>
