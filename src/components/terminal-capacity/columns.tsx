@@ -18,7 +18,6 @@ import {
 
 import { generateClient } from 'aws-amplify/data';
 import type { Schema } from '../../../amplify/data/resource';
-import { UpcomingCargo } from "../../routes/cargo"
 import { TerminalCapacityDomian } from "./terminal-capacity-domain"
 
 const client = generateClient<Schema>();
