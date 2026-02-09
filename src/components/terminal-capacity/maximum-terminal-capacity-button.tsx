@@ -49,38 +49,39 @@ export function MaximumTerminalCapacityButton({ role, limit}: SettingsDialogProp
     return (
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
-          <Button variant="ghost" size="icon" className="h-8 w-8 mr-0">
-            <Settings className="h-4 w-4" />
-            <span className="sr-only">Open settings</span>
-          </Button>
+            <Button variant="ghost" size="icon" className="h-8 w-8 mr-0">
+              <Settings className="h-4 w-4" />
+              <span className="sr-only">Open settings</span>
+            </Button>
         </DialogTrigger>
         <DialogContent>
-          <form onSubmit={handleSubmit}>
-            <DialogHeader>
-              <DialogTitle>Update Terminal Capacity</DialogTitle>
-            </DialogHeader>
-              <div className="dialog-content">
-                <div className="terminal-row">
-                  <Label htmlFor="portCapacity">
-                    Terminal Capacity
-                  </Label>
-                  <input id="portCapacity" type="number" min={0} max={limit} value={portCapacity}
-                        onChange={(e) =>
-                          setPortCapacity(Number(e.target.value))
-                        }
-                        className="col-span-3"
-                        step="1"
-                  />
-                  reservations per Day
+            <form onSubmit={handleSubmit}>
+              <DialogHeader>
+                <DialogTitle>Update Terminal Capacity</DialogTitle>
+              </DialogHeader>
+                <div className="dialog-content">
+                  <br/>
+                  <div className="terminal-row">
+                    <Label htmlFor="portCapacity">
+                      Terminal Capacity 
+                    </Label>
+                    <input id="portCapacity" type="number" min={0} max={limit} value={portCapacity}
+                           onChange={(e) =>
+                              setPortCapacity(Number(e.target.value))
+                           }
+                           step="1"
+                    />
+                     reservations per day
+                  </div>
+                  <br/>
                 </div>
-              </div>
-            <DialogFooter>
-              <Button type="button" variant="outline" onClick={() => setOpen(false)}>
-                Cancel
-              </Button>
-              <Button type="submit">Save</Button>
-            </DialogFooter>
-          </form>
+              <DialogFooter>
+                <Button type="button" variant="outline" onClick={() => setOpen(false)}>
+                  Cancel
+                </Button>
+                <Button type="submit">Save</Button>
+              </DialogFooter>
+            </form>
         </DialogContent>
       </Dialog>
     )
