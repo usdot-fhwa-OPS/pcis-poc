@@ -1,7 +1,6 @@
 
 import { Selfhelp } from '../self-help/self-help';
 import SettingsButton from '../settings/settingsButton';
-import { terminalCapacityList } from '../terminal-capacity/terminal-capacity-client';
 import './userButtonStyles.css';
 
 interface UserButtonProps {
@@ -11,9 +10,7 @@ interface UserButtonProps {
 }
 
 const UserButton: React.FC<UserButtonProps> = ({ fullName, role, limit }) => {
-    let tcl = terminalCapacityList();
     return (
-        <>
         <button className="user-button">
             <Selfhelp />
             <SettingsButton role={role} limit={limit} />
@@ -24,7 +21,6 @@ const UserButton: React.FC<UserButtonProps> = ({ fullName, role, limit }) => {
             <div className="user-avatar"></div>
            
         </button>
-         {tcl}</>
     );
 };
 

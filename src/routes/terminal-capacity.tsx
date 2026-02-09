@@ -1,16 +1,16 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute } from "@tanstack/react-router"
 import { columns } from "../components/terminal-capacity/columns"
 import { DataTable } from "../components/terminal-capacity/terminal-capacity-table"
 import { useEffect, useState } from "react"
 
 //Three Imports needed for Amplify Data Queries and CRUD methods
 import { TerminalCapacityDomian } from '../components/terminal-capacity/terminal-capacity-domain';
-import { terminalCapacityList } from '../components/terminal-capacity/terminal-capacity-client';
+import { terminalCapacityList } from "../components/terminal-capacity/terminal-capacity-client";
 
 //const client = generateClient<Schema>();
 
 
-export const Route = createFileRoute('/terminalcapacity')({
+export const Route = createFileRoute('/terminal-capacity')({
   component: TerminalCapacityComponent,
 })
 
