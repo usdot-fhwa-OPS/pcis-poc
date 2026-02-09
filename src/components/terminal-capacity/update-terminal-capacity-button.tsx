@@ -71,7 +71,7 @@ export function MaximumTerminalCapacityButton({ role, limit}: SettingsDialogProp
                               setPortCapacity(Number(e.target.value))
                            }
                            step="1"
-                           className="five-chars"
+                           className="three-chars"
                     />
                      &nbsp;reservations per day
                   </div>
