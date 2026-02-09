@@ -63,7 +63,7 @@ export function MaximumTerminalCapacityButton({ role, limit}: SettingsDialogProp
                   <br/>
                   <div className="terminal-row">
                     <Label htmlFor="portCapacity">
-                      Terminal Capacity 
+                      Terminal Capacity:&nbsp;&nbsp;
                     </Label>
                     <input id="portCapacity" type="number" min={0} max={limit} value={portCapacity}
                            onChange={(e) =>
@@ -71,7 +71,7 @@ export function MaximumTerminalCapacityButton({ role, limit}: SettingsDialogProp
                            }
                            step="1"
                     />
-                     reservations per day
+                     &nbsp;reservations per day
                   </div>
                   <br/>
                 </div>
