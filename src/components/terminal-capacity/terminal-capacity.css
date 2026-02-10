@@ -1,3 +1,6 @@
 .four-chars {
     width: 4ch;
 }
+.center-text {
+    text-align: center;
+}

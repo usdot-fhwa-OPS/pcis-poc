@@ -43,7 +43,6 @@ export function DeleteTerminalCapacityButton({ role }: SettingsDialogProps) {
                 <div className="center-text">
                     Deleting a temporary capacity can't be undone
                 </div>
-                <br/>
                 Do you want to continue?
               </div>
             <DialogFooter>
