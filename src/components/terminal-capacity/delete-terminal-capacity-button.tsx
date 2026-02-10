@@ -19,13 +19,8 @@ interface SettingsDialogProps {
   limit: number;
 }
 
-export function UpdateTerminalCapacityButton({ role, limit}: SettingsDialogProps) {
+export function DeleteTerminalCapacityButton({ role }: SettingsDialogProps) {
     const [open, setOpen] = useState(false)
-    const [portCapacity, setPortCapacity] = useState(limit)
-
-    useEffect(() => {
-       setPortCapacity(limit);
-    }, [limit]);
 
     // If user is not a Terminal Operator, don't render anything
     if (role !== "Terminal Operator") {
@@ -58,30 +53,23 @@ export function UpdateTerminalCapacityButton({ role, limit}: SettingsDialogProps
         <DialogContent>
             <form onSubmit={handleSubmit}>
               <DialogHeader>
-                <DialogTitle>Update Terminal Capacity</DialogTitle>
+                <DialogTitle>CONFIRMATION REQUIRED</DialogTitle>
               </DialogHeader>
                 <div className="dialog-content">
                   <br/>
                   <div className="terminal-row">
-                    <Label htmlFor="portCapacity">
-                      Terminal Capacity:&nbsp;&nbsp;
+                     <Label htmlFor="portCapacity">
+                      Deleting a temporary capacity can't be undone
                     </Label>
-                    <input id="portCapacity" type="number" min={0} max={limit} value={portCapacity}
-                           onChange={(e) =>
-                              setPortCapacity(Number(e.target.value))
-                           }
-                           step="1"
-                           className="four-chars"
-                    />
-                     &nbsp;reservations per day
                   </div>
                   <br/>
+                  Do you want to continue?
                 </div>
               <DialogFooter>
+                <Button type="submit">Yes</Button>
                 <Button type="button" variant="outline" onClick={() => setOpen(false)}>
-                  Cancel
+                  No
                 </Button>
-                <Button type="submit">Save</Button>
               </DialogFooter>
             </form>
         </DialogContent>

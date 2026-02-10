@@ -20,7 +20,8 @@ import { fetchUserAttributes } from 'aws-amplify/auth';
 import { useEffect, useState } from "react";
 import { NotificationsButton } from "../notifications-button/notifications-button";
 
-import { MaximumTerminalCapacityButton } from "../terminal-capacity/update-terminal-capacity-button";
+import { UpdateTerminalCapacityButton } from "../terminal-capacity/update-terminal-capacity-button";
+import { DeleteTerminalCapacityButton } from "../terminal-capacity/delete-terminal-capacity-button";
 
 import { generateClient, SelectionSet } from 'aws-amplify/data';
 import type { Schema } from '../../../amplify/data/resource';
@@ -198,7 +199,8 @@ export function AppSidebar() {
                 </SidebarMenuItem>
               ))}
               <NotificationsButton notifications={userNotifications} role={userAttributes.role} />
-              <MaximumTerminalCapacityButton role={userAttributes.role} limit={10} />
+              <UpdateTerminalCapacityButton role={userAttributes.role} limit={10} />
+              <DeleteTerminalCapacityButton role={userAttributes.role} limit={10}/>
           </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
