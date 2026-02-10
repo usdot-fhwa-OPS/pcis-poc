@@ -11,7 +11,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "../ui/dialog"
-import { Label } from "../ui/label"
 import "./terminal-capacity.css"
 
 interface SettingsDialogProps {
@@ -26,21 +25,6 @@ export function DeleteTerminalCapacityButton({ role }: SettingsDialogProps) {
     if (role !== "Terminal Operator") {
       return null
     }
-  
-    const handleSubmit = async () => {
-    //   try {
-    //     const { data: updatePortCapacity } = await client.models.Limit.update({
-    //       id: '7bde2cc5-23dc-4f46-b6d9-502133cc2e8c',
-    //       portCapacity: portCapacity,
-    //     }, {
-    //       authMode: 'apiKey',
-    //     })
-    //     console.log("updated port capacity", updatePortCapacity)
-    //   } catch (error) {
-    //     console.error ("error updating port capacity", error);
-    //   }
-    //   setOpen(false)
-    }
     
     return (
       <Dialog open={open} onOpenChange={setOpen}>
@@ -51,27 +35,25 @@ export function DeleteTerminalCapacityButton({ role }: SettingsDialogProps) {
             </Button>
         </DialogTrigger>
         <DialogContent>
-            <form onSubmit={handleSubmit}>
-              <DialogHeader>
-                <DialogTitle>CONFIRMATION REQUIRED</DialogTitle>
-              </DialogHeader>
-                <div className="dialog-content">
-                  <br/>
-                  <div className="terminal-row">
-                     <Label htmlFor="portCapacity">
-                      Deleting a temporary capacity can't be undone
-                    </Label>
-                  </div>
-                  <br/>
-                  Do you want to continue?
+            <DialogHeader>
+              <DialogTitle>CONFIRMATION REQUIRED</DialogTitle>
+            </DialogHeader>
+              <div className="dialog-content center-text">
+                <br/>
+                <div className="center-text">
+                    Deleting a temporary capacity can't be undone
                 </div>
-              <DialogFooter>
-                <Button type="submit">Yes</Button>
-                <Button type="button" variant="outline" onClick={() => setOpen(false)}>
-                  No
-                </Button>
-              </DialogFooter>
-            </form>
+                <br/>
+                Do you want to continue?
+              </div>
+            <DialogFooter>
+              <div className="center-text">
+                  <Button type="submit">Yes</Button>
+                  <Button type="button" variant="outline" onClick={() => setOpen(false)}>
+                    No
+                  </Button>
+              </div>
+            </DialogFooter>
         </DialogContent>
       </Dialog>
     )
