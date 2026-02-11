@@ -1,34 +1,19 @@
 "use client"
 
-import { useState, useEffect } from "react"
 import { Settings } from "lucide-react"
 import { Button } from "../ui/button"
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "../ui/dialog"
-import { Input } from "../ui/input"
-import { Label } from "../ui/label"
-import { generateClient } from 'aws-amplify/data';
-import type { Schema } from '../../../amplify/data/resource';
-const client = generateClient<Schema>();
+import { useNavigate } from "@tanstack/react-router" 
+
 interface SettingsDialogProps {
   role: string
-  limit: number
 }
 
-export default function SettingsButton({ role, limit }: SettingsDialogProps) {
-    const [open, setOpen] = useState(false)
-    const [terminalCapacity, setTerminalCapacity] = useState(limit) 
+export default function SettingsButton({ role}: SettingsDialogProps) {
+    const navigate = useNavigate(); 
 
-    useEffect(() => {
-      setTerminalCapacity(limit); 
-    }, [limit]);
+    const navigateToCapacity = () => {
+      navigate({ to: "/capacity" });
+    }
 
     // If user is not a Terminal Operator, don't render anything
     if (role !== "Terminal Operator") {
@@ -92,5 +77,12 @@ export default function SettingsButton({ role, limit }: SettingsDialogProps) {
         </DialogContent>
       </Dialog>
     )
+    
+    return (
+      <Button onClick={navigateToCapacity} variant="ghost" size="icon" className="h-8 w-8 mr-0">
+             <Settings className="h-4 w-4" />
+             <span className="sr-only">Open settings</span>
+      </Button>
+     )
   }  
 
