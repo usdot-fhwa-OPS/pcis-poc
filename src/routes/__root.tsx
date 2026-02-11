@@ -8,17 +8,13 @@ import { AppSidebar } from "../components/app-sidebar/app-sidebar"
 import UserButton from '../components/userButton/userButton';
 import '../index.css';
 import { Toaster } from 'sonner';
-import { generateClient } from 'aws-amplify/data';
-import type { Schema } from '../../amplify/data/resource';
 import { UserContext } from '../AppContext';
-
 
 export interface UserAttributes {
   given_name?: string;
   family_name?: string;
   'custom:role'?: string;
 }
-
 
 export const Route = createRootRoute({
   component: RootComponent,
@@ -31,12 +27,11 @@ export const Route = createRootRoute({
     )
   },
 })
-const client = generateClient<Schema>();
 
 function RootComponent() {
   const { user } = useAuthenticator()
   const [userAttributes, setUserAttributes] = useState<{ fullName: string; role: string }>({ fullName: "", role: "" })
-  //const [bookingLimit, setBookingLimit] = useState<number>(0);
+  const [bookingLimit, setBookingLimit] = useState<number>(0);
 
   const [userSecurityAttrubutes, setUserSecurityAttrubutes] = useState<UserAttributes>({});
   
@@ -62,14 +57,13 @@ function RootComponent() {
 
     if (user) {
       getUserAttributes()
-      fetchBookingLimit();
     }
   }, [user])
 
   async function fetchBookingLimit() {
     try {
       const { data: limit } = await client.models.Limit.get(
-        {id: '0c1aee99-e95e-4c61-920d-52faea4dbbd5'},
+        {id: '7bde2cc5-23dc-4f46-b6d9-502133cc2e8c'},
         {
           authMode: 'apiKey',
         }
@@ -91,15 +85,11 @@ function RootComponent() {
         <div className="flex-1">
           <Toaster position="top-center" richColors={true} expand={true} />
           <div className="flex items-center justify-end p-4">
-            <UserButton fullName={userAttributes.fullName} role={userAttributes.role} limit={bookingLimit ?? 0} />
+            <UserButton fullName={userAttributes.fullName} role={userAttributes.role} />
           </div>
          
-          
             <Outlet /> 
             
-            
-          
-         
         </div>
         </UserContext.Provider>}
       </SidebarProvider>
