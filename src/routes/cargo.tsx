@@ -15,7 +15,7 @@ export const Route = createFileRoute('/cargo')({
 })
 
 //Define the selection of data that will be used for the table
-const selectionSet = ['vesselID', 'cargoUnitID', 'origin', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail', 'containerStatus', 'flag'] as const; 
+const selectionSet = ['vesselID', 'cargoUnitID', 'origin', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail', 'cargoUnitStatus', 'flag'] as const; 
 
 //Create a type based on your selectionSet that will be later used for the columns.tsx file of the able
 export type UpcomingCargo = SelectionSet<Schema['Container']['type'], typeof selectionSet>

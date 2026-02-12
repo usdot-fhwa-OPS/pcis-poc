@@ -47,19 +47,19 @@ export const columns: ColumnDef<UpcomingCargo>[] = [
   },
   {
     accessorKey: "transopName",
-    header: "Transportation Operator",
+    header: "Transportation Coordinator and Dispatcher",
   },
   {
     accessorKey: "transopEmail",
-    header: "Transportation Operator Email",
+    header: "Transportation Coordinator and Dispatcher Email",
   }, 
   {
-    accessorKey: "containerStatus",
-    header: "Container Status",
+    accessorKey: "cargoUnitStatus",
+    header: "Cargo Unit Status",
     cell: ({ row }) => {
       // Initialize local state with the current containerStatus.
       const [cargoStatus, setStatus] = useState<"On-Ship" | "On-Dock">(
-        row.original.containerStatus as "On-Ship" | "On-Dock"
+        row.original.cargoUnitStatus as "On-Ship" | "On-Dock"
       )
 
       return (
@@ -77,13 +77,13 @@ export const columns: ColumnDef<UpcomingCargo>[] = [
                 setStatus(val as "On-Ship" | "On-Dock")
                 try {
                   // Call the Amplify update method (must always contain containerID)
-                  const { data: updatedContainerStatus } = await client.models.Container.update({
+                  const { data: updatedCargoUnitStatus } = await client.models.Container.update({
                     cargoUnitID: row.original.cargoUnitID, 
-                    containerStatus: val,
+                    cargoUnitStatus: val,
                   })
-                  console.log("Updated container status:", updatedContainerStatus)
+                  console.log("Updated Cargo Unit Status:", updatedCargoUnitStatus)
                 } catch (error) {
-                  console.error("Error updating container status:", error)
+                  console.error("Error updating Cargo Unit Status:", error)
                 }
               }}
             >
@@ -109,11 +109,11 @@ export const columns: ColumnDef<UpcomingCargo>[] = [
         setFlagged(newFlag)
         try {
           // Call the Amplify update method for the flag (again must always contain containerID)
-          const { data: updatedContainerStatus } = await client.models.Container.update({
-            cargoUnitID: row.original.cargoUnitID, // changed containerID to cargoUnitID
+          const { data: updatedCargoUnitStatus } = await client.models.Container.update({
+            cargoUnitID: row.original.cargoUnitID, 
             flag: newFlag,
           })
-          console.log("Updated flag:", updatedContainerStatus)
+          console.log("Updated flag:", updatedCargoUnitStatus)
         } catch (error) {
           console.error("Error updating flag:", error);
         }

@@ -12,7 +12,7 @@ const client = generateClient<Schema>();
 
 import { format } from "date-fns";
 
-import { assignTransportationOperator } from "./assign_transportation_operator.tsx";
+import { assignTransportationCoordinatorAndDispatcher } from "./assign_transportation_operator.tsx";
 
 export const columns = (): ColumnDef<any>[] => {
   const baseColumns: ColumnDef<any>[] = [
@@ -24,7 +24,7 @@ export const columns = (): ColumnDef<any>[] => {
     { accessorKey: "bcoEmail", header: "BCO Email" },
     { 
       accessorKey: "transopName", 
-      header: "Transportation  Operator",
+      header: "Transportation Coordinator and Dispatcher",
       cell: ({ row, table }) => {
 
 
@@ -32,7 +32,7 @@ export const columns = (): ColumnDef<any>[] => {
         const isMissing = !row.original.transopName?.trim() || !row.original.transopEmail?.trim()
         if (isMissing) {
           return (
-            assignTransportationOperator( table, row)
+            assignTransportationCoordinatorAndDispatcher( table, row)
           )
         }
 
@@ -41,10 +41,10 @@ export const columns = (): ColumnDef<any>[] => {
       },
     },
     {
-      accessorKey: "containerStatus",
-      header: "Container Status",
+      accessorKey: "cargoUnitStatus",
+      header: "Cargo Unit Status",
       cell: ({ row }) => {
-        const status = row.original.containerStatus; // Get status value
+        const status = row.original.cargoUnitStatus; // Get status value
         const isOnShip = status === "On-Ship"; // Check if status is "Late"
 
         return (
@@ -74,11 +74,11 @@ baseColumns.push({
             setFlagged(newFlag)
             try {
               // Call the Amplify update method for the flag (again must always contain containerID)
-              const { data: updatedContainerStatus } = await client.models.Container.update({
+              const { data: updatedCargoUnitStatus } = await client.models.Container.update({
                 cargoUnitID: row.original.cargoUnitID, 
                 flag: newFlag,
               })
-              console.log("Updated flag:", updatedContainerStatus)
+              console.log("Updated flag:", updatedCargoUnitStatus)
             } catch (error) {
               console.error("Error updating flag:", error);
             }
@@ -104,8 +104,8 @@ export const CompletedColumn = (): ColumnDef<any>[] => {
     { accessorKey: "destination", header: "Destination" },
     { accessorKey: "bcoName", header: "BCO" },
     { accessorKey: "bcoEmail", header: "BCO Email" },
-    { accessorKey: "transopName", header: "Transportation Operator Name" },
-    { accessorKey: "transopEmail", header: "Transportation Operator Email" },
+    { accessorKey: "transopName", header: "Transportation Coordinator and Dispatcher Name" },
+    { accessorKey: "transopEmail", header: "Transportation Coordinator and Dispatcher Email" },
     {
       accessorKey: "to_status",
       header: () => <div className="w-[150px] text-center">Reservation Status</div>,
@@ -147,11 +147,11 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
     { accessorKey: "bcoName", header: "BCO" },
     { accessorKey: "bcoEmail", header: "BCO Email" },
   //  { accessorKey: "termopName", header: "Assigned Terminal Operator" },
-    { accessorKey: "transopName", header: "Transportation Operator Name" },
-    { accessorKey: "transopEmail", header: "Transportation Operator Email" },
+    { accessorKey: "transopName", header: "Transportation Coordinator and Dispatcher Name" },
+    { accessorKey: "transopEmail", header: "Transportation Coordinator and Dispatcher Email" },
     {
       accessorKey: "Booking Status",
-      header: () => <div className="min-w-[150px] text-center "> Transportation Operator Status</div>,
+      header: () => <div className="min-w-[150px] text-center "> Transportation Coordinator and Dispatcher Status</div>,
       cell: ({ row }) => {
         const status = row.original.reservationStatus; // Get status value
         const isLate = status === "Late for Pick Up"; // Check if status is "Late"
@@ -172,7 +172,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
    
     {
       accessorKey: "contact_to",
-      header: "Contact Transportation Operator",
+      header: "Contact Transportation Coordinator and Dispatcher",
       cell: ({ row }) => {
         const email = row.original.transopEmail
   

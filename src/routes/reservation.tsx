@@ -24,7 +24,7 @@ const selectionSetTransOpUpcomingBookings = ['vesselID', 'cargoUnitID', 'origin'
 //Create a type based on your selectionSet that will be later used for the columns.tsx file of the able
 export type TransOpUpcomingBookings = SelectionSet<Schema['Container']['type'], typeof selectionSetTransOpUpcomingBookings>
 
-const selectionSetTransOpOngoingBookings = ['vesselID', 'cargoUnitID', 'origin', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail', 'reservationDate', 'reservationTime', 'reservationStatus', 'flag', 'containerStatus'] as const; 
+const selectionSetTransOpOngoingBookings = ['vesselID', 'cargoUnitID', 'origin', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail', 'reservationDate', 'reservationTime', 'reservationStatus', 'flag', 'cargoUnitStatus'] as const; 
 export type TransOpOngoingBookings = SelectionSet<Schema['Container']['type'], typeof selectionSetTransOpOngoingBookings>
 
 const selectionSetTerminalOPUpcoming = ['vesselID', 'cargoUnitID', 'origin', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail','reservationDate','reservationTime','reservationStatus', 'flag'] as const; 
@@ -33,7 +33,7 @@ const selectionSetTerminalOpModified = ['vesselID', 'cargoUnitID', 'origin', 'bc
 
 export type TerminalOpModifiedBookings = SelectionSet<Schema['Container']['type'], typeof selectionSetTerminalOpModified>
 //Define the selection of data that will be used for the table
-const selectionSetBCOUpcomingBookings = ['vesselID', 'cargoUnitID', 'origin', 'destination', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail', 'containerStatus','arrivalDate', 'flag'] as const; 
+const selectionSetBCOUpcomingBookings = ['vesselID', 'cargoUnitID', 'origin', 'destination', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail', 'cargoUnitStatus','arrivalDate', 'flag'] as const; 
 //Create a type based on your selectionSet that will be later used for the columns.tsx file of the able
 
 const selectionSetTerminalOPOngoing = ['vesselID', 'cargoUnitID', 'origin', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail','reservationDate','reservationTime','reservationStatus', 'flag'] as const; 
@@ -55,7 +55,7 @@ export type BCOCompletedBooking= SelectionSet<Schema['Container']['type'], typeo
 //Define the selection of data that will be used for the table
 const selectionSetTransportation_CompletedData = [ 
   'vesselID',
-  'cargoUnitID',  // changed containerID to cargoUnitID
+  'cargoUnitID', 
   'origin',
   'bcoName',
   'bcoEmail',
@@ -71,7 +71,7 @@ const selectionSetTransportation_CompletedData = [
 //Define the selection of data that will be used for the table
 const selectionSetTerminal_CompletedData = [ 
   'vesselID',
-  'cargoUnitID',  // changed containerID to cargoUnitID
+  'cargoUnitID',  
   'origin',
   'bcoName',
   'bcoEmail',
@@ -116,7 +116,7 @@ function RouteComponent() {
     getUserAttributes();
   }, [user]);
 
-  async function fetchTransportationOperators() {
+  async function fetchTransportationCoordinatorAndDispatchers() {
     try {
       const session = await fetchAuthSession();
       const response = await fetch("https://xlj2x9eurh.execute-api.us-east-1.amazonaws.com/dev/", {
@@ -134,17 +134,17 @@ function RouteComponent() {
     }
   }
 
-    async function getTerminalCapacity() { // changed port to terminal
+    async function getTerminalCapacity() { 
       try {
         const { data: limit } = await client.models.Limit.get(
-          {id: '7bde2cc5-23dc-4f46-b6d9-502133cc2e8c'},
+          {id: '0c1aee99-e95e-4c61-920d-52faea4dbbd5'},
           {
             authMode: 'apiKey',
           }
         );
         
         if (limit) {
-          return limit.terminalCapacity; // changed port to terminal
+          return limit.terminalCapacity; 
         }
       } catch (error) {
         console.error('Error fetching booking limit', error);
@@ -351,7 +351,7 @@ function RouteComponent() {
                 transopEmail: { eq: userAttributes.email }
               },
               {
-                reservationStatus: { eq: 'Pending Transportation Operator Approval' }
+                reservationStatus: { eq: 'Pending Transportation Coordinator and Dispatcher Approval' }
               }
             ]
           },
@@ -385,7 +385,7 @@ function RouteComponent() {
                 reservationStatus: { ne: 'unassigned' }
               },
               {
-                reservationStatus: { ne: 'Pending Transportation Operator Approval' }
+                reservationStatus: { ne: 'Pending Transportation Coordinator and Dispatcher Approval' }
               },
               {
                 reservationStatus: { ne: 'Picked Up'}
@@ -425,16 +425,16 @@ function RouteComponent() {
         isTerminalNotify: false,
       });
   
-      console.log("Updated container status:", assignTransportationOp);
-      toast.success("Transportation Operator assigned successfully");
+      console.log("Updated Cargo Unit Status:", assignTransportationOp);
+      toast.success("Transportation Coordinator and Dispatcher assigned successfully");
   
       // Refetch data to reflect changes
       await fetchContainers();
   
       return true;
     } catch (error) {
-      console.error("Error updating container status:", error);
-      toast.error("Error assigning Transportation Operator. Please try again.");
+      console.error("Error updating Cargo Unit Status:", error);
+      toast.error("Error assigning Transportation Coordinator and Dispatcher. Please try again.");
       return false; // Explicitly return false when the update fails
     }
   }
@@ -505,7 +505,7 @@ function RouteComponent() {
     async function  markBookingLate(id: string, status: string){  
       try {
 
-          const { data: updatedContainerStatus } = await client.models.Container.update({
+          const { data: updatedCargoUnitStatus } = await client.models.Container.update({
             cargoUnitID: id,   
             reservationStatus: status,
             isTransportationNotify: true,
@@ -513,7 +513,7 @@ function RouteComponent() {
             isTerminalNotify: false,
 
           });
-          console.log("Marked Booking status Late for Pick Up:", updatedContainerStatus);
+          console.log("Marked Booking status Late for Pick Up:", updatedCargoUnitStatus);
           await fetchterminal_operator_ongoing();
           return true; 
         } 
@@ -572,9 +572,9 @@ function RouteComponent() {
           });
         }
         
-        const { data: updatedContainerStatus } = await client.models.Container.update(updatePayload);
-        console.log("Updated container status:", updatedContainerStatus);
-        toast.success("Container status updated successfully");
+        const { data: updatedcargoUnitStatus } = await client.models.Container.update(updatePayload);
+        console.log("Updated Cargo Unit Status:", updatedcargoUnitStatus);
+        toast.success("Cargo Unit Status updated successfully");
     
         // Refresh data after successful update
         await fetchTransOpUpcoming();
@@ -636,9 +636,9 @@ async function updateBooking(id: string, status: string, reservationDate?: strin
       });
     }
 
-    const { data: updatedContainerStatus } = await client.models.Container.update(updatePayload);
+    const { data: updatedCargoUnitStatus } = await client.models.Container.update(updatePayload);
     
-    console.log("Updated booking status:", updatedContainerStatus);
+    console.log("Updated booking status:", updatedCargoUnitStatus);
     toast.success("Booking status updated successfully");
 
     // Refresh relevant data after successful update
@@ -755,7 +755,7 @@ useEffect(() => {
         <TransportationBookingsTableOngoing
           data={transOpOngoingBookings}
           status="Ongoing"
-          meta={{updateTransOpBooking, getTerminalCapacity, getBookingsAmount}} // changed port to terminal
+          meta={{updateTransOpBooking, getTerminalCapacity, getBookingsAmount}} 
         />
       </TabsContent>
 
@@ -788,7 +788,7 @@ useEffect(() => {
           <BcoBookingsTableUpcoming
             data={bcoUpcomingBookings}
             status="Upcoming"
-            meta={{ assignTransOp, fetchTransportationOperators }}
+            meta={{ assignTransOp, fetchTransportationCoordinatorAndDispatchers }}
           />
         </TabsContent>
   
