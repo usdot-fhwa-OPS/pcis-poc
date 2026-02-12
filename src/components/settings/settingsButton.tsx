@@ -19,23 +19,6 @@ export default function SettingsButton({ role}: SettingsDialogProps) {
     if (role !== "Terminal Operator") {
       return null
     }
-  
-    const handleSubmit = async () => {
-      try {
-        const { data: updateTerminalCapacity } = await client.models.Limit.update({ 
-
-          id: '0c1aee99-e95e-4c61-920d-52faea4dbbd5',
-
-          terminalCapacity: terminalCapacity, 
-        }, {
-          authMode: 'apiKey',
-        })
-        console.log("updated terminal capacity", updateTerminalCapacity) 
-      } catch (error) {
-        console.error ("error updating terminal capacity", error); 
-      }
-      setOpen(false)
-    }
     
     return (
       <Button onClick={navigateToCapacity} variant="ghost" size="icon" className="h-8 w-8 mr-0">
