@@ -31,7 +31,6 @@ export const Route = createRootRoute({
 function RootComponent() {
   const { user } = useAuthenticator()
   const [userAttributes, setUserAttributes] = useState<{ fullName: string; role: string }>({ fullName: "", role: "" })
-  const [bookingLimit, setBookingLimit] = useState<number>(0);
 
   const [userSecurityAttrubutes, setUserSecurityAttrubutes] = useState<UserAttributes>({});
   
@@ -59,23 +58,6 @@ function RootComponent() {
       getUserAttributes()
     }
   }, [user])
-
-  async function fetchBookingLimit() {
-    try {
-      const { data: limit } = await client.models.Limit.get(
-        {id: '7bde2cc5-23dc-4f46-b6d9-502133cc2e8c'},
-        {
-          authMode: 'apiKey',
-        }
-      );
-      
-      if (limit) {
-        setBookingLimit(limit.terminalCapacity); 
-      }
-    } catch (error) {
-      console.error('Error fetching booking limit', error);
-    }
-  }
 
   return (
     <div className="flex min-h-screen bg-background">
