@@ -59,6 +59,23 @@ function RootComponent() {
     }
   }, [user])
 
+  async function fetchBookingLimit() {
+    try {
+      const { data: limit } = await client.models.Limit.get(
+        {id: '0c1aee99-e95e-4c61-920d-52faea4dbbd5'},
+        {
+          authMode: 'apiKey',
+        }
+      );
+      
+      if (limit) {
+        setBookingLimit(limit.terminalCapacity); 
+      }
+    } catch (error) {
+      console.error('Error fetching booking limit', error);
+    }
+  }
+
   return (
     <div className="flex min-h-screen bg-background">
       <SidebarProvider>
