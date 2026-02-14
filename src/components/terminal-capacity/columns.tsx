@@ -12,10 +12,6 @@ import { TerminalCapacityDomian } from "./terminal-capacity-domain"
 export const columns: ColumnDef<TerminalCapacityDomian>[] = [
   // Define the columns for the table based on the database items (refer to resources.ts for schema names)
   {
-    accessorKey: "capacityId",
-    header: "Capacity Id",
-  },
-  {
     accessorKey: "capacity", 
     header: "Capacity",
   },
@@ -24,7 +20,7 @@ export const columns: ColumnDef<TerminalCapacityDomian>[] = [
     header: "Start",
   },
   {
-    accessorKey: "endtDate",
+    accessorKey: "endDate",
     header: "End",
   },
   {
@@ -36,10 +32,6 @@ export const columns: ColumnDef<TerminalCapacityDomian>[] = [
     header: "Reason",
   },
   {
-    accessorKey: "transopEmail",
-    header: "Transportation Operator Email",
-  }, 
-  {
     accessorKey: "actions",
     header: " Actions",
     cell: (/*{ row }*/) => {
@@ -49,40 +41,12 @@ export const columns: ColumnDef<TerminalCapacityDomian>[] = [
       // )
 
       return (
-        <div></div>
+        <div>
+          <a >Edit</a> &nbsp;&nbsp;<a >Delete</a>
+
+        </div>
       )
     },
-  },
-  {
-    accessorKey: "flag",
-    header: "Flag",
-    cell: (/*{ row }*/) => {
-      // Initialize flagged state from the row data; fallback to false if undefined.
-      //const [flagged, setFlagged] = useState<boolean>(row.original.flag || false)
-
-      // Function to handle flag toggling.
-      // const handleFlagToggle = async () => {
-      //   const newFlag = !flagged
-      //   // Optimistically update the UI.
-      //   setFlagged(newFlag)
-      //   try {
-      //     // Call the Amplify update method for the flag (again must always contain containerID)
-      //     const { data: updatedContainerStatus } = await client.models.Container.update({
-      //       cargoUnitID: row.original.cargoUnitID, // changed containerID to cargoUnitID
-      //       flag: newFlag,
-      //     })
-      //     console.log("Updated flag:", updatedContainerStatus)
-      //   } catch (error) {
-      //     console.error("Error updating flag:", error);
-      //   }
-      // }
-
-      return (
-        <div></div>
-        // <Button variant="ghost" onClick={handleFlagToggle} className="p-2">
-        //   <Flag className={flagged ? "text-red-600" : "text-gray-400"} />
-        // </Button>
-      )
-    },
+  
   },
 ]

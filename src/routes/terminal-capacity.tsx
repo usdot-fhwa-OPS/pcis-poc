@@ -6,6 +6,7 @@ import { useEffect, useState } from "react"
 //Three Imports needed for Amplify Data Queries and CRUD methods
 import { TerminalCapacityDomian } from '../components/terminal-capacity/terminal-capacity-domain';
 import { terminalCapacityList } from "../components/terminal-capacity/terminal-capacity-client";
+import { AddTerminalCapacity } from "../components/terminal-capacity/add-terminal-capacity";
 
 //const client = generateClient<Schema>();
 
@@ -61,11 +62,14 @@ export default function TerminalCapacityComponent() {
     <div>
       <h1 className="text-2xl font-bold text-center">Terminal Capacity List</h1>
       <div className="container mx-auto p-10">
+        <div className="parent-container">
+          <AddTerminalCapacity></AddTerminalCapacity>
+        </div>
         <DataTable
           columns={columns}
           data={data}
-          // Pass the function in as meta so columns can call it
-          //meta={{ updateTerminalCapacity }}
+        // Pass the function in as meta so columns can call it
+        //meta={{ updateTerminalCapacity }}
         />
       </div>
     </div>

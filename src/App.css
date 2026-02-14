@@ -3,3 +3,14 @@
   padding: 1rem;
 }
 
+.parent-container {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.DialogContent {
+	min-width: 700px;
+	background: white;
+	padding: 30px;
+	border-radius: 4px;
+}
