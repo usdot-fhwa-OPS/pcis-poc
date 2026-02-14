@@ -21,11 +21,9 @@ export const AddTerminalCapacity = () => {
             }
 
     const [date, setDate] = useState<Date | undefined>(new Date())       
-    const [time, setTime] = useState<string | undefined>(undefined)
     const [isCalendarOpen, setIsCalendarOpen] = useState(false)
     
-    const [repeatOption, setRepeatOption] = useState<string | undefined>(undefined)
-    const [reason, setReason] = useState<string | undefined>(undefined)
+    
     
 const timeOptions = [
           "12:00 AM",
@@ -53,7 +51,8 @@ const timeOptions = [
           "10:00 PM",
           "11:00 PM",
         ]
-
+const [time, setTime] = useState<string | undefined>(timeOptions[0])
+    
         const repeatOptionList = [
             "Never", 
             "Daily",
@@ -62,6 +61,7 @@ const timeOptions = [
             "Yearly",
             "Custom"
         ]
+        const [repeatOption, setRepeatOption] = useState<string | undefined>(repeatOptionList[0])
 
         const reasonList = [
                 "Maintenance",
@@ -69,6 +69,7 @@ const timeOptions = [
                 "Labor shortage",
                 "Other"
         ]
+        const [reason, setReason] = useState<string | undefined>(reasonList[0])
 
         const handleDateSelect = (selectedDate: Date | undefined) => {
           if (!selectedDate) return;
@@ -153,7 +154,7 @@ const timeOptions = [
   <div className="col-start-4 col-end-6 ...">
                             <Select onValueChange={setTime}>
                                 <SelectTrigger className={cn("w-[150px]", )}>
-                                    <SelectValue placeholder="Select time" />
+                                    <SelectValue placeholder={time} />
                                 </SelectTrigger>
                                 <SelectContent>
                                     {timeOptions.map((timeOption) => (
@@ -192,7 +193,7 @@ const timeOptions = [
   <div className="col-start-4 col-end-6 ...">
                             <Select onValueChange={setTime}>
                                 <SelectTrigger className={cn("w-[150px]", )}>
-                                    <SelectValue placeholder="Select time" />
+                                    <SelectValue placeholder={time} />
                                 </SelectTrigger>
                                 <SelectContent>
                                     {timeOptions.map((timeOption) => (
@@ -208,7 +209,7 @@ const timeOptions = [
   <div className="col-start-2 col-end-5 ...">
             <Select onValueChange={setRepeatOption}>
                 <SelectTrigger className={cn("w-[150px]", )}>
-                    <SelectValue placeholder="Never" />
+                    <SelectValue placeholder={repeatOption} />
                 </SelectTrigger>
                 <SelectContent>
                     {repeatOptionList.map((repeatOption) => (
@@ -224,7 +225,7 @@ const timeOptions = [
   <div className="col-start-2 col-end-5 ...">
             <Select onValueChange={setReason}>
                 <SelectTrigger className={cn("w-[150px]", )}>
-                    <SelectValue placeholder="Maintenance" />
+                    <SelectValue placeholder={reason} />
                 </SelectTrigger>
                 <SelectContent>
                     {reasonList.map((reason) => (
