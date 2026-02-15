@@ -15,21 +15,16 @@ import { Route as OperatorsRouteImport } from './routes/operators'
 import { Route as NotificationsRouteImport } from './routes/notifications'
 import { Route as ImportRouteImport } from './routes/import'
 import { Route as CargoRouteImport } from './routes/cargo'
+import { Route as CapacityRouteImport } from './routes/capacity'
+import { Route as AnalyticsRouteImport } from './routes/analytics'
 import { Route as IndexRouteImport } from './routes/index'
 
-import { Route as rootRoute } from './routes/__root'
-import { Route as ReservationImport } from './routes/reservation'
-import { Route as OperatorsImport } from './routes/operators'
-import { Route as NotificationsImport } from './routes/notifications'
-import { Route as ImportImport } from './routes/import'
-import { Route as CargoImport } from './routes/cargo'
-import { Route as CapacityImport } from './routes/capacity'
-import { Route as AnalyticsImport } from './routes/analytics'
-import { Route as IndexImport } from './routes/index'
-
-// Create/Update Routes
-
-const ReservationRoute = ReservationImport.update({
+const TerminalCapacityRoute = TerminalCapacityRouteImport.update({
+  id: '/terminal-capacity',
+  path: '/terminal-capacity',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReservationRoute = ReservationRouteImport.update({
   id: '/reservation',
   path: '/reservation',
   getParentRoute: () => rootRouteImport,
@@ -54,94 +49,26 @@ const CargoRoute = CargoRouteImport.update({
   path: '/cargo',
   getParentRoute: () => rootRouteImport,
 } as any)
-
-const CapacityRoute = CapacityImport.update({
+const CapacityRoute = CapacityRouteImport.update({
   id: '/capacity',
   path: '/capacity',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const AnalyticsRoute = AnalyticsImport.update({
+const AnalyticsRoute = AnalyticsRouteImport.update({
   id: '/analytics',
   path: '/analytics',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const IndexRoute = IndexImport.update({
+const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 
-// Populate the FileRoutesByPath interface
-
-declare module '@tanstack/react-router' {
-  interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexImport
-      parentRoute: typeof rootRoute
-    }
-    '/capacity': {
-      id: '/capacity'
-      path: '/capacity'
-      fullPath: '/capacity'
-      preLoaderRoute: typeof CapacityImport
-      parentRoute: typeof rootRoute
-    }
-    '/analytics': {
-      id: '/analytics'
-      path: '/analytics'
-      fullPath: '/analytics'
-      preLoaderRoute: typeof AnalyticsImport
-      parentRoute: typeof rootRoute
-    }
-    '/cargo': {
-      id: '/cargo'
-      path: '/cargo'
-      fullPath: '/cargo'
-      preLoaderRoute: typeof CargoImport
-      parentRoute: typeof rootRoute
-    }
-    '/import': {
-      id: '/import'
-      path: '/import'
-      fullPath: '/import'
-      preLoaderRoute: typeof ImportImport
-      parentRoute: typeof rootRoute
-    }
-    '/notifications': {
-      id: '/notifications'
-      path: '/notifications'
-      fullPath: '/notifications'
-      preLoaderRoute: typeof NotificationsImport
-      parentRoute: typeof rootRoute
-    }
-    '/operators': {
-      id: '/operators'
-      path: '/operators'
-      fullPath: '/operators'
-      preLoaderRoute: typeof OperatorsImport
-      parentRoute: typeof rootRoute
-    }
-    '/reservation': {
-      id: '/reservation'
-      path: '/reservation'
-      fullPath: '/reservation'
-      preLoaderRoute: typeof ReservationImport
-      parentRoute: typeof rootRoute
-    }
-  }
-}
-
-// Create and export the route tree
-
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/capacity': typeof CapacityRoute
   '/analytics': typeof AnalyticsRoute
+  '/capacity': typeof CapacityRoute
   '/cargo': typeof CargoRoute
   '/import': typeof ImportRoute
   '/notifications': typeof NotificationsRoute
@@ -151,8 +78,8 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/capacity': typeof CapacityRoute
   '/analytics': typeof AnalyticsRoute
+  '/capacity': typeof CapacityRoute
   '/cargo': typeof CargoRoute
   '/import': typeof ImportRoute
   '/notifications': typeof NotificationsRoute
@@ -163,8 +90,8 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/capacity': typeof CapacityRoute
   '/analytics': typeof AnalyticsRoute
+  '/capacity': typeof CapacityRoute
   '/cargo': typeof CargoRoute
   '/import': typeof ImportRoute
   '/notifications': typeof NotificationsRoute
@@ -176,8 +103,8 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/capacity'
     | '/analytics'
+    | '/capacity'
     | '/cargo'
     | '/import'
     | '/notifications'
@@ -187,8 +114,8 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/capacity'
     | '/analytics'
+    | '/capacity'
     | '/cargo'
     | '/import'
     | '/notifications'
@@ -198,8 +125,8 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
-    | '/capacity'
     | '/analytics'
+    | '/capacity'
     | '/cargo'
     | '/import'
     | '/notifications'
@@ -210,8 +137,8 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  CapacityRoute: typeof CapacityRoute
   AnalyticsRoute: typeof AnalyticsRoute
+  CapacityRoute: typeof CapacityRoute
   CargoRoute: typeof CargoRoute
   ImportRoute: typeof ImportRoute
   NotificationsRoute: typeof NotificationsRoute
@@ -264,6 +191,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CargoRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/capacity': {
+      id: '/capacity'
+      path: '/capacity'
+      fullPath: '/capacity'
+      preLoaderRoute: typeof CapacityRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/analytics': {
+      id: '/analytics'
+      path: '/analytics'
+      fullPath: '/analytics'
+      preLoaderRoute: typeof AnalyticsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -276,8 +217,8 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  CapacityRoute: CapacityRoute,
   AnalyticsRoute: AnalyticsRoute,
+  CapacityRoute: CapacityRoute,
   CargoRoute: CargoRoute,
   ImportRoute: ImportRoute,
   NotificationsRoute: NotificationsRoute,
@@ -288,46 +229,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-/* ROUTE_MANIFEST_START
-{
-  "routes": {
-    "__root__": {
-      "filePath": "__root.tsx",
-      "children": [
-        "/",
-        "/capacity",
-        "/analytics",
-        "/cargo",
-        "/import",
-        "/notifications",
-        "/operators",
-        "/reservation"
-      ]
-    },
-    "/": {
-      "filePath": "index.tsx"
-    },
-    "/capacity": {
-      "filePath": "capacity.tsx"
-    "/analytics": {
-      "filePath": "analytics.tsx"
-    },
-    "/cargo": {
-      "filePath": "cargo.tsx"
-    },
-    "/import": {
-      "filePath": "import.tsx"
-    },
-    "/notifications": {
-      "filePath": "notifications.tsx"
-    },
-    "/operators": {
-      "filePath": "operators.tsx"
-    },
-    "/reservation": {
-      "filePath": "reservation.tsx"
-    }
-  }
-}
-ROUTE_MANIFEST_END */
