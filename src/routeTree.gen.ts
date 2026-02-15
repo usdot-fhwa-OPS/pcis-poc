@@ -17,12 +17,19 @@ import { Route as ImportRouteImport } from './routes/import'
 import { Route as CargoRouteImport } from './routes/cargo'
 import { Route as IndexRouteImport } from './routes/index'
 
-const TerminalCapacityRoute = TerminalCapacityRouteImport.update({
-  id: '/terminal-capacity',
-  path: '/terminal-capacity',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ReservationRoute = ReservationRouteImport.update({
+import { Route as rootRoute } from './routes/__root'
+import { Route as ReservationImport } from './routes/reservation'
+import { Route as OperatorsImport } from './routes/operators'
+import { Route as NotificationsImport } from './routes/notifications'
+import { Route as ImportImport } from './routes/import'
+import { Route as CargoImport } from './routes/cargo'
+import { Route as CapacityImport } from './routes/capacity'
+import { Route as AnalyticsImport } from './routes/analytics'
+import { Route as IndexImport } from './routes/index'
+
+// Create/Update Routes
+
+const ReservationRoute = ReservationImport.update({
   id: '/reservation',
   path: '/reservation',
   getParentRoute: () => rootRouteImport,
@@ -47,14 +54,94 @@ const CargoRoute = CargoRouteImport.update({
   path: '/cargo',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
+
+const CapacityRoute = CapacityImport.update({
+  id: '/capacity',
+  path: '/capacity',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const AnalyticsRoute = AnalyticsImport.update({
+  id: '/analytics',
+  path: '/analytics',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 
+// Populate the FileRoutesByPath interface
+
+declare module '@tanstack/react-router' {
+  interface FileRoutesByPath {
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/capacity': {
+      id: '/capacity'
+      path: '/capacity'
+      fullPath: '/capacity'
+      preLoaderRoute: typeof CapacityImport
+      parentRoute: typeof rootRoute
+    }
+    '/analytics': {
+      id: '/analytics'
+      path: '/analytics'
+      fullPath: '/analytics'
+      preLoaderRoute: typeof AnalyticsImport
+      parentRoute: typeof rootRoute
+    }
+    '/cargo': {
+      id: '/cargo'
+      path: '/cargo'
+      fullPath: '/cargo'
+      preLoaderRoute: typeof CargoImport
+      parentRoute: typeof rootRoute
+    }
+    '/import': {
+      id: '/import'
+      path: '/import'
+      fullPath: '/import'
+      preLoaderRoute: typeof ImportImport
+      parentRoute: typeof rootRoute
+    }
+    '/notifications': {
+      id: '/notifications'
+      path: '/notifications'
+      fullPath: '/notifications'
+      preLoaderRoute: typeof NotificationsImport
+      parentRoute: typeof rootRoute
+    }
+    '/operators': {
+      id: '/operators'
+      path: '/operators'
+      fullPath: '/operators'
+      preLoaderRoute: typeof OperatorsImport
+      parentRoute: typeof rootRoute
+    }
+    '/reservation': {
+      id: '/reservation'
+      path: '/reservation'
+      fullPath: '/reservation'
+      preLoaderRoute: typeof ReservationImport
+      parentRoute: typeof rootRoute
+    }
+  }
+}
+
+// Create and export the route tree
+
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/capacity': typeof CapacityRoute
+  '/analytics': typeof AnalyticsRoute
   '/cargo': typeof CargoRoute
   '/import': typeof ImportRoute
   '/notifications': typeof NotificationsRoute
@@ -64,6 +151,8 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/capacity': typeof CapacityRoute
+  '/analytics': typeof AnalyticsRoute
   '/cargo': typeof CargoRoute
   '/import': typeof ImportRoute
   '/notifications': typeof NotificationsRoute
@@ -74,6 +163,8 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/capacity': typeof CapacityRoute
+  '/analytics': typeof AnalyticsRoute
   '/cargo': typeof CargoRoute
   '/import': typeof ImportRoute
   '/notifications': typeof NotificationsRoute
@@ -85,6 +176,8 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/capacity'
+    | '/analytics'
     | '/cargo'
     | '/import'
     | '/notifications'
@@ -94,6 +187,8 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/capacity'
+    | '/analytics'
     | '/cargo'
     | '/import'
     | '/notifications'
@@ -103,6 +198,8 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/capacity'
+    | '/analytics'
     | '/cargo'
     | '/import'
     | '/notifications'
@@ -113,6 +210,8 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CapacityRoute: typeof CapacityRoute
+  AnalyticsRoute: typeof AnalyticsRoute
   CargoRoute: typeof CargoRoute
   ImportRoute: typeof ImportRoute
   NotificationsRoute: typeof NotificationsRoute
@@ -177,6 +276,8 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CapacityRoute: CapacityRoute,
+  AnalyticsRoute: AnalyticsRoute,
   CargoRoute: CargoRoute,
   ImportRoute: ImportRoute,
   NotificationsRoute: NotificationsRoute,
@@ -187,3 +288,46 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+/* ROUTE_MANIFEST_START
+{
+  "routes": {
+    "__root__": {
+      "filePath": "__root.tsx",
+      "children": [
+        "/",
+        "/capacity",
+        "/analytics",
+        "/cargo",
+        "/import",
+        "/notifications",
+        "/operators",
+        "/reservation"
+      ]
+    },
+    "/": {
+      "filePath": "index.tsx"
+    },
+    "/capacity": {
+      "filePath": "capacity.tsx"
+    "/analytics": {
+      "filePath": "analytics.tsx"
+    },
+    "/cargo": {
+      "filePath": "cargo.tsx"
+    },
+    "/import": {
+      "filePath": "import.tsx"
+    },
+    "/notifications": {
+      "filePath": "notifications.tsx"
+    },
+    "/operators": {
+      "filePath": "operators.tsx"
+    },
+    "/reservation": {
+      "filePath": "reservation.tsx"
+    }
+  }
+}
+ROUTE_MANIFEST_END */
