@@ -15,3 +15,18 @@ export const terminalCapacityList = async (): Promise<TerminalCapacityDomian[]> 
     const result = (await response.json()) as TerminalCapacityDomian[];
     return result;
 }
+
+export const saveTerminalCapacity = async (termCapDomain: TerminalCapacityDomian): Promise<string> => {
+    const session = await fetchAuthSession();
+    const response = await fetch("https://xlj2x9eurh.execute-api.us-east-1.amazonaws.com/dev/terminalCapacity", {
+        method: 'PUT',
+        headers: {
+            "Authorization": `Bearer ${session.tokens?.accessToken?.toString()}`,
+            "Content-Type": "application/json",
+            "Accept": "*/*"
+        },
+        body: JSON.stringify(termCapDomain)
+    });
+    const result = (await response.json());
+    return result;
+}

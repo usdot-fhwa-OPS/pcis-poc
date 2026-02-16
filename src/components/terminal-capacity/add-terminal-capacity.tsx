@@ -11,6 +11,9 @@ import { cn } from "../../lib/utils";
 import { format } from "date-fns"
 
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { TerminalCapacityDomian } from "./terminal-capacity-domain";
+import { v4 as uuidv4 } from "uuid";
+import { saveTerminalCapacity } from "./terminal-capacity-client";
 
 export const AddTerminalCapacity = () => {
 
@@ -20,8 +23,10 @@ export const AddTerminalCapacity = () => {
               setIsDialogOpen(true)
             }
 
-    const [date, setDate] = useState<Date | undefined>(new Date())       
-    const [isCalendarOpen, setIsCalendarOpen] = useState(false)
+    const [startDate, setStartDate] = useState<Date>(new Date())    
+    const [endDate, setEndDate] = useState<Date>(new Date())       
+    const [isStartCalendarOpen, setIsStartCalendarOpen] = useState(false)
+    const [isEndCalendarOpen, setIsEndCalendarOpen] = useState(false)
     
     
     
@@ -51,7 +56,9 @@ const timeOptions = [
           "10:00 PM",
           "11:00 PM",
         ]
-const [time, setTime] = useState<string | undefined>(timeOptions[0])
+const [startTime, setStartTime] = useState<string | undefined>(timeOptions[0])
+const [endTime, setEndTime] = useState<string | undefined>(timeOptions[0])
+
     
         const repeatOptionList = [
             "Never", 
@@ -71,12 +78,44 @@ const [time, setTime] = useState<string | undefined>(timeOptions[0])
         ]
         const [reason, setReason] = useState<string | undefined>(reasonList[0])
 
-        const handleDateSelect = (selectedDate: Date | undefined) => {
+        const handleStartDateSelect = (selectedDate: Date | undefined) => {
           if (!selectedDate) return;
-          setDate(selectedDate)
+          setStartDate(selectedDate)
           // Keep the calendar open after selection
-          setIsCalendarOpen(!isCalendarOpen)
+          setIsStartCalendarOpen(!isStartCalendarOpen)
         };
+        const handleEndDateSelect = (selectedDate: Date | undefined) => {
+          if (!selectedDate) return;
+          setEndDate(selectedDate)
+          // Keep the calendar open after selection
+          setIsEndCalendarOpen(!isEndCalendarOpen)
+        };
+
+       
+        
+
+    const save = async () => {
+
+        const termCapDomain: TerminalCapacityDomian = {
+            capacityId: uuidv4(),
+            capacity: terminalCapacity,
+            capacityType: 'TEMPORARY',
+            createdAt: (new Date()).toISOString(),
+            updatedAt: (new Date()).toISOString(),
+            startDate: format(startDate, "yyyy-MM-dd"),
+            startTime: startTime,
+            endDate: format(endDate, "yyyy-MM-dd"),
+            endTime: endTime,
+            repeat: repeatOption,
+            reason: reason,
+            isActive: true,
+
+        };
+
+        saveTerminalCapacity(termCapDomain).then((resp) => { console.log(resp) });
+
+    }
+  
     return (
         <Dialog
             open={isDialogOpen}
@@ -123,86 +162,26 @@ const [time, setTime] = useState<string | undefined>(timeOptions[0])
                         />
                     </div>
                     <div className="col-start-3 col-end-6 ...">
-                                            <Label htmlFor="terminalCapacity" className="text-left">
-                                                reservation per day
-                                            </Label>
+                        <Label htmlFor="terminalCapacity" className="text-left">
+                            reservation per day
+                        </Label>
                     </div>                        
   <div className="col-1">
-    <Label htmlFor="terminalCapacity" className="text-right">
-                            Start
-                        </Label>
+    <Label htmlFor="terminalCapacity" className="text-right">Start</Label>
   </div>
   
-  <div className="col-span-2 col-end-4 ...">
-            <Popover modal={true} open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
-                <PopoverTrigger asChild>
-                    <Button
-                        variant={"outline"}
-                        className={cn("w-[200px] justify-start text-left font-normal", !date && "text-muted-foreground",  )}
-                        onClick={() => setIsCalendarOpen(true)}
-                    >
-                        <CalendarIcon className="mr-2 h-4 w-4" />
-                        {date ? format(date, "MM/dd/yyyy") : <span>Pick a date</span>}
-                    </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0">
-                    <Calendar mode="single" selected={date} disabled={{ before: new Date() }} onSelect={handleDateSelect} initialFocus />
-                </PopoverContent>
-            </Popover>
-
-  </div>
-  <div className="col-start-4 col-end-6 ...">
-                            <Select onValueChange={setTime}>
-                                <SelectTrigger className={cn("w-[150px]", )}>
-                                    <SelectValue placeholder={time} />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    {timeOptions.map((timeOption) => (
-                                        <SelectItem key={timeOption} value={timeOption}>
-                                            {timeOption}
-                                        </SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
-
-  </div>
+  <div className="col-span-2 col-end-4 ...">{showStartDateCalendar()}</div>
+  <div className="col-start-4 col-end-6 ...">{showStartTime()}</div>
   <div className="col-1">
-    <Label htmlFor="terminalCapacity" className="text-right">
-                            End
-                        </Label>
+    <Label htmlFor="terminalCapacity" className="text-right">End</Label>
   </div>
   
   <div className="col-span-2 col-end-4 ...">
-            <Popover modal={true} open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
-                <PopoverTrigger asChild>
-                    <Button
-                        variant={"outline"}
-                        className={cn("w-[200px] justify-start text-left font-normal", !date && "text-muted-foreground", )}
-                        onClick={() => setIsCalendarOpen(true)}
-                    >
-                        <CalendarIcon className="mr-2 h-4 w-4" />
-                        {date ? format(date, "MM/dd/yyyy") : <span>Pick a date</span>}
-                    </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0">
-                    <Calendar mode="single" selected={date} disabled={{ before: new Date() }} onSelect={handleDateSelect} initialFocus />
-                </PopoverContent>
-            </Popover>
+            {showEndDateCalendar()}
 
   </div>
   <div className="col-start-4 col-end-6 ...">
-                            <Select onValueChange={setTime}>
-                                <SelectTrigger className={cn("w-[150px]", )}>
-                                    <SelectValue placeholder={time} />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    {timeOptions.map((timeOption) => (
-                                        <SelectItem key={timeOption} value={timeOption}>
-                                            {timeOption}
-                                        </SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
+                            {showEndTime()}
 
   </div>
   <div className="col-start-1 col-end-2 ...">Repeat</div>
@@ -247,7 +226,7 @@ const [time, setTime] = useState<string | undefined>(timeOptions[0])
                     <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
                         Add Another
                     </Button>
-                    <Button onClick={() => { }}>
+                    <Button onClick={() => { save()}}>
                         Save
                     </Button>
                 </DialogFooter>
@@ -255,4 +234,73 @@ const [time, setTime] = useState<string | undefined>(timeOptions[0])
         </Dialog>
 
     );
+
+    function showEndTime() {
+        return <Select onValueChange={setEndTime}>
+            <SelectTrigger className={cn("w-[150px]")}>
+                <SelectValue placeholder={endTime} />
+            </SelectTrigger>
+            <SelectContent>
+                {timeOptions.map((timeOption) => (
+                    <SelectItem key={timeOption} value={timeOption}>
+                        {timeOption}
+                    </SelectItem>
+                ))}
+            </SelectContent>
+        </Select>;
+    }
+
+    function showEndDateCalendar() {
+        return <Popover modal={true} open={isEndCalendarOpen} onOpenChange={setIsEndCalendarOpen}>
+            <PopoverTrigger asChild>
+                <Button
+                    variant={"outline"}
+                    className={cn("w-[200px] justify-start text-left font-normal", !endDate && "text-muted-foreground")}
+                    onClick={() => setIsEndCalendarOpen(true)}
+                >
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {endDate ? format(endDate, "MM/dd/yyyy") : <span>Pick a date</span>}
+                </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0">
+                <Calendar mode="single" selected={endDate} disabled={{ before: new Date() }} onSelect={handleEndDateSelect} initialFocus />
+            </PopoverContent>
+        </Popover>;
+    }
+
+    function showStartTime() {
+        return <Select onValueChange={setStartTime}>
+            <SelectTrigger className={cn("w-[150px]")}>
+                <SelectValue placeholder={startTime} />
+            </SelectTrigger>
+            <SelectContent>
+                {timeOptions.map((timeOption) => (
+                    <SelectItem key={timeOption} value={timeOption}>
+                        {timeOption}
+                    </SelectItem>
+                ))}
+            </SelectContent>
+        </Select>;
+    }
+
+    function showStartDateCalendar() {
+        return <Popover modal={true} open={isStartCalendarOpen} onOpenChange={setIsStartCalendarOpen}>
+            <PopoverTrigger asChild>
+                <Button
+                    variant={"outline"}
+                    className={cn("w-[200px] justify-start text-left font-normal", !startDate && "text-muted-foreground")}
+                    onClick={() => setIsStartCalendarOpen(true)}
+                >
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {startDate ? format(startDate, "MM/dd/yyyy") : <span>Pick a date</span>}
+                </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0">
+                <Calendar mode="single" selected={startDate} disabled={{ before: new Date() }} onSelect={handleStartDateSelect} initialFocus />
+            </PopoverContent>
+        </Popover>;
+    }
+
 }
+
+ 
