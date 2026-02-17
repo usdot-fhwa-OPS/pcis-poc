@@ -7,6 +7,6 @@
 .center-buttons {
     display: flex !important;
     justify-content: center !important;
-    gap: 1rem;
+    gap: 1px;
     width: 100%;
 }
