@@ -11,7 +11,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem,
 import { LucideChevronDown, LucideTramFront, LucideTruck, LucideUsers } from "lucide-react";
 
 
-export const assignTransportationOperator = (table: any, row: any) => {
+export const assignTransportationCoordinator = (table: any, row: any) => {
 
         const [data, setData] = useState<User[]>([])
         const [tempName, setTempName] = useState("")
@@ -20,7 +20,7 @@ export const assignTransportationOperator = (table: any, row: any) => {
        
         const handleOpen = async () => {
           setIsDialogOpen(true)
-          const result = await (table.options.meta as BCODataTableMeta)?.fetchTransportationOperators();
+          const result = await (table.options.meta as BCODataTableMeta)?.fetchTransportationCoordinators();
           setData(result)
         }
 
@@ -36,7 +36,7 @@ export const assignTransportationOperator = (table: any, row: any) => {
 
         function handleSubmit() {
           // Use the parent's updateCargo method:
-          (table.options.meta as BCODataTableMeta)?.assignTransOp(row.original.cargoUnitID, tempName, tempEmail, "Pending Transportation Operator Approval")
+          (table.options.meta as BCODataTableMeta)?.assignTransOp(row.original.cargoUnitID, tempName, tempEmail, "Pending Transportation Coordinator Approval")
           setIsDialogOpen(false)
         }
 
@@ -79,17 +79,17 @@ export const assignTransportationOperator = (table: any, row: any) => {
                 </DialogTrigger>
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle>Assign Transportation Operator</DialogTitle>
+                        <DialogTitle>Assign Transportation Coordinator</DialogTitle>
                         <DialogDescription>
-                            Select a Transportation Operator name and email to assign this container.
+                            Select a Transportation Coordinator name and email to assign this container.
                         </DialogDescription>
                     </DialogHeader>
                     <div className="space-y-2 py-2">
                         <div>
                             <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
-                                    <Button variant="outline" disabled={row.original.containerStatus === "On-Ship"}  >Select Transportation Operator <LucideChevronDown />
-</Button>
+                                    <Button variant="outline" disabled={row.original.containerStatus === "On-Ship"}  >Select Transportation Coordinator<LucideChevronDown />
+                                    </Button>
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent className="w-56" align="start">
                                     <DropdownMenuGroup>
@@ -138,7 +138,7 @@ export const assignTransportationOperator = (table: any, row: any) => {
                             </DropdownMenu>
                         </div>
                         <div>
-                            <Label>Transportation Operator Email</Label>
+                            <Label>Transportation Coordinator Email</Label>
                             <Input
                                 value={tempEmail}
                                 disabled={true}

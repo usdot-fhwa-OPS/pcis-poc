@@ -55,7 +55,7 @@ export type BCOCompletedBooking= SelectionSet<Schema['Container']['type'], typeo
 //Define the selection of data that will be used for the table
 const selectionSetTransportation_CompletedData = [ 
   'vesselID',
-  'cargoUnitID',  // changed containerID to cargoUnitID
+  'cargoUnitID', 
   'origin',
   'bcoName',
   'bcoEmail',
@@ -71,7 +71,7 @@ const selectionSetTransportation_CompletedData = [
 //Define the selection of data that will be used for the table
 const selectionSetTerminal_CompletedData = [ 
   'vesselID',
-  'cargoUnitID',  // changed containerID to cargoUnitID
+  'cargoUnitID',  
   'origin',
   'bcoName',
   'bcoEmail',
@@ -116,7 +116,7 @@ function RouteComponent() {
     getUserAttributes();
   }, [user]);
 
-  async function fetchTransportationOperators() {
+  async function fetchTransportationCoordinators() {
     try {
       const session = await fetchAuthSession();
       const response = await fetch("https://xlj2x9eurh.execute-api.us-east-1.amazonaws.com/dev/", {
@@ -134,17 +134,17 @@ function RouteComponent() {
     }
   }
 
-    async function getTerminalCapacity() { // changed port to terminal
+    async function getTerminalCapacity() { 
       try {
         const { data: limit } = await client.models.Limit.get(
-          {id: '7bde2cc5-23dc-4f46-b6d9-502133cc2e8c'},
+          {id: '0c1aee99-e95e-4c61-920d-52faea4dbbd5'},
           {
             authMode: 'apiKey',
           }
         );
         
         if (limit) {
-          return limit.terminalCapacity; // changed port to terminal
+          return limit.terminalCapacity; 
         }
       } catch (error) {
         console.error('Error fetching booking limit', error);
@@ -351,7 +351,7 @@ function RouteComponent() {
                 transopEmail: { eq: userAttributes.email }
               },
               {
-                reservationStatus: { eq: 'Pending Transportation Operator Approval' }
+                reservationStatus: { eq: 'Pending Transportation Coordinator Approval' }
               }
             ]
           },
@@ -385,7 +385,7 @@ function RouteComponent() {
                 reservationStatus: { ne: 'unassigned' }
               },
               {
-                reservationStatus: { ne: 'Pending Transportation Operator Approval' }
+                reservationStatus: { ne: 'Pending Transportation Coordinator Approval' }
               },
               {
                 reservationStatus: { ne: 'Picked Up'}
@@ -426,7 +426,7 @@ function RouteComponent() {
       });
   
       console.log("Updated container status:", assignTransportationOp);
-      toast.success("Transportation Operator assigned successfully");
+      toast.success("Transportation Coordinator assigned successfully");
   
       // Refetch data to reflect changes
       await fetchContainers();
@@ -434,7 +434,7 @@ function RouteComponent() {
       return true;
     } catch (error) {
       console.error("Error updating container status:", error);
-      toast.error("Error assigning Transportation Operator. Please try again.");
+      toast.error("Error assigning Transportation Coordinator. Please try again.");
       return false; // Explicitly return false when the update fails
     }
   }
@@ -755,7 +755,7 @@ useEffect(() => {
         <TransportationBookingsTableOngoing
           data={transOpOngoingBookings}
           status="Ongoing"
-          meta={{updateTransOpBooking, getTerminalCapacity, getBookingsAmount}} // changed port to terminal
+          meta={{updateTransOpBooking, getTerminalCapacity, getBookingsAmount}} 
         />
       </TabsContent>
 
@@ -788,7 +788,7 @@ useEffect(() => {
           <BcoBookingsTableUpcoming
             data={bcoUpcomingBookings}
             status="Upcoming"
-            meta={{ assignTransOp, fetchTransportationOperators }}
+            meta={{ assignTransOp, fetchTransportationCoordinators }}
           />
         </TabsContent>
   
