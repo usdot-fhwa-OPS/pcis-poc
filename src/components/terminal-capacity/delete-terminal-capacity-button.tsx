@@ -35,7 +35,7 @@ export function DeleteTerminalCapacityButton({ role }: SettingsDialogProps) {
             </Button>
         </DialogTrigger>
         <DialogContent>
-            <DialogHeader>
+            <DialogHeader className="p-4 border-b">
               <DialogTitle>CONFIRMATION REQUIRED</DialogTitle>
             </DialogHeader>
               <div className="dialog-content center-text">
