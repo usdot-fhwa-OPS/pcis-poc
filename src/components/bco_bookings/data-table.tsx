@@ -51,8 +51,8 @@ export function DataTable<TData, TValue>({ columns, data, meta }: DataTableProps
   })
 
   return (
-    
-          <div className="mb-4 w-full px-3 py-2 border rounded-md">
+    <div className="w-full">
+      <div className="mb-4 px-3 py-2 border rounded-md">
         <Input
           placeholder="Filter by Cargo Unit ID" 
           value={(table.getColumn("cargoUnitID")?.getFilterValue() as string) ?? ""}  
@@ -61,23 +61,24 @@ export function DataTable<TData, TValue>({ columns, data, meta }: DataTableProps
           }
           className="max-w-sm"
         />
-     
+      </div>
 
-      <Table>
-        <TableHeader>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id}>
-              {headerGroup.headers.map((header) => (
-                <TableHead key={header.id}>
-                  {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
-                </TableHead>
-              ))}
-            </TableRow>
-          ))}
-        </TableHeader>
-        <TableBody>
-          {table.getRowModel().rows.length ? (
-            table.getRowModel().rows.map((row) => (
+      <div className="rounded-md border overflow-x-auto">
+        <Table>
+          <TableHeader>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <TableRow key={headerGroup.id}>
+                {headerGroup.headers.map((header) => (
+                  <TableHead key={header.id}>
+                    {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
+                  </TableHead>
+                ))}
+              </TableRow>
+            ))}
+          </TableHeader>
+          <TableBody>
+            {table.getRowModel().rows.length ? (
+              table.getRowModel().rows.map((row) => (
               <TableRow key={row.id}>
                 {row.getVisibleCells().map((cell) => (
                   <TableCell key={cell.id}>
@@ -95,6 +96,7 @@ export function DataTable<TData, TValue>({ columns, data, meta }: DataTableProps
           )}
         </TableBody>
       </Table>
+      </div>
     </div>
   )
 }
