@@ -1,16 +1,7 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "../ui/button.tsx";
 import { useState } from "react";
-import { Flag, Loader2 } from "lucide-react";
-import { Label } from "../ui/label"
-import { Input } from "../ui/input"
-import { BCODataTableMeta } from "./data-table.tsx";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "../ui/tooltip"
+import { Flag } from "lucide-react";
 
 //Four Imports needed for Amplify Data Queries and CRUD methods
 
@@ -19,145 +10,29 @@ import type { Schema } from '../../../amplify/data/resource';
 
 const client = generateClient<Schema>();
 
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-  DialogFooter,
-} from "../ui/dialog"  
 import { format } from "date-fns";
 
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../ui/select"
-import { User } from "../users/columns.tsx";
+import { assignTransportationCoordinator} from "./assign_transportation_operator.tsx";
 
 export const columns = (): ColumnDef<any>[] => {
   const baseColumns: ColumnDef<any>[] = [
     { accessorKey: "vesselID", header: "Vessel ID" },
-    { accessorKey: "containerID", header: "Container ID" },
+    { accessorKey: "cargoUnitID", header: "Cargo Unit ID" }, 
     { accessorKey: "origin", header: "Origin" },
     { accessorKey: "destination", header: "Destination" },
     { accessorKey: "bcoName", header: "BCO" },
     { accessorKey: "bcoEmail", header: "BCO Email" },
     { 
       accessorKey: "transopName", 
-      header: "Transportation  Operator",
+      header: "Transportation Coordinator",
       cell: ({ row, table }) => {
 
-        const [tempName, setTempName] = useState("")
-        const [tempEmail, setTempEmail] = useState("")
-        const [isLoading, setIsLoading] = useState(true)
-        const [isDialogOpen, setIsDialogOpen] = useState(false)
 
         // If either operator OR email is missing, show "Book" button
         const isMissing = !row.original.transopName?.trim() || !row.original.transopEmail?.trim()
-
-        function handleSubmit() {
-          // Use the parent's updateCargo method:
-          (table.options.meta as BCODataTableMeta)?.assignTransOp(row.original.containerID, tempName, tempEmail, "Pending Transportation Operator Approval")
-          setIsDialogOpen(false)
-        }
-
-        const [data, setData] = useState<User[]>([])
-        
-        const handleOpen = async () => {
-          setIsDialogOpen(true)
-          const result = await (table.options.meta as BCODataTableMeta)?.fetchTransportationOperators();
-          setData(result)
-          setIsLoading(false)
-        }
-
-        const handleOperatorSelect = (value: string) => {
-          setTempName(value);
-          const selectedUser = data.find(
-            (user) => `${user.given_name} ${user.family_name}` === value
-          );
-          if (selectedUser) {
-            setTempEmail(selectedUser.email);
-          }
-        };
-
         if (isMissing) {
           return (
-            <Dialog 
-              open={isDialogOpen} 
-              onOpenChange={(open) => {
-                setIsDialogOpen(open)
-                
-              }}
-            >
-              <DialogTrigger asChild>
-                <TooltipProvider>
-                  <Tooltip delayDuration={300}>
-                    <TooltipTrigger>
-                     <Button onClick={handleOpen} variant="outline" disabled={row.original.containerStatus === "On-Ship"} className="bg-blue-600 text-white hover:bg-blue-700">Assign</Button>
-                    </TooltipTrigger>
-                    {row.original.containerStatus === "On-Ship" && (
-                      <TooltipContent>
-                        <p>Container still on ship. Cannot assign operator yet.</p>
-                      </TooltipContent>
-                    )}
-                  </Tooltip>
-                </TooltipProvider>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Assign Transportation Operator</DialogTitle>
-                  <DialogDescription>
-                  Enter a Transportation Operator name and email to assign this container.
-                  </DialogDescription>
-                </DialogHeader>
-                <div className="space-y-2 py-2">
-                  <div>
-                    <Label>Transportation Operator Name</Label>
-                    <Select value={tempName} onValueChange={handleOperatorSelect} disabled={isLoading}>
-                      <SelectTrigger className="w-full">
-                        <div className="flex items-center gap-2">
-                          {isLoading && <Loader2 className="h-4 w-4 animate-spin" />}
-                          <SelectValue placeholder="Select operator" />
-                        </div>
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectGroup>
-                          {data.map(user => {
-                            const fullName = `${user.given_name} ${user.family_name}`;
-                            return (
-                              <SelectItem key={user.email} value={fullName}>
-                                {fullName}
-                              </SelectItem>
-                            );
-                          })}
-                        </SelectGroup>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div>
-                    <Label>Transportation Operator Email</Label>
-                    <Input
-                      value={tempEmail}
-                      disabled={true}
-                    />
-                  </div>
-                </div>
-                <DialogFooter>
-                  <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
-                    Cancel
-                  </Button>
-                  <Button onClick={handleSubmit} disabled={!tempName.trim() || !tempEmail.trim()}>
-                    Submit
-                    </Button>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
+            assignTransportationCoordinator( table, row)
           )
         }
 
@@ -200,7 +75,7 @@ baseColumns.push({
             try {
               // Call the Amplify update method for the flag (again must always contain containerID)
               const { data: updatedContainerStatus } = await client.models.Container.update({
-                containerID: row.original.containerID,
+                cargoUnitID: row.original.cargoUnitID, 
                 flag: newFlag,
               })
               console.log("Updated flag:", updatedContainerStatus)
@@ -224,13 +99,13 @@ baseColumns.push({
 export const CompletedColumn = (): ColumnDef<any>[] => {
   const baseColumns: ColumnDef<any>[] = [
     { accessorKey: "vesselID", header: "Vessel ID" },
-    { accessorKey: "containerID", header: "Container ID" },
+    { accessorKey: "cargoUnitID", header: "Cargo Unit ID" }, 
     { accessorKey: "origin", header: "Origin" },
     { accessorKey: "destination", header: "Destination" },
     { accessorKey: "bcoName", header: "BCO" },
     { accessorKey: "bcoEmail", header: "BCO Email" },
-    { accessorKey: "transopName", header: "Transportation Operator Name" },
-    { accessorKey: "transopEmail", header: "Transportation Operator Email" },
+    { accessorKey: "transopName", header: "Transportation Coordinator Name" },
+    { accessorKey: "transopEmail", header: "Transportation Coordinator Email" },
     {
       accessorKey: "to_status",
       header: () => <div className="w-[150px] text-center">Reservation Status</div>,
@@ -266,17 +141,17 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
     
     // { accessorKey: "terminalId", header: "Terminal ID" },
     { accessorKey: "vesselID", header: "Vessel ID" },
-    { accessorKey: "containerID", header: "Container ID" },
+    { accessorKey: "cargoUnitID", header: "Cargo Unit ID" }, 
     { accessorKey: "origin", header: "Origin" },
     { accessorKey: "destination", header: "Destination" },
     { accessorKey: "bcoName", header: "BCO" },
     { accessorKey: "bcoEmail", header: "BCO Email" },
   //  { accessorKey: "termopName", header: "Assigned Terminal Operator" },
-    { accessorKey: "transopName", header: "Transportation Operator Name" },
-    { accessorKey: "transopEmail", header: "Transportation Operator Email" },
+    { accessorKey: "transopName", header: "Transportation Coordinator Name" },
+    { accessorKey: "transopEmail", header: "Transportation Coordinator Email" },
     {
       accessorKey: "Booking Status",
-      header: () => <div className="min-w-[150px] text-center "> Transportation Operator Status</div>,
+      header: () => <div className="min-w-[150px] text-center "> Transportation Coordinator Status</div>,
       cell: ({ row }) => {
         const status = row.original.reservationStatus; // Get status value
         const isLate = status === "Late for Pick Up"; // Check if status is "Late"
@@ -297,7 +172,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
    
     {
       accessorKey: "contact_to",
-      header: "Contact Transportation Operator",
+      header: "Contact Transportation Coordinator",
       cell: ({ row }) => {
         const email = row.original.transopEmail
   

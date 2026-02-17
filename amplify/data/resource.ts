@@ -10,7 +10,7 @@ const schema = a.schema({
   Container: a
     .model({
       vesselID: a.string(),
-      containerID: a.string().required(),
+      cargoUnitID: a.string().required(), 
       bcoName: a.string(),
       bcoEmail: a.string(),
       origin: a.string(),
@@ -33,11 +33,11 @@ const schema = a.schema({
       isBCONotify: a.boolean().default(false),
       isTerminalNotify: a.boolean().default(false),
     })
-    .identifier(['containerID'])
+    .identifier(['cargoUnitID']) 
     .authorization((allow) => [allow.publicApiKey(),]),
   Limit: a
     .model({
-      portCapacity: a.integer().required().default(3),
+      terminalCapacity: a.integer().required().default(3), 
     })
     .authorization((allow) => [allow.publicApiKey(),]),
 });
@@ -48,9 +48,11 @@ export const data = defineData({
   schema,
   authorizationModes: {
     defaultAuthorizationMode: 'apiKey',
+    apiKeyAuthorizationMode: {
+      expiresInDays: 365,
+    },
   },
 });
-
 
 /*== STEP 2 ===============================================================
 Go to your frontend source code. From your client-side code, generate a

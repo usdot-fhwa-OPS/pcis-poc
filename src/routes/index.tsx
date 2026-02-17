@@ -9,7 +9,7 @@ import {BcoBookingsTableUpcoming,  BcoBookingsTableCompleted,BcoBookingsTableOng
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs.tsx"
 import { toast } from "sonner"
 
-//Three Imports needed for Amplify Data Queries and CRUD methods
+//Three Imports needed for Amplify Data Queries and CRUD methods 
 import { generateClient, SelectionSet } from 'aws-amplify/data';
 import type { Schema } from '../../amplify/data/resource';
 
@@ -17,42 +17,42 @@ const client = generateClient<Schema>();
 
 
 //Define the selection of data that will be used for the table
-const selectionSetTransOpUpcomingBookings = ['vesselID', 'containerID', 'origin', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail', 'assignmentDate', 'reservationStatus','flag'] as const;
+const selectionSetTransOpUpcomingBookings = ['vesselID', 'cargoUnitID', 'origin', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail', 'assignmentDate', 'reservationStatus','flag'] as const; 
 //Create a type based on your selectionSet that will be later used for the columns.tsx file of the able
 export type TransOpUpcomingBookings = SelectionSet<Schema['Container']['type'], typeof selectionSetTransOpUpcomingBookings>
 
-const selectionSetTransOpOngoingBookings = ['vesselID', 'containerID', 'origin', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail', 'reservationDate', 'reservationTime', 'reservationStatus', 'flag', 'containerStatus'] as const;
+const selectionSetTransOpOngoingBookings = ['vesselID', 'cargoUnitID', 'origin', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail', 'reservationDate', 'reservationTime', 'reservationStatus', 'flag', 'containerStatus'] as const; 
 export type TransOpOngoingBookings = SelectionSet<Schema['Container']['type'], typeof selectionSetTransOpOngoingBookings>
 
-const selectionSetTerminalOPUpcoming = ['vesselID', 'containerID', 'origin', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail','reservationDate','reservationTime','reservationStatus', 'flag'] as const;
+const selectionSetTerminalOPUpcoming = ['vesselID', 'cargoUnitID', 'origin', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail','reservationDate','reservationTime','reservationStatus', 'flag'] as const; 
 
-const selectionSetTerminalOpModified = ['vesselID', 'containerID', 'origin', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail','reservationDate','reservationTime', 'reservationStatus', 'modifiedReservationDate', 'modifiedReservationTime'] as const;
+const selectionSetTerminalOpModified = ['vesselID', 'cargoUnitID', 'origin', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail','reservationDate','reservationTime', 'reservationStatus', 'modifiedReservationDate', 'modifiedReservationTime'] as const; 
 
 export type TerminalOpModifiedBookings = SelectionSet<Schema['Container']['type'], typeof selectionSetTerminalOpModified>
 //Define the selection of data that will be used for the table
-const selectionSetBCOUpcomingBookings = ['vesselID', 'containerID', 'origin', 'destination', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail', 'containerStatus','arrivalDate', 'flag'] as const;
+const selectionSetBCOUpcomingBookings = ['vesselID', 'cargoUnitID', 'origin', 'destination', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail', 'containerStatus','arrivalDate', 'flag'] as const; 
 //Create a type based on your selectionSet that will be later used for the columns.tsx file of the able
 
-const selectionSetTerminalOPOngoing = ['vesselID', 'containerID', 'origin', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail','reservationDate','reservationTime','reservationStatus', 'flag'] as const;
-export type BCOUpcomingBookings = SelectionSet<Schema['Container']['type'], typeof selectionSetBCOUpcomingBookings>
+const selectionSetTerminalOPOngoing = ['vesselID', 'cargoUnitID', 'origin', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail','reservationDate','reservationTime','reservationStatus', 'flag'] as const; 
+export type BCOUpcomingBookings = SelectionSet<Schema['Container']['type'], typeof selectionSetBCOUpcomingBookings> 
 
 //Create a type based on your selectionSet that will be later used for the columns.tsx file of the able
 export type TerminalOPUpcomingBookings= SelectionSet<Schema['Container']['type'], typeof selectionSetTerminalOPUpcoming>
 
 export type TerminalOPOngoingBookings= SelectionSet<Schema['Container']['type'], typeof selectionSetTerminalOPOngoing >
 
-const selectionSetBCOOngoing = ['vesselID', 'containerID', 'origin','destination', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail','reservationDate','resApprovalDate','reservationStatus', 'resPickupDate','flag', 'updatedAt'] as const;
+const selectionSetBCOOngoing = ['vesselID', 'cargoUnitID', 'origin','destination', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail','reservationDate','resApprovalDate','reservationStatus', 'resPickupDate','flag', 'updatedAt'] as const; 
 
 export type BCOOngoingBooking= SelectionSet<Schema['Container']['type'], typeof selectionSetBCOOngoing>
 
-const selectionSetBCOCompleted = ['vesselID', 'containerID', 'origin', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail','reservationDate','resApprovalDate','reservationStatus','destination', 'resPickupDate','flag'] as const;
+const selectionSetBCOCompleted = ['vesselID', 'cargoUnitID', 'origin', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail','reservationDate','resApprovalDate','reservationStatus','destination', 'resPickupDate','flag'] as const; 
 
 export type BCOCompletedBooking= SelectionSet<Schema['Container']['type'], typeof selectionSetBCOCompleted>
 
 //Define the selection of data that will be used for the table
 const selectionSetTransportation_CompletedData = [ 
   'vesselID',
-  'containerID',
+  'cargoUnitID', 
   'origin',
   'bcoName',
   'bcoEmail',
@@ -68,7 +68,7 @@ const selectionSetTransportation_CompletedData = [
 //Define the selection of data that will be used for the table
 const selectionSetTerminal_CompletedData = [ 
   'vesselID',
-  'containerID',
+  'cargoUnitID', 
   'origin',
   'bcoName',
   'bcoEmail',
@@ -102,7 +102,6 @@ export const Route = createFileRoute('/')({
 function Index() {
   const { user } = useAuthenticator();
     const [userAttributes, setUserAttributes] = useState<{ fullName: string; role: string, email: string }>({ fullName: '', role: '', email: '' });
-    
     useEffect(() => {
       const getUserAttributes = async () => {
         try {
@@ -127,7 +126,7 @@ function Index() {
       }
     }, [user]);
     
-    async function fetchTransportationOperators() {
+    async function fetchTransportationCoordinators() {
         try {
           const session = await fetchAuthSession();
           const response = await fetch("https://xlj2x9eurh.execute-api.us-east-1.amazonaws.com/dev/", {
@@ -145,17 +144,17 @@ function Index() {
         }
       }
 
-    async function getPortCapacity() {
+    async function getTerminalCapacity() { 
       try {
         const { data: limit } = await client.models.Limit.get(
-          {id: '7bde2cc5-23dc-4f46-b6d9-502133cc2e8c'},
+          {id: '0c1aee99-e95e-4c61-920d-52faea4dbbd5'},
           {
             authMode: 'apiKey',
           }
         );
         
         if (limit) {
-          return limit.portCapacity;
+          return limit.terminalCapacity; 
         }
       } catch (error) {
         console.error('Error fetching booking limit', error);
@@ -217,7 +216,9 @@ function Index() {
       
       
       async function fetchTransOperatorCBookingsContainers() {
-        if (userAttributes.role === 'Transportation Operator' && userAttributes.email) {
+        if (((userAttributes.role === 'Trucking Operator') 
+          || (userAttributes.role === 'Rail Operator')
+          || (userAttributes.role === 'Third Party Logistics Provider')) && userAttributes.email) {
           try {
             const { data: cargo } = await client.models.Container.list({
               selectionSet:selectionSetTransportation_CompletedData,
@@ -356,7 +357,9 @@ function Index() {
       const [transOpUpcomingBookings, setTransOpUpcomingBookings] = useState<TransOpUpcomingBookings[]>([]);
     
       async function fetchTransOpUpcoming() {
-        if (userAttributes.role === 'Transportation Operator') {
+        if ((userAttributes.role === 'Trucking Operator') 
+          || (userAttributes.role === 'Rail Operator')
+          || (userAttributes.role === 'Third Party Logistics Provider')) {
           try {
             const { data: cargo } = await client.models.Container.list({
               filter: {
@@ -365,7 +368,7 @@ function Index() {
                     transopEmail: { eq: userAttributes.email }
                   },
                   {
-                    reservationStatus: { eq: 'Pending Transportation Operator Approval' }
+                    reservationStatus: { eq: 'Pending Transportation Coordinator Approval' }
                   }
                 ]
               },
@@ -385,7 +388,9 @@ function Index() {
       const [transOpOngoingBookings, setTransOpOngoingBookings] = useState<TransOpOngoingBookings[]>([]);
     
       async function fetchTransOpOngoing() {
-        if (userAttributes.role === 'Transportation Operator') {
+        if ((userAttributes.role === 'Trucking Operator') 
+          || (userAttributes.role === 'Rail Operator')
+          || (userAttributes.role === 'Third Party Logistics Provider')) {
           try {
             const { data: cargo } = await client.models.Container.list({
               filter: {
@@ -397,7 +402,7 @@ function Index() {
                     reservationStatus: { ne: 'unassigned' }
                   },
                   {
-                    reservationStatus: { ne: 'Pending Transportation Operator Approval' }
+                    reservationStatus: { ne: 'Pending Transportation Coordinator Approval' }
                   },
                   {
                     reservationStatus: { ne: 'Picked Up'}
@@ -409,7 +414,7 @@ function Index() {
               });
             setTransOpOngoingBookings(cargo);
           } catch (error) {
-            console.error('Error fetching containers:', error);
+            console.error('Error fetching caro unit:', error);
           }
         }
       }
@@ -418,21 +423,21 @@ function Index() {
       }, [userAttributes.role, refresh]);
        
       // Update container then refetch containers
-      async function assignTransOp(containerID: string, newName: string, newEmail: string, reservationStatus: string) {
+      async function assignTransOp(cargoUnitID: string, newName: string, newEmail: string, reservationStatus: string) { 
         try {
           const { data: assignTransportationOp } = await client.models.Container.update({
-            containerID: containerID,
+            cargoUnitID: cargoUnitID,
             transopName: newName,
             transopEmail: newEmail,
             reservationStatus: reservationStatus,
             assignmentDate: new Date().toLocaleDateString('en-US'),
             isTransportationNotify: true,
           });
-          console.log('Updated container status:', assignTransportationOp);
+          console.log('Updated cargo unit status:', assignTransportationOp);
           // Refetch containers after updating
           await fetchContainers();
         } catch (error) {
-          console.error('Error updating container status:', error);
+          console.error('Error updating cargo unit status:', error);
         }
       }
     
@@ -515,7 +520,7 @@ function Index() {
           }
         
           try {
-            let updatePayload = { containerID: id, reservationStatus: status, isTransportationNotify: false, isBCONotify: false, isTerminalNotify: false };
+            let updatePayload = { cargoUnitID: id, reservationStatus: status, isTransportationNotify: false, isBCONotify: false, isTerminalNotify: false }; 
         
             if (status === "unassigned") {
               Object.assign(updatePayload, {
@@ -575,7 +580,7 @@ function Index() {
       }
     
       try {
-        let updatePayload: any = { containerID: id, reservationStatus: status };
+        let updatePayload: any = { cargoUnitID: id, reservationStatus: status }; 
     
         if (status === "unassigned") {
           Object.assign(updatePayload, {
@@ -636,7 +641,7 @@ function Index() {
       try {
     
           const { data: updatedContainerStatus } = await client.models.Container.update({
-            containerID: id,
+            cargoUnitID: id, 
             reservationStatus: status,
             isTransportationNotify: true,
             isBCONotify: true,
@@ -757,11 +762,14 @@ function Index() {
           </TabsContent>
           </div>
         </Tabs>
+        
       </div>
       );
     }
   
-    if (userAttributes.role === "Transportation Operator") {
+    if ((userAttributes.role === 'Trucking Operator') 
+          || (userAttributes.role === 'Rail Operator')
+          || (userAttributes.role === 'Third Party Logistics Provider')) {
       return (
       <div className="w-full">
       <div className="p-2" style={{ textAlign: 'left' }}>
@@ -815,7 +823,7 @@ function Index() {
           <TransportationBookingsTableOngoing
             data={transOpOngoingBookings}
             status="Ongoing"
-            meta={{updateTransOpBooking, getPortCapacity, getBookingsAmount}}
+            meta={{updateTransOpBooking, getTerminalCapacity, getBookingsAmount}} 
           />
         </TabsContent>
   
@@ -827,6 +835,7 @@ function Index() {
           />
         </TabsContent>
       </Tabs>
+     
     </div>
   );
     }
@@ -879,7 +888,7 @@ function Index() {
             <BcoBookingsTableUpcoming
               data={bcoUpcomingBookings}
               status="Upcoming"
-              meta={{ assignTransOp, fetchTransportationOperators }}
+              meta={{ assignTransOp, fetchTransportationCoordinators }}
             />
           </TabsContent>
     
@@ -899,7 +908,12 @@ function Index() {
             />
           </TabsContent>
         </Tabs>
+
+        
+        
       </div>
+ 
+
     );
   }
 }

@@ -30,8 +30,8 @@ export const columns: ColumnDef<UpcomingCargo>[] = [
     header: "Vessel ID",
   },
   {
-    accessorKey: "containerID",
-    header: "Container ID",
+    accessorKey: "cargoUnitID", 
+    header: "Cargo Unit ID",
   },
   {
     accessorKey: "origin",
@@ -47,11 +47,11 @@ export const columns: ColumnDef<UpcomingCargo>[] = [
   },
   {
     accessorKey: "transopName",
-    header: "Transportation Operator",
+    header: "Transportation Coordinator",
   },
   {
     accessorKey: "transopEmail",
-    header: "Transportation Operator Email",
+    header: "Transportation Coordinator Email",
   }, 
   {
     accessorKey: "containerStatus",
@@ -78,7 +78,7 @@ export const columns: ColumnDef<UpcomingCargo>[] = [
                 try {
                   // Call the Amplify update method (must always contain containerID)
                   const { data: updatedContainerStatus } = await client.models.Container.update({
-                    containerID: row.original.containerID,
+                    cargoUnitID: row.original.cargoUnitID, 
                     containerStatus: val,
                   })
                   console.log("Updated container status:", updatedContainerStatus)
@@ -110,7 +110,7 @@ export const columns: ColumnDef<UpcomingCargo>[] = [
         try {
           // Call the Amplify update method for the flag (again must always contain containerID)
           const { data: updatedContainerStatus } = await client.models.Container.update({
-            containerID: row.original.containerID,
+            cargoUnitID: row.original.cargoUnitID, // changed containerID to cargoUnitID
             flag: newFlag,
           })
           console.log("Updated flag:", updatedContainerStatus)

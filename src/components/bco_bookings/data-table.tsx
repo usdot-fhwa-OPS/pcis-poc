@@ -21,8 +21,8 @@ import {
 } from "../ui/table.tsx"
 
 export interface BCODataTableMeta {
-  assignTransOp: (containerID: string, newName: string, newEmail: string, reservationStatus: string) => Promise<boolean>;
-  fetchTransportationOperators: () => Promise<any>
+  assignTransOp: (cargoUnitID: string, newName: string, newEmail: string, reservationStatus: string) => Promise<boolean>; 
+  fetchTransportationCoordinators: () => Promise<any>
 }
 
 interface DataTableProps<TData, TValue> {
@@ -54,10 +54,10 @@ export function DataTable<TData, TValue>({ columns, data, meta }: DataTableProps
     
           <div className="mb-4 w-full px-3 py-2 border rounded-md">
         <Input
-          placeholder="Filter by Container ID"
-          value={(table.getColumn("containerID")?.getFilterValue() as string) ?? ""}
+          placeholder="Filter by Cargo Unit ID" 
+          value={(table.getColumn("cargoUnitID")?.getFilterValue() as string) ?? ""}  
           onChange={(event) =>
-            table.getColumn("containerID")?.setFilterValue(event.target.value)
+            table.getColumn("cargoUnitID")?.setFilterValue(event.target.value) 
           }
           className="max-w-sm"
         />

@@ -21,13 +21,13 @@ import {
 
 export interface TransOpDataTableMeta {
   updateTransOpBooking: (
-    containerID: string, 
+    cargoUnitID: string, 
     reservationStatus: string, 
     reservationDate?: string, 
     reservationTime?: string
   ) => Promise<boolean>;
   
-  getPortCapacity: () => Promise<number>;
+  getTerminalCapacity: () => Promise<number>; 
   getBookingsAmount: (
     reservationDate: string,
   ) => Promise<number>;
@@ -56,10 +56,10 @@ export function DataTable<TData, TValue>({ columns, data, meta }: DataTableProps
     
           <div className="mb-4 w-full px-3 py-2 border rounded-md">
         <Input
-          placeholder="Filter by Container ID"
-          value={(table.getColumn("containerID")?.getFilterValue() as string) ?? ""}
+          placeholder="Filter by Cargo Unit ID" 
+          value={(table.getColumn("cargoUnitID")?.getFilterValue() as string) ?? ""} 
           onChange={(event) =>
-            table.getColumn("containerID")?.setFilterValue(event.target.value)
+            table.getColumn("cargoUnitID")?.setFilterValue(event.target.value) 
           }
           className="max-w-sm"
         />

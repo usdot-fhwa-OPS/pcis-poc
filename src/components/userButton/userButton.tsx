@@ -1,17 +1,18 @@
 
+import { Selfhelp } from '../self-help/self-help';
 import SettingsButton from '../settings/settingsButton';
 import './userButtonStyles.css';
 
 interface UserButtonProps {
   fullName: string;
   role: string;
-  limit: number;
 }
 
-const UserButton: React.FC<UserButtonProps> = ({ fullName, role, limit }) => {
+const UserButton: React.FC<UserButtonProps> = ({ fullName, role }) => {
     return (
         <button className="user-button">
-            <SettingsButton role={role} limit={limit} />
+            <Selfhelp />
+            <SettingsButton role={role} />
             <div className="user-button-content">
             <span>{fullName}</span>
             <span className="user-role">{role}</span>

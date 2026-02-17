@@ -1,10 +1,11 @@
-import { Authenticator, SelectField, translations } from '@aws-amplify/ui-react';
+import { Authenticator, Button, SelectField, TextField, translations } from '@aws-amplify/ui-react';
 import { I18n } from 'aws-amplify/utils';
 import { Amplify } from 'aws-amplify';
 import outputs from '../../../amplify_outputs.json';
 
 import '@aws-amplify/ui-react/styles.css';
 import './authStyles.css';
+import { useState } from 'react';
 
 Amplify.configure(outputs);
 I18n.putVocabularies(translations);
@@ -36,15 +37,47 @@ const formFields = {
 
 const roleOptions = [
   <option key="Beneficiary Cargo Owner" value="Beneficiary Cargo Owner">Beneficiary Cargo Owner</option>,
-  <option key="Transportation Operator" value="Transportation Operator">Transportation Operator</option>,
   <option key="Terminal Operator" value="Terminal Operator">Terminal Operator</option>,
+  <option key="Trucking Operator" value="Trucking Operator">Trucking Operator</option>,
+  <option key="Rail Operator" value="Rail Operator">Rail Operator</option>,
+  <option key="Third Party Logistics Provider" value="Third Party Logistics Provider">Third Party Logistics Provider</option>,
 ];
 
 const orgOptions = [
-  <option key="Leidos" value="Leidos">Leidos</option>,
+	<option key="None" 									    value="None">None</option>,
+	<option key="Union Pacific"							value="Union Pacific">Union Pacific</option>,
+	<option key="CSX"									      value="CSX">CSX</option>,
+	<option key="Heart of Georgia Railroad (HOG)" 		  value="Heart of Georgia Railroad (HOG)">Heart of Georgia Railroad (HOG)</option>,
+	<option key="Illinois and Midland Railroad (IMRR)"	value="Illinois and Midland Railroad (IMRR)">Illinois and Midland Railroad (IMRR)</option>,
+	<option key="ABC Drayage"						value="ABC Drayage">ABC Drayage</option>,
+	<option key="XYZ 3PL"								value="XYZ 3PL">XYZ 3PL</option>,
+	<option key="Leidos" 								value="Leidos">Leidos</option>
+
 ];
 
+function Organization() {
+  const [isPredefined, setIsPredefined] = useState(true);
+
+  function toggle() {
+    setIsPredefined((isPredefined) => !isPredefined);
+  }
+
+  return (
+    <>
+    {isPredefined &&<SelectField className="amplify-field" label="Your Organization" name="custom:organization" required>
+                  {orgOptions}
+                </SelectField>}
+      <Button onClick={toggle}>{(isPredefined && 'Enter Organization if not listed') || (!isPredefined && 'Pick Organization from the list')}</Button>
+      {!isPredefined && <TextField className="amplify-field" label="Your Organization" name="custom:organization" required>
+
+                </TextField>}
+      
+    </>
+  );
+}
+
 const Auth = ({ children }: { children: React.ReactNode }) => {
+  
   return (
     <Authenticator
       className="amplify-authenticator"
@@ -63,9 +96,9 @@ const Auth = ({ children }: { children: React.ReactNode }) => {
                   {roleOptions}
                 </SelectField>
 
-                <SelectField className="amplify-field" label="Your Organization" name="custom:organization" required>
-                  {orgOptions}
-                </SelectField>
+                
+                <Organization />
+                
               </>
             );
           },

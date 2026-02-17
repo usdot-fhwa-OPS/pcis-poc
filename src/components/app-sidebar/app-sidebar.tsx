@@ -1,4 +1,4 @@
-import { FileUp, Home, Ship, User , CalendarClock } from "lucide-react"
+import { FileUp, Home, Ship, User , CalendarClock, BarChart } from "lucide-react"
 
 import {
   Sidebar,
@@ -20,9 +20,6 @@ import { fetchUserAttributes } from 'aws-amplify/auth';
 import { useEffect, useState } from "react";
 import { NotificationsButton } from "../notifications-button/notifications-button";
 
-import { UpdateTerminalCapacityButton } from "../terminal-capacity/update-terminal-capacity-button";
-import { DeleteTerminalCapacityButton } from "../terminal-capacity/delete-terminal-capacity-button";
-
 import { generateClient, SelectionSet } from 'aws-amplify/data';
 import type { Schema } from '../../../amplify/data/resource';
 import { Subscription } from "rxjs";
@@ -30,8 +27,8 @@ import { useNavigate } from "@tanstack/react-router";
 
 const client = generateClient<Schema>();
 
-const selectionSet = ['containerID', 'reservationStatus', "updatedAt", "isBCONotify", "isTransportationNotify"] as const;
-export type Notifications = SelectionSet<Schema['Container']['type'], typeof selectionSet>
+const selectionSet = ['cargoUnitID', 'reservationStatus', "updatedAt", "isBCONotify", "isTransportationNotify"] as const; 
+export type Notifications = SelectionSet<Schema['Container']['type'], typeof selectionSet> 
 
 
 // Menu items.
@@ -60,6 +57,11 @@ const items = [
     title: "Reservation Status",
     url: "/reservation",
     icon: CalendarClock,
+  },
+  {
+    title: "Analytics",
+    url: "/analytics",
+    icon: BarChart,
   },
 ]
 
@@ -106,7 +108,9 @@ export function AppSidebar() {
     }
 
     if (
-      userAttributes.role === "Transportation Operator" ||
+      (userAttributes.role === 'Trucking Operator') 
+          || (userAttributes.role === 'Rail Operator')
+          || (userAttributes.role === 'Third Party Logistics Provider') ||
       userAttributes.role === "Beneficiary Cargo Owner"
     ) {
       // These roles only have access to the allowed items.
@@ -149,7 +153,9 @@ export function AppSidebar() {
           setUserNotifications(items);
         },
       });
-    } else if (userAttributes.role === "Transportation Operator") {
+    } else if ((userAttributes.role === 'Trucking Operator') 
+          || (userAttributes.role === 'Rail Operator')
+          || (userAttributes.role === 'Third Party Logistics Provider')) {
       notisSub = client.models.Container.observeQuery({
         filter: {
           isTransportationNotify: { eq: true },
@@ -199,9 +205,7 @@ export function AppSidebar() {
                 </SidebarMenuItem>
               ))}
               <NotificationsButton notifications={userNotifications} role={userAttributes.role} />
-              <UpdateTerminalCapacityButton role={userAttributes.role} limit={10} />
-              <DeleteTerminalCapacityButton role={userAttributes.role} limit={10}/>
-          </SidebarMenu>
+            </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
         <SidebarFooter>
