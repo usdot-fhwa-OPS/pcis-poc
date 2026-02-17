@@ -45,7 +45,7 @@ export function DeleteTerminalCapacityButton({ role }: SettingsDialogProps) {
                 </div>
                 Do you want to continue?
               </div>
-            <DialogFooter className="flex justify-center gap-4">
+            <DialogFooter className="center-buttons">
                 <Button type="submit">Yes</Button>
                 <Button type="button" variant="outline" onClick={() => setOpen(false)}>No</Button>
             </DialogFooter>
