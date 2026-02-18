@@ -60,10 +60,10 @@ export function DataTable<TData, TValue>({
   return (
     <div className="mb-4 w-full px-3 py-2 border rounded-md">
         <Input
-          placeholder="Filter by Terminal Capacity  ID..." 
-          value={(table.getColumn("capacityId")?.getFilterValue() as string) ?? ""} 
+          placeholder="Filter by Terminal Capacity ..." 
+          value={(table.getColumn("capacity")?.getFilterValue() as string) ?? ""} 
           onChange={(event) =>
-            table.getColumn("capacityId")?.setFilterValue(event.target.value) 
+            table.getColumn("capacity")?.setFilterValue(event.target.value) 
           }
           className="max-w-sm"
         />

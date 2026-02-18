@@ -5,6 +5,7 @@ import { ColumnDef } from "@tanstack/react-table"
 //Four Imports needed for Amplify Data Queries and CRUD methods
 
 import { TerminalCapacityDomian } from "./terminal-capacity-domain"
+import { DeleteTerminalCapacity } from "./delete-terminal-capacity"
 
 //const client = generateClient<Schema>();
 
@@ -34,7 +35,7 @@ export const columns: ColumnDef<TerminalCapacityDomian>[] = [
   {
     accessorKey: "actions",
     header: " Actions",
-    cell: (/*{ row }*/) => {
+    cell: ({ row }) => {
       // Initialize local state with the current containerStatus.
       // const [cargoStatus, setStatus] = useState<"On-Ship" | "On-Dock">(
       //   row.original.containerStatus as "On-Ship" | "On-Dock"
@@ -42,7 +43,7 @@ export const columns: ColumnDef<TerminalCapacityDomian>[] = [
 
       return (
         <div>
-          <a >Edit</a> &nbsp;&nbsp;<a >Delete</a>
+          <a >Edit</a> &nbsp;&nbsp; { DeleteTerminalCapacity(row.original.capacityId)}
 
         </div>
       )
