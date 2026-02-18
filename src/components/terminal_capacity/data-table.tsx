@@ -1,6 +1,5 @@
 "use client"
 import * as React from "react"
-import { Input } from "../ui/input.tsx"
 import {
   ColumnDef,
   flexRender,
@@ -19,17 +18,9 @@ import {
   TableRow,
 } from "../ui/table.tsx"
 
-// //Adding interface for setting Booking status
-// export interface TerminalOperatorDataTableMeta {
-//   updateBooking: (id: string, status: string, reservationDate?: string, reservationTime?: string)  => Promise<boolean>;
-//   markBookingLate: (id: string, status: string) => Promise<boolean>;
-  
-// }
-
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
-  //meta?: TerminalOperatorDataTableMeta
 }
 
 export function DataTable<TData, TValue>({ columns, data} : DataTableProps<TData, TValue>) {
@@ -47,15 +38,6 @@ export function DataTable<TData, TValue>({ columns, data} : DataTableProps<TData
   return (
     
     <div className="mb-4 w-xl max-w-9/10 px-3 py-2 border rounded-md">
-        <Input
-          placeholder="Filter by Cargo Unit ID"  
-          value={(table.getColumn("cargoUnitID")?.getFilterValue() as string) ?? ""} 
-          onChange={(event) =>
-            table.getColumn("cargoUnitID")?.setFilterValue(event.target.value) 
-          }
-          className="max-w-sm"
-        />
-     
 
       <Table>
         <TableHeader>
