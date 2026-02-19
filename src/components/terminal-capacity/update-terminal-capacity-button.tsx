@@ -15,22 +15,16 @@ import { Label } from "../ui/label"
 import "./terminal-capacity.css"
 
 interface SettingsDialogProps {
-  role: string;
   limit: number;
 }
 
-export function UpdateTerminalCapacityButton({ role, limit}: SettingsDialogProps) {
+export function UpdateTerminalCapacityButton({limit}: SettingsDialogProps) {
     const [open, setOpen] = useState(false)
     const [portCapacity, setPortCapacity] = useState(limit)
 
     useEffect(() => {
        setPortCapacity(limit);
     }, [limit]);
-
-    // If user is not a Terminal Operator, don't render anything
-    if (role !== "Terminal Operator") {
-      return null
-    }
   
     const handleSubmit = async () => {
     //   try {
