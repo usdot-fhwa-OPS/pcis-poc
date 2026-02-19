@@ -1,0 +1,12 @@
+.four-chars {
+    width: 4ch;
+}
+.center-text {
+    text-align: center;
+}
+.center-buttons {
+    display: flex !important;
+    justify-content: center !important;
+    gap: 1px !important;
+    width: 100%;
+}
