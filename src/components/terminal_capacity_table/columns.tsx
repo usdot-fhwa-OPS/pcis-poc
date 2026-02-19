@@ -1,5 +1,6 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "../ui/button.tsx";
+import { DeleteTerminalCapacityButton } from "../terminal-capacity/delete-terminal-capacity-button.tsx";
 //Imports generateClient and Schema may be need for future updates
 //import { generateClient } from 'aws-amplify/data';
 //import type { Schema } from '../../../amplify/data/resource';
@@ -16,7 +17,6 @@ export type Capacity = {
 
 export const columns = (): ColumnDef<any>[] => {
   const baseColumns: ColumnDef<any>[] = [
-
     { accessorKey: "capacity", header: "Capacity" },
     { accessorKey: "startTime", header: "Start" }, 
     { accessorKey: "endTime", header: "End" },
@@ -37,8 +37,7 @@ export const columns = (): ColumnDef<any>[] => {
     
               <Button 
                 variant="destructive"
-                //onClick={() => ()} 
-                //TO DO: PCIS2-38
+                onClick={() => DeleteTerminalCapacityButton} 
               >
                   Delete
               </Button>
