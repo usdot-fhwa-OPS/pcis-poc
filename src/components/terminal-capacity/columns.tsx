@@ -6,6 +6,7 @@ import { ColumnDef } from "@tanstack/react-table"
 
 import { TerminalCapacityDomian } from "./terminal-capacity-domain"
 import { DeleteTerminalCapacity } from "./delete-terminal-capacity"
+import { UpdateTerminalCapacity } from "./update-terminal-capacity"
 
 //const client = generateClient<Schema>();
 
@@ -43,7 +44,7 @@ export const columns: ColumnDef<TerminalCapacityDomian>[] = [
 
       return (
         <div>
-          <a >Edit</a> &nbsp;&nbsp; { DeleteTerminalCapacity(row.original.capacityId)}
+          {UpdateTerminalCapacity(row.original.capacityId)} &nbsp;&nbsp; { DeleteTerminalCapacity(row.original.capacityId)}
 
         </div>
       )

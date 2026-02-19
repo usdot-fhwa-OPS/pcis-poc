@@ -13,14 +13,26 @@ import { format } from "date-fns"
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { TerminalCapacityDomian } from "./terminal-capacity-domain";
 import { v4 as uuidv4 } from "uuid";
-import { saveTerminalCapacity } from "./terminal-capacity-client";
+import { getTerrminalCapacity, saveTerminalCapacity } from "./terminal-capacity-client";
 
-export const AddTerminalCapacity = () => {
+export const UpdateTerminalCapacity = (terminalCapacityUid:string) => {
 
     const [isDialogOpen, setIsDialogOpen] = useState(false)
     const [terminalCapacity, setTerminalCapacity] = useState(0) 
     const handleOpen = async () => {
-              setIsDialogOpen(true)
+                getTerrminalCapacity(terminalCapacityUid).then((terminalCapacity: TerminalCapacityDomian) =>{
+            setTerminalCapacity(terminalCapacity.capacity);
+            setStartDate(terminalCapacity.startDate?new Date(terminalCapacity.startDate):new Date());
+            setStartTime(terminalCapacity.startTime?terminalCapacity.startTime:undefined);
+            setEndDate(terminalCapacity.endDate?new Date(terminalCapacity.endDate):new Date());
+            setEndTime(terminalCapacity.endTime?terminalCapacity.endTime:undefined);
+            setRepeatOption(terminalCapacity.repeat);
+            setReason(terminalCapacity.reason);
+            setOtherReason(terminalCapacity.reason);
+            setIsDialogOpen(true)
+        });
+
+              
             }
 
     const [startDate, setStartDate] = useState<Date>(new Date())    
@@ -81,14 +93,6 @@ const [endTime, setEndTime] = useState<string | undefined>(timeOptions[0])
                 "Labor shortage",
                 "Other"
         ]
-        
-        const frequencyList = [
-                "Daily",
-                "Weekly",
-                "Monthly",
-                "Yearly"
-        ]
-
         const [reason, setReason] = useState<string | undefined>(reasonList[0])
         const [otherReason, setOtherReason] = useState<string | undefined>('')
 
@@ -109,12 +113,6 @@ const [endTime, setEndTime] = useState<string | undefined>(timeOptions[0])
 
             return 'Other' === reason;
        }
-
-       const showCustomRepeat = (): boolean =>{
-
-            return 'Custom' === repeatOption;
-       }
-       const [frequency, setFrequency] = useState<string | undefined>(frequencyList[0])
         
 
     const save = async () => {
@@ -138,13 +136,14 @@ const [endTime, setEndTime] = useState<string | undefined>(timeOptions[0])
         saveTerminalCapacity(termCapDomain).then((resp) => { console.log(resp) });
 
     }
+
+
   
     return (
         <Dialog
             open={isDialogOpen}
             onOpenChange={(open) => {
-                setIsDialogOpen(open)
-
+                 setIsDialogOpen(open)               
             }}
         >
             <DialogTrigger asChild>
@@ -152,7 +151,7 @@ const [endTime, setEndTime] = useState<string | undefined>(timeOptions[0])
                     <Tooltip delayDuration={300}>
                         <TooltipTrigger>
                             <div>
-                              <Button onClick={handleOpen} >Add Terminal Capacity</Button>
+                              <a onClick={handleOpen}>Edit</a>
 
                             </div>
                         </TooltipTrigger>
@@ -223,27 +222,6 @@ const [endTime, setEndTime] = useState<string | undefined>(timeOptions[0])
             </Select>
 
   </div>
-  {showCustomRepeat() &&
-  <>
-    <div className="col-start-1 col-end-2 ...">Frequency</div>
-  <div className="col-start-2 col-end-5 ...">
-            <Select onValueChange={setFrequency}>
-                <SelectTrigger className={cn("w-[150px]", )}>
-                    <SelectValue placeholder={frequency} />
-                </SelectTrigger>
-                <SelectContent>
-                    {frequencyList.map((frequency) => (
-                        <SelectItem key={frequency} value={frequency}>
-                            {frequency}
-                        </SelectItem>
-                    ))}
-                </SelectContent>
-            </Select>
-
-  </div>  
-  </>
-  }
-
 <div className="col-start-1 col-end-2 ...">Reason</div>
   <div className="col-start-2 col-end-5 ...">
             <Select onValueChange={setReason}>
@@ -263,8 +241,8 @@ const [endTime, setEndTime] = useState<string | undefined>(timeOptions[0])
     {showOtherReason() && 
             <Input
                 id="otherReason"
-                type="string"
                 value={otherReason}
+                type="string"
                 onChange={(e) => setOtherReason(e.target.value)}
                 className="col-span-1"
             />
