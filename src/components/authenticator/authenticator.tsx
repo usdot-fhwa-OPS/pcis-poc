@@ -41,7 +41,7 @@ const roleOptions = [
   <option key="Trucking Operator" value="Trucking Operator">Trucking Operator</option>,
   <option key="Rail Operator" value="Rail Operator">Rail Operator</option>,
   <option key="Third Party Logistics Provider" value="Third Party Logistics Provider">Third Party Logistics Provider</option>,
-  <option key="Vessel Agent" value="Vessal Agent">Vessel Agent</option>,
+  <option key="Vessel Agent" value="Vessel Agent">Vessel Agent</option>,
 ];
 
 const orgOptions = [
