@@ -21,11 +21,19 @@ export const columns: ColumnDef<TerminalCapacityDomian>[] = [
     accessorKey: "startDate",
     header: "Start",
   },
+   {
+    accessorKey: "startTime",
+    header: "",
+  },
   {
     accessorKey: "endDate",
     header: "End",
   },
-  {
+   {
+    accessorKey: "endTime",
+    header: "",
+  },
+ {
     accessorKey: "repeat",
     header: "Repeat",
   },

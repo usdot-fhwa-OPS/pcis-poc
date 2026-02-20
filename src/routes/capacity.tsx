@@ -6,6 +6,8 @@ import { useEffect, useState } from "react"
 import { TerminalCapacityDomian } from '../components/terminal-capacity/terminal-capacity-domain';
 import { terminalCapacityList } from "../components/terminal-capacity/terminal-capacity-client";
 import { AddTerminalCapacity } from "../components/terminal-capacity/add-terminal-capacity";
+import { Button } from "../components/ui/button";
+import { UpdateTerminalCapacityButton } from "../components/terminal-capacity/update-terminal-capacity-button";
 
 
 
@@ -16,13 +18,14 @@ export const Route = createFileRoute('/capacity')({
 
 export default function TerminalCapacityComponent() {
   const [data, setData] = useState<TerminalCapacityDomian[]>([])
-
+  const [loading, setLoading] = useState(true)
   
 
   //Fetch the data from the database
   const fetchTerminalCapacityList = async () => {
     
     setData(await terminalCapacityList());
+     setLoading(false);
   }
 
   //Fetch the data on the first render
@@ -30,19 +33,32 @@ export default function TerminalCapacityComponent() {
     fetchTerminalCapacityList();
   }, [])
 
-
+if (loading) {
+    return <div>Loading...</div>
+  }
   return (
-    <div>
-      <h1 className="text-2xl font-bold text-center">Terminal Capacity List</h1>
+
+   <div className="p-2">
+      <h1 className="text-2xl font-bold text-center">Terminal Capacity</h1>
+      <p className="text-left">Maximum Terminal Capacity: 5 Reservations per day
+      <Button 
+        variant="outline" 
+        onClick={() => UpdateTerminalCapacityButton} 
+        >
+        (Update)
+      </Button>
+      </p>
       <div className="container mx-auto p-10">
         <div className="parent-container">
           <AddTerminalCapacity></AddTerminalCapacity>
         </div>
-        <DataTable
-          columns={columns}
-          data={data}
-        />
-      </div>
-    </div>
+              <DataTable
+                columns={columns}
+                data={data}
+              />
+            </div>
+    </div>    
+    
   )
+
 }
