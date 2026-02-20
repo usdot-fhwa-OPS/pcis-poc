@@ -115,6 +115,12 @@ const [endTime, setEndTime] = useState<string | undefined>(timeOptions[0])
             return 'Custom' === repeatOption;
        }
        const [frequency, setFrequency] = useState<string | undefined>(frequencyList[0])
+
+       const showDailyEvery = (): boolean =>{
+
+            return 'Daily' === frequency;
+       }
+       const [dailyEvery, setDailyEvery] = useState<string | undefined>()
         
 
     const save = async () => {
@@ -240,7 +246,41 @@ const [endTime, setEndTime] = useState<string | undefined>(timeOptions[0])
                 </SelectContent>
             </Select>
 
-  </div>  
+  </div>
+  {showDailyEvery() && 
+  <>
+  <div className="col-start-1 col-end-2 ...">
+                            <Label htmlFor="terminalCapacity" className="text-right">
+                                Every
+                            </Label>
+</div>
+  <div className="col-3">
+    
+            <Input
+                id="dailyEvery"
+                
+                type="number"
+                value={dailyEvery}
+                onChange={(e) => setDailyEvery(e.target.value)}
+                className="col-span-1"
+                min="0"
+                step="1"
+            />
+            
+    
+</div>
+<div className="col-start-3 col-end-6 ...">
+                        <Label htmlFor="terminalCapacity" className="text-left">
+                            days
+                        </Label>
+                        
+                    </div> 
+<div className="col-span-5">
+    <span>This temporary capacity will repeate every {dailyEvery} days.</span>
+</div>
+                    
+</>
+    }  
   </>
   }
 
