@@ -1,7 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { type Capacity, columns } from "../components/terminal_capacity_table/columns"
 import { DataTable } from "../components/terminal_capacity_table/data-table"
-import { Button } from "../components/ui/button.tsx";
 import { UpdateTerminalCapacityButton } from "../components/terminal-capacity/update-terminal-capacity-button.tsx";
 import { useEffect, useState } from "react"
 
@@ -32,12 +31,7 @@ export default function Capacity() {
     <div className="p-2">
       <h1 className="text-2xl font-bold text-center">Terminal Capacity</h1>
       <p className="text-left">Maximum Terminal Capacity: 5 Reservations per day
-      <Button 
-        variant="outline" 
-        onClick={() => UpdateTerminalCapacityButton} 
-        >
-        (Update)
-      </Button>
+      <UpdateTerminalCapacityButton limit={5}/>
       </p>
       <div className="container mx-auto p-10">
               <DataTable

@@ -34,13 +34,7 @@ export const columns = (): ColumnDef<any>[] => {
               >
                 Edit
               </Button>
-    
-              <Button 
-                variant="destructive"
-                onClick={() => DeleteTerminalCapacityButton} 
-              >
-                  Delete
-              </Button>
+              <DeleteTerminalCapacityButton/>
             </div>
           ),
           
