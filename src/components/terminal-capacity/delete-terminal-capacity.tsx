@@ -34,7 +34,7 @@ export const DeleteTerminalCapacity = (terminalCapacityUid:string) => {
 
             }}
         >
-            <DialogTrigger asChild>
+            <DialogTrigger>
                 <TooltipProvider>
                     <Tooltip delayDuration={300}>
                         <TooltipTrigger>

@@ -146,7 +146,7 @@ const [endTime, setEndTime] = useState<string | undefined>(timeOptions[0])
                  setIsDialogOpen(open)               
             }}
         >
-            <DialogTrigger asChild>
+            <DialogTrigger>
                 <TooltipProvider>
                     <Tooltip delayDuration={300}>
                         <TooltipTrigger>

@@ -15,13 +15,17 @@ export function MonthlyRepeatOptions({monthlyEvery, setMonthlyEvery,
                                       repeatCycle, setRepeatCycle,
                                       daysOfMonth, setDaysOfMonth,
                                       onTheWeek, setOnTheWeek,
-                                      onTheWeekDay, setOnTheWeekDay}) {
+                                      onTheWeekDay, setOnTheWeekDay}:{monthlyEvery:any, setMonthlyEvery:any, 
+                                      repeatCycle:any, setRepeatCycle:any,
+                                      daysOfMonth:any, setDaysOfMonth:any,
+                                      onTheWeek:any, setOnTheWeek:any,
+                                      onTheWeekDay:any, setOnTheWeekDay:any}) {
 
 const [date, setDate] = React.useState<Date | undefined>(new Date())
 
   
 
-  const addDays = (newDate) =>{
+  const addDays = (newDate:Date) =>{
 
     daysOfMonth?.push(newDate ? format(newDate, "dd"):'' );
     setDaysOfMonth(daysOfMonth);
@@ -89,14 +93,14 @@ const [date, setDate] = React.useState<Date | undefined>(new Date())
             <Calendar
               mode="single"
               selected={date}
-              onSelect={(value) => { setDate(value); addDays(value) }}
+              onSelect={(value:any) => { setDate(value); addDays(value) }}
               className="rounded-lg border"
               captionLayout="dropdown"
             />
           </div>
           <div className="col-span-5">
             <span>This temporary capacity will repeate every {monthlyEvery} months</span>
-            <span><br></br>on the {daysOfMonth?.map((day, i, array) => { return day + ((i < (array.length - 1)) ? ' and ' : '') })}</span>
+            <span><br></br>on the {daysOfMonth?.map((day:any, i:number, array:any) => { return day + ((i < (array.length - 1)) ? ' and ' : '') })}</span>
           </div>
 
         </>

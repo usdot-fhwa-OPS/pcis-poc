@@ -3,7 +3,7 @@ import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 
 
-export function DailyRepeatOptions({dailyEvery, setDailyEvery}) {
+export function DailyRepeatOptions({dailyEvery, setDailyEvery}:{dailyEvery:any, setDailyEvery:any}) {
        
   return (
 
