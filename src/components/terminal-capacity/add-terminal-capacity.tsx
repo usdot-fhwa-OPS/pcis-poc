@@ -1,4 +1,5 @@
-import { useState } from "react";
+"use client"
+import React, { useState } from "react";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
 import { Tooltip, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
 import { Button } from "../ui/button";
@@ -14,6 +15,9 @@ import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { TerminalCapacityDomian } from "./terminal-capacity-domain";
 import { v4 as uuidv4 } from "uuid";
 import { saveTerminalCapacity } from "./terminal-capacity-client";
+import { Combobox, ComboboxChip, ComboboxChips, ComboboxChipsInput, ComboboxContent, ComboboxEmpty, ComboboxInput, ComboboxItem, ComboboxList, ComboboxValue, useComboboxAnchor } from "../ui/combobox";
+import { WeekdaysComboboxMultiple } from "./WeekdaysComboboxMultiple";
+import { WeekdaysMultipleSelect } from "./WeekdaysMultipleSelect";
 
 export const AddTerminalCapacity = () => {
 
@@ -122,6 +126,13 @@ const [endTime, setEndTime] = useState<string | undefined>(timeOptions[0])
        }
        const [dailyEvery, setDailyEvery] = useState<string | undefined>()
         
+       
+       const showWeeklyEvery = (): boolean =>{
+
+            return 'Weekly' === frequency;
+       }
+       const [weeklyEvery, setWeeklyEvery] = useState<string | undefined>()
+       const [weeklyOnDays, setWeeklyOnDays] = useState<string[] | undefined>([])
 
     const save = async () => {
 
@@ -144,16 +155,19 @@ const [endTime, setEndTime] = useState<string | undefined>(timeOptions[0])
         saveTerminalCapacity(termCapDomain).then((resp) => { console.log(resp) });
 
     }
-  
+
+    
     return (
-        <Dialog
+        <>
+        {/* <WeekdaysComboboxMultiple></WeekdaysComboboxMultiple> */}
+         <Dialog
             open={isDialogOpen}
             onOpenChange={(open) => {
                 setIsDialogOpen(open)
 
             }}
         >
-            <DialogTrigger asChild>
+            <DialogTrigger>
                 <TooltipProvider>
                     <Tooltip delayDuration={300}>
                         <TooltipTrigger>
@@ -280,7 +294,52 @@ const [endTime, setEndTime] = useState<string | undefined>(timeOptions[0])
 </div>
                     
 </>
-    }  
+    }
+
+ {showWeeklyEvery() && 
+  <>
+  <div className="col-start-1 col-end-2 ...">
+                            <Label htmlFor="terminalCapacity" className="text-right">
+                                Every
+                            </Label>
+</div>
+  <div className="col-3">
+    
+            <Input
+                id="weeklyEvery"
+                
+                type="number"
+                value={dailyEvery}
+                onChange={(e) => setWeeklyEvery(e.target.value)}
+                className="col-span-1"
+                min="0"
+                step="1"
+            />
+            
+    
+</div>
+<div className="col-start-3 col-end-6 ...">
+                        <Label htmlFor="terminalCapacity" className="text-left">
+                            weeks
+                        </Label>
+                        
+                    </div> 
+<div className="col-start-1 col-end-2 ...">
+                            <Label htmlFor="terminalCapacity" className="text-right">
+                                On day(s):
+                            </Label>
+</div>
+  <div className="col-3">
+            <WeekdaysComboboxMultiple></WeekdaysComboboxMultiple>
+            
+    
+</div>                    
+<div className="col-span-5">
+    <span>This temporary capacity will repeate every {weeklyEvery} weeks.</span>
+</div>
+                    
+</>
+    }       
   </>
   }
 
@@ -327,6 +386,8 @@ const [endTime, setEndTime] = useState<string | undefined>(timeOptions[0])
                 </DialogFooter>
             </DialogContent>
         </Dialog>
+        </>
+       
 
     );
 
