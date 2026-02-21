@@ -25,7 +25,9 @@ const weekDays = [
             "Sunday"
        ];
 
-export function WeeklyRepeatOptions({weeklyEvery, setWeeklyEvery, weeklyOnDays, setWeeklyOnDays}) {
+export function WeeklyRepeatOptions({weeklyEvery, setWeeklyEvery, weeklyOnDays, setWeeklyOnDays}:
+  {weeklyEvery:any, setWeeklyEvery:any, weeklyOnDays:any, setWeeklyOnDays:any}
+) {
        const anchor = useComboboxAnchor();
   
   return (
@@ -99,7 +101,7 @@ export function WeeklyRepeatOptions({weeklyEvery, setWeeklyEvery, weeklyOnDays, 
       </div>
       <div className="col-span-5">
         <span>This temporary capacity will repeate every {weeklyEvery} weeks</span>
-        <span><br></br>on {weeklyOnDays?.map((day, i, array) => { return day + ((i < (array.length - 1)) ? ' and ' : '') })}</span>
+        <span><br></br>on {weeklyOnDays?.map((day:any, i:number, array:any) => { return day + ((i < (array.length - 1)) ? ' and ' : '') })}</span>
       </div>
 
     </>
