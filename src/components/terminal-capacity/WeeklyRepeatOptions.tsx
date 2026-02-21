@@ -12,6 +12,8 @@ import {
   ComboboxValue,
   useComboboxAnchor,
 } from "../ui/combobox"
+import { Label } from "../ui/label";
+import { Input } from "../ui/input";
 
 const weekDays = [
             "Monday",
@@ -23,19 +25,51 @@ const weekDays = [
             "Sunday"
        ];
 
-export function WeekdaysComboboxMultiple() {
+export function WeeklyRepeatOptions({weeklyEvery, setWeeklyEvery, weeklyOnDays, setWeeklyOnDays}) {
        const anchor = useComboboxAnchor();
-       const [weeklyEvery, setWeeklyEvery] = React.useState<string | undefined>()
-       const [weeklyOnDays, setWeeklyOnDays] = React.useState<string[] | undefined>([])
-
+  
   return (
-    <Combobox
+
+    <>
+      <div className="col-start-1 col-end-2 ...">
+        <Label htmlFor="terminalCapacity" className="text-right">
+          Every
+        </Label>
+      </div>
+      <div className="col-3">
+
+        <Input
+          id="weeklyEvery"
+
+          type="number"
+          value={weeklyEvery}
+          onChange={(e) => setWeeklyEvery(e.target.value)}
+          className="col-span-1"
+          min="0"
+          step="1"
+        />
+
+
+      </div>
+      <div className="col-start-3 col-end-6 ...">
+        <Label htmlFor="terminalCapacity" className="text-left">
+          weeks
+        </Label>
+
+      </div>
+      <div className="col-start-1 col-end-2 ...">
+        <Label htmlFor="terminalCapacity" className="text-right">
+          On day(s):
+        </Label>
+      </div>
+      <div className="col-3">
+        <Combobox
           multiple
           autoHighlight
-          items={weekDays}
           value={weeklyOnDays}
+          items={weekDays}
           defaultValue={[weekDays[0]]}
-          onValueChange={setWeeklyOnDays}
+          onValueChange={(value) => { setWeeklyOnDays(value) }}
         >
           <ComboboxChips ref={anchor} className="w-full max-w-xs">
             <ComboboxValue>
@@ -60,5 +94,17 @@ export function WeekdaysComboboxMultiple() {
             </ComboboxList>
           </ComboboxContent>
         </Combobox>
+
+
+      </div>
+      <div className="col-span-5">
+        <span>This temporary capacity will repeate every {weeklyEvery} weeks</span>
+        <span><br></br>on {weeklyOnDays?.map((day, i, array) => { return day + ((i < (array.length - 1)) ? ' and ' : '') })}</span>
+      </div>
+
+    </>
+
+
   )
 }
+

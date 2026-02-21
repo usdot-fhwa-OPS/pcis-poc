@@ -15,9 +15,8 @@ import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { TerminalCapacityDomian } from "./terminal-capacity-domain";
 import { v4 as uuidv4 } from "uuid";
 import { saveTerminalCapacity } from "./terminal-capacity-client";
-import { Combobox, ComboboxChip, ComboboxChips, ComboboxChipsInput, ComboboxContent, ComboboxEmpty, ComboboxInput, ComboboxItem, ComboboxList, ComboboxValue, useComboboxAnchor } from "../ui/combobox";
-import { WeekdaysComboboxMultiple } from "./WeekdaysComboboxMultiple";
-import { WeekdaysMultipleSelect } from "./WeekdaysMultipleSelect";
+import { WeeklyRepeatOptions } from "./WeeklyRepeatOptions";
+import { DailyRepeatOptions } from "./DailyRepeatOptions";
 
 export const AddTerminalCapacity = () => {
 
@@ -124,16 +123,17 @@ const [endTime, setEndTime] = useState<string | undefined>(timeOptions[0])
 
             return 'Daily' === frequency;
        }
-       const [dailyEvery, setDailyEvery] = useState<string | undefined>()
+       const [dailyEvery, setDailyEvery] = useState<number | undefined>()
         
        
        const showWeeklyEvery = (): boolean =>{
 
             return 'Weekly' === frequency;
        }
-       const [weeklyEvery, setWeeklyEvery] = useState<string | undefined>()
-       const [weeklyOnDays, setWeeklyOnDays] = useState<string[] | undefined>([])
-
+       const [weeklyEvery, setWeeklyEvery] = useState<number | undefined>()
+       const [weeklyOnDays, setWeeklyOnDays] = React.useState<string[] | undefined>([])
+       
+       
     const save = async () => {
 
         const termCapDomain: TerminalCapacityDomian = {
@@ -149,17 +149,33 @@ const [endTime, setEndTime] = useState<string | undefined>(timeOptions[0])
             repeat: repeatOption,
             reason: reason,
             isActive: true,
+             repeatConfig: {
+                    frequency: frequency,         // "daily" | "weekly" | "monthly" | "yearly"
+                    interval: dailyEvery?dailyEvery:(weeklyEvery?weeklyEvery:undefined),          // Every X days/weeks/months/years
+                    
+                    // Weekly specific
+                    daysOfWeek: weeklyOnDays,      // ["monday", "wednesday"]
+                    
+                    // Monthly specific
+                    // cycle?: string,             // "each" | "onThe"
+                    // daysOfMonth?: number[],     // [10, 27] when cycle = "each"
+                    // weekNumber?: string,        // "first" | "second" | "third" | "fourth" | "last"
+                    // dayOfWeek?: string,         // "monday" through "sunday"
+                    
+                    // // Yearly specific
+                    // months?: string[],          // ["june", "december"]
+                    // Can also use weekNumber + dayOfWeek for yearly
+            }
 
         };
 
-        saveTerminalCapacity(termCapDomain).then((resp) => { console.log(resp) });
+        //saveTerminalCapacity(termCapDomain).then((resp) => { console.log(resp) });
 
     }
 
     
     return (
         <>
-        {/* <WeekdaysComboboxMultiple></WeekdaysComboboxMultiple> */}
          <Dialog
             open={isDialogOpen}
             onOpenChange={(open) => {
@@ -261,86 +277,21 @@ const [endTime, setEndTime] = useState<string | undefined>(timeOptions[0])
             </Select>
 
   </div>
-  {showDailyEvery() && 
-  <>
-  <div className="col-start-1 col-end-2 ...">
-                            <Label htmlFor="terminalCapacity" className="text-right">
-                                Every
-                            </Label>
-</div>
-  <div className="col-3">
-    
-            <Input
-                id="dailyEvery"
-                
-                type="number"
-                value={dailyEvery}
-                onChange={(e) => setDailyEvery(e.target.value)}
-                className="col-span-1"
-                min="0"
-                step="1"
-            />
-            
-    
-</div>
-<div className="col-start-3 col-end-6 ...">
-                        <Label htmlFor="terminalCapacity" className="text-left">
-                            days
-                        </Label>
-                        
-                    </div> 
-<div className="col-span-5">
-    <span>This temporary capacity will repeate every {dailyEvery} days.</span>
-</div>
-                    
-</>
+    {showDailyEvery() &&
+        <DailyRepeatOptions
+            dailyEvery={dailyEvery}
+            setDailyEvery={setDailyEvery} />
     }
 
- {showWeeklyEvery() && 
-  <>
-  <div className="col-start-1 col-end-2 ...">
-                            <Label htmlFor="terminalCapacity" className="text-right">
-                                Every
-                            </Label>
-</div>
-  <div className="col-3">
-    
-            <Input
-                id="weeklyEvery"
-                
-                type="number"
-                value={dailyEvery}
-                onChange={(e) => setWeeklyEvery(e.target.value)}
-                className="col-span-1"
-                min="0"
-                step="1"
-            />
-            
-    
-</div>
-<div className="col-start-3 col-end-6 ...">
-                        <Label htmlFor="terminalCapacity" className="text-left">
-                            weeks
-                        </Label>
-                        
-                    </div> 
-<div className="col-start-1 col-end-2 ...">
-                            <Label htmlFor="terminalCapacity" className="text-right">
-                                On day(s):
-                            </Label>
-</div>
-  <div className="col-3">
-            <WeekdaysComboboxMultiple></WeekdaysComboboxMultiple>
-            
-    
-</div>                    
-<div className="col-span-5">
-    <span>This temporary capacity will repeate every {weeklyEvery} weeks.</span>
-</div>
-                    
+    {showWeeklyEvery() &&
+
+        <WeeklyRepeatOptions
+            weeklyEvery={weeklyEvery}
+            setWeeklyEvery={setWeeklyEvery}
+            weeklyOnDays={weeklyOnDays}
+            setWeeklyOnDays={setWeeklyOnDays}></WeeklyRepeatOptions>
+    }
 </>
-    }       
-  </>
   }
 
 <div className="col-start-1 col-end-2 ...">Reason</div>
