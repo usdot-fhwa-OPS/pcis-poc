@@ -17,6 +17,7 @@ import { v4 as uuidv4 } from "uuid";
 import { saveTerminalCapacity } from "./terminal-capacity-client";
 import { WeeklyRepeatOptions } from "./WeeklyRepeatOptions";
 import { DailyRepeatOptions } from "./DailyRepeatOptions";
+import { MonthlyRepeatOptions } from "./MonthlyRepeatOptions";
 
 export const AddTerminalCapacity = () => {
 
@@ -119,19 +120,30 @@ const [endTime, setEndTime] = useState<string | undefined>(timeOptions[0])
        }
        const [frequency, setFrequency] = useState<string | undefined>(frequencyList[0])
 
-       const showDailyEvery = (): boolean =>{
+       const showDailyRepeatOption = (): boolean =>{
 
             return 'Daily' === frequency;
        }
        const [dailyEvery, setDailyEvery] = useState<number | undefined>()
         
        
-       const showWeeklyEvery = (): boolean =>{
+       const showWeeklyRepeatOption = (): boolean =>{
 
             return 'Weekly' === frequency;
        }
        const [weeklyEvery, setWeeklyEvery] = useState<number | undefined>()
        const [weeklyOnDays, setWeeklyOnDays] = React.useState<string[] | undefined>([])
+
+       const showMonthlyRepeatOption = (): boolean =>{
+
+            return 'Monthly' === frequency;
+       }
+       const [monthlyEvery, setMonthlyEvery] = useState<number | undefined>()
+       const [repeatCycle, setRepeatCycle] = React.useState<string | undefined>()
+       const [daysOfMonth, setDaysOfMonth] = React.useState<number[] | undefined>([])
+       const [onTheWeek, setOnTheWeek] = React.useState<string | undefined>()
+       const [onTheWeekDay, setOnTheWeekDay] = React.useState<string | undefined>()
+       
        
        
     const save = async () => {
@@ -151,16 +163,17 @@ const [endTime, setEndTime] = useState<string | undefined>(timeOptions[0])
             isActive: true,
              repeatConfig: {
                     frequency: frequency,         // "daily" | "weekly" | "monthly" | "yearly"
-                    interval: dailyEvery?dailyEvery:(weeklyEvery?weeklyEvery:undefined),          // Every X days/weeks/months/years
+                    interval: dailyEvery?dailyEvery:(weeklyEvery?weeklyEvery:
+                        (monthlyEvery?monthlyEvery:undefined)),          // Every X days/weeks/months/years
                     
                     // Weekly specific
                     daysOfWeek: weeklyOnDays,      // ["monday", "wednesday"]
                     
                     // Monthly specific
-                    // cycle?: string,             // "each" | "onThe"
-                    // daysOfMonth?: number[],     // [10, 27] when cycle = "each"
-                    // weekNumber?: string,        // "first" | "second" | "third" | "fourth" | "last"
-                    // dayOfWeek?: string,         // "monday" through "sunday"
+                     cycle: repeatCycle,             // "each" | "onThe"
+                     daysOfMonth: daysOfMonth,     // [10, 27] when cycle = "each"
+                     weekNumber: onTheWeek,        // "first" | "second" | "third" | "fourth" | "last"
+                     dayOfWeek: onTheWeekDay,         // "monday" through "sunday"
                     
                     // // Yearly specific
                     // months?: string[],          // ["june", "december"]
@@ -169,7 +182,7 @@ const [endTime, setEndTime] = useState<string | undefined>(timeOptions[0])
 
         };
 
-        //saveTerminalCapacity(termCapDomain).then((resp) => { console.log(resp) });
+        saveTerminalCapacity(termCapDomain).then((resp) => { console.log(resp) });
 
     }
 
@@ -277,19 +290,35 @@ const [endTime, setEndTime] = useState<string | undefined>(timeOptions[0])
             </Select>
 
   </div>
-    {showDailyEvery() &&
+    {showDailyRepeatOption() &&
         <DailyRepeatOptions
             dailyEvery={dailyEvery}
             setDailyEvery={setDailyEvery} />
     }
 
-    {showWeeklyEvery() &&
+    {showWeeklyRepeatOption() &&
 
         <WeeklyRepeatOptions
             weeklyEvery={weeklyEvery}
             setWeeklyEvery={setWeeklyEvery}
             weeklyOnDays={weeklyOnDays}
             setWeeklyOnDays={setWeeklyOnDays}></WeeklyRepeatOptions>
+    }
+
+    {showMonthlyRepeatOption() &&
+
+        <MonthlyRepeatOptions 
+                    monthlyEvery = {monthlyEvery} 
+                    setMonthlyEvery={setMonthlyEvery} 
+                    repeatCycle={repeatCycle}
+                    setRepeatCycle={setRepeatCycle}
+                    daysOfMonth={daysOfMonth}
+                    setDaysOfMonth={setDaysOfMonth}
+                    onTheWeek={onTheWeek} 
+                    setOnTheWeek={setOnTheWeek}
+                    onTheWeekDay={onTheWeekDay} 
+                    setOnTheWeekDay={setOnTheWeekDay}/>
+
     }
 </>
   }
