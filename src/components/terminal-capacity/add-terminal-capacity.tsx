@@ -18,6 +18,7 @@ import { saveTerminalCapacity } from "./terminal-capacity-client";
 import { WeeklyRepeatOptions } from "./WeeklyRepeatOptions";
 import { DailyRepeatOptions } from "./DailyRepeatOptions";
 import { MonthlyRepeatOptions } from "./MonthlyRepeatOptions";
+import { YearlyRepeatOptions } from "./YearlyRepeatOptions.";
 
 export const AddTerminalCapacity = () => {
 
@@ -138,13 +139,20 @@ const [endTime, setEndTime] = useState<string | undefined>(timeOptions[0])
 
             return 'Monthly' === frequency;
        }
+        const showYearlyRepeatOption = (): boolean =>{
+
+            return 'Yearly' === frequency;
+       }
+
        const [monthlyEvery, setMonthlyEvery] = useState<number | undefined>()
        const [repeatCycle, setRepeatCycle] = React.useState<string | undefined>()
        const [daysOfMonth, setDaysOfMonth] = React.useState<number[] | undefined>([])
        const [onTheWeek, setOnTheWeek] = React.useState<string | undefined>()
        const [onTheWeekDay, setOnTheWeekDay] = React.useState<string | undefined>()
        
-       
+       const [yearlyEvery, setYearlyEvery] = useState<number | undefined>()
+       const [monthsOfYear, setMonthsOfYear] = useState<string[] | undefined>()
+       const [dayOfWeekforYearly, setDayOfWeekforYearly] = React.useState(false)
        
     const save = async () => {
 
@@ -164,7 +172,8 @@ const [endTime, setEndTime] = useState<string | undefined>(timeOptions[0])
              repeatConfig: {
                     frequency: frequency,         // "daily" | "weekly" | "monthly" | "yearly"
                     interval: dailyEvery?dailyEvery:(weeklyEvery?weeklyEvery:
-                        (monthlyEvery?monthlyEvery:undefined)),          // Every X days/weeks/months/years
+                        (monthlyEvery?monthlyEvery:
+                        yearlyEvery?yearlyEvery:undefined)),          // Every X days/weeks/months/years
                     
                     // Weekly specific
                     daysOfWeek: weeklyOnDays,      // ["monday", "wednesday"]
@@ -176,7 +185,7 @@ const [endTime, setEndTime] = useState<string | undefined>(timeOptions[0])
                      dayOfWeek: onTheWeekDay,         // "monday" through "sunday"
                     
                     // // Yearly specific
-                    // months?: string[],          // ["june", "december"]
+                     months: monthsOfYear,          // ["june", "december"]
                     // Can also use weekNumber + dayOfWeek for yearly
             }
 
@@ -320,6 +329,21 @@ const [endTime, setEndTime] = useState<string | undefined>(timeOptions[0])
                     setOnTheWeekDay={setOnTheWeekDay}/>
 
     }
+    {showYearlyRepeatOption() &&
+
+        <YearlyRepeatOptions 
+                    yearlyEvery = {yearlyEvery} 
+                    setYearlyEvery={setYearlyEvery} 
+                    monthsOfYear={monthsOfYear}
+                    setMonthsOfYear={setMonthsOfYear}
+                    dayOfWeekforYearly={dayOfWeekforYearly}
+                    setDayOfWeekforYearly={setDayOfWeekforYearly}
+                    onTheWeek={onTheWeek} 
+                    setOnTheWeek={setOnTheWeek}
+                    onTheWeekDay={onTheWeekDay} 
+                    setOnTheWeekDay={setOnTheWeekDay}/>
+
+    }    
 </>
   }
 
