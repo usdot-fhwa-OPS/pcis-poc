@@ -30,7 +30,7 @@ export default function Capacity() {
   return (
     <div className="p-2">
       <h1 className="text-2xl font-bold text-center">Terminal Capacity</h1>
-      <p className="text-left">Maximum Terminal Capacity: 5 Reservations per day 
+      <p className="text-left">Maximum Terminal Capacity: 5 Reservations per day&nbsp;&nbsp;
       <UpdateTerminalCapacityButton limit={5}/>
       </p>
       <div className="container mx-auto p-10">

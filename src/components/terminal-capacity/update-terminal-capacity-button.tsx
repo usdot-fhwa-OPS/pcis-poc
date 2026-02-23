@@ -44,7 +44,7 @@ export function UpdateTerminalCapacityButton({limit}: SettingsDialogProps) {
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
             <Button variant="outline">
-              (Update)
+              Update
             </Button>
         </DialogTrigger>
         <DialogContent>
