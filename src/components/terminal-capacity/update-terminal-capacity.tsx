@@ -89,7 +89,7 @@ const [endTime, setEndTime] = useState<string | undefined>(timeOptions[0])
 
         const reasonList = [
                 "Maintenance",
-                "Equipment malfunction",
+                "Equipment Malfunction",
                 "Labor shortage",
                 "Other"
         ]
@@ -185,7 +185,7 @@ const [endTime, setEndTime] = useState<string | undefined>(timeOptions[0])
                     </div>
                     <div className="col-start-3 col-end-6 ...">
                         <Label htmlFor="terminalCapacity" className="text-left">
-                            reservation per day
+                            reservation(s) per day
                         </Label>
                     </div>                        
   <div className="col-1">
@@ -255,9 +255,6 @@ const [endTime, setEndTime] = useState<string | undefined>(timeOptions[0])
                 <DialogFooter>
                     <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
                         Cancel
-                    </Button>
-                    <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
-                        Add Another
                     </Button>
                     <Button onClick={() => { save()}}>
                         Save
