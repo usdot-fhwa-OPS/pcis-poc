@@ -65,7 +65,7 @@ const items = [
   },
     {
     title: "Berth Reservation",
-    url: "/analytics",
+    url: "/berth",
     icon: Anchor,
   },
 ]
