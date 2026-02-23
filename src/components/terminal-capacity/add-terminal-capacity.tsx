@@ -82,7 +82,7 @@ const [endTime, setEndTime] = useState<string | undefined>(timeOptions[0])
 
         const reasonList = [
                 "Maintenance",
-                "Equipment malfunction",
+                "Equipment Malfunction",
                 "Labor shortage",
                 "Other"
         ]
@@ -222,7 +222,7 @@ const [endTime, setEndTime] = useState<string | undefined>(timeOptions[0])
                 <div className="grid grid-cols-5 gap-2">
                     <div className="h-10 col-span-3 col-start-1 ...">
                         <DialogHeader>
-                            <DialogTitle>Add Temporrary Capicity</DialogTitle>
+                            <DialogTitle>Add Temporrary Capacity</DialogTitle>
                             <DialogDescription></DialogDescription>
                         </DialogHeader>
                     </div>
@@ -244,7 +244,7 @@ const [endTime, setEndTime] = useState<string | undefined>(timeOptions[0])
                     </div>
                     <div className="col-start-3 col-end-6 ...">
                         <Label htmlFor="terminalCapacity" className="text-left">
-                            reservation per day
+                            reservation(s) per day
                         </Label>
                     </div>                        
   <div className="col-1">
@@ -380,9 +380,6 @@ const [endTime, setEndTime] = useState<string | undefined>(timeOptions[0])
                 <DialogFooter>
                     <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
                         Cancel
-                    </Button>
-                    <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
-                        Add Another
                     </Button>
                     <Button onClick={() => { save()}}>
                         Save
