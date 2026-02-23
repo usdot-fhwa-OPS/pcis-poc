@@ -163,7 +163,7 @@ const [endTime, setEndTime] = useState<string | undefined>(timeOptions[0])
                 <div className="grid grid-cols-5 gap-2">
                     <div className="h-10 col-span-3 col-start-1 ...">
                         <DialogHeader>
-                            <DialogTitle>Add Temporrary Capicity</DialogTitle>
+                            <DialogTitle>Add Temporrary Capacity</DialogTitle>
                             <DialogDescription></DialogDescription>
                         </DialogHeader>
                     </div>
