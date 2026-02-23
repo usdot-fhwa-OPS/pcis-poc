@@ -1099,7 +1099,7 @@ function Index() {
                 <BcoBookingsTableUpcoming
                   data={bcoUpcomingBookings}
                   status="Upcoming"
-                  meta={{ assignTransOp, fetchTransportationOperators }}
+                  meta={{ assignTransOp, fetchTransportationCoordinators }}
                 />
               </TabsContent>
         
