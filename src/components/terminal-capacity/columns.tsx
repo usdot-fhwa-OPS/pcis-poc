@@ -5,8 +5,7 @@ import { ColumnDef } from "@tanstack/react-table"
 //Four Imports needed for Amplify Data Queries and CRUD methods
 
 import { TerminalCapacityDomian } from "./terminal-capacity-domain"
-import { DeleteTerminalCapacity } from "./delete-terminal-capacity"
-import { UpdateTerminalCapacity } from "./update-terminal-capacity"
+import { DeleteTerminalCapacityButton } from "../terminal-capacity/delete-terminal-capacity-button.tsx";
 
 //const client = generateClient<Schema>();
 
@@ -45,17 +44,16 @@ export const columns: ColumnDef<TerminalCapacityDomian>[] = [
     accessorKey: "actions",
     header: " Actions",
     cell: ({ row }) => {
-      // Initialize local state with the current containerStatus.
-      // const [cargoStatus, setStatus] = useState<"On-Ship" | "On-Dock">(
-      //   row.original.containerStatus as "On-Ship" | "On-Dock"
-      // )
-
-      return (
-        <div>
-          {UpdateTerminalCapacity(row.original.capacityId)} &nbsp;&nbsp; { DeleteTerminalCapacity(row.original.capacityId)}
-
-        </div>
-      )
+        <div className="flex space-x-8 ">
+              <Button 
+                variant="outline" 
+                //onClick={() => ()} 
+                //TO DO: PCIS2-42
+              >
+                Edit
+              </Button>
+              <DeleteTerminalCapacityButton/>
+          </div>
     },
   
   },
