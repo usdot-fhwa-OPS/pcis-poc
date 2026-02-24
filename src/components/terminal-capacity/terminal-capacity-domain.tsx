@@ -1,4 +1,4 @@
-export type TerminalCapacityDomian = {
+export type TerminalCapacityDomain = {
   capacityId: string,           // "MAXIMUM" for default, UUID for temp capacities
   capacityType: string,         // "MAXIMUM" | "TEMPORARY"
   capacity: number,             // The actual capacity number

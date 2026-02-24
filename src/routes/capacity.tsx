@@ -3,7 +3,7 @@ import { columns } from "../components/terminal-capacity/columns"
 import { DataTable } from "../components/terminal-capacity/terminal-capacity-table"
 import { useEffect, useState } from "react"
 
-import { TerminalCapacityDomian } from '../components/terminal-capacity/terminal-capacity-domain';
+import { TerminalCapacityDomain } from '../components/terminal-capacity/terminal-capacity-domain';
 import { terminalCapacityList } from "../components/terminal-capacity/terminal-capacity-client";
 import { AddTerminalCapacity } from "../components/terminal-capacity/add-terminal-capacity";
 import { Button } from "../components/ui/button";
@@ -17,7 +17,7 @@ export const Route = createFileRoute('/capacity')({
 
 
 export default function TerminalCapacityComponent() {
-  const [data, setData] = useState<TerminalCapacityDomian[]>([])
+  const [data, setData] = useState<TerminalCapacityDomain[]>([])
   const [loading, setLoading] = useState(true)
   
 

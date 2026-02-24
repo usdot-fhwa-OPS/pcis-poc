@@ -11,7 +11,7 @@ import { cn } from "../../lib/utils";
 import { format } from "date-fns"
 
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import { TerminalCapacityDomian } from "./terminal-capacity-domain";
+import { TerminalCapacityDomain } from "./terminal-capacity-domain";
 import { v4 as uuidv4 } from "uuid";
 import { getTerrminalCapacity, saveTerminalCapacity } from "./terminal-capacity-client";
 
@@ -20,7 +20,7 @@ export const UpdateTerminalCapacity = (terminalCapacityUid:string) => {
     const [isDialogOpen, setIsDialogOpen] = useState(false)
     const [terminalCapacity, setTerminalCapacity] = useState(0) 
     const handleOpen = async () => {
-                getTerrminalCapacity(terminalCapacityUid).then((terminalCapacity: TerminalCapacityDomian) =>{
+                getTerrminalCapacity(terminalCapacityUid).then((terminalCapacity: TerminalCapacityDomain) =>{
             setTerminalCapacity(terminalCapacity.capacity);
             setStartDate(terminalCapacity.startDate?new Date(terminalCapacity.startDate):new Date());
             setStartTime(terminalCapacity.startTime?terminalCapacity.startTime:undefined);
@@ -117,7 +117,7 @@ const [endTime, setEndTime] = useState<string | undefined>(timeOptions[0])
 
     const save = async () => {
 
-        const termCapDomain: TerminalCapacityDomian = {
+        const termCapDomain: TerminalCapacityDomain = {
             capacityId: uuidv4(),
             capacity: terminalCapacity,
             capacityType: 'TEMPORARY',

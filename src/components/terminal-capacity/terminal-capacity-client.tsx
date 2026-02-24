@@ -1,9 +1,9 @@
 import { fetchAuthSession } from "aws-amplify/auth";
-import { TerminalCapacityDomian } from "./terminal-capacity-domain";
+import { TerminalCapacityDomain } from "./terminal-capacity-domain";
 
 
 
-export const terminalCapacityList = async (): Promise<TerminalCapacityDomian[]> => {
+export const terminalCapacityList = async (): Promise<TerminalCapacityDomain[]> => {
     const session = await fetchAuthSession();
     const response = await fetch("https://xlj2x9eurh.execute-api.us-east-1.amazonaws.com/dev/terminalCapacityList", {
         method: 'GET',
@@ -13,11 +13,11 @@ export const terminalCapacityList = async (): Promise<TerminalCapacityDomian[]> 
             "Accept": "*/*"
         }
     });
-    const result = (await response.json()) as TerminalCapacityDomian[];
+    const result = (await response.json()) as TerminalCapacityDomain[];
     return result;
 }
 
-export const saveTerminalCapacity = async (termCapDomain: TerminalCapacityDomian): Promise<string> => {
+export const saveTerminalCapacity = async (termCapDomain: TerminalCapacityDomain): Promise<string> => {
     const session = await fetchAuthSession();
     const response = await fetch("https://xlj2x9eurh.execute-api.us-east-1.amazonaws.com/dev/terminalCapacity", {
         method: 'PUT',
@@ -32,7 +32,7 @@ export const saveTerminalCapacity = async (termCapDomain: TerminalCapacityDomian
     return result;
 }
 
-export const deleteTerrminalCapacity = async (terminalCapacityUid:string): Promise<any> => {
+export const deleteTerminalCapacity = async (terminalCapacityUid:string): Promise<any> => {
     const session = await fetchAuthSession();
     const response = await fetch(`https://xlj2x9eurh.execute-api.us-east-1.amazonaws.com/dev/terminalCapacity/${terminalCapacityUid}`, {
         method: 'DELETE',
@@ -45,7 +45,7 @@ export const deleteTerrminalCapacity = async (terminalCapacityUid:string): Promi
     return response;
 }
 
-export const getTerrminalCapacity = async (terminalCapacityUid:string): Promise<TerminalCapacityDomian> => {
+export const getTerrminalCapacity = async (terminalCapacityUid:string): Promise<TerminalCapacityDomain> => {
     const session = await fetchAuthSession();
     const response = await fetch(`https://xlj2x9eurh.execute-api.us-east-1.amazonaws.com/dev/terminalCapacity/${terminalCapacityUid}`, {
         method: 'GET',
@@ -55,6 +55,6 @@ export const getTerrminalCapacity = async (terminalCapacityUid:string): Promise<
             "Accept": "*/*"
         }
     });
-    const result = (await response.json()) as TerminalCapacityDomian;
+    const result = (await response.json()) as TerminalCapacityDomain;
     return result;
 }

@@ -3,7 +3,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Tooltip, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
 import { Button } from "../ui/button";
 import { Label } from "../ui/label";
-import { deleteTerrminalCapacity } from "./terminal-capacity-client";
+import { deleteTerminalCapacity } from "./terminal-capacity-client";
 
 
 export const DeleteTerminalCapacity = (terminalCapacityUid:string) => {
@@ -19,7 +19,7 @@ export const DeleteTerminalCapacity = (terminalCapacityUid:string) => {
 
         
 
-        deleteTerrminalCapacity(terminalCapacityUid).then((resp) => { 
+        deleteTerminalCapacity(terminalCapacityUid).then((resp) => { 
             console.log(resp) 
             setIsDialogOpen(false);
         });
@@ -62,7 +62,7 @@ export const DeleteTerminalCapacity = (terminalCapacityUid:string) => {
                    </div>
                    <div className="col-span-3">
                                 <Label htmlFor="terminalCapacity" className="text-center">
-                                    Do you want to continue?.
+                                    Do you want to continue?
                                 </Label>
                     </div>
                  </div>          

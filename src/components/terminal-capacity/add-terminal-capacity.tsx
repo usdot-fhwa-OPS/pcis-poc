@@ -12,7 +12,7 @@ import { cn } from "../../lib/utils";
 import { format } from "date-fns"
 
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import { TerminalCapacityDomian } from "./terminal-capacity-domain";
+import { TerminalCapacityDomain } from "./terminal-capacity-domain";
 import { v4 as uuidv4 } from "uuid";
 import { saveTerminalCapacity } from "./terminal-capacity-client";
 import { WeeklyRepeatOptions } from "./WeeklyRepeatOptions";
@@ -156,7 +156,7 @@ const [endTime, setEndTime] = useState<string | undefined>(timeOptions[0])
        
     const save = async () => {
 
-        const termCapDomain: TerminalCapacityDomian = {
+        const termCapDomain: TerminalCapacityDomain = {
             capacityId: uuidv4(),
             capacity: terminalCapacity,
             capacityType: 'TEMPORARY',

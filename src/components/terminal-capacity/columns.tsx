@@ -4,13 +4,14 @@ import { ColumnDef } from "@tanstack/react-table"
 
 //Four Imports needed for Amplify Data Queries and CRUD methods
 
-import { TerminalCapacityDomian } from "./terminal-capacity-domain"
+import { TerminalCapacityDomain } from "./terminal-capacity-domain"
 import { DeleteTerminalCapacityButton } from "../terminal-capacity/delete-terminal-capacity-button.tsx";
+import { Button } from "../ui/button.tsx";
 
 //const client = generateClient<Schema>();
 
 //Define the selection of data that will be used for the table (type exported from cargo.tsx in this case)
-export const columns: ColumnDef<TerminalCapacityDomian>[] = [
+export const columns: ColumnDef<TerminalCapacityDomain>[] = [
   // Define the columns for the table based on the database items (refer to resources.ts for schema names)
   {
     accessorKey: "capacity", 
@@ -41,10 +42,10 @@ export const columns: ColumnDef<TerminalCapacityDomian>[] = [
     header: "Reason",
   },
   {
-    accessorKey: "actions",
-    header: " Actions",
-    cell: ({ row }) => {
-        <div className="flex space-x-8 ">
+          accessorKey: "actions",
+          header: () => <div style={{ minWidth: "50px"}}>Actions</div>,
+          cell: () => (
+            <div className="flex space-x-8 ">
               <Button 
                 variant="outline" 
                 //onClick={() => ()} 
@@ -53,8 +54,8 @@ export const columns: ColumnDef<TerminalCapacityDomian>[] = [
                 Edit
               </Button>
               <DeleteTerminalCapacityButton/>
-          </div>
-    },
-  
-  },
+            </div>
+          ),
+          
+        },
 ]

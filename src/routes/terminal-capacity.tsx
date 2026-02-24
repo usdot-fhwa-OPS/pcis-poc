@@ -4,7 +4,7 @@ import { DataTable } from "../components/terminal-capacity/terminal-capacity-tab
 import { useEffect, useState } from "react"
 
 //Three Imports needed for Amplify Data Queries and CRUD methods
-import { TerminalCapacityDomian } from '../components/terminal-capacity/terminal-capacity-domain';
+import { TerminalCapacityDomain } from '../components/terminal-capacity/terminal-capacity-domain';
 import { terminalCapacityList } from "../components/terminal-capacity/terminal-capacity-client";
 import { AddTerminalCapacity } from "../components/terminal-capacity/add-terminal-capacity";
 
@@ -24,8 +24,8 @@ export const Route = createFileRoute('/terminal-capacity')({
 
 export default function TerminalCapacityComponent() {
   //Will hold the data after the query call, according to the TerminalCapacity Type declared above.
-  //const [data, setData] = useState<TerminalCapacityDomian[]>([])
-  const [data, setData] = useState<TerminalCapacityDomian[]>([])
+  //const [data, setData] = useState<TerminalCapacityDomain[]>([])
+  const [data, setData] = useState<TerminalCapacityDomain[]>([])
 
   
 
