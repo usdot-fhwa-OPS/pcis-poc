@@ -6,7 +6,6 @@ import { useEffect, useState } from "react"
 import { TerminalCapacityDomain } from '../components/terminal-capacity/terminal-capacity-domain';
 import { terminalCapacityList } from "../components/terminal-capacity/terminal-capacity-client";
 import { AddTerminalCapacity } from "../components/terminal-capacity/add-terminal-capacity";
-import { Button } from "../components/ui/button";
 import { UpdateTerminalCapacityButton } from "../components/terminal-capacity/update-terminal-capacity-button";
 
 
