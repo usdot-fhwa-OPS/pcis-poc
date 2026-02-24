@@ -36,7 +36,7 @@ export default function TerminalCapacityComponent() {
 if (loading) {
     return <div>Loading...</div>
   }
-  return (
+ return (
 
    <div className="p-2">
       <h1 className="text-2xl font-bold text-center">Terminal Capacity</h1>

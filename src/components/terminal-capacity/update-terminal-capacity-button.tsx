@@ -1,7 +1,6 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Settings } from "lucide-react"
 import { Button } from "../ui/button"
 import {
   Dialog,
@@ -44,9 +43,8 @@ export function UpdateTerminalCapacityButton({limit}: SettingsDialogProps) {
     return (
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger>
-            <Button variant="ghost" size="icon" className="h-8 w-8 mr-0">
-              <Settings className="h-4 w-4" />
-              <span className="sr-only">Open settings</span>
+            <Button variant="outline">
+              Update
             </Button>
         </DialogTrigger>
         <DialogContent>
