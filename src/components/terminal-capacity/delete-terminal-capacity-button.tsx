@@ -1,7 +1,6 @@
 "use client"
 
 import { useState } from "react"
-import { Settings } from "lucide-react"
 import { Button } from "../ui/button"
 import {
   Dialog,
@@ -13,25 +12,14 @@ import {
 } from "../ui/dialog"
 import "./terminal-capacity.css"
 
-interface SettingsDialogProps {
-  role: string;
-  limit: number;
-}
-
-export function DeleteTerminalCapacityButton({ role }: SettingsDialogProps) {
+export function DeleteTerminalCapacityButton() {
     const [open, setOpen] = useState(false)
-
-    // If user is not a Terminal Operator, don't render anything
-    if (role !== "Terminal Operator") {
-      return null
-    }
     
     return (
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
-            <Button variant="ghost" size="icon" className="h-8 w-8 mr-0">
-              <Settings className="h-4 w-4" />
-              <span className="sr-only">Open settings</span>
+            <Button variant="destructive">
+              Delete
             </Button>
         </DialogTrigger>
         <DialogContent>
