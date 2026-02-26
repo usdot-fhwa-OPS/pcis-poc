@@ -39,6 +39,11 @@ const items = [
     icon: Home,
   },
   {
+    title: "Berth Reservations",
+    url: "/berth",
+    icon: Anchor,
+  },
+  {
     title: "Available Operators",
     url: "/operators",
     icon: User,
@@ -58,11 +63,7 @@ const items = [
     url: "/reservation",
     icon: CalendarClock,
   },
-  {
-    title: "Berth Reservation",
-    url: "/berth",
-    icon: Anchor,
-  },
+
   {
     title: "Analytics",
     url: "/analytics",
