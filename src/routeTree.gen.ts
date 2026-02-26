@@ -11,6 +11,7 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as TerminalCapacityImport } from './routes/terminal-capacity'
 import { Route as ReservationImport } from './routes/reservation'
 import { Route as OperatorsImport } from './routes/operators'
 import { Route as NotificationsImport } from './routes/notifications'
@@ -21,6 +22,12 @@ import { Route as AnalyticsImport } from './routes/analytics'
 import { Route as IndexImport } from './routes/index'
 
 // Create/Update Routes
+
+const TerminalCapacityRoute = TerminalCapacityImport.update({
+  id: '/terminal-capacity',
+  path: '/terminal-capacity',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const ReservationRoute = ReservationImport.update({
   id: '/reservation',
@@ -130,6 +137,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ReservationImport
       parentRoute: typeof rootRoute
     }
+    '/terminal-capacity': {
+      id: '/terminal-capacity'
+      path: '/terminal-capacity'
+      fullPath: '/terminal-capacity'
+      preLoaderRoute: typeof TerminalCapacityImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -144,6 +158,7 @@ export interface FileRoutesByFullPath {
   '/notifications': typeof NotificationsRoute
   '/operators': typeof OperatorsRoute
   '/reservation': typeof ReservationRoute
+  '/terminal-capacity': typeof TerminalCapacityRoute
 }
 
 export interface FileRoutesByTo {
@@ -155,6 +170,7 @@ export interface FileRoutesByTo {
   '/notifications': typeof NotificationsRoute
   '/operators': typeof OperatorsRoute
   '/reservation': typeof ReservationRoute
+  '/terminal-capacity': typeof TerminalCapacityRoute
 }
 
 export interface FileRoutesById {
@@ -167,6 +183,7 @@ export interface FileRoutesById {
   '/notifications': typeof NotificationsRoute
   '/operators': typeof OperatorsRoute
   '/reservation': typeof ReservationRoute
+  '/terminal-capacity': typeof TerminalCapacityRoute
 }
 
 export interface FileRouteTypes {
@@ -180,6 +197,7 @@ export interface FileRouteTypes {
     | '/notifications'
     | '/operators'
     | '/reservation'
+    | '/terminal-capacity'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -190,6 +208,7 @@ export interface FileRouteTypes {
     | '/notifications'
     | '/operators'
     | '/reservation'
+    | '/terminal-capacity'
   id:
     | '__root__'
     | '/'
@@ -200,6 +219,7 @@ export interface FileRouteTypes {
     | '/notifications'
     | '/operators'
     | '/reservation'
+    | '/terminal-capacity'
   fileRoutesById: FileRoutesById
 }
 
@@ -212,6 +232,7 @@ export interface RootRouteChildren {
   NotificationsRoute: typeof NotificationsRoute
   OperatorsRoute: typeof OperatorsRoute
   ReservationRoute: typeof ReservationRoute
+  TerminalCapacityRoute: typeof TerminalCapacityRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
@@ -223,6 +244,7 @@ const rootRouteChildren: RootRouteChildren = {
   NotificationsRoute: NotificationsRoute,
   OperatorsRoute: OperatorsRoute,
   ReservationRoute: ReservationRoute,
+  TerminalCapacityRoute: TerminalCapacityRoute,
 }
 
 export const routeTree = rootRoute
@@ -242,7 +264,8 @@ export const routeTree = rootRoute
         "/import",
         "/notifications",
         "/operators",
-        "/reservation"
+        "/reservation",
+        "/terminal-capacity"
       ]
     },
     "/": {
@@ -268,6 +291,9 @@ export const routeTree = rootRoute
     },
     "/reservation": {
       "filePath": "reservation.tsx"
+    },
+    "/terminal-capacity": {
+      "filePath": "terminal-capacity.tsx"
     }
   }
 }
