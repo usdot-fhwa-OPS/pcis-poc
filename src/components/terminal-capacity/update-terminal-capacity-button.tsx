@@ -1,7 +1,6 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Settings } from "lucide-react"
 import { Button } from "../ui/button"
 import {
   Dialog,
@@ -15,22 +14,16 @@ import { Label } from "../ui/label"
 import "./terminal-capacity.css"
 
 interface SettingsDialogProps {
-  role: string;
   limit: number;
 }
 
-export function UpdateTerminalCapacityButton({ role, limit}: SettingsDialogProps) {
+export function UpdateTerminalCapacityButton({limit}: SettingsDialogProps) {
     const [open, setOpen] = useState(false)
     const [portCapacity, setPortCapacity] = useState(limit)
 
     useEffect(() => {
        setPortCapacity(limit);
     }, [limit]);
-
-    // If user is not a Terminal Operator, don't render anything
-    if (role !== "Terminal Operator") {
-      return null
-    }
   
     const handleSubmit = async () => {
     //   try {
@@ -49,10 +42,9 @@ export function UpdateTerminalCapacityButton({ role, limit}: SettingsDialogProps
     
     return (
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogTrigger asChild>
-            <Button variant="ghost" size="icon" className="h-8 w-8 mr-0">
-              <Settings className="h-4 w-4" />
-              <span className="sr-only">Open settings</span>
+        <DialogTrigger>
+            <Button variant="outline">
+              Update
             </Button>
         </DialogTrigger>
         <DialogContent>

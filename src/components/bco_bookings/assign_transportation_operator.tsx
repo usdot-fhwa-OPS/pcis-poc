@@ -63,7 +63,7 @@ export const assignTransportationCoordinator = (table: any, row: any) => {
 
                 }}
             >
-                <DialogTrigger asChild>
+                <DialogTrigger>
                     <TooltipProvider>
                         <Tooltip delayDuration={300}>
                             <TooltipTrigger>
