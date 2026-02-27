@@ -1095,13 +1095,13 @@ function Index() {
                 <TabsTrigger value="completed">Completed</TabsTrigger>
               </TabsList>
         
-{/*               <TabsContent value="upcoming">
+              <TabsContent value="upcoming">
                 <BcoBookingsTableUpcoming
                   data={bcoUpcomingBookings}
                   status="Upcoming"
-                  meta={{ assignTransOp, fetchTransportationOperators }}
+                  meta={{ assignTransOp, fetchTransportationCoordinators }}
                 />
-              </TabsContent> */}
+              </TabsContent>
         
               <TabsContent value="ongoing">
                 <BcoBookingsTableOngoing
