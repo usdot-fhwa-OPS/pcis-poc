@@ -1,4 +1,5 @@
 import { FileUp, Home, Ship, User , CalendarClock, BarChart } from "lucide-react"
+import { FileUp, Home, Ship, User , CalendarClock, BarChart, Anchor } from "lucide-react"
 
 import {
   Sidebar,
@@ -63,6 +64,11 @@ const items = [
     url: "/analytics",
     icon: BarChart,
   },
+  {
+    title: "Berth Reservation",
+    url: "/Berth",
+    icon: Anchor,
+  },
 ]
 
 export function AppSidebar() {
@@ -107,10 +113,16 @@ export function AppSidebar() {
       return true;
     }
 
+     if (userAttributes.role === "Vessel Agent") {
+       ["Berth Reservation"];
+      return true;
+    }
+
     if (
       (userAttributes.role === 'Trucking Operator') 
           || (userAttributes.role === 'Rail Operator')
           || (userAttributes.role === 'Third Party Logistics Provider') ||
+         (userAttributes.role === "Vessel Agent") ||
       userAttributes.role === "Beneficiary Cargo Owner"
     ) {
       // These roles only have access to the allowed items.
@@ -155,7 +167,8 @@ export function AppSidebar() {
       });
     } else if ((userAttributes.role === 'Trucking Operator') 
           || (userAttributes.role === 'Rail Operator')
-          || (userAttributes.role === 'Third Party Logistics Provider')) {
+          || (userAttributes.role === 'Third Party Logistics Provider') 
+          || (userAttributes.role === "Vessel Agent") ) {
       notisSub = client.models.Container.observeQuery({
         filter: {
           isTransportationNotify: { eq: true },
