@@ -117,7 +117,7 @@ export function AppSidebar() {
       (userAttributes.role === 'Trucking Operator') 
           || (userAttributes.role === 'Rail Operator')
           || (userAttributes.role === 'Third Party Logistics Provider') ||
-         (userAttributes.role === "Vessel Agent") ||
+         (userAttributes.role === 'Vessel Agent') ||
       userAttributes.role === "Beneficiary Cargo Owner"
     ) {
       // These roles only have access to the allowed items.
@@ -163,7 +163,7 @@ export function AppSidebar() {
     } else if ((userAttributes.role === 'Trucking Operator') 
           || (userAttributes.role === 'Rail Operator')
           || (userAttributes.role === 'Third Party Logistics Provider') 
-          || (userAttributes.role === "Vessel Agent") ) {
+          || (userAttributes.role === 'Vessel Agent') ) {
       notisSub = client.models.Container.observeQuery({
         filter: {
           isTransportationNotify: { eq: true },
