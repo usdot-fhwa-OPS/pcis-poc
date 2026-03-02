@@ -113,6 +113,9 @@ export function AppSidebar() {
       return true;
     }
 
+     if (userAttributes.role === "Vessel Agent") {
+       ["Berth Reservation"];
+      return true;
     }
 
     if (
