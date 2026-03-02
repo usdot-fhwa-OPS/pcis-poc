@@ -112,12 +112,17 @@ export function AppSidebar() {
       // Terminal Operators have access to all items.
       return true;
     }
+    if (userAttributes.role === "Vessel Agent") {
+      return (
+        allowedForLimitedRoles.includes(item.title) ||
+        item.title ==="Berth Reservation"
+      );
+    }
 
     if (
       (userAttributes.role === 'Trucking Operator') 
           || (userAttributes.role === 'Rail Operator')
           || (userAttributes.role === 'Third Party Logistics Provider') ||
-         (userAttributes.role === 'Vessel Agent') ||
       userAttributes.role === "Beneficiary Cargo Owner"
     ) {
       // These roles only have access to the allowed items.
@@ -162,8 +167,7 @@ export function AppSidebar() {
       });
     } else if ((userAttributes.role === 'Trucking Operator') 
           || (userAttributes.role === 'Rail Operator')
-          || (userAttributes.role === 'Third Party Logistics Provider') 
-          || (userAttributes.role === 'Vessel Agent') ) {
+          || (userAttributes.role === 'Third Party Logistics Provider')) {
       notisSub = client.models.Container.observeQuery({
         filter: {
           isTransportationNotify: { eq: true },
