@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
 import { Tooltip, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
 import { Button } from "../ui/button";
@@ -14,6 +14,10 @@ import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { TerminalCapacityDomain } from "./terminal-capacity-domain";
 import { v4 as uuidv4 } from "uuid";
 import { getTerrminalCapacity, saveTerminalCapacity } from "./terminal-capacity-client";
+import { DailyRepeatOptions } from "./DailyRepeatOptions";
+import { WeeklyRepeatOptions } from "./WeeklyRepeatOptions";
+import { MonthlyRepeatOptions } from "./MonthlyRepeatOptions";
+import { YearlyRepeatOptions } from "./YearlyRepeatOptions.";
 
 export const UpdateTerminalCapacity = (terminalCapacityUid:string) => {
 
@@ -93,6 +97,13 @@ const [endTime, setEndTime] = useState<string | undefined>(timeOptions[0])
                 "Labor shortage",
                 "Other"
         ]
+
+        const frequencyList = [
+                "Daily",
+                "Weekly",
+                "Monthly",
+                "Yearly"
+        ]
         const [reason, setReason] = useState<string | undefined>(reasonList[0])
         const [otherReason, setOtherReason] = useState<string | undefined>('')
 
@@ -114,223 +125,350 @@ const [endTime, setEndTime] = useState<string | undefined>(timeOptions[0])
             return 'Other' === reason;
        }
         
+const showCustomRepeat = (): boolean =>{
 
-    const save = async () => {
+            return 'Custom' === repeatOption;
+       }
+       const [frequency, setFrequency] = useState<string | undefined>(frequencyList[0])
 
-        const termCapDomain: TerminalCapacityDomain = {
-            capacityId: uuidv4(),
-            capacity: terminalCapacity,
-            capacityType: 'TEMPORARY',
-            createdAt: (new Date()).toISOString(),
-            updatedAt: (new Date()).toISOString(),
-            startDate: format(startDate, "yyyy-MM-dd"),
-            startTime: startTime,
-            endDate: format(endDate, "yyyy-MM-dd"),
-            endTime: endTime,
-            repeat: repeatOption,
-            reason: reason,
-            isActive: true,
+       const showDailyRepeatOption = (): boolean =>{
 
-        };
+            return 'Daily' === frequency;
+       }
+       const [dailyEvery, setDailyEvery] = useState<number | undefined>()
+        
+       
+       const showWeeklyRepeatOption = (): boolean =>{
 
-        saveTerminalCapacity(termCapDomain).then((resp) => { console.log(resp) });
+            return 'Weekly' === frequency;
+       }
+       const [weeklyEvery, setWeeklyEvery] = useState<number | undefined>()
+       const [weeklyOnDays, setWeeklyOnDays] = React.useState<string[] | undefined>([])
 
-    }
+       const showMonthlyRepeatOption = (): boolean =>{
+
+            return 'Monthly' === frequency;
+       }
+        const showYearlyRepeatOption = (): boolean =>{
+
+            return 'Yearly' === frequency;
+       }
+
+       const [monthlyEvery, setMonthlyEvery] = useState<number | undefined>()
+       const [repeatCycle, setRepeatCycle] = React.useState<string | undefined>()
+       const [daysOfMonth, setDaysOfMonth] = React.useState<number[] | undefined>([])
+       const [onTheWeek, setOnTheWeek] = React.useState<string | undefined>()
+       const [onTheWeekDay, setOnTheWeekDay] = React.useState<string | undefined>()
+       
+       const [yearlyEvery, setYearlyEvery] = useState<number | undefined>()
+       const [monthsOfYear, setMonthsOfYear] = useState<string[] | undefined>()
+       const [dayOfWeekforYearly, setDayOfWeekforYearly] = React.useState(false)
+    
+       
+       const save = async () => {
+       
+               const termCapDomain: TerminalCapacityDomain = {
+                   capacityId: uuidv4(),
+                   capacity: terminalCapacity,
+                   capacityType: 'TEMPORARY',
+                   createdAt: (new Date()).toISOString(),
+                   updatedAt: (new Date()).toISOString(),
+                   startDate: format(startDate, "yyyy-MM-dd"),
+                   startTime: startTime,
+                   endDate: format(endDate, "yyyy-MM-dd"),
+                   endTime: endTime,
+                   repeat: repeatOption,
+                   reason: reason,
+                   isActive: true,
+                    repeatConfig: {
+                           frequency: frequency,         // "daily" | "weekly" | "monthly" | "yearly"
+                           interval: dailyEvery?dailyEvery:(weeklyEvery?weeklyEvery:
+                               (monthlyEvery?monthlyEvery:
+                               yearlyEvery?yearlyEvery:undefined)),          // Every X days/weeks/months/years
+                           
+                           // Weekly specific
+                           daysOfWeek: weeklyOnDays,      // ["monday", "wednesday"]
+                           
+                           // Monthly specific
+                            cycle: repeatCycle,             // "each" | "onThe"
+                            daysOfMonth: daysOfMonth,     // [10, 27] when cycle = "each"
+                            weekNumber: onTheWeek,        // "first" | "second" | "third" | "fourth" | "last"
+                            dayOfWeek: onTheWeekDay,         // "monday" through "sunday"
+                           
+                           // // Yearly specific
+                            months: monthsOfYear,          // ["june", "december"]
+                           // Can also use weekNumber + dayOfWeek for yearly
+                   }
+       
+               };
+       
+               saveTerminalCapacity(termCapDomain).then((resp) => { console.log(resp) });
+       
+           }
 
 
   
     return (
-        <Dialog
-            open={isDialogOpen}
-            onOpenChange={(open) => {
-                 setIsDialogOpen(open)               
-            }}
-        >
-            <DialogTrigger>
-                <TooltipProvider>
-                    <Tooltip delayDuration={300}>
-                        <TooltipTrigger>
-                            <div>
-                              <a onClick={handleOpen}>Edit</a>
-
-                            </div>
-                        </TooltipTrigger>
-
-                    </Tooltip>
-                </TooltipProvider>
-            </DialogTrigger>
-            <DialogContent className="DialogContent">
-                <div className="grid grid-cols-5 gap-2">
-                    <div className="h-10 col-span-3 col-start-1 ...">
-                        <DialogHeader>
-                            <DialogTitle>Add Temporrary Capacity</DialogTitle>
-                            <DialogDescription></DialogDescription>
-                        </DialogHeader>
-                    </div>
-                    <div className="col-start-1 col-end-2 ...">
-                            <Label htmlFor="terminalCapacity" className="text-right">
-                                Terminal Capacity
+            <>
+             <Dialog
+                open={isDialogOpen}
+                onOpenChange={(open) => {
+                    setIsDialogOpen(open)
+    
+                }}
+            >
+                <DialogTrigger>
+                    <TooltipProvider>
+                        <Tooltip delayDuration={300}>
+                            <TooltipTrigger>
+                                <div>
+                                  <a onClick={handleOpen}>Edit</a>
+    
+                                </div>
+                            </TooltipTrigger>
+    
+                        </Tooltip>
+                    </TooltipProvider>
+                </DialogTrigger>
+                <DialogContent className="DialogContent">
+                    <div className="grid grid-cols-5 gap-2">
+                        <div className="h-10 col-span-3 col-start-1 ...">
+                            <DialogHeader>
+                                <DialogTitle>Edit Temporrary Capacity</DialogTitle>
+                                <DialogDescription></DialogDescription>
+                            </DialogHeader>
+                        </div>
+                        <div className="col-start-1 col-end-2 ...">
+                                <Label htmlFor="terminalCapacity" className="text-right">
+                                    Terminal Capacity
+                                </Label>
+                       </div>
+                        <div className="col-3">
+                            <Input
+                                id="terminalCapacity"
+                                type="number"
+                                value={terminalCapacity}
+                                onChange={(e) => setTerminalCapacity(Number(e.target.value))}
+                                className="col-span-1"
+                                min="0"
+                                step="1"
+                            />
+                        </div>
+                        <div className="col-start-3 col-end-6 ...">
+                            <Label htmlFor="terminalCapacity" className="text-left">
+                                reservation(s) per day
                             </Label>
-                   </div>
-                    <div className="col-3">
-                        <Input
-                            id="terminalCapacity"
-                            type="number"
-                            value={terminalCapacity}
-                            onChange={(e) => setTerminalCapacity(Number(e.target.value))}
-                            className="col-span-1"
-                            min="0"
-                            step="1"
-                        />
-                    </div>
-                    <div className="col-start-3 col-end-6 ...">
-                        <Label htmlFor="terminalCapacity" className="text-left">
-                            reservation(s) per day
-                        </Label>
-                    </div>                        
-  <div className="col-1">
-    <Label htmlFor="terminalCapacity" className="text-right">Start</Label>
-  </div>
-  
-  <div className="col-span-2 col-end-4 ...">{showStartDateCalendar()}</div>
-  <div className="col-start-4 col-end-6 ...">{showStartTime()}</div>
-  <div className="col-1">
-    <Label htmlFor="terminalCapacity" className="text-right">End</Label>
-  </div>
-  
-  <div className="col-span-2 col-end-4 ...">
-            {showEndDateCalendar()}
-
-  </div>
-  <div className="col-start-4 col-end-6 ...">
-                            {showEndTime()}
-
-  </div>
-  <div className="col-start-1 col-end-2 ...">Repeat</div>
-  <div className="col-start-2 col-end-5 ...">
-            <Select onValueChange={setRepeatOption}>
-                <SelectTrigger className={cn("w-[150px]", )}>
-                    <SelectValue placeholder={repeatOption} />
+                        </div>                        
+      <div className="col-1">
+        <Label htmlFor="terminalCapacity" className="text-right">Start</Label>
+      </div>
+      
+      <div className="col-span-2 col-end-4 ...">{showStartDateCalendar()}</div>
+      <div className="col-start-4 col-end-6 ...">{showStartTime()}</div>
+      <div className="col-1">
+        <Label htmlFor="terminalCapacity" className="text-right">End</Label>
+      </div>
+      
+      <div className="col-span-2 col-end-4 ...">
+                {showEndDateCalendar()}
+    
+      </div>
+      <div className="col-start-4 col-end-6 ...">
+                                {showEndTime()}
+    
+      </div>
+      <div className="col-start-1 col-end-2 ...">Repeat</div>
+      <div className="col-start-2 col-end-5 ...">
+                <Select onValueChange={setRepeatOption}>
+                    <SelectTrigger className={cn("w-[150px]", )}>
+                        <SelectValue placeholder={repeatOption} />
+                    </SelectTrigger>
+                    <SelectContent>
+                        {repeatOptionList.map((repeatOption) => (
+                            <SelectItem key={repeatOption} value={repeatOption}>
+                                {repeatOption}
+                            </SelectItem>
+                        ))}
+                    </SelectContent>
+                </Select>
+    
+      </div>
+      {showCustomRepeat() &&
+      <>
+        <div className="col-start-1 col-end-2 ...">Frequency</div>
+      <div className="col-start-2 col-end-5 ...">
+                <Select onValueChange={setFrequency}>
+                    <SelectTrigger className={cn("w-[150px]", )}>
+                        <SelectValue placeholder={frequency} />
+                    </SelectTrigger>
+                    <SelectContent>
+                        {frequencyList.map((frequency) => (
+                            <SelectItem key={frequency} value={frequency}>
+                                {frequency}
+                            </SelectItem>
+                        ))}
+                    </SelectContent>
+                </Select>
+    
+      </div>
+        {showDailyRepeatOption() &&
+            <DailyRepeatOptions
+                dailyEvery={dailyEvery}
+                setDailyEvery={setDailyEvery} />
+        }
+    
+        {showWeeklyRepeatOption() &&
+    
+            <WeeklyRepeatOptions
+                weeklyEvery={weeklyEvery}
+                setWeeklyEvery={setWeeklyEvery}
+                weeklyOnDays={weeklyOnDays}
+                setWeeklyOnDays={setWeeklyOnDays}></WeeklyRepeatOptions>
+        }
+    
+        {showMonthlyRepeatOption() &&
+    
+            <MonthlyRepeatOptions 
+                        monthlyEvery = {monthlyEvery} 
+                        setMonthlyEvery={setMonthlyEvery} 
+                        repeatCycle={repeatCycle}
+                        setRepeatCycle={setRepeatCycle}
+                        daysOfMonth={daysOfMonth}
+                        setDaysOfMonth={setDaysOfMonth}
+                        onTheWeek={onTheWeek} 
+                        setOnTheWeek={setOnTheWeek}
+                        onTheWeekDay={onTheWeekDay} 
+                        setOnTheWeekDay={setOnTheWeekDay}/>
+    
+        }
+        {showYearlyRepeatOption() &&
+    
+            <YearlyRepeatOptions 
+                        yearlyEvery = {yearlyEvery} 
+                        setYearlyEvery={setYearlyEvery} 
+                        monthsOfYear={monthsOfYear}
+                        setMonthsOfYear={setMonthsOfYear}
+                        dayOfWeekforYearly={dayOfWeekforYearly}
+                        setDayOfWeekforYearly={setDayOfWeekforYearly}
+                        onTheWeek={onTheWeek} 
+                        setOnTheWeek={setOnTheWeek}
+                        onTheWeekDay={onTheWeekDay} 
+                        setOnTheWeekDay={setOnTheWeekDay}/>
+    
+        }    
+    </>
+      }
+    
+    <div className="col-start-1 col-end-2 ...">Reason</div>
+      <div className="col-start-2 col-end-5 ...">
+                <Select onValueChange={setReason}>
+                    <SelectTrigger className={cn("w-[150px]", )}>
+                        <SelectValue placeholder={reason} />
+                    </SelectTrigger>
+                    <SelectContent>
+                        {reasonList.map((reason) => (
+                            <SelectItem key={reason} value={reason}>
+                                {reason}
+                            </SelectItem>
+                        ))}
+                    </SelectContent>
+                </Select>
+      </div>
+    <div className="col-start-2 col-end-5 ...">
+        {showOtherReason() && 
+                <Input
+                    id="otherReason"
+                    type="string"
+                    value={otherReason}
+                    onChange={(e) => setOtherReason(e.target.value)}
+                    className="col-span-1"
+                />
+        }
+    </div>
+    
+      </div>
+                              
+    
+                    <DialogFooter>
+                        <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
+                            Cancel
+                        </Button>
+                        <Button onClick={() => { save()}}>
+                            Save
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+            </>
+           
+    
+        );
+    
+        function showEndTime() {
+            return <Select onValueChange={setEndTime}>
+                <SelectTrigger className={cn("w-[150px]")}>
+                    <SelectValue placeholder={endTime} />
                 </SelectTrigger>
                 <SelectContent>
-                    {repeatOptionList.map((repeatOption) => (
-                        <SelectItem key={repeatOption} value={repeatOption}>
-                            {repeatOption}
+                    {timeOptions.map((timeOption) => (
+                        <SelectItem key={timeOption} value={timeOption}>
+                            {timeOption}
                         </SelectItem>
                     ))}
                 </SelectContent>
-            </Select>
-
-  </div>
-<div className="col-start-1 col-end-2 ...">Reason</div>
-  <div className="col-start-2 col-end-5 ...">
-            <Select onValueChange={setReason}>
-                <SelectTrigger className={cn("w-[150px]", )}>
-                    <SelectValue placeholder={reason} />
+            </Select>;
+        }
+    
+        function showEndDateCalendar() {
+            return <Popover modal={true} open={isEndCalendarOpen} onOpenChange={setIsEndCalendarOpen}>
+                <PopoverTrigger asChild>
+                    <Button
+                        variant={"outline"}
+                        className={cn("w-[200px] justify-start text-left font-normal", !endDate && "text-muted-foreground")}
+                        onClick={() => setIsEndCalendarOpen(true)}
+                    >
+                        <CalendarIcon className="mr-2 h-4 w-4" />
+                        {endDate ? format(endDate, "MM/dd/yyyy") : <span>Pick a date</span>}
+                    </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0">
+                    <Calendar mode="single" selected={endDate} disabled={{ before: new Date() }} onSelect={handleEndDateSelect} initialFocus />
+                </PopoverContent>
+            </Popover>;
+        }
+    
+        function showStartTime() {
+            return <Select onValueChange={setStartTime}>
+                <SelectTrigger className={cn("w-[150px]")}>
+                    <SelectValue placeholder={startTime} />
                 </SelectTrigger>
                 <SelectContent>
-                    {reasonList.map((reason) => (
-                        <SelectItem key={reason} value={reason}>
-                            {reason}
+                    {timeOptions.map((timeOption) => (
+                        <SelectItem key={timeOption} value={timeOption}>
+                            {timeOption}
                         </SelectItem>
                     ))}
                 </SelectContent>
-            </Select>
-  </div>
-<div className="col-start-2 col-end-5 ...">
-    {showOtherReason() && 
-            <Input
-                id="otherReason"
-                value={otherReason}
-                type="string"
-                onChange={(e) => setOtherReason(e.target.value)}
-                className="col-span-1"
-            />
-    }
-</div>
-
-  </div>
-                          
-
-                <DialogFooter>
-                    <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
-                        Cancel
+            </Select>;
+        }
+    
+        function showStartDateCalendar() {
+            return <Popover modal={true} open={isStartCalendarOpen} onOpenChange={setIsStartCalendarOpen}>
+                <PopoverTrigger asChild>
+                    <Button
+                        variant={"outline"}
+                        className={cn("w-[200px] justify-start text-left font-normal", !startDate && "text-muted-foreground")}
+                        onClick={() => setIsStartCalendarOpen(true)}
+                    >
+                        <CalendarIcon className="mr-2 h-4 w-4" />
+                        {startDate ? format(startDate, "MM/dd/yyyy") : <span>Pick a date</span>}
                     </Button>
-                    <Button onClick={() => { save()}}>
-                        Save
-                    </Button>
-                </DialogFooter>
-            </DialogContent>
-        </Dialog>
-
-    );
-
-    function showEndTime() {
-        return <Select onValueChange={setEndTime}>
-            <SelectTrigger className={cn("w-[150px]")}>
-                <SelectValue placeholder={endTime} />
-            </SelectTrigger>
-            <SelectContent>
-                {timeOptions.map((timeOption) => (
-                    <SelectItem key={timeOption} value={timeOption}>
-                        {timeOption}
-                    </SelectItem>
-                ))}
-            </SelectContent>
-        </Select>;
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0">
+                    <Calendar mode="single" selected={startDate} disabled={{ before: new Date() }} onSelect={handleStartDateSelect} initialFocus />
+                </PopoverContent>
+            </Popover>;
+        }
+    
     }
-
-    function showEndDateCalendar() {
-        return <Popover modal={true} open={isEndCalendarOpen} onOpenChange={setIsEndCalendarOpen}>
-            <PopoverTrigger asChild>
-                <Button
-                    variant={"outline"}
-                    className={cn("w-[200px] justify-start text-left font-normal", !endDate && "text-muted-foreground")}
-                    onClick={() => setIsEndCalendarOpen(true)}
-                >
-                    <CalendarIcon className="mr-2 h-4 w-4" />
-                    {endDate ? format(endDate, "MM/dd/yyyy") : <span>Pick a date</span>}
-                </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-auto p-0">
-                <Calendar mode="single" selected={endDate} disabled={{ before: new Date() }} onSelect={handleEndDateSelect} initialFocus />
-            </PopoverContent>
-        </Popover>;
-    }
-
-    function showStartTime() {
-        return <Select onValueChange={setStartTime}>
-            <SelectTrigger className={cn("w-[150px]")}>
-                <SelectValue placeholder={startTime} />
-            </SelectTrigger>
-            <SelectContent>
-                {timeOptions.map((timeOption) => (
-                    <SelectItem key={timeOption} value={timeOption}>
-                        {timeOption}
-                    </SelectItem>
-                ))}
-            </SelectContent>
-        </Select>;
-    }
-
-    function showStartDateCalendar() {
-        return <Popover modal={true} open={isStartCalendarOpen} onOpenChange={setIsStartCalendarOpen}>
-            <PopoverTrigger asChild>
-                <Button
-                    variant={"outline"}
-                    className={cn("w-[200px] justify-start text-left font-normal", !startDate && "text-muted-foreground")}
-                    onClick={() => setIsStartCalendarOpen(true)}
-                >
-                    <CalendarIcon className="mr-2 h-4 w-4" />
-                    {startDate ? format(startDate, "MM/dd/yyyy") : <span>Pick a date</span>}
-                </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-auto p-0">
-                <Calendar mode="single" selected={startDate} disabled={{ before: new Date() }} onSelect={handleStartDateSelect} initialFocus />
-            </PopoverContent>
-        </Popover>;
-    }
-
-}
-
  

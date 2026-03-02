@@ -6,7 +6,7 @@ import { ColumnDef } from "@tanstack/react-table"
 
 import { TerminalCapacityDomain } from "./terminal-capacity-domain"
 import { DeleteTerminalCapacityButton } from "../terminal-capacity/delete-terminal-capacity-button.tsx";
-import { Button } from "../ui/button.tsx";
+import { UpdateTerminalCapacity } from "./update-terminal-capacity.tsx";
 
 //const client = generateClient<Schema>();
 
@@ -44,15 +44,9 @@ export const columns: ColumnDef<TerminalCapacityDomain>[] = [
   {
           accessorKey: "actions",
           header: () => <div style={{ minWidth: "50px"}}>Actions</div>,
-          cell: () => (
+          cell: ({ row }) => (
             <div className="flex space-x-8 ">
-              <Button 
-                variant="outline" 
-                //onClick={() => ()} 
-                //TO DO: PCIS2-42
-              >
-                Edit
-              </Button>
+             {UpdateTerminalCapacity(row.original.capacityId)}
               <DeleteTerminalCapacityButton/>
             </div>
           ),
