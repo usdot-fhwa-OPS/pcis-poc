@@ -167,7 +167,7 @@ const [endTime, setEndTime] = useState<string | undefined>(timeOptions[0])
             endDate: format(endDate, "yyyy-MM-dd"),
             endTime: endTime,
             repeat: repeatOption,
-            reason: reason,
+            reason: showOtherReason()?otherReason:reason,
             isActive: true,
              repeatConfig: {
                     frequency: frequency,         // "daily" | "weekly" | "monthly" | "yearly"
