@@ -263,7 +263,7 @@ const showCustomRepeat = (): boolean =>{
                         <Tooltip delayDuration={300}>
                             <TooltipTrigger>
                                 <div>
-                                  <a onClick={handleOpen}>Edit</a>
+                                    <Button onClick={handleOpen}>Edit</Button>
     
                                 </div>
                             </TooltipTrigger>
