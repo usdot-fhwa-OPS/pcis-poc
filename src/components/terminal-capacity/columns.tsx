@@ -19,19 +19,19 @@ export const columns: ColumnDef<TerminalCapacityDomain>[] = [
   },
   {
     accessorKey: "startDate",
-    header: "Start",
+    header: "Start Date",
   },
    {
     accessorKey: "startTime",
-    header: "",
+    header: "Start Time",
   },
   {
     accessorKey: "endDate",
-    header: "End",
+    header: "End Date",
   },
    {
     accessorKey: "endTime",
-    header: "",
+    header: "End Time",
   },
  {
     accessorKey: "repeat",

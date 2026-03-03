@@ -1,6 +1,6 @@
 import { fetchAuthSession } from "aws-amplify/auth";
 import { TerminalCapacityDomain } from "./terminal-capacity-domain";
-
+import { format } from "date-fns"
 
 
 export const terminalCapacityList = async (): Promise<TerminalCapacityDomain[]> => {
@@ -14,6 +14,15 @@ export const terminalCapacityList = async (): Promise<TerminalCapacityDomain[]> 
         }
     });
     const result = (await response.json()) as TerminalCapacityDomain[];
+    result.map((item)=>{
+        try{
+            item.startDate= format(item.startDate?item.startDate:'', "MM/dd/yyyy");
+            item.endDate = format(item.endDate?item.endDate:'', "MM/dd/yyyy");
+
+        }catch(e){
+            console.error(e);
+        }
+    })
     return result;
 }
 

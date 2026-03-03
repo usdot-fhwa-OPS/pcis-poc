@@ -33,6 +33,47 @@ export const UpdateTerminalCapacity = (terminalCapacityUid:string) => {
             setRepeatOption(terminalCapacity.repeat);
             setReason(terminalCapacity.reason);
             setOtherReason(terminalCapacity.reason);
+            if(terminalCapacity.repeatConfig){
+                
+                setRepeatOption('Custom');
+                setFrequency(terminalCapacity.repeatConfig.frequency)
+                if(showDailyRepeatOption()){
+
+                    setDailyEvery(terminalCapacity.repeatConfig.interval)
+
+                }else if(showWeeklyRepeatOption()){
+
+                    setWeeklyEvery(terminalCapacity.repeatConfig.interval);
+                    setWeeklyOnDays(terminalCapacity.repeatConfig.daysOfWeek);
+
+
+                }else if(showMonthlyRepeatOption()){
+
+                    setMonthlyEvery(terminalCapacity.repeatConfig.interval)
+                    setRepeatCycle(terminalCapacity.repeatConfig.cycle)
+                    setDaysOfMonth(terminalCapacity.repeatConfig.daysOfMonth)
+                    setOnTheWeek(terminalCapacity.repeatConfig.weekNumber)
+                    setOnTheWeekDay(terminalCapacity.repeatConfig.dayOfWeek)
+
+
+                }else if(showYearlyRepeatOption()){
+
+                    setYearlyEvery(terminalCapacity.repeatConfig.interval)
+                    setMonthsOfYear(terminalCapacity.repeatConfig.months)
+                    if(terminalCapacity.repeatConfig.daysOfWeek){
+    
+                        setOnTheWeekDay(terminalCapacity.repeatConfig.dayOfWeek);
+                        setDayOfWeekforYearly(true);
+
+                    }
+                    
+                    setOnTheWeek(terminalCapacity.repeatConfig.weekNumber)
+                    setMonthsOfYear(terminalCapacity.repeatConfig.months)
+
+                }
+                
+            }
+                
             setIsDialogOpen(true)
         });
 
@@ -173,12 +214,12 @@ const showCustomRepeat = (): boolean =>{
                    capacityType: 'TEMPORARY',
                    createdAt: (new Date()).toISOString(),
                    updatedAt: (new Date()).toISOString(),
-                   startDate: format(startDate, "yyyy-MM-dd"),
+                   startDate: format(startDate, "MM/DD/yyyy"),
                    startTime: startTime,
-                   endDate: format(endDate, "yyyy-MM-dd"),
+                   endDate: format(endDate, "MM/DD/yyyy"),
                    endTime: endTime,
                    repeat: repeatOption,
-                   reason: reason,
+                    reason: showOtherReason()?otherReason:reason,
                    isActive: true,
                     repeatConfig: {
                            frequency: frequency,         // "daily" | "weekly" | "monthly" | "yearly"
@@ -234,7 +275,7 @@ const showCustomRepeat = (): boolean =>{
                     <div className="grid grid-cols-5 gap-2">
                         <div className="h-10 col-span-3 col-start-1 ...">
                             <DialogHeader>
-                                <DialogTitle>Edit Temporrary Capacity</DialogTitle>
+                                <DialogTitle>Edit Temporary Capacity</DialogTitle>
                                 <DialogDescription></DialogDescription>
                             </DialogHeader>
                         </div>
