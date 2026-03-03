@@ -41,6 +41,7 @@ const roleOptions = [
   <option key="Trucking Operator" value="Trucking Operator">Trucking Operator</option>,
   <option key="Rail Operator" value="Rail Operator">Rail Operator</option>,
   <option key="Third Party Logistics Provider" value="Third Party Logistics Provider">Third Party Logistics Provider</option>,
+  <option key="Vessel Agent" value="Vessel Agent">Vessel Agent</option>,
 ];
 
 const orgOptions = [
@@ -51,7 +52,9 @@ const orgOptions = [
 	<option key="Illinois and Midland Railroad (IMRR)"	value="Illinois and Midland Railroad (IMRR)">Illinois and Midland Railroad (IMRR)</option>,
 	<option key="ABC Drayage"						value="ABC Drayage">ABC Drayage</option>,
 	<option key="XYZ 3PL"								value="XYZ 3PL">XYZ 3PL</option>,
-	<option key="Leidos" 								value="Leidos">Leidos</option>
+	<option key="Leidos" 								value="Leidos">Leidos</option>,
+  <option key="Vessel Agent XYZ" 								value="Vessel Agent XYZ">Vessel Agent XYZ</option>,
+  <option key="Vessel Agent ABC" 								value="Vessel Agent ABC">Vessel Agent ABC</option>
 
 ];
 

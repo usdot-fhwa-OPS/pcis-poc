@@ -303,7 +303,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
               }
             }}
           >
-            <DialogTrigger asChild>
+            <DialogTrigger>
             <TooltipProvider>
               <Tooltip delayDuration={300}>
                 <TooltipTrigger>
@@ -489,7 +489,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
 
         return (
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogTrigger asChild>
+          <DialogTrigger>
             <Button variant="ghost" className="p-2" onClick={() => setIsDialogOpen(true)} disabled={row.original.reservationStatus !== "Pending Pick Up" && row.original.reservationStatus !== "Late for Pick Up"}>
               <Pencil />
             </Button>

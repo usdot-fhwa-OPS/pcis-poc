@@ -18,6 +18,7 @@ const UserButton: React.FC<UserButtonProps> = ({ fullName, role }) => {
             <span className="user-role">{role}</span>
             </div>
             <div className="user-avatar"></div>
+           
         </button>
     );
 };
