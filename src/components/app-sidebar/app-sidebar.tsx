@@ -64,7 +64,7 @@ const items = [
     icon: BarChart,
   },
   {
-    title: "Berth Reservation",
+    title: "Berth Reservations",
     url: "/Berth",
     icon: Anchor,
   },
@@ -114,7 +114,7 @@ export function AppSidebar() {
     if (userAttributes.role === "Vessel Agent") {
       return (
         allowedForLimitedRoles.includes(item.title) ||
-        item.title ==="Berth Reservation"
+        item.title ==="Berth Reservations"
       );
     }
 
