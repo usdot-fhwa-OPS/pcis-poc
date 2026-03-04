@@ -23,7 +23,7 @@ import {
 import { Input } from "../ui/input"
 
 export interface TerminalCapacityTableMeta {
-  fetchTerminalCapacityList: () => void 
+  fetchTerminalCapacityList: any
 }
 
 interface DataTableProps<TData, TValue> {
