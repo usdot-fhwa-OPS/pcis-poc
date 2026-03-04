@@ -11,9 +11,20 @@ import {
   DialogTrigger,
 } from "../ui/dialog"
 import "./terminal-capacity.css"
+import { deleteTerminalCapacity } from "./terminal-capacity-client"
+import { TerminalCapacityTableMeta } from "./terminal-capacity-table"
 
-export function DeleteTerminalCapacityButton() {
+export function DeleteTerminalCapacityButton(terminalCapacityUid:string, table:any) {
     const [open, setOpen] = useState(false)
+
+    const deleteTc = async () => {
+            deleteTerminalCapacity(terminalCapacityUid).then(async(resp) => { 
+                console.log(resp) 
+                await (table.options.meta as TerminalCapacityTableMeta)?.fetchTerminalCapacityList();
+                setOpen(false);
+            });
+    
+        }
     
     return (
       <Dialog open={open} onOpenChange={setOpen}>
@@ -34,7 +45,7 @@ export function DeleteTerminalCapacityButton() {
                 Do you want to continue?
               </div>
             <DialogFooter className="center-buttons">
-                <Button type="submit">Yes</Button>
+                <Button type="button" onClick={()=>deleteTc()} >Yes</Button>
                 <Button type="button" variant="outline" onClick={() => setOpen(false)}>No</Button>
             </DialogFooter>
         </DialogContent>
