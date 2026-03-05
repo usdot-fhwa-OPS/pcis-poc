@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
 import { Tooltip, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
 import { Button } from "../ui/button";
@@ -13,7 +13,7 @@ import { format } from "date-fns"
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { TerminalCapacityDomain } from "./terminal-capacity-domain";
 import { v4 as uuidv4 } from "uuid";
-import { getTerrminalCapacity, saveTerminalCapacity } from "./terminal-capacity-client";
+import { saveTerminalCapacity } from "./terminal-capacity-client";
 import { DailyRepeatOptions } from "./DailyRepeatOptions";
 import { WeeklyRepeatOptions } from "./WeeklyRepeatOptions";
 import { MonthlyRepeatOptions } from "./MonthlyRepeatOptions";
@@ -27,64 +27,7 @@ export const UpdateTerminalCapacity = (terminalCapacityUid:string) => {
     const terminalCapacityList = useAppSelector((state) => state.terminalCapacityList.value)
 
     
-    const handleOpen = async () => {
-        const termCap: TerminalCapacityDomain 
-                = (terminalCapacityList.filter(value => (value.capacityId === terminalCapacityUid)))[0];
-
-
-        setTerminalCapacity(termCap.capacity);
-        setStartDate(termCap.startDate ? new Date(termCap.startDate) : new Date());
-        setStartTime(termCap.startTime ? termCap.startTime : undefined);
-        setEndDate(termCap.endDate ? new Date(termCap.endDate) : new Date());
-        setEndTime(termCap.endTime ? termCap.endTime : undefined);
-        setRepeatOption(termCap.repeat);
-        setReason(termCap.reason);
-        setOtherReason(termCap.reason);
-        if (termCap.repeatConfig) {
-
-            setRepeatOption('Custom');
-            setFrequency(termCap.repeatConfig.frequency)
-            if (showDailyRepeatOption()) {
-
-                setDailyEvery(termCap.repeatConfig.interval)
-
-            } else if (showWeeklyRepeatOption()) {
-
-                setWeeklyEvery(termCap.repeatConfig.interval);
-                setWeeklyOnDays(termCap.repeatConfig.daysOfWeek);
-
-
-            } else if (showMonthlyRepeatOption()) {
-
-                setMonthlyEvery(termCap.repeatConfig.interval)
-                setRepeatCycle(termCap.repeatConfig.cycle)
-                setDaysOfMonth(termCap.repeatConfig.daysOfMonth)
-                setOnTheWeek(termCap.repeatConfig.weekNumber)
-                setOnTheWeekDay(termCap.repeatConfig.dayOfWeek)
-
-
-            } else if (showYearlyRepeatOption()) {
-
-                setYearlyEvery(termCap.repeatConfig.interval)
-                setMonthsOfYear(termCap.repeatConfig.months)
-                if (termCap.repeatConfig.daysOfWeek) {
-
-                    setOnTheWeekDay(termCap.repeatConfig.dayOfWeek);
-                    setDayOfWeekforYearly(true);
-
-                }
-
-                setOnTheWeek(termCap.repeatConfig.weekNumber)
-                setMonthsOfYear(termCap.repeatConfig.months)
-
-            }
-
-        }
-
-        setIsDialogOpen(true)
-
-    }
-
+    
     const [startDate, setStartDate] = useState<Date>(new Date())    
     const [endDate, setEndDate] = useState<Date>(new Date())       
     const [isStartCalendarOpen, setIsStartCalendarOpen] = useState(false)
@@ -209,8 +152,73 @@ const showCustomRepeat = (): boolean =>{
        const [yearlyEvery, setYearlyEvery] = useState<number | undefined>()
        const [monthsOfYear, setMonthsOfYear] = useState<string[] | undefined>()
        const [dayOfWeekforYearly, setDayOfWeekforYearly] = React.useState(false)
+
+    const findTerminalCapacityDomain = () => {
+        const respTc: TerminalCapacityDomain 
+                = (terminalCapacityList.filter(value => (value.capacityId === terminalCapacityUid)))[0];
+
+            setTerminalCapacity(respTc.capacity);
+            setStartDate(respTc.startDate ? new Date(respTc.startDate) : new Date());
+            setStartTime(respTc.startTime ? respTc.startTime : undefined);
+            setEndDate(respTc.endDate ? new Date(respTc.endDate) : new Date());
+            setEndTime(respTc.endTime ? respTc.endTime : undefined);
+            setRepeatOption(respTc.repeat);
+            setReason(respTc.reason);
+            setOtherReason(respTc.reason);
+            if (respTc.repeatConfig) {
+
+                setRepeatOption('Custom');
+                const frequency = respTc.repeatConfig.frequency;
+                setFrequency(frequency)
+                if ('Daily' === frequency) {
+
+                    setDailyEvery(respTc.repeatConfig.interval)
+
+                } else if ('Weekly' === frequency) {
+
+                    setWeeklyEvery(respTc.repeatConfig.interval);
+                    setWeeklyOnDays(respTc.repeatConfig.daysOfWeek);
+
+
+                } else if ('Monthly' === frequency) {
+
+                    setMonthlyEvery(respTc.repeatConfig.interval)
+                    setRepeatCycle(respTc.repeatConfig.cycle)
+                    setDaysOfMonth(respTc.repeatConfig.daysOfMonth)
+                    setOnTheWeek(respTc.repeatConfig.weekNumber)
+                    setOnTheWeekDay(respTc.repeatConfig.dayOfWeek)
+
+
+                } else if ('Yearly' === frequency) {
+
+                    setYearlyEvery(respTc.repeatConfig.interval)
+                    setMonthsOfYear(respTc.repeatConfig.months)
+                    if (respTc.repeatConfig.daysOfWeek) {
+
+                        setOnTheWeekDay(respTc.repeatConfig.dayOfWeek);
+                        setDayOfWeekforYearly(true);
+
+                    }
+
+                    setOnTheWeek(respTc.repeatConfig.weekNumber)
+                    setMonthsOfYear(respTc.repeatConfig.months)
+
+                }
+
+            }
+
+
+    
+    }
+       
     
        
+    const handleOpen = () => {
+        findTerminalCapacityDomain();
+        setIsDialogOpen(true)
+    }
+
+
        const save = async () => {
        
                const termCapDomain: TerminalCapacityDomain = {
@@ -219,9 +227,9 @@ const showCustomRepeat = (): boolean =>{
                    capacityType: 'TEMPORARY',
                    createdAt: (new Date()).toISOString(),
                    updatedAt: (new Date()).toISOString(),
-                   startDate: format(startDate, "MM/DD/yyyy"),
+                   startDate: format(startDate, "MM/dd/yyyy"),
                    startTime: startTime,
-                   endDate: format(endDate, "MM/DD/yyyy"),
+                   endDate: format(endDate, "MM/dd/yyyy"),
                    endTime: endTime,
                    repeat: repeatOption,
                     reason: showOtherReason()?otherReason:reason,

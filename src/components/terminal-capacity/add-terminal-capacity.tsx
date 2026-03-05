@@ -20,7 +20,7 @@ import { DailyRepeatOptions } from "./DailyRepeatOptions";
 import { MonthlyRepeatOptions } from "./MonthlyRepeatOptions";
 import { YearlyRepeatOptions } from "./YearlyRepeatOptions.";
 
-export const AddTerminalCapacity = () => {
+export const AddTerminalCapacity = (props:any) => {
 
     const [isDialogOpen, setIsDialogOpen] = useState(false)
     const [terminalCapacity, setTerminalCapacity] = useState(0) 
@@ -162,9 +162,9 @@ const [endTime, setEndTime] = useState<string | undefined>(timeOptions[0])
             capacityType: 'TEMPORARY',
             createdAt: (new Date()).toISOString(),
             updatedAt: (new Date()).toISOString(),
-            startDate: format(startDate, "MM/DD/yyyy"),
+            startDate: format(startDate, "MM/dd/yyyy"),
             startTime: startTime,
-            endDate: format(endDate, "MM/DD/yyyy"),
+            endDate: format(endDate, "MM/dd/yyyy"),
             endTime: endTime,
             repeat: repeatOption,
             reason: showOtherReason()?otherReason:reason,
@@ -191,7 +191,13 @@ const [endTime, setEndTime] = useState<string | undefined>(timeOptions[0])
 
         };
 
-        saveTerminalCapacity(termCapDomain).then((resp) => { console.log(resp) });
+        saveTerminalCapacity(termCapDomain).then((resp) => { 
+            console.log(resp) 
+            props.fetchTerminalCapacityList();
+        });
+        
+        setIsDialogOpen(false);
+
 
     }
 

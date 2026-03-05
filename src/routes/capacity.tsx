@@ -55,11 +55,12 @@ if (loading) {
        </p>
       <div className="container mx-auto p-10">
         <div className="parent-container">
-          <AddTerminalCapacity></AddTerminalCapacity>
+          <AddTerminalCapacity fetchTerminalCapacityList={fetchTerminalCapacityList}></AddTerminalCapacity>
         </div>
               <DataTable
                 columns={columns}
                 data={data}
+                meta={{fetchTerminalCapacityList}}
               />
             </div>
     </div>    
