@@ -1,4 +1,4 @@
-import { FileUp, Home, Ship, User , CalendarClock, BarChart } from "lucide-react"
+import { FileUp, Home, Ship, User , CalendarClock, BarChart, Anchor } from "lucide-react"
 
 import {
   Sidebar,
@@ -39,6 +39,11 @@ const items = [
     icon: Home,
   },
   {
+    title: "Berth Reservations",
+    url: "/berth-manager",
+    icon: Anchor,
+  },
+  {
     title: "Available Operators",
     url: "/operators",
     icon: User,
@@ -58,6 +63,7 @@ const items = [
     url: "/reservation",
     icon: CalendarClock,
   },
+
   {
     title: "Analytics",
     url: "/analytics",
