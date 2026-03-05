@@ -98,7 +98,7 @@ export function AppSidebar() {
   }, [user]);
 
   // Define which menu items are allowed for limited roles.
-  const allowedForLimitedRoles = ["Home", "Reservation Status", "Notifications"];
+  const allowedForLimitedRoles = ["Home", "Reservation Status", "Analytics", "Notifications"];
 
   // Filter menu items based on the custom role.
   const filteredItems = items.filter((item) => {
