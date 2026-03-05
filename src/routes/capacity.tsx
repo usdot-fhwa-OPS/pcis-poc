@@ -8,6 +8,9 @@ import { terminalCapacityList } from "../components/terminal-capacity/terminal-c
 import { AddTerminalCapacity } from "../components/terminal-capacity/add-terminal-capacity";
 import { UpdateTerminalCapacityButton } from "../components/terminal-capacity/update-terminal-capacity-button";
 
+import { useAppSelector, useAppDispatch } from '../hooks'
+import { populate } from "../components/terminal-capacity/terminal-capacity-state";
+
 
 
 export const Route = createFileRoute('/capacity')({
@@ -19,17 +22,25 @@ export default function TerminalCapacityComponent() {
   const [data, setData] = useState<TerminalCapacityDomain[]>([])
   const [loading, setLoading] = useState(true)
   
+  const dispatch = useAppDispatch()
+ 
+
 
   //Fetch the data from the database
   const fetchTerminalCapacityList = async () => {
     
     setData(await terminalCapacityList());
      setLoading(false);
+
+      dispatch(populate(await terminalCapacityList()));
+
   }
 
   //Fetch the data on the first render
   useEffect(() => {
     fetchTerminalCapacityList();
+      
+
   }, [])
 
 if (loading) {

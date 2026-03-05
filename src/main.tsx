@@ -10,6 +10,8 @@ import './index.css'
 
 import { Amplify } from 'aws-amplify';
 import outputs from '../amplify_outputs.json';
+import { Provider } from 'react-redux'
+import { store } from './store.tsx'
 
 Amplify.configure(outputs);
 
@@ -28,9 +30,11 @@ if (!rootElement.innerHTML) {
   const root = ReactDOM.createRoot(rootElement)
   root.render(
     <StrictMode>
-      <Auth>
-        <RouterProvider router={router} />
-      </Auth>
+       <Provider store={store}>
+        <Auth>
+          <RouterProvider router={router} />
+        </Auth>
+       </Provider>
     </StrictMode>,
   )
 }
