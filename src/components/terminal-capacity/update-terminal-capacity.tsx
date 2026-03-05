@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
 import { Tooltip, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
 import { Button } from "../ui/button";
@@ -23,63 +23,7 @@ export const UpdateTerminalCapacity = (terminalCapacityUid:string) => {
 
     const [isDialogOpen, setIsDialogOpen] = useState(false)
     const [terminalCapacity, setTerminalCapacity] = useState(0) 
-    const handleOpen = async () => {
-                getTerrminalCapacity(terminalCapacityUid).then((terminalCapacity: TerminalCapacityDomain) =>{
-            setTerminalCapacity(terminalCapacity.capacity);
-            setStartDate(terminalCapacity.startDate?new Date(terminalCapacity.startDate):new Date());
-            setStartTime(terminalCapacity.startTime?terminalCapacity.startTime:undefined);
-            setEndDate(terminalCapacity.endDate?new Date(terminalCapacity.endDate):new Date());
-            setEndTime(terminalCapacity.endTime?terminalCapacity.endTime:undefined);
-            setRepeatOption(terminalCapacity.repeat);
-            setReason(terminalCapacity.reason);
-            setOtherReason(terminalCapacity.reason);
-            if(terminalCapacity.repeatConfig){
-                
-                setRepeatOption('Custom');
-                setFrequency(terminalCapacity.repeatConfig.frequency)
-                if(showDailyRepeatOption()){
-
-                    setDailyEvery(terminalCapacity.repeatConfig.interval)
-
-                }else if(showWeeklyRepeatOption()){
-
-                    setWeeklyEvery(terminalCapacity.repeatConfig.interval);
-                    setWeeklyOnDays(terminalCapacity.repeatConfig.daysOfWeek);
-
-
-                }else if(showMonthlyRepeatOption()){
-
-                    setMonthlyEvery(terminalCapacity.repeatConfig.interval)
-                    setRepeatCycle(terminalCapacity.repeatConfig.cycle)
-                    setDaysOfMonth(terminalCapacity.repeatConfig.daysOfMonth)
-                    setOnTheWeek(terminalCapacity.repeatConfig.weekNumber)
-                    setOnTheWeekDay(terminalCapacity.repeatConfig.dayOfWeek)
-
-
-                }else if(showYearlyRepeatOption()){
-
-                    setYearlyEvery(terminalCapacity.repeatConfig.interval)
-                    setMonthsOfYear(terminalCapacity.repeatConfig.months)
-                    if(terminalCapacity.repeatConfig.daysOfWeek){
     
-                        setOnTheWeekDay(terminalCapacity.repeatConfig.dayOfWeek);
-                        setDayOfWeekforYearly(true);
-
-                    }
-                    
-                    setOnTheWeek(terminalCapacity.repeatConfig.weekNumber)
-                    setMonthsOfYear(terminalCapacity.repeatConfig.months)
-
-                }
-                
-            }
-                
-            setIsDialogOpen(true)
-        });
-
-              
-            }
-
     const [startDate, setStartDate] = useState<Date>(new Date())    
     const [endDate, setEndDate] = useState<Date>(new Date())       
     const [isStartCalendarOpen, setIsStartCalendarOpen] = useState(false)
@@ -204,8 +148,70 @@ const showCustomRepeat = (): boolean =>{
        const [yearlyEvery, setYearlyEvery] = useState<number | undefined>()
        const [monthsOfYear, setMonthsOfYear] = useState<string[] | undefined>()
        const [dayOfWeekforYearly, setDayOfWeekforYearly] = React.useState(false)
+
+    useEffect(() => {
+        getTerrminalCapacity(terminalCapacityUid).then((respTc: TerminalCapacityDomain) => {
+            setTerminalCapacity(respTc.capacity);
+            setStartDate(respTc.startDate ? new Date(respTc.startDate) : new Date());
+            setStartTime(respTc.startTime ? respTc.startTime : undefined);
+            setEndDate(respTc.endDate ? new Date(respTc.endDate) : new Date());
+            setEndTime(respTc.endTime ? respTc.endTime : undefined);
+            setRepeatOption(respTc.repeat);
+            setReason(respTc.reason);
+            setOtherReason(respTc.reason);
+            if (respTc.repeatConfig) {
+
+                setRepeatOption('Custom');
+                const frequency = respTc.repeatConfig.frequency;
+                setFrequency(frequency)
+                if ('Daily' === frequency) {
+
+                    setDailyEvery(respTc.repeatConfig.interval)
+
+                } else if ('Weekly' === frequency) {
+
+                    setWeeklyEvery(respTc.repeatConfig.interval);
+                    setWeeklyOnDays(respTc.repeatConfig.daysOfWeek);
+
+
+                } else if ('Monthly' === frequency) {
+
+                    setMonthlyEvery(respTc.repeatConfig.interval)
+                    setRepeatCycle(respTc.repeatConfig.cycle)
+                    setDaysOfMonth(respTc.repeatConfig.daysOfMonth)
+                    setOnTheWeek(respTc.repeatConfig.weekNumber)
+                    setOnTheWeekDay(respTc.repeatConfig.dayOfWeek)
+
+
+                } else if ('Yearly' === frequency) {
+
+                    setYearlyEvery(respTc.repeatConfig.interval)
+                    setMonthsOfYear(respTc.repeatConfig.months)
+                    if (respTc.repeatConfig.daysOfWeek) {
+
+                        setOnTheWeekDay(respTc.repeatConfig.dayOfWeek);
+                        setDayOfWeekforYearly(true);
+
+                    }
+
+                    setOnTheWeek(respTc.repeatConfig.weekNumber)
+                    setMonthsOfYear(respTc.repeatConfig.months)
+
+                }
+
+            }
+
+
+        });
+    }, [])
+       
     
        
+    const handleOpen = () => {
+        setIsDialogOpen(true)
+    }
+
+
        const save = async () => {
        
                const termCapDomain: TerminalCapacityDomain = {
