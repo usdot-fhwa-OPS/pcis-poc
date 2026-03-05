@@ -8,7 +8,7 @@ import { terminalCapacityList } from "../components/terminal-capacity/terminal-c
 import { AddTerminalCapacity } from "../components/terminal-capacity/add-terminal-capacity";
 import { UpdateTerminalCapacityButton } from "../components/terminal-capacity/update-terminal-capacity-button";
 
-import { useAppSelector, useAppDispatch } from '../hooks'
+import { useAppDispatch } from '../hooks'
 import { populate } from "../components/terminal-capacity/terminal-capacity-state";
 
 
