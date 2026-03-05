@@ -1,65 +1,58 @@
-import { createFileRoute } from '@tanstack/react-router'
-import { type Capacity, columns } from "../components/terminal_capacity_table/columns"
-import { DataTable } from "../components/terminal_capacity_table/data-table"
-import { UpdateTerminalCapacityButton } from "../components/terminal-capacity/update-terminal-capacity-button.tsx";
+import { createFileRoute } from "@tanstack/react-router"
+import { columns } from "../components/terminal-capacity/columns"
+import { DataTable } from "../components/terminal-capacity/terminal-capacity-table"
 import { useEffect, useState } from "react"
 
+import { TerminalCapacityDomain } from '../components/terminal-capacity/terminal-capacity-domain';
+import { terminalCapacityList } from "../components/terminal-capacity/terminal-capacity-client";
+import { AddTerminalCapacity } from "../components/terminal-capacity/add-terminal-capacity";
+import { UpdateTerminalCapacityButton } from "../components/terminal-capacity/update-terminal-capacity-button";
+
+
+
 export const Route = createFileRoute('/capacity')({
-  component: Capacity
+  component: TerminalCapacityComponent,
 })
 
 
-export default function Capacity() {
-  const [data, setData] = useState<Capacity[]>([])
+export default function TerminalCapacityComponent() {
+  const [data, setData] = useState<TerminalCapacityDomain[]>([])
   const [loading, setLoading] = useState(true)
+  
 
-  useEffect(() => {
-    async function fetchData() {
-      const result = await getData()
-      setData(result)
-      setLoading(false)
-    }
-    fetchData()
-  }, [])
-
-  if (loading) {
-    return <div>Loading...</div>
+  //Fetch the data from the database
+  const fetchTerminalCapacityList = async () => {
+    
+    setData(await terminalCapacityList());
+     setLoading(false);
   }
 
+  //Fetch the data on the first render
+  useEffect(() => {
+    fetchTerminalCapacityList();
+  }, [])
 
-  return (
-    <div className="p-2">
+if (loading) {
+    return <div>Loading...</div>
+  }
+ return (
+
+   <div className="p-2">
       <h1 className="text-2xl font-bold text-center">Terminal Capacity</h1>
-      <p className="text-left">Maximum Terminal Capacity: 5 Reservations per day&nbsp;&nbsp;
-      <UpdateTerminalCapacityButton limit={5}/>
-      </p>
+       <p className="text-left">Maximum Terminal Capacity: 5 Reservations per day&nbsp;&nbsp;
+        <UpdateTerminalCapacityButton limit={5}/>      
+       </p>
       <div className="container mx-auto p-10">
+        <div className="parent-container">
+          <AddTerminalCapacity></AddTerminalCapacity>
+        </div>
               <DataTable
-                columns={columns()}
+                columns={columns}
                 data={data}
               />
             </div>
-    </div>
+    </div>    
     
   )
-}
 
-async function getData() {
-  // Replace with API Calls
-  return [
-    {
-      capacity : 3,
-      startTime: "12/12/2025 9:30 AM",
-      endTime: "12/12/2025 3:30 PM",
-      repeat: "Never",
-      reason: "Equipment Malfunction"
-    },
-    {
-      capacity : 4,
-      startTime: "12/15/2025 6:00 AM",
-      endTime: "12/15/2025 6:00 PM",
-      repeat: "Never",
-      reason: "Labor Shortage"
-    }
-  ]
 }
