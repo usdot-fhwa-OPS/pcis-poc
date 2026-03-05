@@ -40,7 +40,7 @@ const items = [
   },
   {
     title: "Berth Reservations",
-    url: "/berth",
+    url: "/berth-manager",
     icon: Anchor,
   },
   {
