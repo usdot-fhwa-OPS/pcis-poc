@@ -162,12 +162,12 @@ const [endTime, setEndTime] = useState<string | undefined>(timeOptions[0])
             capacityType: 'TEMPORARY',
             createdAt: (new Date()).toISOString(),
             updatedAt: (new Date()).toISOString(),
-            startDate: format(startDate, "yyyy-MM-dd"),
+            startDate: format(startDate, "MM/DD/yyyy"),
             startTime: startTime,
-            endDate: format(endDate, "yyyy-MM-dd"),
+            endDate: format(endDate, "MM/DD/yyyy"),
             endTime: endTime,
             repeat: repeatOption,
-            reason: reason,
+            reason: showOtherReason()?otherReason:reason,
             isActive: true,
              repeatConfig: {
                     frequency: frequency,         // "daily" | "weekly" | "monthly" | "yearly"
