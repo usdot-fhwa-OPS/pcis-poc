@@ -112,10 +112,7 @@ export function AppSidebar() {
       return true;
     }
     if (userAttributes.role === "Vessel Agent") {
-      return (
-        allowedForLimitedRoles.includes(item.title) ||
-        item.title ==="Berth Reservations"
-      );
+      return item.title ==="Berth Reservations";
     }
 
     if (
