@@ -25,7 +25,7 @@ export const columns = (): ColumnDef<any>[] => {
     {
           accessorKey: "actions",
           header: () => <div style={{ minWidth: "50px"}}>Actions</div>,
-          cell: ({row, table}) => (
+          cell: ({row}) => (
             <div className="flex space-x-8 ">
               <Button 
                 variant="outline" 
@@ -34,7 +34,7 @@ export const columns = (): ColumnDef<any>[] => {
               >
                 Edit
               </Button>
-              {DeleteTerminalCapacityButton(row.original.capacityId, table)}
+              {DeleteTerminalCapacityButton(row.original.capacityId)}
             </div>
           ),
           
