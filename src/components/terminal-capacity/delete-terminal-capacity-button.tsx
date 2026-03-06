@@ -11,16 +11,18 @@ import {
   DialogTrigger,
 } from "../ui/dialog"
 import "./terminal-capacity.css"
-import { deleteTerminalCapacity } from "./terminal-capacity-client"
-import { TerminalCapacityTableMeta } from "./terminal-capacity-table"
+import { deleteTerminalCapacity, terminalCapacityList } from "./terminal-capacity-client"
+import { useAppDispatch } from "../../hooks"
+import { populate } from "./terminal-capacity-state"
 
-export function DeleteTerminalCapacityButton(terminalCapacityUid:string, table:any) {
+export function DeleteTerminalCapacityButton(terminalCapacityUid:string) {
     const [open, setOpen] = useState(false)
+    const dispatch = useAppDispatch()
 
-    const deleteTc = async () => {
+    const deleteTc = () => {
             deleteTerminalCapacity(terminalCapacityUid).then(async(resp) => { 
                 console.log(resp) 
-                await (table.options.meta as TerminalCapacityTableMeta)?.fetchTerminalCapacityList();
+                dispatch(populate(await terminalCapacityList()));
                 setOpen(false);
             });
     

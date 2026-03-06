@@ -14,13 +14,15 @@ import { format } from "date-fns"
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { TerminalCapacityDomain } from "./terminal-capacity-domain";
 import { v4 as uuidv4 } from "uuid";
-import { saveTerminalCapacity } from "./terminal-capacity-client";
+import { saveTerminalCapacity, terminalCapacityList } from "./terminal-capacity-client";
 import { WeeklyRepeatOptions } from "./WeeklyRepeatOptions";
 import { DailyRepeatOptions } from "./DailyRepeatOptions";
 import { MonthlyRepeatOptions } from "./MonthlyRepeatOptions";
 import { YearlyRepeatOptions } from "./YearlyRepeatOptions.";
+import { useAppDispatch } from "../../hooks";
+import { populate } from "./terminal-capacity-state";
 
-export const AddTerminalCapacity = (props:any) => {
+export const AddTerminalCapacity = () => {
 
     const [isDialogOpen, setIsDialogOpen] = useState(false)
     const [terminalCapacity, setTerminalCapacity] = useState(0) 
@@ -32,7 +34,7 @@ export const AddTerminalCapacity = (props:any) => {
     const [endDate, setEndDate] = useState<Date>(new Date())       
     const [isStartCalendarOpen, setIsStartCalendarOpen] = useState(false)
     const [isEndCalendarOpen, setIsEndCalendarOpen] = useState(false)
-    
+    const dispatch = useAppDispatch()
     
     
 const timeOptions = [
@@ -191,9 +193,9 @@ const [endTime, setEndTime] = useState<string | undefined>(timeOptions[0])
 
         };
 
-        saveTerminalCapacity(termCapDomain).then((resp) => { 
+        saveTerminalCapacity(termCapDomain).then(async (resp) => { 
             console.log(resp) 
-            props.fetchTerminalCapacityList();
+            dispatch(populate(await terminalCapacityList()));
         });
         
         setIsDialogOpen(false);

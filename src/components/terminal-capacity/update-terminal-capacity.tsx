@@ -19,12 +19,13 @@ import { WeeklyRepeatOptions } from "./WeeklyRepeatOptions";
 import { MonthlyRepeatOptions } from "./MonthlyRepeatOptions";
 import { YearlyRepeatOptions } from "./YearlyRepeatOptions.";
 import { useAppSelector } from "../../hooks";
+import { getTerminalCapacityList } from "./terminal-capacity-state";
 
 export const UpdateTerminalCapacity = (terminalCapacityUid:string) => {
 
     const [isDialogOpen, setIsDialogOpen] = useState(false)
     const [terminalCapacity, setTerminalCapacity] = useState(0) 
-    const terminalCapacityList = useAppSelector((state) => state.terminalCapacityList.value)
+    const terminalCapacityList = useAppSelector(getTerminalCapacityList)
 
     
     
