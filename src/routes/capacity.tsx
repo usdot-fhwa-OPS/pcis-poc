@@ -1,6 +1,4 @@
 import { createFileRoute } from "@tanstack/react-router"
-import { columns } from "../components/terminal-capacity/columns"
-import { DataTable } from "../components/terminal-capacity/terminal-capacity-table"
 import { useEffect, useState } from "react"
 
 import { terminalCapacityList } from "../components/terminal-capacity/terminal-capacity-client";
@@ -9,6 +7,7 @@ import { UpdateTerminalCapacityButton } from "../components/terminal-capacity/up
 
 import { useAppDispatch, useAppSelector } from '../hooks'
 import { getTerminalCapacityList, populate } from "../components/terminal-capacity/terminal-capacity-state";
+import { TerminalCapacityTable } from "../components/terminal_capacity_table/terminal-capacity-table";
 
 
 
@@ -54,11 +53,7 @@ if (loading) {
         <div className="parent-container">
           <AddTerminalCapacity/>
         </div>
-              <DataTable
-                columns={columns}
-                data={data}
-                meta={{fetchTerminalCapacityList}}
-              />
+              <TerminalCapacityTable data={data}/>
             </div>
     </div>    
     

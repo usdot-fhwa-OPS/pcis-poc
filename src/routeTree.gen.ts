@@ -9,7 +9,6 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as TerminalCapacityRouteImport } from './routes/terminal-capacity'
 import { Route as ReservationRouteImport } from './routes/reservation'
 import { Route as OperatorsRouteImport } from './routes/operators'
 import { Route as NotificationsRouteImport } from './routes/notifications'
@@ -19,11 +18,6 @@ import { Route as CapacityRouteImport } from './routes/capacity'
 import { Route as AnalyticsRouteImport } from './routes/analytics'
 import { Route as IndexRouteImport } from './routes/index'
 
-const TerminalCapacityRoute = TerminalCapacityRouteImport.update({
-  id: '/terminal-capacity',
-  path: '/terminal-capacity',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const ReservationRoute = ReservationRouteImport.update({
   id: '/reservation',
   path: '/reservation',
@@ -74,7 +68,6 @@ export interface FileRoutesByFullPath {
   '/notifications': typeof NotificationsRoute
   '/operators': typeof OperatorsRoute
   '/reservation': typeof ReservationRoute
-  '/terminal-capacity': typeof TerminalCapacityRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -85,7 +78,6 @@ export interface FileRoutesByTo {
   '/notifications': typeof NotificationsRoute
   '/operators': typeof OperatorsRoute
   '/reservation': typeof ReservationRoute
-  '/terminal-capacity': typeof TerminalCapacityRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -97,7 +89,6 @@ export interface FileRoutesById {
   '/notifications': typeof NotificationsRoute
   '/operators': typeof OperatorsRoute
   '/reservation': typeof ReservationRoute
-  '/terminal-capacity': typeof TerminalCapacityRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -110,7 +101,6 @@ export interface FileRouteTypes {
     | '/notifications'
     | '/operators'
     | '/reservation'
-    | '/terminal-capacity'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -121,7 +111,6 @@ export interface FileRouteTypes {
     | '/notifications'
     | '/operators'
     | '/reservation'
-    | '/terminal-capacity'
   id:
     | '__root__'
     | '/'
@@ -132,7 +121,6 @@ export interface FileRouteTypes {
     | '/notifications'
     | '/operators'
     | '/reservation'
-    | '/terminal-capacity'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -144,18 +132,10 @@ export interface RootRouteChildren {
   NotificationsRoute: typeof NotificationsRoute
   OperatorsRoute: typeof OperatorsRoute
   ReservationRoute: typeof ReservationRoute
-  TerminalCapacityRoute: typeof TerminalCapacityRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/terminal-capacity': {
-      id: '/terminal-capacity'
-      path: '/terminal-capacity'
-      fullPath: '/terminal-capacity'
-      preLoaderRoute: typeof TerminalCapacityRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/reservation': {
       id: '/reservation'
       path: '/reservation'
@@ -224,7 +204,6 @@ const rootRouteChildren: RootRouteChildren = {
   NotificationsRoute: NotificationsRoute,
   OperatorsRoute: OperatorsRoute,
   ReservationRoute: ReservationRoute,
-  TerminalCapacityRoute: TerminalCapacityRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

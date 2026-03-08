@@ -23,8 +23,8 @@ export function DeleteTerminalCapacityButton(terminalCapacityUid:string) {
             deleteTerminalCapacity(terminalCapacityUid).then(async(resp) => { 
                 console.log(resp) 
                 dispatch(populate(await terminalCapacityList()));
-                setOpen(false);
             });
+            setOpen(false);
     
         }
     

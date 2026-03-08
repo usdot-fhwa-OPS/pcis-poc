@@ -1,45 +1,54 @@
-import { ColumnDef } from "@tanstack/react-table";
-import { Button } from "../ui/button.tsx";
-import { DeleteTerminalCapacityButton } from "../terminal-capacity/delete-terminal-capacity-button.tsx";
-//Imports generateClient and Schema may be need for future updates
-//import { generateClient } from 'aws-amplify/data';
-//import type { Schema } from '../../../amplify/data/resource';
+"use client"
 
+import { ColumnDef } from "@tanstack/react-table"
+import { UpdateTerminalCapacity } from "../terminal-capacity/update-terminal-capacity"
+import { DeleteTerminalCapacityButton } from "../terminal-capacity/delete-terminal-capacity-button"
+import { TerminalCapacityDomain } from "../terminal-capacity/terminal-capacity-domain"
+
+//Four Imports needed for Amplify Data Queries and CRUD methods
 
 //const client = generateClient<Schema>();
-export type Capacity = {
-  capacity : number
-  startTime: string
-  endTime: string
-  repeat: string
-  reason: string
-}
 
-export const columns = (): ColumnDef<any>[] => {
-  const baseColumns: ColumnDef<any>[] = [
-    { accessorKey: "capacity", header: "Capacity" },
-    { accessorKey: "startTime", header: "Start" }, 
-    { accessorKey: "endTime", header: "End" },
-    { accessorKey: "repeat", header: "Repeat" },
-    { accessorKey: "reason", header: "Reason" },
-    {
+//Define the selection of data that will be used for the table (type exported from cargo.tsx in this case)
+export const columns: ColumnDef<TerminalCapacityDomain>[] = [
+  // Define the columns for the table based on the database items (refer to resources.ts for schema names)
+  {
+    accessorKey: "capacity", 
+    header: "Capacity",
+  },
+  {
+    accessorKey: "startDate",
+    header: "Start Date",
+  },
+   {
+    accessorKey: "startTime",
+    header: "Start Time",
+  },
+  {
+    accessorKey: "endDate",
+    header: "End Date",
+  },
+   {
+    accessorKey: "endTime",
+    header: "End Time",
+  },
+ {
+    accessorKey: "repeat",
+    header: "Repeat",
+  },
+  {
+    accessorKey: "reason",
+    header: "Reason",
+  },
+  {
           accessorKey: "actions",
           header: () => <div style={{ minWidth: "50px"}}>Actions</div>,
-          cell: ({row}) => (
+          cell: ({ row }) => (
             <div className="flex space-x-8 ">
-              <Button 
-                variant="outline" 
-                //onClick={() => ()} 
-                //TO DO: PCIS2-42
-              >
-                Edit
-              </Button>
+              {UpdateTerminalCapacity(row.original.capacityId)}
               {DeleteTerminalCapacityButton(row.original.capacityId)}
             </div>
           ),
           
-        }
-
-  ];
-return baseColumns;
-}
+        },
+]

@@ -12,21 +12,20 @@ import { format } from "date-fns"
 
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { TerminalCapacityDomain } from "./terminal-capacity-domain";
-import { v4 as uuidv4 } from "uuid";
-import { saveTerminalCapacity } from "./terminal-capacity-client";
+import { saveTerminalCapacity, terminalCapacityList} from "./terminal-capacity-client";
 import { DailyRepeatOptions } from "./DailyRepeatOptions";
 import { WeeklyRepeatOptions } from "./WeeklyRepeatOptions";
 import { MonthlyRepeatOptions } from "./MonthlyRepeatOptions";
 import { YearlyRepeatOptions } from "./YearlyRepeatOptions.";
-import { useAppSelector } from "../../hooks";
-import { getTerminalCapacityList } from "./terminal-capacity-state";
+import { useAppDispatch, useAppSelector } from "../../hooks";
+import { getTerminalCapacityList, populate } from "./terminal-capacity-state";
 
 export const UpdateTerminalCapacity = (terminalCapacityUid:string) => {
 
     const [isDialogOpen, setIsDialogOpen] = useState(false)
     const [terminalCapacity, setTerminalCapacity] = useState(0) 
-    const terminalCapacityList = useAppSelector(getTerminalCapacityList)
-
+    const tcList = useAppSelector(getTerminalCapacityList)
+    const dispatch = useAppDispatch()   
     
     
     const [startDate, setStartDate] = useState<Date>(new Date())    
@@ -156,7 +155,7 @@ const showCustomRepeat = (): boolean =>{
 
     const findTerminalCapacityDomain = () => {
         const respTc: TerminalCapacityDomain 
-                = (terminalCapacityList.filter(value => (value.capacityId === terminalCapacityUid)))[0];
+                = (tcList.filter(value => (value.capacityId === terminalCapacityUid)))[0];
 
             setTerminalCapacity(respTc.capacity);
             setStartDate(respTc.startDate ? new Date(respTc.startDate) : new Date());
@@ -223,7 +222,7 @@ const showCustomRepeat = (): boolean =>{
        const save = async () => {
        
                const termCapDomain: TerminalCapacityDomain = {
-                   capacityId: uuidv4(),
+                   capacityId: terminalCapacityUid,
                    capacity: terminalCapacity,
                    capacityType: 'TEMPORARY',
                    createdAt: (new Date()).toISOString(),
@@ -257,8 +256,11 @@ const showCustomRepeat = (): boolean =>{
        
                };
        
-               saveTerminalCapacity(termCapDomain).then((resp) => { console.log(resp) });
-       
+               saveTerminalCapacity(termCapDomain).then(async (resp) => { 
+                console.log(resp) 
+                 dispatch(populate(await terminalCapacityList()));
+            });
+               setIsDialogOpen(false);
            }
 
 
