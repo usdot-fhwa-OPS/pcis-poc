@@ -114,7 +114,7 @@ export function AppSidebar() {
   const allowedForLimitedRoles = ["Home", "Reservation Status", "Notifications"];
 
    // Define which menu items are allowed for Vessel Agent Role.
-  const allowedForVesselAgentRole = ["Home", "Reservation Status", "Notifications", "Berth Requests"];
+  const allowedForVesselAgentRole = ["Home", "Notifications", "Berth Requests"];
 
   // Filter menu items based on the custom role.
   const filteredItems = items.filter((item) => {
