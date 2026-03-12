@@ -28,10 +28,17 @@ const [date, setDate] = React.useState<Date | undefined>(new Date())
   const addDays = (newDate:Date) =>{
     if(newDate){
       const day = newDate ? format(newDate, "dd"):'';
-      if(!daysOfMonth?.find((element: string) => element === day)){
+      const existingDayIndex = daysOfMonth?.indexOf(day)
+      if(existingDayIndex === -1){
+        
         daysOfMonth?.push(day);
-        setDaysOfMonth(daysOfMonth);
+        
+      }else{
+        
+        daysOfMonth.splice(existingDayIndex, 1)
+       
       }
+      setDaysOfMonth(daysOfMonth);
     }
   }
   
