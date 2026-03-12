@@ -9,7 +9,7 @@ import { format } from "date-fns";
 const repeatCycleOption = ["Each" , "OnThe"];
 
 const weekNumber = ["First" , "Second" , "Third" , "Fourth" , "Last"];
-const weekDays = ['Monday', 'Tuesday', 'Wednesday', 'Thrusday', 'Friday', 'Saturday', 'Sunday'];
+const weekDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
 export function MonthlyRepeatOptions({monthlyEvery, setMonthlyEvery, 
                                       repeatCycle, setRepeatCycle,
