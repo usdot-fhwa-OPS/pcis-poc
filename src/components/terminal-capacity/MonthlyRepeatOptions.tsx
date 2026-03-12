@@ -26,9 +26,13 @@ const [date, setDate] = React.useState<Date | undefined>(new Date())
   
 
   const addDays = (newDate:Date) =>{
-
-    daysOfMonth?.push(newDate ? format(newDate, "dd"):'' );
-    setDaysOfMonth(daysOfMonth);
+    if(newDate){
+      const day = newDate ? format(newDate, "dd"):'';
+      if(!daysOfMonth?.find((element: string) => element === day)){
+        daysOfMonth?.push(day);
+        setDaysOfMonth(daysOfMonth);
+      }
+    }
   }
   
   return (

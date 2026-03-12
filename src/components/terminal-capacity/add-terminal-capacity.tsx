@@ -85,7 +85,7 @@ const [endTime, setEndTime] = useState<string | undefined>(timeOptions[0])
         const reasonList = [
                 "Maintenance",
                 "Equipment Malfunction",
-                "Labor shortage",
+                "Labor Shortage",
                 "Other"
         ]
         
