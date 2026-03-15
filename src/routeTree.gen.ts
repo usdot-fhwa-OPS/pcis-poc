@@ -15,6 +15,8 @@ import { Route as NotificationsRouteImport } from './routes/notifications'
 import { Route as ImportRouteImport } from './routes/import'
 import { Route as CargoRouteImport } from './routes/cargo'
 import { Route as CapacityRouteImport } from './routes/capacity'
+import { Route as BerthRequestsRouteImport } from './routes/berth-requests'
+import { Route as BerthManagerRouteImport } from './routes/berth-manager'
 import { Route as AnalyticsRouteImport } from './routes/analytics'
 import { Route as IndexRouteImport } from './routes/index'
 
@@ -48,6 +50,16 @@ const CapacityRoute = CapacityRouteImport.update({
   path: '/capacity',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BerthRequestsRoute = BerthRequestsRouteImport.update({
+  id: '/berth-requests',
+  path: '/berth-requests',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BerthManagerRoute = BerthManagerRouteImport.update({
+  id: '/berth-manager',
+  path: '/berth-manager',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AnalyticsRoute = AnalyticsRouteImport.update({
   id: '/analytics',
   path: '/analytics',
@@ -62,6 +74,8 @@ const IndexRoute = IndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/analytics': typeof AnalyticsRoute
+  '/berth-manager': typeof BerthManagerRoute
+  '/berth-requests': typeof BerthRequestsRoute
   '/capacity': typeof CapacityRoute
   '/cargo': typeof CargoRoute
   '/import': typeof ImportRoute
@@ -72,6 +86,8 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/analytics': typeof AnalyticsRoute
+  '/berth-manager': typeof BerthManagerRoute
+  '/berth-requests': typeof BerthRequestsRoute
   '/capacity': typeof CapacityRoute
   '/cargo': typeof CargoRoute
   '/import': typeof ImportRoute
@@ -83,6 +99,8 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/analytics': typeof AnalyticsRoute
+  '/berth-manager': typeof BerthManagerRoute
+  '/berth-requests': typeof BerthRequestsRoute
   '/capacity': typeof CapacityRoute
   '/cargo': typeof CargoRoute
   '/import': typeof ImportRoute
@@ -95,6 +113,8 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/analytics'
+    | '/berth-manager'
+    | '/berth-requests'
     | '/capacity'
     | '/cargo'
     | '/import'
@@ -105,6 +125,8 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/analytics'
+    | '/berth-manager'
+    | '/berth-requests'
     | '/capacity'
     | '/cargo'
     | '/import'
@@ -115,6 +137,8 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/analytics'
+    | '/berth-manager'
+    | '/berth-requests'
     | '/capacity'
     | '/cargo'
     | '/import'
@@ -126,6 +150,8 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AnalyticsRoute: typeof AnalyticsRoute
+  BerthManagerRoute: typeof BerthManagerRoute
+  BerthRequestsRoute: typeof BerthRequestsRoute
   CapacityRoute: typeof CapacityRoute
   CargoRoute: typeof CargoRoute
   ImportRoute: typeof ImportRoute
@@ -178,6 +204,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CapacityRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/berth-requests': {
+      id: '/berth-requests'
+      path: '/berth-requests'
+      fullPath: '/berth-requests'
+      preLoaderRoute: typeof BerthRequestsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/berth-manager': {
+      id: '/berth-manager'
+      path: '/berth-manager'
+      fullPath: '/berth-manager'
+      preLoaderRoute: typeof BerthManagerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/analytics': {
       id: '/analytics'
       path: '/analytics'
@@ -198,6 +238,8 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AnalyticsRoute: AnalyticsRoute,
+  BerthManagerRoute: BerthManagerRoute,
+  BerthRequestsRoute: BerthRequestsRoute,
   CapacityRoute: CapacityRoute,
   CargoRoute: CargoRoute,
   ImportRoute: ImportRoute,

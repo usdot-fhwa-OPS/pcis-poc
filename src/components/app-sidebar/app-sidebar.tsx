@@ -1,4 +1,4 @@
-import { FileUp, Home, Ship, User , CalendarClock, BarChart } from "lucide-react"
+import { FileUp, Home, Ship, User , CalendarClock, BarChart, Anchor, Container } from "lucide-react"
 
 import {
   Sidebar,
@@ -39,6 +39,16 @@ const items = [
     icon: Home,
   },
   {
+    title: "Berth Requests",
+    url: "/berth-requests",
+    icon: Ship,
+  },
+  {
+    title: "Berth Reservations",
+    url: "/berth-manager",
+    icon: Anchor,
+  },
+  {
     title: "Available Operators",
     url: "/operators",
     icon: User,
@@ -51,7 +61,7 @@ const items = [
   {
     title: "Upcoming Cargo",
     url: "/cargo",
-    icon: Ship,
+    icon: Container,
   },
   {
     title: "Reservation Status",
@@ -97,14 +107,20 @@ export function AppSidebar() {
     getUserAttributes();
   }, [user]);
 
+  // Define which menu items are allowed for Terminal Operator role.
+  const allowedForTerminalOperatorRole = ["Home", "Berth Reservations", "Available Operators", "Import Stow Plan", "Upcoming Cargo", "Reservation Status", "Analytics", "Notifications"];
+
   // Define which menu items are allowed for limited roles.
   const allowedForLimitedRoles = ["Home", "Reservation Status", "Notifications"];
+
+   // Define which menu items are allowed for Vessel Agent Role.
+  const allowedForVesselAgentRole = ["Home", "Notifications", "Berth Requests"];
 
   // Filter menu items based on the custom role.
   const filteredItems = items.filter((item) => {
     if (userAttributes.role === "Terminal Operator") {
-      // Terminal Operators have access to all items.
-      return true;
+      // Terminal Operators have access to all items except Berth Request.
+      return allowedForTerminalOperatorRole.includes(item.title)
     }
 
     if (
@@ -115,6 +131,11 @@ export function AppSidebar() {
     ) {
       // These roles only have access to the allowed items.
       return allowedForLimitedRoles.includes(item.title);
+    }
+
+    if (userAttributes.role === "Vessel Agent") {
+      // Vessel Agent only has access to allowed items.
+      return allowedForVesselAgentRole.includes(item.title)
     }
 
     // If role is undefined or unrecognized, do not show any items.
