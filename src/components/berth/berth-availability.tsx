@@ -29,7 +29,7 @@ export const BerthAvailability = ({limit}: SettingsDialogProps) => {
                             <h3 className="text-sm">Set the maximum number of berths available at the terminal.</h3>
                         </div>
                     </DialogHeader>
-                    <div className="ml-2">
+                    <div className="ml-6">
                         <Label htmlFor="portCapacity">
                             Berths Available:&nbsp;
                         </Label>
@@ -42,7 +42,7 @@ export const BerthAvailability = ({limit}: SettingsDialogProps) => {
                     </div>
                     <br/>
                     <br/>
-                    <div className="ml-auto">
+                    <div className="mr-4 gap-2">
                         <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
                                 Cancel
                         </Button>
