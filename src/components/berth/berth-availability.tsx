@@ -21,7 +21,7 @@ export const BerthAvailability = ({limit}: SettingsDialogProps) => {
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogContent className="max-w-2xl p-0">
                 <form onSubmit={handleSubmit}>
-                    <DialogHeader className="p-4 border-b">
+                    <DialogHeader className="p-4 border-b-0">
                         <div className="flex items-center gap-2">
                             <h2 className="text-lg font-semibold">Berth Availability</h2>
                         </div>
@@ -29,7 +29,7 @@ export const BerthAvailability = ({limit}: SettingsDialogProps) => {
                             <h3 className="text-sm">Set the maximum number of berths available at the terminal.</h3>
                         </div>
                     </DialogHeader>
-                    <div className="terminal-row left-1">
+                    <div className="flex items-center gap-2">
                         <Label htmlFor="portCapacity">
                             Berths Available:&nbsp;&nbsp;
                         </Label>
@@ -42,7 +42,7 @@ export const BerthAvailability = ({limit}: SettingsDialogProps) => {
                     </div>
                     <br/>
                     <br/>
-                    <div className="terminal-row left-10">
+                    <div className="flex items-center gap-2">
                         <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
                                 Cancel
                         </Button>
