@@ -38,11 +38,11 @@ export const BerthAvailability = ({limit}: SettingsDialogProps) => {
                                     setBerthAvailability(Number(e.target.value))
                                 }
                                 step="1"
-                                className="four-chars"/>
+                                className="w-4"/>
                     </div>
                     <br/>
                     <br/>
-                    <div className="ml-35 flex items-center gap-2">
+                    <div className="ml-35 flex items-right gap-2">
                         <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
                                 Cancel
                         </Button>
