@@ -29,9 +29,9 @@ export const BerthAvailability = ({limit}: SettingsDialogProps) => {
                             <h3 className="text-sm">Set the maximum number of berths available at the terminal.</h3>
                         </div>
                     </DialogHeader>
-                    <div className="flex items-center gap-2">
+                    <div className="ml-2">
                         <Label htmlFor="portCapacity">
-                            Berths Available:&nbsp;&nbsp;
+                            Berths Available:&nbsp;
                         </Label>
                         <input id="berthAvailability" type="number" min={0} max={limit} value={berthAvailability}
                                 onChange={(e) =>
@@ -42,12 +42,13 @@ export const BerthAvailability = ({limit}: SettingsDialogProps) => {
                     </div>
                     <br/>
                     <br/>
-                    <div className="flex items-center gap-2">
+                    <div className="ml-auto">
                         <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
                                 Cancel
                         </Button>
                         <Button type="submit">Enter Berth Availability</Button>
                     </div>
+                    <br/>
                 </form>
             </DialogContent>
         </Dialog>
