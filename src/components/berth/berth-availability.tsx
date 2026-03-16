@@ -1,7 +1,6 @@
 "use client"
 
 import { useState } from "react"
-//import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
 import { Dialog, DialogContent, DialogHeader } from "../ui/dialog"
 import { Button } from "../ui/button"
 import { Label } from "../ui/label"
@@ -30,7 +29,7 @@ export const BerthAvailability = ({limit}: SettingsDialogProps) => {
                             <h3 className="text-sm">Set the maximum number of berths available at the terminal.</h3>
                         </div>
                     </DialogHeader>
-                    <div className="terminal-row">
+                    <div className="terminal-row left-1">
                         <Label htmlFor="portCapacity">
                             Berths Available:&nbsp;&nbsp;
                         </Label>
@@ -41,10 +40,14 @@ export const BerthAvailability = ({limit}: SettingsDialogProps) => {
                                 step="1"
                                 className="four-chars"/>
                     </div>
-                    <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
-                            Cancel
-                    </Button>
-                    <Button type="submit">Enter Berth Availability</Button>
+                    <br/>
+                    <br/>
+                    <div className="terminal-row left-10">
+                        <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
+                                Cancel
+                        </Button>
+                        <Button type="submit">Enter Berth Availability</Button>
+                    </div>
                 </form>
             </DialogContent>
         </Dialog>
