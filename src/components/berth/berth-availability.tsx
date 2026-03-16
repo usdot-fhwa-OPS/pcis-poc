@@ -30,7 +30,7 @@ export const BerthAvailability = ({limit}: SettingsDialogProps) => {
                         </div>
                     </DialogHeader>
                     <div className="ml-4 flex gap-2">
-                        <Label htmlFor="portCapacity">
+                        <Label htmlFor="berthsAvailable">
                             Berths Available:
                         </Label>
                         <input id="berthAvailability" type="number" min={0} max={limit} value={berthAvailability}
@@ -42,7 +42,7 @@ export const BerthAvailability = ({limit}: SettingsDialogProps) => {
                     </div>
                     <br/>
                     <br/>
-                    <div className="ml-35 gap-2">
+                    <div className="flex justify-end gap-2 mr-4">
                         <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
                                 Cancel
                         </Button>
