@@ -1,3 +1,5 @@
+"use client"
+
 import { useState } from "react";
 //import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
 import { Dialog, DialogContent, DialogHeader } from "../ui/dialog";
@@ -5,7 +7,7 @@ import { Dialog, DialogContent, DialogHeader } from "../ui/dialog";
 
 export const BerthAvailability = () => {
 
-    const [isDialogOpen, setIsDialogOpen] = useState(false)
+    const [isDialogOpen, setIsDialogOpen] = useState(true)
   
     return (
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
