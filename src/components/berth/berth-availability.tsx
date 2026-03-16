@@ -42,7 +42,7 @@ export const BerthAvailability = ({limit}: SettingsDialogProps) => {
                     </div>
                     <br/>
                     <br/>
-                    <div className="ml-35 flex gap-2">
+                    <div className="ml-35 gap-2">
                         <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
                                 Cancel
                         </Button>
