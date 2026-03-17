@@ -1,4 +1,4 @@
-import { FileUp, Home, Ship, User , CalendarClock, BarChart, Anchor, Container, triangleAlert } from "lucide-react"
+import { FileUp, Home, Ship, User , CalendarClock, BarChart, Anchor, Container, TriangleAlert } from "lucide-react"
 
 import {
   Sidebar,
@@ -71,7 +71,7 @@ const items = [
   {
     title: "Hazardous Cargo",
     url: "/hazardous-cargo",
-    icon: triangleAlert,
+    icon: TriangleAlert,
   },
   {
     title: "Analytics",
