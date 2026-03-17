@@ -111,7 +111,7 @@ export function AppSidebar() {
   const allowedForTerminalOperatorRole = ["Home", "Berth Reservations", "Available Operators", "Import Stow Plan", "Upcoming Cargo", "Reservation Status", "Analytics", "Notifications"];
 
   // Define which menu items are allowed for limited roles.
-  const allowedForLimitedRoles = ["Home", "Reservation Status", "Notifications"];
+  const allowedForLimitedRoles = ["Home", "Reservation Status", "Analytics", "Notifications"];
 
    // Define which menu items are allowed for Vessel Agent Role.
   const allowedForVesselAgentRole = ["Home", "Notifications", "Berth Requests"];
