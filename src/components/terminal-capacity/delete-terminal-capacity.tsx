@@ -21,8 +21,9 @@ export const DeleteTerminalCapacity = (terminalCapacityUid:string) => {
 
         deleteTerminalCapacity(terminalCapacityUid).then((resp) => { 
             console.log(resp) 
-            setIsDialogOpen(false);
         });
+        
+        setIsDialogOpen(false);
 
     }
   

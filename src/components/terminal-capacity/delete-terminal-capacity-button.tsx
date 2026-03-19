@@ -11,9 +11,22 @@ import {
   DialogTrigger,
 } from "../ui/dialog"
 import "./terminal-capacity.css"
+import { deleteTerminalCapacity, terminalCapacityList } from "./terminal-capacity-client"
+import { useAppDispatch } from "../../hooks"
+import { populate } from "./terminal-capacity-state"
 
-export function DeleteTerminalCapacityButton() {
+export function DeleteTerminalCapacityButton(terminalCapacityUid:string) {
     const [open, setOpen] = useState(false)
+    const dispatch = useAppDispatch()
+
+    const deleteTc = () => {
+            deleteTerminalCapacity(terminalCapacityUid).then(async(resp) => { 
+                console.log(resp) 
+                dispatch(populate(await terminalCapacityList()));
+            });
+            setOpen(false);
+    
+        }
     
     return (
       <Dialog open={open} onOpenChange={setOpen}>
@@ -34,7 +47,7 @@ export function DeleteTerminalCapacityButton() {
                 Do you want to continue?
               </div>
             <DialogFooter className="center-buttons">
-                <Button type="submit">Yes</Button>
+                <Button type="button" onClick={()=>deleteTc()} >Yes</Button>
                 <Button type="button" variant="outline" onClick={() => setOpen(false)}>No</Button>
             </DialogFooter>
         </DialogContent>

@@ -46,8 +46,8 @@ export const columns: ColumnDef<TerminalCapacityDomain>[] = [
           header: () => <div style={{ minWidth: "50px"}}>Actions</div>,
           cell: ({ row }) => (
             <div className="flex space-x-8 ">
-             {UpdateTerminalCapacity(row.original.capacityId)}
-              <DeleteTerminalCapacityButton/>
+              {UpdateTerminalCapacity(row.original.capacityId)}
+              {DeleteTerminalCapacityButton(row.original.capacityId)}
             </div>
           ),
           

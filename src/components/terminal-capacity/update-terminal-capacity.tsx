@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useState } from "react";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
 import { Tooltip, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
 import { Button } from "../ui/button";
@@ -12,74 +12,22 @@ import { format } from "date-fns"
 
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { TerminalCapacityDomain } from "./terminal-capacity-domain";
-import { v4 as uuidv4 } from "uuid";
-import { getTerrminalCapacity, saveTerminalCapacity } from "./terminal-capacity-client";
+import { saveTerminalCapacity, terminalCapacityList} from "./terminal-capacity-client";
 import { DailyRepeatOptions } from "./DailyRepeatOptions";
 import { WeeklyRepeatOptions } from "./WeeklyRepeatOptions";
 import { MonthlyRepeatOptions } from "./MonthlyRepeatOptions";
 import { YearlyRepeatOptions } from "./YearlyRepeatOptions.";
+import { useAppDispatch, useAppSelector } from "../../hooks";
+import { getTerminalCapacityList, populate } from "./terminal-capacity-state";
 
 export const UpdateTerminalCapacity = (terminalCapacityUid:string) => {
 
     const [isDialogOpen, setIsDialogOpen] = useState(false)
     const [terminalCapacity, setTerminalCapacity] = useState(0) 
-    const handleOpen = async () => {
-                getTerrminalCapacity(terminalCapacityUid).then((terminalCapacity: TerminalCapacityDomain) =>{
-            setTerminalCapacity(terminalCapacity.capacity);
-            setStartDate(terminalCapacity.startDate?new Date(terminalCapacity.startDate):new Date());
-            setStartTime(terminalCapacity.startTime?terminalCapacity.startTime:undefined);
-            setEndDate(terminalCapacity.endDate?new Date(terminalCapacity.endDate):new Date());
-            setEndTime(terminalCapacity.endTime?terminalCapacity.endTime:undefined);
-            setRepeatOption(terminalCapacity.repeat);
-            setReason(terminalCapacity.reason);
-            setOtherReason(terminalCapacity.reason);
-            if(terminalCapacity.repeatConfig){
-                
-                setRepeatOption('Custom');
-                setFrequency(terminalCapacity.repeatConfig.frequency)
-                if(showDailyRepeatOption()){
-
-                    setDailyEvery(terminalCapacity.repeatConfig.interval)
-
-                }else if(showWeeklyRepeatOption()){
-
-                    setWeeklyEvery(terminalCapacity.repeatConfig.interval);
-                    setWeeklyOnDays(terminalCapacity.repeatConfig.daysOfWeek);
-
-
-                }else if(showMonthlyRepeatOption()){
-
-                    setMonthlyEvery(terminalCapacity.repeatConfig.interval)
-                    setRepeatCycle(terminalCapacity.repeatConfig.cycle)
-                    setDaysOfMonth(terminalCapacity.repeatConfig.daysOfMonth)
-                    setOnTheWeek(terminalCapacity.repeatConfig.weekNumber)
-                    setOnTheWeekDay(terminalCapacity.repeatConfig.dayOfWeek)
-
-
-                }else if(showYearlyRepeatOption()){
-
-                    setYearlyEvery(terminalCapacity.repeatConfig.interval)
-                    setMonthsOfYear(terminalCapacity.repeatConfig.months)
-                    if(terminalCapacity.repeatConfig.daysOfWeek){
+    const tcList = useAppSelector(getTerminalCapacityList)
+    const dispatch = useAppDispatch()   
     
-                        setOnTheWeekDay(terminalCapacity.repeatConfig.dayOfWeek);
-                        setDayOfWeekforYearly(true);
-
-                    }
-                    
-                    setOnTheWeek(terminalCapacity.repeatConfig.weekNumber)
-                    setMonthsOfYear(terminalCapacity.repeatConfig.months)
-
-                }
-                
-            }
-                
-            setIsDialogOpen(true)
-        });
-
-              
-            }
-
+    
     const [startDate, setStartDate] = useState<Date>(new Date())    
     const [endDate, setEndDate] = useState<Date>(new Date())       
     const [isStartCalendarOpen, setIsStartCalendarOpen] = useState(false)
@@ -135,7 +83,7 @@ const [endTime, setEndTime] = useState<string | undefined>(timeOptions[0])
         const reasonList = [
                 "Maintenance",
                 "Equipment Malfunction",
-                "Labor shortage",
+                "Labor Shortage",
                 "Other"
         ]
 
@@ -204,19 +152,84 @@ const showCustomRepeat = (): boolean =>{
        const [yearlyEvery, setYearlyEvery] = useState<number | undefined>()
        const [monthsOfYear, setMonthsOfYear] = useState<string[] | undefined>()
        const [dayOfWeekforYearly, setDayOfWeekforYearly] = React.useState(false)
+
+    const findTerminalCapacityDomain = () => {
+        const respTc: TerminalCapacityDomain 
+                = (tcList.filter(value => (value.capacityId === terminalCapacityUid)))[0];
+
+            setTerminalCapacity(respTc.capacity);
+            setStartDate(respTc.startDate ? new Date(respTc.startDate) : new Date());
+            setStartTime(respTc.startTime ? respTc.startTime : undefined);
+            setEndDate(respTc.endDate ? new Date(respTc.endDate) : new Date());
+            setEndTime(respTc.endTime ? respTc.endTime : undefined);
+            setRepeatOption(respTc.repeat);
+            setReason(respTc.reason);
+            setOtherReason(respTc.reason);
+            if (respTc.repeatConfig) {
+
+                setRepeatOption('Custom');
+                const frequency = respTc.repeatConfig.frequency;
+                setFrequency(frequency)
+                if ('Daily' === frequency) {
+
+                    setDailyEvery(respTc.repeatConfig.interval)
+
+                } else if ('Weekly' === frequency) {
+
+                    setWeeklyEvery(respTc.repeatConfig.interval);
+                    setWeeklyOnDays(respTc.repeatConfig.daysOfWeek);
+
+
+                } else if ('Monthly' === frequency) {
+
+                    setMonthlyEvery(respTc.repeatConfig.interval)
+                    setRepeatCycle(respTc.repeatConfig.cycle)
+                    setDaysOfMonth(respTc.repeatConfig.daysOfMonth)
+                    setOnTheWeek(respTc.repeatConfig.weekNumber)
+                    setOnTheWeekDay(respTc.repeatConfig.dayOfWeek)
+
+
+                } else if ('Yearly' === frequency) {
+
+                    setYearlyEvery(respTc.repeatConfig.interval)
+                    setMonthsOfYear(respTc.repeatConfig.months)
+                    if (respTc.repeatConfig.daysOfWeek) {
+
+                        setOnTheWeekDay(respTc.repeatConfig.dayOfWeek);
+                        setDayOfWeekforYearly(true);
+
+                    }
+
+                    setOnTheWeek(respTc.repeatConfig.weekNumber)
+                    setMonthsOfYear(respTc.repeatConfig.months)
+
+                }
+
+            }
+
+
+    
+    }
+       
     
        
+    const handleOpen = () => {
+        findTerminalCapacityDomain();
+        setIsDialogOpen(true)
+    }
+
+
        const save = async () => {
        
                const termCapDomain: TerminalCapacityDomain = {
-                   capacityId: uuidv4(),
+                   capacityId: terminalCapacityUid,
                    capacity: terminalCapacity,
                    capacityType: 'TEMPORARY',
                    createdAt: (new Date()).toISOString(),
                    updatedAt: (new Date()).toISOString(),
-                   startDate: format(startDate, "MM/DD/yyyy"),
+                   startDate: format(startDate, "MM/dd/yyyy"),
                    startTime: startTime,
-                   endDate: format(endDate, "MM/DD/yyyy"),
+                   endDate: format(endDate, "MM/dd/yyyy"),
                    endTime: endTime,
                    repeat: repeatOption,
                     reason: showOtherReason()?otherReason:reason,
@@ -243,8 +256,11 @@ const showCustomRepeat = (): boolean =>{
        
                };
        
-               saveTerminalCapacity(termCapDomain).then((resp) => { console.log(resp) });
-       
+               saveTerminalCapacity(termCapDomain).then(async (resp) => { 
+                console.log(resp) 
+                 dispatch(populate(await terminalCapacityList()));
+            });
+               setIsDialogOpen(false);
            }
 
 
