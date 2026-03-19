@@ -21,6 +21,7 @@ import { Route as CapacityImport } from './routes/capacity'
 import { Route as BerthRequestsImport } from './routes/berth-requests'
 import { Route as BerthManagerImport } from './routes/berth-manager'
 import { Route as HazardousCargoImport } from './routes/hazardous-cargo'
+import { Route as HazardousCargoManagerImport } from './routes/hazardous-cargo-manager'
 import { Route as AnalyticsImport } from './routes/analytics'
 import { Route as IndexImport } from './routes/index'
 
@@ -86,6 +87,12 @@ const HazardousCargoRoute = HazardousCargoImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const HazardousCargoManagerRoute = HazardousCargoManagerImport.update({
+  id: '/hazardous-cargo-manager',
+  path: '/hazardous-cargo-manager',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const AnalyticsRoute = AnalyticsImport.update({
   id: '/analytics',
   path: '/analytics',
@@ -114,6 +121,13 @@ declare module '@tanstack/react-router' {
       path: '/analytics'
       fullPath: '/analytics'
       preLoaderRoute: typeof AnalyticsImport
+      parentRoute: typeof rootRoute
+    }
+    '/hazardous-cargo-manager': {
+      id: '/hazardous-cargo-manager'
+      path: '/hazardous-cargo-manager'
+      fullPath: '/hazardous-cargo-manager'
+      preLoaderRoute: typeof HazardousCargoManagerImport
       parentRoute: typeof rootRoute
     }
     '/hazardous-cargo': {
@@ -194,6 +208,7 @@ declare module '@tanstack/react-router' {
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/analytics': typeof AnalyticsRoute
+  '/hazardous-cargo-manager': typeof HazardousCargoManagerRoute
   '/hazardous-cargo': typeof HazardousCargoRoute
   '/berth-manager': typeof BerthManagerRoute
   '/berth-requests': typeof BerthRequestsRoute
@@ -209,6 +224,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/analytics': typeof AnalyticsRoute
+  '/hazardous-cargo-manager': typeof HazardousCargoManagerRoute
   '/hazardous-cargo': typeof HazardousCargoRoute
   '/berth-manager': typeof BerthManagerRoute
   '/berth-requests': typeof BerthRequestsRoute
@@ -225,6 +241,7 @@ export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
   '/analytics': typeof AnalyticsRoute
+  '/hazardous-cargo-manager': typeof HazardousCargoManagerRoute
   '/hazardous-cargo': typeof HazardousCargoRoute
   '/berth-manager': typeof BerthManagerRoute
   '/berth-requests': typeof BerthRequestsRoute
@@ -242,6 +259,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/analytics'
+    | '/hazardous-cargo-manager'
     | '/hazardous-cargo'
     | '/berth-manager'
     | '/berth-requests'
@@ -256,6 +274,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/analytics'
+    | '/hazardous-cargo-manager'
     | '/hazardous-cargo'
     | '/berth-manager'
     | '/berth-requests'
@@ -270,6 +289,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/analytics'
+    | '/hazardous-cargo-manager'
     | '/hazardous-cargo'
     | '/berth-manager'
     | '/berth-requests'
@@ -286,6 +306,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AnalyticsRoute: typeof AnalyticsRoute
+  HazardousCargoManagerRoute: typeof HazardousCargoManagerRoute
   HazardousCargoRoute: typeof HazardousCargoRoute
   BerthManagerRoute: typeof BerthManagerRoute
   BerthRequestsRoute: typeof BerthRequestsRoute
@@ -301,6 +322,7 @@ export interface RootRouteChildren {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AnalyticsRoute: AnalyticsRoute,
+  HazardousCargoManagerRoute: HazardousCargoManagerRoute,
   HazardousCargoRoute: HazardousCargoRoute,
   BerthManagerRoute: BerthManagerRoute,
   BerthRequestsRoute: BerthRequestsRoute,
@@ -325,6 +347,7 @@ export const routeTree = rootRoute
       "children": [
         "/",
         "/analytics",
+        "/hazardous-cargo-manager",
         "/hazardous-cargo",
         "/berth-manager",
         "/berth-requests",
@@ -342,6 +365,9 @@ export const routeTree = rootRoute
     },
     "/analytics": {
       "filePath": "analytics.tsx"
+    },
+    "/hazardous-cargo-manager": {
+      "filePath": "hazardous-cargo-manager.tsx"
     },
     "/hazardous-cargo": {
       "filePath": "hazardous-cargo.tsx"
