@@ -252,64 +252,136 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
             termCapList.map((item) => {
               try {
                 if (item) {
-                  if('MAXIMUM' === item.capacityType){
+                  if ('MAXIMUM' === item.capacityType) {
 
-                        limit = limit + item.capacity;
+                    limit = limit + item.capacity;
 
-                  }else if (('Never' !== item.repeat) &&(item.startDate) && (item.endDate)
+                  } else if ((item.startDate) && (item.endDate)
                     && (item.startTime) && (item.endTime)) {
 
-                      if('Daily' === item.repeat){
-                          addLimit(item);
-                      }else if('Weekdays' === item.repeat){
-                        
-                          if(!isWeekend(date)){
-                              addLimit(item);
-                          }
+                    if ('Never' === item.repeat) {
+                      if(differenceInDays(item.startDate, date) === 0){
+                          // same day as start date
+                            addLimit(item);
+                      }
+                      
+                    }else if ('Daily' === item.repeat) {
 
-                      }else if('Weekends' === item.repeat){
-                        
-                          if(isWeekend(date)){
-                              addLimit(item);
-                          }
+                      addLimit(item);
+                      
+                    } else if ('Weekdays' === item.repeat) {
 
-                        
-                      }else if('Weekly' === item.repeat){
-                       
+                      if (!isWeekend(date)) {
+                        addLimit(item);
+                      }
+
+                    } else if ('Weekends' === item.repeat) {
+
+                      if (isWeekend(date)) {
+                        addLimit(item);
+                      }
+
+
+                    } else if ('Weekly' === item.repeat) {
+
+                      let daysAfterStart = differenceInDays(item.startDate, date);
+                      if ((daysAfterStart % 7) == 0) {
                         addLimit(item);
 
-                      }else if('Biweekly' === item.repeat){
-                       
-                        let daysAfterStart = differenceInDays(item.startDate, date);
-                        //even
-                        if((daysAfterStart % 2) == 0){
-                            // bi weekly
-                            addLimit(item);
-                        
-                        }
-                        
-                      }else if('Monthly' === item.repeat){
-                       
-                        
-                        
-                      }else if('Every 3 months' === item.repeat){
-                       
-                        
-                        
-                      }else if('Every 6 months' === item.repeat){
-                       
-                        
-                        
-                      }else if('Yearly' === item.repeat){
-                       
-                        
-                        
-                      }else if('Custom' === item.repeat){
-                       
-                        
-                        
                       }
-                    
+
+                    } else if ('Biweekly' === item.repeat) {
+
+                      let daysAfterStart = differenceInDays(item.startDate, date);
+                      //even
+                      if ((daysAfterStart % 2) == 0) {
+                        // bi weekly
+                        addLimit(item);
+
+                      }
+
+                    } else if ('Monthly' === item.repeat) {
+
+                      let daysAfterStart = differenceInDays(item.startDate, date);
+                     
+                      if ((daysAfterStart % 30) == 0) {
+                        
+                        addLimit(item);
+
+                      }
+
+                    } else if ('Every 3 months' === item.repeat) {
+
+                      let daysAfterStart = differenceInDays(item.startDate, date);
+                      
+                      if ((daysAfterStart % (30*3)) == 0) {
+                        
+                        addLimit(item);
+
+                      }
+
+                    } else if ('Every 6 months' === item.repeat) {
+
+                      let daysAfterStart = differenceInDays(item.startDate, date);
+                      
+                      if ((daysAfterStart % (30*6)) == 0) {
+                        
+                        addLimit(item);
+
+                      }
+
+                    } else if ('Yearly' === item.repeat) {
+
+                      let daysAfterStart = differenceInDays(item.startDate, date);
+                      
+                      if ((daysAfterStart % 365) == 0) {
+                        
+                        addLimit(item);
+
+                      }
+
+                    } else if ('Custom' === item.repeat) {
+
+                      if ('Daily' === item.repeatConfig?.frequency) {
+
+                        let daysCount = differenceInDays(item.startDate, date);
+                        if ((item.repeatConfig.interval) &&
+                          ((daysCount % item.repeatConfig.interval) == 0)) {
+
+                          addLimit(item);
+                        }
+
+                      } else if ('Weekly' === item.repeatConfig?.frequency) {
+
+                        let daysCount = differenceInDays(item.startDate, date);
+                        if ((item.repeatConfig.interval) &&
+                          ((daysCount % (item.repeatConfig.interval * 7)) == 0)) {
+
+                          addLimit(item);
+                        }
+
+                      } else if ('Monthly' === item.repeatConfig?.frequency) {
+
+                        let daysCount = differenceInDays(item.startDate, date);
+                        if ((item.repeatConfig.interval) &&
+                          ((daysCount % (item.repeatConfig.interval * 30)) == 0)) {
+
+                          addLimit(item);
+                        }
+
+                      } else if ('Yearly' === item.repeatConfig?.frequency) {
+
+                        let daysCount = differenceInDays(item.startDate, date);
+                        if ((item.repeatConfig.interval) &&
+                          ((daysCount % (item.repeatConfig.interval * 365)) == 0)) {
+
+                          addLimit(item);
+                        }
+
+                      }
+
+                    }
+
 
                   }
                 }
