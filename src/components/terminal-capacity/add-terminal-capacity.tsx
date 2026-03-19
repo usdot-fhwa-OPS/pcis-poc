@@ -14,11 +14,13 @@ import { format } from "date-fns"
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { TerminalCapacityDomain } from "./terminal-capacity-domain";
 import { v4 as uuidv4 } from "uuid";
-import { saveTerminalCapacity } from "./terminal-capacity-client";
+import { saveTerminalCapacity, terminalCapacityList } from "./terminal-capacity-client";
 import { WeeklyRepeatOptions } from "./WeeklyRepeatOptions";
 import { DailyRepeatOptions } from "./DailyRepeatOptions";
 import { MonthlyRepeatOptions } from "./MonthlyRepeatOptions";
 import { YearlyRepeatOptions } from "./YearlyRepeatOptions.";
+import { useAppDispatch } from "../../hooks";
+import { populate } from "./terminal-capacity-state";
 
 export const AddTerminalCapacity = () => {
 
@@ -32,7 +34,7 @@ export const AddTerminalCapacity = () => {
     const [endDate, setEndDate] = useState<Date>(new Date())       
     const [isStartCalendarOpen, setIsStartCalendarOpen] = useState(false)
     const [isEndCalendarOpen, setIsEndCalendarOpen] = useState(false)
-    
+    const dispatch = useAppDispatch()
     
     
 const timeOptions = [
@@ -83,7 +85,7 @@ const [endTime, setEndTime] = useState<string | undefined>(timeOptions[0])
         const reasonList = [
                 "Maintenance",
                 "Equipment Malfunction",
-                "Labor shortage",
+                "Labor Shortage",
                 "Other"
         ]
         
@@ -162,9 +164,9 @@ const [endTime, setEndTime] = useState<string | undefined>(timeOptions[0])
             capacityType: 'TEMPORARY',
             createdAt: (new Date()).toISOString(),
             updatedAt: (new Date()).toISOString(),
-            startDate: format(startDate, "MM/DD/yyyy"),
+            startDate: format(startDate, "MM/dd/yyyy"),
             startTime: startTime,
-            endDate: format(endDate, "MM/DD/yyyy"),
+            endDate: format(endDate, "MM/dd/yyyy"),
             endTime: endTime,
             repeat: repeatOption,
             reason: showOtherReason()?otherReason:reason,
@@ -191,7 +193,13 @@ const [endTime, setEndTime] = useState<string | undefined>(timeOptions[0])
 
         };
 
-        saveTerminalCapacity(termCapDomain).then((resp) => { console.log(resp) });
+        saveTerminalCapacity(termCapDomain).then(async (resp) => { 
+            console.log(resp) 
+            dispatch(populate(await terminalCapacityList()));
+        });
+        
+        setIsDialogOpen(false);
+
 
     }
 
