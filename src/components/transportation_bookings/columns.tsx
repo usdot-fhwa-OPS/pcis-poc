@@ -13,7 +13,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "../ui/tooltip"
-import { format } from "date-fns"
+import { differenceInDays, format, isWeekend } from "date-fns"
 import { cn } from "../../lib/utils"
 import { TransOpUpcomingBookings, TransOpOngoingBookings } from "../../routes/reservation.tsx";
 //Four Imports needed for Amplify Data Queries and CRUD methods
@@ -26,6 +26,9 @@ const client = generateClient<Schema>();
 import { TransOperatorCompletedBookings } from "../../routes/reservation.tsx"
 import { Checkbox } from "../ui/checkbox.tsx";
 import { toast } from "sonner";
+import { useAppSelector } from "../../hooks.tsx";
+import { getTerminalCapacityList } from "../terminal-capacity/terminal-capacity-state.tsx";
+import { TerminalCapacityDomain } from "../terminal-capacity/terminal-capacity-domain.tsx";
 
 
 export const columns = (): ColumnDef<any>[] => {
@@ -236,25 +239,117 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
         const [isCalendarOpen, setIsCalendarOpen] = useState(false)
         const [isDialogOpen, setIsDialogOpen] = useState(false)
         const [isAtCapacity, setIsAtCapacity] = useState(false)
-        
+        const termCapList = useAppSelector(getTerminalCapacityList)
         
         const isDateTimeSelected = (): boolean => {
           return !!date && !!time
         }
-
         
+        function getTerminalCapacityLimit(date: Date, time: string) {
+          let limit = 0;
+          try {
+
+            termCapList.map((item) => {
+              try {
+                if (item) {
+                  if('MAXIMUM' === item.capacityType){
+
+                        limit = limit + item.capacity;
+
+                  }else if (('Never' !== item.repeat) &&(item.startDate) && (item.endDate)
+                    && (item.startTime) && (item.endTime)) {
+
+                      if('Daily' === item.repeat){
+                          addLimit(item);
+                      }else if('Weekdays' === item.repeat){
+                        
+                          if(!isWeekend(date)){
+                              addLimit(item);
+                          }
+
+                      }else if('Weekends' === item.repeat){
+                        
+                          if(isWeekend(date)){
+                              addLimit(item);
+                          }
+
+                        
+                      }else if('Weekly' === item.repeat){
+                       
+                        addLimit(item);
+
+                      }else if('Biweekly' === item.repeat){
+                       
+                        let daysAfterStart = differenceInDays(item.startDate, date);
+                        //even
+                        if((daysAfterStart % 2) == 0){
+                            // bi weekly
+                            addLimit(item);
+                        
+                        }
+                        
+                      }else if('Monthly' === item.repeat){
+                       
+                        
+                        
+                      }else if('Every 3 months' === item.repeat){
+                       
+                        
+                        
+                      }else if('Every 6 months' === item.repeat){
+                       
+                        
+                        
+                      }else if('Yearly' === item.repeat){
+                       
+                        
+                        
+                      }else if('Custom' === item.repeat){
+                       
+                        
+                        
+                      }
+                    
+
+                  }
+                }
+
+              } catch (e) {
+                console.error(e);
+              }
+            })
+
+
+          } catch (error) {
+            console.error('Error fetching booking limit', error);
+          }
+          return limit;
+
+          function addLimit(item: TerminalCapacityDomain) {
+            const start = new Date(item.startDate + ' ' + item.startTime);
+            const end = new Date(item.endDate + ' ' + item.endTime);
+
+            const pickedDate = new Date(format(date, "MM/dd/yyyy") + ' ' + time);
+            if ((pickedDate >= start) && (pickedDate <= end)) {
+              limit = limit + item.capacity;
+            }
+          }
+          }
 
         const handleBooking = async () => {
-          const limit = await (table.options.meta as TransOpDataTableMeta)?.getTerminalCapacity() 
-          const bookingsLength = await (table.options.meta as TransOpDataTableMeta)?.getBookingsAmount(String(format(date!, "MM/dd/yyyy")))
-          if (bookingsLength >= limit) {
-            setIsAtCapacity(true);
-            toast.error(`Terminal at capacity (Limit ${limit} per day). Please try a different date.`)
-          } else {
-            (table.options.meta as TransOpDataTableMeta)?.updateTransOpBooking(row.original.cargoUnitID, "Pending Reservation Approval", String(format(date!, "MM/dd/yyyy")), time ?? "") 
-            setIsDialogOpen(false)
-            setIsAtCapacity(false)
+          if (date && time) {
+            const limit = getTerminalCapacityLimit(date, time)
+            const bookingsLength = await (table.options.meta as TransOpDataTableMeta)?.getBookingsAmount(String(format(date!, "MM/dd/yyyy")))
+            if (bookingsLength >= limit) {
+              setIsAtCapacity(true);
+              toast.error(`Terminal at capacity (Limit ${limit} per day). Please try a different date.`)
+            } else {
+              (table.options.meta as TransOpDataTableMeta)?.updateTransOpBooking(row.original.cargoUnitID, "Pending Reservation Approval", String(format(date!, "MM/dd/yyyy")), time ?? "")
+              setIsDialogOpen(false)
+              setIsAtCapacity(false)
+            }
           }
+
         }
 
         const timeOptions = [

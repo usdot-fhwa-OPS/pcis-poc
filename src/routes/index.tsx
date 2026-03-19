@@ -24,6 +24,9 @@ import {
 //Three Imports needed for Amplify Data Queries and CRUD methods 
 import { generateClient, SelectionSet } from 'aws-amplify/data';
 import type { Schema } from '../../amplify/data/resource';
+import { useAppDispatch, useAppSelector } from '../hooks.tsx';
+import { getTerminalCapacityList, populate } from '../components/terminal-capacity/terminal-capacity-state.tsx';
+import { terminalCapacityList } from '../components/terminal-capacity/terminal-capacity-client.tsx';
 
 const client = generateClient<Schema>();
 
@@ -143,6 +146,15 @@ function Index() {
     const [userAttributes, setUserAttributes] = useState<{ fullName: string; role: string, email: string }>({ fullName: '', role: '', email: '' });
     const [analyticsData, setAnalyticsData] = useState<AnalyticsResponse | null>(null);
     const [analyticsLoading, setAnalyticsLoading] = useState(false);
+
+    const dispatch = useAppDispatch()
+    const termCapList = useAppSelector(getTerminalCapacityList)
+    const fetchTerminalCapacityList = async () => {
+        
+            dispatch(populate(await terminalCapacityList()));
+           
+      }
+
     useEffect(() => {
       const getUserAttributes = async () => {
         try {
@@ -165,6 +177,12 @@ function Index() {
       if (user) {
         getUserAttributes();
       }
+
+      if(termCapList.length === 0){
+        fetchTerminalCapacityList();
+      }
+      
+      
     }, [user]);
 
     // Fetch analytics for BCO
@@ -248,6 +266,9 @@ function Index() {
         console.error('Error fetching booking limit', error);
       }
   }
+
+      
+
 
   async function getBookingsAmount(reservationDate: string) {
     try {
