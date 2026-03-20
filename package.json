@@ -48,7 +48,7 @@
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
-    "@aws-amplify/backend": "^1.2.1",
+    "@aws-amplify/backend": "^1.13.0",
     "@aws-amplify/backend-cli": "^1.4.6",
     "@aws-sdk/client-cognito-identity-provider": "^3.750.0",
     "@eslint/js": "^9.15.0",
