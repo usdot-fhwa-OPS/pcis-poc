@@ -13,6 +13,7 @@ import { Route as ReservationRouteImport } from './routes/reservation'
 import { Route as OperatorsRouteImport } from './routes/operators'
 import { Route as NotificationsRouteImport } from './routes/notifications'
 import { Route as ImportRouteImport } from './routes/import'
+import { Route as HazardousCargoRouteImport } from './routes/hazardous-cargo'
 import { Route as CargoRouteImport } from './routes/cargo'
 import { Route as CapacityRouteImport } from './routes/capacity'
 import { Route as BerthRequestsRouteImport } from './routes/berth-requests'
@@ -38,6 +39,11 @@ const NotificationsRoute = NotificationsRouteImport.update({
 const ImportRoute = ImportRouteImport.update({
   id: '/import',
   path: '/import',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HazardousCargoRoute = HazardousCargoRouteImport.update({
+  id: '/hazardous-cargo',
+  path: '/hazardous-cargo',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CargoRoute = CargoRouteImport.update({
@@ -78,6 +84,7 @@ export interface FileRoutesByFullPath {
   '/berth-requests': typeof BerthRequestsRoute
   '/capacity': typeof CapacityRoute
   '/cargo': typeof CargoRoute
+  '/hazardous-cargo': typeof HazardousCargoRoute
   '/import': typeof ImportRoute
   '/notifications': typeof NotificationsRoute
   '/operators': typeof OperatorsRoute
@@ -90,6 +97,7 @@ export interface FileRoutesByTo {
   '/berth-requests': typeof BerthRequestsRoute
   '/capacity': typeof CapacityRoute
   '/cargo': typeof CargoRoute
+  '/hazardous-cargo': typeof HazardousCargoRoute
   '/import': typeof ImportRoute
   '/notifications': typeof NotificationsRoute
   '/operators': typeof OperatorsRoute
@@ -103,6 +111,7 @@ export interface FileRoutesById {
   '/berth-requests': typeof BerthRequestsRoute
   '/capacity': typeof CapacityRoute
   '/cargo': typeof CargoRoute
+  '/hazardous-cargo': typeof HazardousCargoRoute
   '/import': typeof ImportRoute
   '/notifications': typeof NotificationsRoute
   '/operators': typeof OperatorsRoute
@@ -117,6 +126,7 @@ export interface FileRouteTypes {
     | '/berth-requests'
     | '/capacity'
     | '/cargo'
+    | '/hazardous-cargo'
     | '/import'
     | '/notifications'
     | '/operators'
@@ -129,6 +139,7 @@ export interface FileRouteTypes {
     | '/berth-requests'
     | '/capacity'
     | '/cargo'
+    | '/hazardous-cargo'
     | '/import'
     | '/notifications'
     | '/operators'
@@ -141,6 +152,7 @@ export interface FileRouteTypes {
     | '/berth-requests'
     | '/capacity'
     | '/cargo'
+    | '/hazardous-cargo'
     | '/import'
     | '/notifications'
     | '/operators'
@@ -154,6 +166,7 @@ export interface RootRouteChildren {
   BerthRequestsRoute: typeof BerthRequestsRoute
   CapacityRoute: typeof CapacityRoute
   CargoRoute: typeof CargoRoute
+  HazardousCargoRoute: typeof HazardousCargoRoute
   ImportRoute: typeof ImportRoute
   NotificationsRoute: typeof NotificationsRoute
   OperatorsRoute: typeof OperatorsRoute
@@ -188,6 +201,13 @@ declare module '@tanstack/react-router' {
       path: '/import'
       fullPath: '/import'
       preLoaderRoute: typeof ImportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/hazardous-cargo': {
+      id: '/hazardous-cargo'
+      path: '/hazardous-cargo'
+      fullPath: '/hazardous-cargo'
+      preLoaderRoute: typeof HazardousCargoRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/cargo': {
@@ -242,6 +262,7 @@ const rootRouteChildren: RootRouteChildren = {
   BerthRequestsRoute: BerthRequestsRoute,
   CapacityRoute: CapacityRoute,
   CargoRoute: CargoRoute,
+  HazardousCargoRoute: HazardousCargoRoute,
   ImportRoute: ImportRoute,
   NotificationsRoute: NotificationsRoute,
   OperatorsRoute: OperatorsRoute,
