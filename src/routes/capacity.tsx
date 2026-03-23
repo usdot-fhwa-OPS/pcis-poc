@@ -1,12 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router"
-import { columns } from "../components/terminal-capacity/columns"
-import { DataTable } from "../components/terminal-capacity/terminal-capacity-table"
 import { useEffect, useState } from "react"
 
-import { TerminalCapacityDomain } from '../components/terminal-capacity/terminal-capacity-domain';
 import { terminalCapacityList } from "../components/terminal-capacity/terminal-capacity-client";
 import { AddTerminalCapacity } from "../components/terminal-capacity/add-terminal-capacity";
 import { UpdateTerminalCapacityButton } from "../components/terminal-capacity/update-terminal-capacity-button";
+
+import { useAppDispatch, useAppSelector } from '../hooks'
+import { getTerminalCapacityList, populate } from "../components/terminal-capacity/terminal-capacity-state";
+import { TerminalCapacityTable } from "../components/terminal_capacity_table/terminal-capacity-table";
 
 
 
@@ -16,20 +17,26 @@ export const Route = createFileRoute('/capacity')({
 
 
 export default function TerminalCapacityComponent() {
-  const [data, setData] = useState<TerminalCapacityDomain[]>([])
+ 
+  const data = useAppSelector(getTerminalCapacityList)
   const [loading, setLoading] = useState(true)
   
+  const dispatch = useAppDispatch()
+ 
+
 
   //Fetch the data from the database
   const fetchTerminalCapacityList = async () => {
-    
-    setData(await terminalCapacityList());
-     setLoading(false);
-  }
+  
+      dispatch(populate(await terminalCapacityList()));
+      setLoading(false);
+}
 
   //Fetch the data on the first render
   useEffect(() => {
     fetchTerminalCapacityList();
+      
+
   }, [])
 
 if (loading) {
@@ -44,12 +51,9 @@ if (loading) {
        </p>
       <div className="container mx-auto p-10">
         <div className="parent-container">
-          <AddTerminalCapacity></AddTerminalCapacity>
+          <AddTerminalCapacity/>
         </div>
-              <DataTable
-                columns={columns}
-                data={data}
-              />
+              <TerminalCapacityTable data={data}/>
             </div>
     </div>    
     
