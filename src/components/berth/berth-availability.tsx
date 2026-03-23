@@ -5,26 +5,19 @@ import { Dialog, DialogContent, DialogHeader } from "../ui/dialog"
 import { Button } from "../ui/button"
 import { Label } from "../ui/label"
 
-/* interface SettingsDialogProps {
-  limit: number;
-} */
-
 export const BerthAvailability = () => {
-//export const BerthAvailability = ({limit}: SettingsDialogProps) => {
-
     const limit: number = 6;
-    const [berths, setBerths] = useState(["", "", "", "", "", ""]);
+    const [berths, setBerths] = useState([""]);
 
     const addBerth = () => {
         if (berths.length < limit) {
-        setBerths([...berths, ""]);
+            setBerths([...berths, ""]);
         }
     };
 
     const removeBerth = (index: number) => {
-        if (index === 0) return;
-        const updated = berths.filter((_, i) => i !== index);
-        setBerths(updated);
+        if (berths.length === 1) return;
+        setBerths(berths.filter((_, i) => i !== index));
     };
 
     const updateBerth = (index: number, value: string) => {
@@ -34,8 +27,6 @@ export const BerthAvailability = () => {
     };    
 
     const [isDialogOpen, setIsDialogOpen] = useState(true)
-    const [berthAvailability] = useState(limit)
-    //const [berthAvailability, setBerthAvailability] = useState(limit)
 
     const handleSubmit = async () => {
     }
@@ -63,7 +54,7 @@ export const BerthAvailability = () => {
                             onChange={(e) => updateBerth(index, e.target.value)}
                             className="border px-2 py-1 w-[30ch]" />
 
-                        {index === berths.length - 1 && berths.length < berthAvailability ? (
+                        {index === berths.length - 1 && berths.length < limit ? (
                             <button type="button"
                             onClick={addBerth}
                             className="px-2 py-1 bg-green-500 text-white rounded"
