@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { Dialog, DialogContent, DialogHeader } from "../ui/dialog"
 import { Button } from "../ui/button"
-//import { Label } from "../ui/label"
+import { Label } from "../ui/label"
 
 interface SettingsDialogProps {
   limit: number;
@@ -31,6 +31,7 @@ export const BerthAvailability = ({limit}: SettingsDialogProps) => {
     };    
 
     const [isDialogOpen, setIsDialogOpen] = useState(true)
+    const [berthAvailability] = useState(limit)
     //const [berthAvailability, setBerthAvailability] = useState(limit)
 
     const handleSubmit = async () => {
@@ -51,7 +52,7 @@ export const BerthAvailability = ({limit}: SettingsDialogProps) => {
                     <div className="space-y-3">
                     {berths.map((value, index) => (
                         <div key={index} className="flex items-center gap-2">
-                        <label className="w-20">Berth {index + 1}</label>
+                        <Label className="w-20">Berth {index + 1}</Label>
                         <input
                             type="text"
                             value={value}
@@ -59,7 +60,7 @@ export const BerthAvailability = ({limit}: SettingsDialogProps) => {
                             className="flex-1 border rounded px-2 py-1"
                         />
 
-                        {index === berths.length - 1 && berths.length < 6 ? (
+                        {index === berths.length - 1 && berths.length < berthAvailability ? (
                             <button
                             onClick={addBerth}
                             className="px-2 py-1 bg-green-500 text-white rounded"
