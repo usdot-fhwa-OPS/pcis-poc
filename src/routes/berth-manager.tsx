@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 
-export const Route = createFileRoute('/berth-vessel')({
+export const Route = createFileRoute('/berth-manager')({
   component: RouteComponent,
 })
 
@@ -9,4 +9,5 @@ function RouteComponent() {
     <div className="p-2">
       <h1 className="text-2xl font-bold text-center">Berth Reservations</h1>
     </div>
-  )}
+  )
+}

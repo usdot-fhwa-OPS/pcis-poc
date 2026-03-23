@@ -9,7 +9,7 @@ import { format } from "date-fns";
 const repeatCycleOption = ["Each" , "OnThe"];
 
 const weekNumber = ["First" , "Second" , "Third" , "Fourth" , "Last"];
-const weekDays = ['Monday', 'Tuesday', 'Wednesday', 'Thrusday', 'Friday', 'Saturday', 'Sunday'];
+const weekDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
 export function MonthlyRepeatOptions({monthlyEvery, setMonthlyEvery, 
                                       repeatCycle, setRepeatCycle,
@@ -26,9 +26,21 @@ const [date, setDate] = React.useState<Date | undefined>(new Date())
   
 
   const addDays = (newDate:Date) =>{
-
-    daysOfMonth?.push(newDate ? format(newDate, "dd"):'' );
-    setDaysOfMonth(daysOfMonth);
+    if(newDate){
+      const day = newDate ? format(newDate, "dd"):'';
+      const dOfM = [...daysOfMonth];
+      const existingDayIndex = dOfM?.indexOf(day)
+      if(existingDayIndex === -1){
+        
+        dOfM?.push(day);
+        
+      }else{
+        
+        dOfM.splice(existingDayIndex, 1)
+       
+      }
+      setDaysOfMonth(dOfM);
+    }
   }
   
   return (
