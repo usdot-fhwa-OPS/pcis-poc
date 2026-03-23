@@ -5,11 +5,14 @@ import { Dialog, DialogContent, DialogHeader } from "../ui/dialog"
 import { Button } from "../ui/button"
 import { Label } from "../ui/label"
 
-interface SettingsDialogProps {
+/* interface SettingsDialogProps {
   limit: number;
-}
+} */
 
-export const BerthAvailability = ({limit}: SettingsDialogProps) => {
+export const BerthAvailability = () => {
+//export const BerthAvailability = ({limit}: SettingsDialogProps) => {
+
+    const limit: number = 6;
     const [berths, setBerths] = useState(["", "", "", "", "", ""]);
 
     const addBerth = () => {
@@ -57,7 +60,8 @@ export const BerthAvailability = ({limit}: SettingsDialogProps) => {
                             type="text"
                             value={value}
                             onChange={(e) => updateBerth(index, e.target.value)}
-                            className="w-32 flex-1 border rounded px-2 py-1"
+                            className="w-32"
+                            // className="w-32"  flex-1 border rounded px-2 py-1"
                         />
 
                         {index === berths.length - 1 && berths.length < berthAvailability ? (

@@ -5,14 +5,15 @@ import { Dialog, DialogContent, DialogHeader } from "../ui/dialog"
 import { Button } from "../ui/button"
 import { Label } from "../ui/label"
 
-interface SettingsDialogProps {
+/* interface SettingsDialogProps {
   limit: number;
-}
+} */
 
-export const BerthAvailability = ({limit}: SettingsDialogProps) => {
+export const BerthAvailability = () => {
+//export const BerthAvailability = ({limit}: SettingsDialogProps) => {
 
     const [isDialogOpen, setIsDialogOpen] = useState(true)
-    const [berthAvailability, setBerthAvailability] = useState(limit)
+    //const [berthAvailability, setBerthAvailability] = useState(limit)
 
     const handleSubmit = async () => {
     }
@@ -33,12 +34,12 @@ export const BerthAvailability = ({limit}: SettingsDialogProps) => {
                         <Label htmlFor="berthsAvailable">
                             Berths Available:
                         </Label>
-                        <input id="berthAvailability" type="number" min={0} max={limit} value={berthAvailability}
+{/*                         <input id="berthAvailability" type="number" min={0} max={limit} value={berthAvailability}
                                 onChange={(e) =>
                                     setBerthAvailability(Number(e.target.value))
                                 }
                                 step="1"
-                                className="w-8"/>
+                                className="w-8"/> */}
                     </div>
                     <br/>
                     <br/>
