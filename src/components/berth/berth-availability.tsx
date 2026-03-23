@@ -55,7 +55,7 @@ export const BerthAvailability = () => {
                     <div className="space-y-3">
                     {berths.map((value, index) => (
                         <div key={index} className="ml-4 flex items-center gap-2">
-                        <Label className="w-8">Berth {index + 1}</Label>
+                        <Label className="w-12">Berth {index + 1}</Label>
                         <input
                             type="text"
                             value={value}
@@ -73,9 +73,9 @@ export const BerthAvailability = () => {
                         ) : (
                             <button type="button"
                             onClick={() => removeBerth(index)}
-                            disabled={index === 0}
+                            disabled={berths.length === 1}
                             className={`px-2 py-1 rounded text-white ${
-                                index === 0
+                               berths.length === 1
                                 ? "bg-gray-400 cursor-not-allowed"
                                 : "bg-red-500"
                             }`}
