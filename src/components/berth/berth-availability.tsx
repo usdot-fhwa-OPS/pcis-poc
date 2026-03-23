@@ -59,8 +59,9 @@ export const BerthAvailability = () => {
                         <input
                             type="text"
                             value={value}
+                            maxLength={20}
                             onChange={(e) => updateBerth(index, e.target.value)}
-                            className="w-16 flex-1 border rounded px-2 py-1" />
+                            className="border px-2 py-1 w-[20ch]" />
 
                         {index === berths.length - 1 && berths.length < berthAvailability ? (
                             <button type="button"
@@ -72,7 +73,7 @@ export const BerthAvailability = () => {
                         ) : (
                             <button type="button"
                             onClick={() => removeBerth(index)}
-                            disabled={index === 0}
+                            // disabled={index === 0}
                             className={`px-2 py-1 rounded text-white ${
                                 index === 0
                                 ? "bg-gray-400 cursor-not-allowed"
