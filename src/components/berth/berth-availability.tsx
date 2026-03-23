@@ -54,25 +54,23 @@ export const BerthAvailability = () => {
                     </DialogHeader>
                     <div className="space-y-3">
                     {berths.map((value, index) => (
-                        <div key={index} className="flex items-center gap-2">
+                        <div key={index} className="ml-4 flex items-center gap-2">
                         <Label className="w-20">Berth {index + 1}</Label>
                         <input
                             type="text"
                             value={value}
                             onChange={(e) => updateBerth(index, e.target.value)}
-                            className="w-32"
-                            // className="w-32"  flex-1 border rounded px-2 py-1"
-                        />
+                            className="w-16 flex-1 border rounded px-2 py-1" />
 
                         {index === berths.length - 1 && berths.length < berthAvailability ? (
-                            <button
+                            <button type="button"
                             onClick={addBerth}
                             className="px-2 py-1 bg-green-500 text-white rounded"
                             >
                             Add
                             </button>
                         ) : (
-                            <button
+                            <button type="button"
                             onClick={() => removeBerth(index)}
                             disabled={index === 0}
                             className={`px-2 py-1 rounded text-white ${
