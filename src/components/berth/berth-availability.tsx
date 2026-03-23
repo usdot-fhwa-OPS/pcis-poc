@@ -59,9 +59,9 @@ export const BerthAvailability = () => {
                         <input
                             type="text"
                             value={value}
-                            maxLength={20}
+                            maxLength={30}
                             onChange={(e) => updateBerth(index, e.target.value)}
-                            className="border px-2 py-1 w-[20ch]" />
+                            className="border px-2 py-1 w-[30ch]" />
 
                         {index === berths.length - 1 && berths.length < berthAvailability ? (
                             <button type="button"
