@@ -13,7 +13,7 @@ export const BerthAvailability = ({limit}: SettingsDialogProps) => {
     const [berths, setBerths] = useState(["", "", "", "", "", ""]);
 
     const addBerth = () => {
-        if (berths.length < 6) {
+        if (berths.length < limit) {
         setBerths([...berths, ""]);
         }
     };
@@ -57,7 +57,7 @@ export const BerthAvailability = ({limit}: SettingsDialogProps) => {
                             type="text"
                             value={value}
                             onChange={(e) => updateBerth(index, e.target.value)}
-                            className="flex-1 border rounded px-2 py-1"
+                            className="w-32 flex-1 border rounded px-2 py-1"
                         />
 
                         {index === berths.length - 1 && berths.length < berthAvailability ? (
