@@ -7,7 +7,7 @@ import { Label } from "../ui/label"
 
 export const BerthAvailability = () => {
     const limit: number = 6;
-    const [berths, setBerths] = useState([""]);
+    const [berths, setBerths] = useState(["","","","","",""]);
 
     const addBerth = () => {
         if (berths.length < limit) {
