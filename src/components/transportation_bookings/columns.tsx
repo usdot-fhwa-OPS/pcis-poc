@@ -26,9 +26,10 @@ const client = generateClient<Schema>();
 import { TransOperatorCompletedBookings } from "../../routes/reservation.tsx"
 import { Checkbox } from "../ui/checkbox.tsx";
 import { toast } from "sonner";
-import { useAppSelector } from "../../hooks.tsx";
-import { getTerminalCapacityList } from "../terminal-capacity/terminal-capacity-state.tsx";
+import { useAppDispatch } from "../../hooks.tsx";
+import { populate } from "../terminal-capacity/terminal-capacity-state.tsx";
 import { TerminalCapacityDomain } from "../terminal-capacity/terminal-capacity-domain.tsx";
+import { terminalCapacityList } from "../terminal-capacity/terminal-capacity-client.tsx";
 
 
 export const columns = (): ColumnDef<any>[] => {
@@ -239,16 +240,18 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
         const [isCalendarOpen, setIsCalendarOpen] = useState(false)
         const [isDialogOpen, setIsDialogOpen] = useState(false)
         const [isAtCapacity, setIsAtCapacity] = useState(false)
-        const termCapList = useAppSelector(getTerminalCapacityList)
+        const dispatch = useAppDispatch()   
         
         const isDateTimeSelected = (): boolean => {
           return !!date && !!time
         }
         
-        function getTerminalCapacityLimit(date: Date, time: string) {
+        async function getTerminalCapacityLimit(date: Date, time: string) {
           let limit = 0;
           try {
 
+            const termCapList = await terminalCapacityList();
+            dispatch(populate(termCapList));
             termCapList.map((item) => {
               try {
                 if (item) {
@@ -260,15 +263,15 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
                     && (item.startTime) && (item.endTime)) {
 
                     if ('Never' === item.repeat) {
-                      if(differenceInDays(item.startDate, date) === 0){
-                          // same day as start date
-                            addLimit(item);
+                      if (differenceInDays(date, item.startDate) === 0) {
+                        // same day as start date
+                        addLimit(item);
                       }
-                      
-                    }else if ('Daily' === item.repeat) {
+
+                    } else if ('Daily' === item.repeat) {
 
                       addLimit(item);
-                      
+
                     } else if ('Weekdays' === item.repeat) {
 
                       if (!isWeekend(date)) {
@@ -284,7 +287,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
 
                     } else if ('Weekly' === item.repeat) {
 
-                      let daysAfterStart = differenceInDays(item.startDate, date);
+                      let daysAfterStart = differenceInDays(date, item.startDate);
                       if ((daysAfterStart % 7) == 0) {
                         addLimit(item);
 
@@ -292,7 +295,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
 
                     } else if ('Biweekly' === item.repeat) {
 
-                      let daysAfterStart = differenceInDays(item.startDate, date);
+                      let daysAfterStart = differenceInDays(date, item.startDate);
                       //even
                       if ((daysAfterStart % 2) == 0) {
                         // bi weekly
@@ -302,40 +305,40 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
 
                     } else if ('Monthly' === item.repeat) {
 
-                      let daysAfterStart = differenceInDays(item.startDate, date);
-                     
+                      let daysAfterStart = differenceInDays(date, item.startDate);
+
                       if ((daysAfterStart % 30) == 0) {
-                        
+
                         addLimit(item);
 
                       }
 
                     } else if ('Every 3 months' === item.repeat) {
 
-                      let daysAfterStart = differenceInDays(item.startDate, date);
-                      
-                      if ((daysAfterStart % (30*3)) == 0) {
-                        
+                      let daysAfterStart = differenceInDays(date, item.startDate);
+
+                      if ((daysAfterStart % (30 * 3)) == 0) {
+
                         addLimit(item);
 
                       }
 
                     } else if ('Every 6 months' === item.repeat) {
 
-                      let daysAfterStart = differenceInDays(item.startDate, date);
-                      
-                      if ((daysAfterStart % (30*6)) == 0) {
-                        
+                      let daysAfterStart = differenceInDays(date, item.startDate);
+
+                      if ((daysAfterStart % (30 * 6)) == 0) {
+
                         addLimit(item);
 
                       }
 
                     } else if ('Yearly' === item.repeat) {
 
-                      let daysAfterStart = differenceInDays(item.startDate, date);
-                      
+                      let daysAfterStart = differenceInDays(date, item.startDate);
+
                       if ((daysAfterStart % 365) == 0) {
-                        
+
                         addLimit(item);
 
                       }
@@ -344,7 +347,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
 
                       if ('Daily' === item.repeatConfig?.frequency) {
 
-                        let daysCount = differenceInDays(item.startDate, date);
+                        let daysCount = differenceInDays(date, item.startDate);
                         if ((item.repeatConfig.interval) &&
                           ((daysCount % item.repeatConfig.interval) == 0)) {
 
@@ -353,7 +356,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
 
                       } else if ('Weekly' === item.repeatConfig?.frequency) {
 
-                        let daysCount = differenceInDays(item.startDate, date);
+                        let daysCount = differenceInDays(date, item.startDate);
                         if ((item.repeatConfig.interval) &&
                           ((daysCount % (item.repeatConfig.interval * 7)) == 0)) {
 
@@ -362,7 +365,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
 
                       } else if ('Monthly' === item.repeatConfig?.frequency) {
 
-                        let daysCount = differenceInDays(item.startDate, date);
+                        let daysCount = differenceInDays(date, item.startDate);
                         if ((item.repeatConfig.interval) &&
                           ((daysCount % (item.repeatConfig.interval * 30)) == 0)) {
 
@@ -371,7 +374,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
 
                       } else if ('Yearly' === item.repeatConfig?.frequency) {
 
-                        let daysCount = differenceInDays(item.startDate, date);
+                        let daysCount = differenceInDays(date, item.startDate);
                         if ((item.repeatConfig.interval) &&
                           ((daysCount % (item.repeatConfig.interval * 365)) == 0)) {
 
@@ -392,6 +395,8 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
             })
 
 
+
+
           } catch (error) {
             console.error('Error fetching booking limit', error);
           }
@@ -406,11 +411,11 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
               limit = limit + item.capacity;
             }
           }
-          }
+        }
 
         const handleBooking = async () => {
           if (date && time) {
-            const limit = getTerminalCapacityLimit(date, time)
+            const limit = await getTerminalCapacityLimit(date, time)
             const bookingsLength = await (table.options.meta as TransOpDataTableMeta)?.getBookingsAmount(String(format(date!, "MM/dd/yyyy")))
             if (bookingsLength >= limit) {
               setIsAtCapacity(true);
