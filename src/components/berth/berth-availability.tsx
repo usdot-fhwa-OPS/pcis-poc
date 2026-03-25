@@ -11,7 +11,9 @@ export const BerthAvailability = () => {
 
     const updateLimit = () => {
         if(berthAvailability>limit) {
-            addBerth();            
+            for(let i:number = limit; i<berthAvailability; i++) {
+                addBerth();            
+            }    
         } else if (berthAvailability<limit) {
             removeBerth(limit-1);
         }
