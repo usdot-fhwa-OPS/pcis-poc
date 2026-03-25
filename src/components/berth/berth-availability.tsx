@@ -50,7 +50,7 @@ export const BerthAvailability = () => {
   
     return (      
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-            <DialogContent className="max-w-48 p-0">
+            <DialogContent className="max-w-56 p-0">
                 <form onSubmit={handleSubmit}>
                     <DialogHeader className="p-4 border-b-0">
                         <div className="flex items-center gap-2">
@@ -61,7 +61,7 @@ export const BerthAvailability = () => {
                         </div>
                     </DialogHeader>
                     <div className="ml-4 flex gap-2">
-                        <Label className="w-12">
+                        <Label className="w-18">
                             Berths Available:
                         </Label>
 *                       <input id="berthAvailability" type="number" min={1} max={limit} value={berthAvailability}
