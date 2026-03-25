@@ -9,6 +9,5 @@ function RouteComponent() {
     <div className="p-2">
       <h1 className="text-2xl font-bold text-center">Berth Requests</h1>
     </div>
-    <button type="button">Add New Berth Request</button>
   )
 }
