@@ -6,8 +6,17 @@ import { Button } from "../ui/button"
 import { Label } from "../ui/label"
 
 export const BerthAvailability = () => {
-    const limit: number = 6;
+    let limit: number = 10;
     const [berths, setBerths] = useState(["","","","","",""]);
+
+    const updateLimit = () => {
+        if(berthAvailability>limit) {
+            addBerth();            
+        } else if (berthAvailability<limit) {
+            removeBerth(limit-1);
+        }
+        limit = berthAvailability;
+    };
 
     const addBerth = () => {
         if (berths.length < limit) {
@@ -55,7 +64,7 @@ export const BerthAvailability = () => {
                                 }
                                 step="1"
                                 className="w-8"/>
-                                <button type="button" onClick={addBerth}
+                                <button type="button" onClick={updateLimit}
                                 className="px-2 py-1 bg-green-500 text-white rounded">
                                   Update
                                 </button>                                 
