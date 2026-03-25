@@ -54,8 +54,13 @@ export const BerthAvailability = () => {
                                     setBerthAvailability(Number(e.target.value))
                                 }
                                 step="1"
-                                className="w-8"/> 
-                    </div>                    
+                                className="w-8"/>
+                                <button type="button" onClick={addBerth}
+                                className="px-2 py-1 bg-green-500 text-white rounded">
+                                  Update
+                                </button>                                 
+                    </div> 
+                    <br/>                   
                     <div className="space-y-3">
                         {berths.map((value, index) => (
                             <div key={index} className="ml-4 flex items-center gap-2">
