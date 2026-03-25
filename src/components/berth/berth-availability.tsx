@@ -61,9 +61,7 @@ export const BerthAvailability = () => {
                         </div>
                     </DialogHeader>
                     <div className="ml-4 flex gap-2">
-                        {/* <Label className="w-20"> */}
-                            Berths Available:
-                        {/* </Label> */}
+                        <Label className="bottom-0">Berths Available:</Label>                            
 *                       <input id="berthAvailability" type="number" min={1} max={limit} value={berthAvailability}
                             onChange={(e) =>
                                 setBerthAvailability(Number(e.target.value))
@@ -79,7 +77,7 @@ export const BerthAvailability = () => {
                     <div className="space-y-3">
                         {berths.map((value, index) => (
                             <div key={index} className="ml-4 flex items-center gap-2">
-                            <Label className="w-12">Berth {index + 1}</Label>
+                            <Label className="w-20">Berth {index + 1}</Label>
                             <input
                                 type="text"
                                 value={value}
