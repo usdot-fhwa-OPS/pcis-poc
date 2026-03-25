@@ -7,14 +7,20 @@ import { Label } from "../ui/label"
 
 export const BerthAvailability = () => {
     let limit: number = 10;
-    const [berths, setBerths] = useState(["","","","","",""]);
+    const [berths, setBerths] = useState(["","","","","","","","","",""]);
 
     const updateLimit = () => {
+        console.log("berthAvailability : " + berthAvailability);
+        console.log("limit : " + limit);
+        console.log("berths.length : " + berths.length);
         if(berthAvailability>limit) {
             for(let i:number = limit; i<berthAvailability; i++) {
-                addBerth();            
+                console.log("add berth!");
+                limit++;
+                setBerths([...berths, ""]);            
             }    
         } else if (berthAvailability<limit) {
+            console.log("remove berth!");            
             removeBerth(limit-1);
         }
         limit = berthAvailability;
