@@ -7,26 +7,21 @@ import { Label } from "../ui/label"
 
 export const BerthAvailability = () => {
     let limit: number = 10;
-    const [berths, setBerths] = useState(["","","","","","","","","",""]);
+    const [berths, setBerths] = useState(["","","","","","","","","",""]); //default 10
 
     const updateLimit = () => {
-        console.log("berthAvailability : " + berthAvailability);
-        console.log("limit : " + limit);
-        console.log("berths.length : " + berths.length);
         if(berthAvailability>berths.length) {
             while(berths.length < berthAvailability) { 
-                console.log("add berth!");
                 limit++;
                 berths.push("");           
             }    
         } else if (berthAvailability<berths.length) {
             while(berths.length > berthAvailability) {   
-               console.log("remove berth!");  
                limit--;        
                berths.pop();
             }
         }
-        setBerths([...berths]);
+        setBerths([...berths]); //needed to refresh
     };
 
     const addBerth = () => {
@@ -66,19 +61,19 @@ export const BerthAvailability = () => {
                         </div>
                     </DialogHeader>
                     <div className="ml-4 flex gap-2">
-                        <Label htmlFor="berthsAvailable">
+                        <Label>
                             Berths Available:
                         </Label>
-*                         <input id="berthAvailability" type="number" min={0} max={limit} value={berthAvailability}
-                                onChange={(e) =>
-                                    setBerthAvailability(Number(e.target.value))
-                                }
-                                step="1"
-                                className="w-8"/>
-                                <button type="button" onClick={updateLimit}
-                                className="px-2 py-1 bg-green-500 text-white rounded">
-                                  Update
-                                </button>                                 
+*                       <input id="berthAvailability" type="number" min={1} max={limit} value={berthAvailability}
+                            onChange={(e) =>
+                                setBerthAvailability(Number(e.target.value))
+                            }
+                            step="1"
+                            className="w-8"/>
+                            <button type="button" onClick={updateLimit}
+                            className="px-2 py-1 bg-green-500 text-white rounded">
+                                Update
+                        </button>                                 
                     </div> 
                     <br/>                   
                     <div className="space-y-3">
