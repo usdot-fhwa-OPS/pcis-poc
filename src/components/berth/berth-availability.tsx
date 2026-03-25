@@ -61,9 +61,9 @@ export const BerthAvailability = () => {
                         </div>
                     </DialogHeader>
                     <div className="ml-4 flex gap-2">
-                        <Label className="w-18">
+                        {/* <Label className="w-20"> */}
                             Berths Available:
-                        </Label>
+                        {/* </Label> */}
 *                       <input id="berthAvailability" type="number" min={1} max={limit} value={berthAvailability}
                             onChange={(e) =>
                                 setBerthAvailability(Number(e.target.value))
