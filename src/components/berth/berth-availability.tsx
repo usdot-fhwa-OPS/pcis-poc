@@ -77,7 +77,7 @@ export const BerthAvailability = () => {
                     <div className="space-y-3">
                         {berths.map((value, index) => (
                             <div key={index} className="ml-4 flex items-center gap-2">
-                            <Label className="w-20">Berth {index + 1}</Label>
+                            <Label className="w-16">Berth {index + 1}</Label>
                             <input
                                 type="text"
                                 value={value}
