@@ -13,16 +13,17 @@ export const BerthAvailability = () => {
         console.log("berthAvailability : " + berthAvailability);
         console.log("limit : " + limit);
         console.log("berths.length : " + berths.length);
-        if(berthAvailability>limit) {
-            for(let i:number = limit; i<berthAvailability; i++) {
+        if(berthAvailability>berths.length) {
+            while(berths.length < berthAvailability) { 
                 console.log("add berth!");
                 limit++;
-                setBerths([...berths, ""]);            
+                addBerth();            
             }    
-        } else if (berthAvailability<limit) {
+        } else if (berthAvailability<berths.length) {
             while(berths.length > berthAvailability) {   
-               console.log("remove berth!");          
-               removeBerth(limit-1);
+               console.log("remove berth!");  
+               limit--;        
+               removeBerth(limit);
             }
         }
         limit = berthAvailability;
