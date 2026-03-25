@@ -26,7 +26,7 @@ export const BerthAvailability = () => {
                removeBerth(limit);
             }
         }
-        limit = berthAvailability;
+        //limit = berthAvailability;
     };
 
     const addBerth = () => {
