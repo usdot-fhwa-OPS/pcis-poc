@@ -20,8 +20,10 @@ export const BerthAvailability = () => {
                 setBerths([...berths, ""]);            
             }    
         } else if (berthAvailability<limit) {
-            console.log("remove berth!");            
-            removeBerth(limit-1);
+            while(berths.length > berthAvailability) {   
+               console.log("remove berth!");          
+               removeBerth(limit-1);
+            }
         }
         limit = berthAvailability;
     };
