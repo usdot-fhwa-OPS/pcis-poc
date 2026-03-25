@@ -17,16 +17,15 @@ export const BerthAvailability = () => {
             while(berths.length < berthAvailability) { 
                 console.log("add berth!");
                 limit++;
-                addBerth();            
+                berths.push("");           
             }    
         } else if (berthAvailability<berths.length) {
             while(berths.length > berthAvailability) {   
                console.log("remove berth!");  
                limit--;        
-               removeBerth(limit);
+               berths.pop();
             }
         }
-        //limit = berthAvailability;
     };
 
     const addBerth = () => {
