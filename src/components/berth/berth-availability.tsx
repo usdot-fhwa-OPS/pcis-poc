@@ -26,6 +26,7 @@ export const BerthAvailability = () => {
                berths.pop();
             }
         }
+        setBerths([...berths]);
     };
 
     const addBerth = () => {
