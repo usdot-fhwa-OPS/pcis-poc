@@ -28,7 +28,7 @@ export const BerthAvailability = () => {
         if (berths.length < limit) {
             setBerths([...berths, ""]);
             setBerthAvailability(berths.length);
-            setBerths([...berths]); //needed for refresh
+            limit = berths.length;
         }
     };
 
@@ -36,7 +36,7 @@ export const BerthAvailability = () => {
         if (berths.length === 1) return;
         setBerths(berths.filter((_, i) => i !== index));
         setBerthAvailability(berths.length);
-        setBerths([...berths]); //needed for refresh
+        limit = berths.length;
     };
 
     const updateBerth = (index: number, value: string) => {
