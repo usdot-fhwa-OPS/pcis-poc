@@ -21,18 +21,20 @@ export const BerthAvailability = () => {
                berths.pop();
             }
         }
-        setBerths([...berths]); //needed to refresh
+        setBerths([...berths]); //needed for refresh
     };
 
     const addBerth = () => {
         if (berths.length < limit) {
             setBerths([...berths, ""]);
         }
+        setBerthAvailability(berths.length);
     };
 
     const removeBerth = (index: number) => {
         if (berths.length === 1) return;
         setBerths(berths.filter((_, i) => i !== index));
+        setBerthAvailability(berths.length);
     };
 
     const updateBerth = (index: number, value: string) => {
@@ -61,7 +63,7 @@ export const BerthAvailability = () => {
                         </div>
                     </DialogHeader>
                     <div className="ml-4 flex gap-2">
-                        <Label className="bottom-0">Berths Available:</Label>                            
+                        <Label className="">Berths Available:</Label>                            
 *                       <input id="berthAvailability" type="number" min={1} max={limit} value={berthAvailability}
                             onChange={(e) =>
                                 setBerthAvailability(Number(e.target.value))
@@ -77,7 +79,7 @@ export const BerthAvailability = () => {
                     <div className="space-y-3">
                         {berths.map((value, index) => (
                             <div key={index} className="ml-4 flex items-center gap-2">
-                            <Label className="w-16">Berth {index + 1}</Label>
+                            <Label className="w-14">Berth {index + 1}</Label>
                             <input
                                 type="text"
                                 value={value}
