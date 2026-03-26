@@ -26,15 +26,17 @@ export const BerthAvailability = () => {
 
     const addBerth = () => {
         if (berths.length < limit) {
-            setBerthAvailability(berths.length);
             setBerths([...berths, ""]);
+            setBerthAvailability(berths.length);
+            setBerths([...berths]); //needed for refresh
         }
     };
 
     const removeBerth = (index: number) => {
         if (berths.length === 1) return;
-        setBerthAvailability(berths.length);
         setBerths(berths.filter((_, i) => i !== index));
+        setBerthAvailability(berths.length);
+        setBerths([...berths]); //needed for refresh
     };
 
     const updateBerth = (index: number, value: string) => {
