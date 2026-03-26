@@ -28,7 +28,6 @@ export const BerthAvailability = () => {
         if (berths.length < limit) {
             setBerths([...berths, ""]);
             setBerthAvailability(berths.length+1);
-            //limit = berths.length;
         }
     };
 
@@ -36,7 +35,6 @@ export const BerthAvailability = () => {
         if (berths.length === 1) return;
         setBerths(berths.filter((_, i) => i !== index));
         setBerthAvailability(berths.length-1);
-        //limit = berths.length;
     };
 
     const updateBerth = (index: number, value: string) => {
@@ -87,7 +85,7 @@ export const BerthAvailability = () => {
                                 value={value}
                                 maxLength={30}
                                 onChange={(e) => updateBerth(index, e.target.value)}
-                                className="border px-2 py-1 w-[30ch]" />
+                                className="border px-2 py-1 w-[28ch]" />
 
                             {index === berths.length - 1 && berths.length < limit ? (
                                 <button type="button"
