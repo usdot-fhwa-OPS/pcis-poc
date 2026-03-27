@@ -12,18 +12,18 @@ import {
 } from "../ui/dialog"
 import { Label } from "../ui/label"
 import "./terminal-capacity.css"
+import { TerminalCapacityDomain } from "./terminal-capacity-domain"
+import { saveTerminalCapacity } from "./terminal-capacity-client"
 
-interface SettingsDialogProps {
-  limit: number;
-}
 
-export function UpdateTerminalCapacityButton({limit}: SettingsDialogProps) {
+export function UpdateTerminalCapacityButton({maxTerminalCapacity}: {maxTerminalCapacity:TerminalCapacityDomain}) {
     const [open, setOpen] = useState(false)
-    const [portCapacity, setPortCapacity] = useState(limit)
+    const [portCapacity, setPortCapacity] = useState(maxTerminalCapacity?.capacity)
+    
 
     useEffect(() => {
-       setPortCapacity(limit);
-    }, [limit]);
+       setPortCapacity(maxTerminalCapacity?.capacity);
+    }, [maxTerminalCapacity?.capacity]);
   
     const handleSubmit = async () => {
     //   try {
@@ -40,6 +40,17 @@ export function UpdateTerminalCapacityButton({limit}: SettingsDialogProps) {
     //   setOpen(false)
     }
     
+  const save = async () => {
+    const updatedMaxTc = {...maxTerminalCapacity};
+    updatedMaxTc.capacity = portCapacity;
+
+    saveTerminalCapacity(updatedMaxTc).then(async (resp) => {
+      console.log(resp)
+
+    });
+    setOpen(false);
+  }
+
     return (
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger>
@@ -58,7 +69,7 @@ export function UpdateTerminalCapacityButton({limit}: SettingsDialogProps) {
                     <Label htmlFor="portCapacity">
                       Terminal Capacity:&nbsp;&nbsp;
                     </Label>
-                    <input id="portCapacity" type="number" min={0} max={limit} value={portCapacity}
+                    <input id="portCapacity" type="number" min={0} value={portCapacity}
                            onChange={(e) =>
                               setPortCapacity(Number(e.target.value))
                            }
@@ -73,7 +84,7 @@ export function UpdateTerminalCapacityButton({limit}: SettingsDialogProps) {
                 <Button type="button" variant="outline" onClick={() => setOpen(false)}>
                   Cancel
                 </Button>
-                <Button type="submit">Save</Button>
+                <Button type="submit" onClick={()=>save()}>Save</Button>
               </DialogFooter>
             </form>
         </DialogContent>
