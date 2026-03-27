@@ -17,6 +17,7 @@ import { Route as HazardousCargoRouteImport } from './routes/hazardous-cargo'
 import { Route as CargoRouteImport } from './routes/cargo'
 import { Route as CapacityRouteImport } from './routes/capacity'
 import { Route as BerthRequestsRouteImport } from './routes/berth-requests'
+import { Route as BerthRequestAddRouteImport } from './routes/berth-request-add'
 import { Route as BerthManagerRouteImport } from './routes/berth-manager'
 import { Route as AnalyticsRouteImport } from './routes/analytics'
 import { Route as IndexRouteImport } from './routes/index'
@@ -61,6 +62,11 @@ const BerthRequestsRoute = BerthRequestsRouteImport.update({
   path: '/berth-requests',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BerthRequestAddRoute = BerthRequestAddRouteImport.update({
+  id: '/berth-request-add',
+  path: '/berth-request-add',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BerthManagerRoute = BerthManagerRouteImport.update({
   id: '/berth-manager',
   path: '/berth-manager',
@@ -81,6 +87,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/analytics': typeof AnalyticsRoute
   '/berth-manager': typeof BerthManagerRoute
+  '/berth-request-add': typeof BerthRequestAddRoute
   '/berth-requests': typeof BerthRequestsRoute
   '/capacity': typeof CapacityRoute
   '/cargo': typeof CargoRoute
@@ -94,6 +101,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/analytics': typeof AnalyticsRoute
   '/berth-manager': typeof BerthManagerRoute
+  '/berth-request-add': typeof BerthRequestAddRoute
   '/berth-requests': typeof BerthRequestsRoute
   '/capacity': typeof CapacityRoute
   '/cargo': typeof CargoRoute
@@ -108,6 +116,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/analytics': typeof AnalyticsRoute
   '/berth-manager': typeof BerthManagerRoute
+  '/berth-request-add': typeof BerthRequestAddRoute
   '/berth-requests': typeof BerthRequestsRoute
   '/capacity': typeof CapacityRoute
   '/cargo': typeof CargoRoute
@@ -123,6 +132,7 @@ export interface FileRouteTypes {
     | '/'
     | '/analytics'
     | '/berth-manager'
+    | '/berth-request-add'
     | '/berth-requests'
     | '/capacity'
     | '/cargo'
@@ -136,6 +146,7 @@ export interface FileRouteTypes {
     | '/'
     | '/analytics'
     | '/berth-manager'
+    | '/berth-request-add'
     | '/berth-requests'
     | '/capacity'
     | '/cargo'
@@ -149,6 +160,7 @@ export interface FileRouteTypes {
     | '/'
     | '/analytics'
     | '/berth-manager'
+    | '/berth-request-add'
     | '/berth-requests'
     | '/capacity'
     | '/cargo'
@@ -163,6 +175,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AnalyticsRoute: typeof AnalyticsRoute
   BerthManagerRoute: typeof BerthManagerRoute
+  BerthRequestAddRoute: typeof BerthRequestAddRoute
   BerthRequestsRoute: typeof BerthRequestsRoute
   CapacityRoute: typeof CapacityRoute
   CargoRoute: typeof CargoRoute
@@ -231,6 +244,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BerthRequestsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/berth-request-add': {
+      id: '/berth-request-add'
+      path: '/berth-request-add'
+      fullPath: '/berth-request-add'
+      preLoaderRoute: typeof BerthRequestAddRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/berth-manager': {
       id: '/berth-manager'
       path: '/berth-manager'
@@ -259,6 +279,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AnalyticsRoute: AnalyticsRoute,
   BerthManagerRoute: BerthManagerRoute,
+  BerthRequestAddRoute: BerthRequestAddRoute,
   BerthRequestsRoute: BerthRequestsRoute,
   CapacityRoute: CapacityRoute,
   CargoRoute: CargoRoute,
