@@ -1,10 +1,55 @@
 "use client"
-
+import React, { useState } from "react";
+import { Button } from "../ui/button";
+import { Calendar } from "../ui/calendar";
+import { CalendarIcon } from "lucide-react";
 import { Checkbox } from "../ui/checkbox";
 import { Label } from "../ui/label";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
+import { cn } from "../../lib/utils";
+import { format } from "date-fns";
 
 export const AddBerthRequest = () => {
+
+    const [startDate, setStartDate] = useState<Date>(new Date()) 
+    const [isStartCalendarOpen, setIsStartCalendarOpen] = useState(false)
+
+    const timeOptions = [
+            "12:00 AM",
+            "01:00 AM",
+            "02:00 AM",
+            "03:00 AM",
+            "04:00 AM",
+            "05:00 AM",
+            "06:00 AM",
+            "07:00 AM",
+            "08:00 AM",
+            "09:00 AM",
+            "10:00 AM",
+            "11:00 AM",
+            "12:00 PM",
+            "01:00 PM",
+            "02:00 PM",
+            "03:00 PM",
+            "04:00 PM",
+            "05:00 PM",
+            "06:00 PM",
+            "07:00 PM",
+            "08:00 PM",
+            "09:00 PM",
+            "10:00 PM",
+            "11:00 PM",
+            ]
+    const [startTime, setStartTime] = useState<string | undefined>(timeOptions[0])
+    
+    const handleStartDateSelect = (selectedDate: Date | undefined) => {
+        if (!selectedDate) return;
+        setStartDate(selectedDate)
+        // Keep the calendar open after selection
+        setIsStartCalendarOpen(!isStartCalendarOpen)
+    };
+
 
     return (
     <>
@@ -50,8 +95,11 @@ export const AddBerthRequest = () => {
                     Estimated Departure
                 </Label>
             </div>
-            <div className="col-start-2 col-end-6">
-                Date and time
+            <div className="col-span-2 col-end-4">
+                {showStartDateCalendar()}
+            </div>
+            <div className="col-start-4 col-end-6">
+                {showStartTime()}
             </div>
             <div className="col-1">
                 <span className="text-sm font-medium leading-none">Services Required</span>
@@ -93,4 +141,37 @@ export const AddBerthRequest = () => {
         </div>
     </>
     )
+
+    function showStartTime() {
+        return <Select onValueChange={setStartTime}>
+            <SelectTrigger className={cn("w-[150px]")}>
+                <SelectValue placeholder={startTime} />
+            </SelectTrigger>
+            <SelectContent>
+                {timeOptions.map((timeOption) => (
+                    <SelectItem key={timeOption} value={timeOption}>
+                        {timeOption}
+                    </SelectItem>
+                ))}
+            </SelectContent>
+        </Select>;
+    }
+
+    function showStartDateCalendar() {
+        return <Popover modal={true} open={isStartCalendarOpen} onOpenChange={setIsStartCalendarOpen}>
+            <PopoverTrigger asChild>
+                <Button
+                    variant={"outline"}
+                    className={cn("w-[200px] justify-start text-left font-normal", !startDate && "text-muted-foreground")}
+                    onClick={() => setIsStartCalendarOpen(true)}
+                >
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {startDate ? format(startDate, "MM/dd/yyyy") : <span>Pick a date</span>}
+                </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0">
+                <Calendar mode="single" selected={startDate} disabled={{ before: new Date() }} onSelect={handleStartDateSelect} initialFocus />
+            </PopoverContent>
+        </Popover>;
+    }
 }
