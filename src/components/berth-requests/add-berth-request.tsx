@@ -2,7 +2,6 @@
 
 import { Checkbox } from "../ui/checkbox";
 import { Label } from "../ui/label";
-import { Input } from "../ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 
 export const AddBerthRequest = () => {
@@ -21,8 +20,11 @@ export const AddBerthRequest = () => {
                         <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                        <SelectItem>
-                            Terminal Name
+                        <SelectItem value="Terminal Name 1">
+                            Terminal Name 1
+                        </SelectItem>
+                        <SelectItem value="Terminal Name 2">
+                            Terminal Name 2
                         </SelectItem>
                     </SelectContent>
                 </Select>
