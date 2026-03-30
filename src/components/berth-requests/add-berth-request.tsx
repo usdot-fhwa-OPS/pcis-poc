@@ -28,9 +28,9 @@ export const AddBerthRequest = () => {
                         </SelectItem>
                     </SelectContent>
                 </Select>
-                <div>
-                    <p>To contact this terminal directly:</p>
-                    <div>
+                <div className="mt-3">
+                    <p className="mb-2">To contact this terminal directly:</p>
+                    <div className="px-8 pb-3">
                         <p>Terminal Name</p>
                         <p>Phone: 555-555-5555</p>
                         <p>Email: name@company.com</p>
@@ -54,7 +54,7 @@ export const AddBerthRequest = () => {
                 Date and time
             </div>
             <div className="col-1">
-                Services Required
+                <span className="text-sm font-medium leading-none">Services Required</span>
             </div>
             <div className="col-start-2 col-end-6">
                 <Checkbox id="berthRequestServicesFuel" value="Fuel"/>
@@ -78,8 +78,8 @@ export const AddBerthRequest = () => {
                     Waste Disposal
                 </Label>
             </div>
-            <div className="col-6">
-                <h2>Attach a Cargo Manifest</h2>
+            <div className="col-span-5 mb-6">
+                <h2 className="text-xl font-semibold mt-6 mb-3">Attach a Cargo Manifest</h2>
                 <p>Instructions for file attachment:</p>
                 <ol>
                     <li>Locate your cargo manifest file on your computer.</li>
@@ -87,7 +87,7 @@ export const AddBerthRequest = () => {
                     <li>A check mark will appear next to your file&rsquo;s name when it is uploaded.</li>
                 </ol>
             </div>
-            <div className="col-6">
+            <div className="col-span-5">
                 File upload area
             </div>
         </div>
