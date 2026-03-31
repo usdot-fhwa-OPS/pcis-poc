@@ -3,6 +3,7 @@ import { Button } from "../ui/button";
 import { Calendar } from "../ui/calendar";
 import { CalendarIcon, Info } from "lucide-react";
 import { Checkbox } from "../ui/checkbox";
+import { FileUploader } from '@aws-amplify/ui-react-storage';
 import { Label } from "../ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
@@ -84,7 +85,7 @@ export const AddBerthRequest = () => {
                     </Select>
                 </div>
                 <div className="col-start-2 col-end-6 pt-2">
-                    <p className="mb-2"><Info className="h-4 w-4 mr-2" stroke="#0090FF" /> To contact this terminal directly:</p>
+                    <p className="mb-2"><Info className="inline-block h-4 w-4 mr-1" stroke="#0090FF" />To contact this terminal directly:</p>
                     <div className="px-8 pb-3">
                         <p>Terminal Name</p>
                         <p>Phone: <a href="tel:5555555555">555-555-5555</a></p>
@@ -147,8 +148,15 @@ export const AddBerthRequest = () => {
                         <li>A check mark will appear next to your file&rsquo;s name when it is uploaded.</li>
                     </ol>
                 </div>
-                <div className="col-span-5 mb-6">
-                    File upload area
+                <div className="col-span-5 mb-8">
+                    <FileUploader
+                        acceptedFileTypes={[
+                        '.csv',
+                        ]}
+                        path="stowPlans/"
+                        maxFileCount={1}
+                        isResumable
+                    />
                 </div>
             </div>
         </div>
