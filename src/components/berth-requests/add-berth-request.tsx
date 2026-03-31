@@ -117,27 +117,37 @@ export const AddBerthRequest = () => {
                 <div className="col-1">
                     <span className="text-sm font-medium leading-none">Services Required</span>
                 </div>
-                <div className="col-start-2 col-end-6">
-                    <Checkbox id="berthRequestServicesFuel" value="Fuel"/>
-                    <Label htmlFor="berthRequestServicesFuel">
-                        Fuel
-                    </Label>
-                    <Checkbox id="berthRequestServicesFood" value="Food"/>
-                    <Label htmlFor="berthRequestServicesFood">
-                        Food
-                    </Label>
-                    <Checkbox id="berthRequestServicesWater" value="Water"/>
-                    <Label htmlFor="berthRequestServicesWater">
-                        Water
-                    </Label>
-                    <Checkbox id="berthRequestServicesCrew" value="Crew Services"/>
-                    <Label htmlFor="berthRequestServicesCrew">
-                        Crew Services
-                    </Label>
-                    <Checkbox id="berthRequestServicesWaste" value="Waste Disposal"/>
-                    <Label htmlFor="berthRequestServicesWaste">
-                        Waste Disposal
-                    </Label>
+                <div className="col-start-2 col-end-6 flex items-center">
+                    <div className="pr-4">
+                        <Checkbox className="mr-2" id="berthRequestServicesFuel" value="Fuel"/>
+                        <Label htmlFor="berthRequestServicesFuel">
+                            Fuel
+                        </Label>
+                    </div>
+                    <div className="pr-4">
+                        <Checkbox className="mr-2" id="berthRequestServicesFood" value="Food"/>
+                        <Label htmlFor="berthRequestServicesFood">
+                            Food
+                        </Label>
+                    </div>
+                    <div className="pr-4">
+                        <Checkbox className="mr-2" id="berthRequestServicesWater" value="Water"/>
+                        <Label htmlFor="berthRequestServicesWater">
+                            Water
+                        </Label>
+                    </div>
+                    <div className="pr-4">
+                        <Checkbox className="mr-2" id="berthRequestServicesCrew" value="Crew Services"/>
+                        <Label htmlFor="berthRequestServicesCrew">
+                            Crew Services
+                        </Label>
+                    </div>
+                    <div>
+                        <Checkbox className="mr-2" id="berthRequestServicesWaste" value="Waste Disposal"/>
+                        <Label htmlFor="berthRequestServicesWaste">
+                            Waste Disposal
+                        </Label>
+                    </div>
                 </div>
                 <div className="col-span-5 mt-8 mb-6">
                     <h2 className="text-xl font-semibold mb-4">Attach a Cargo Manifest</h2>
