@@ -11,8 +11,10 @@ import { format } from "date-fns";
 
 export const AddBerthRequest = () => {
 
-    const [startDate, setStartDate] = useState<Date>(new Date()) 
+    const [startDate, setStartDate] = useState<Date>(new Date())
+    const [endDate, setEndDate] = useState<Date>(new Date())    
     const [isStartCalendarOpen, setIsStartCalendarOpen] = useState(false)
+    const [isEndCalendarOpen, setIsEndCalendarOpen] = useState(false)
 
     const timeOptions = [
             "12:00 AM",
@@ -41,6 +43,7 @@ export const AddBerthRequest = () => {
             "11:00 PM",
             ]
     const [startTime, setStartTime] = useState<string | undefined>(timeOptions[0])
+    const [endTime, setEndTime] = useState<string | undefined>(timeOptions[0])
     
     const handleStartDateSelect = (selectedDate: Date | undefined) => {
         if (!selectedDate) return;
@@ -49,6 +52,12 @@ export const AddBerthRequest = () => {
         setIsStartCalendarOpen(!isStartCalendarOpen)
     };
 
+    const handleEndDateSelect = (selectedDate: Date | undefined) => {
+        if (!selectedDate) return;
+        setEndDate(selectedDate)
+        // Keep the calendar open after selection
+        setIsEndCalendarOpen(!isEndCalendarOpen)
+    };
 
     return (
     <>
@@ -86,8 +95,11 @@ export const AddBerthRequest = () => {
                     Estimated Arrival
                 </Label>
             </div>
-            <div className="col-start-2 col-end-6">
-                Date and time
+            <div className="col-span-2 col-end-4">
+                {showStartDateCalendar()}
+            </div>
+            <div className="col-start-4 col-end-6">
+                {showStartTime()}
             </div>
             <div className="col-1">
                 <Label htmlFor="berthRequestEtd">
@@ -95,10 +107,10 @@ export const AddBerthRequest = () => {
                 </Label>
             </div>
             <div className="col-span-2 col-end-4">
-                {showStartDateCalendar()}
+                {showEndDateCalendar()}
             </div>
             <div className="col-start-4 col-end-6">
-                {showStartTime()}
+                {showEndTime()}
             </div>
             <div className="col-1">
                 <span className="text-sm font-medium leading-none">Services Required</span>
@@ -173,4 +185,38 @@ export const AddBerthRequest = () => {
             </PopoverContent>
         </Popover>;
     }
+
+    function showEndTime() {
+        return <Select onValueChange={setEndTime}>
+            <SelectTrigger className={cn("w-[150px]")}>
+                <SelectValue placeholder={endTime} />
+            </SelectTrigger>
+            <SelectContent>
+                {timeOptions.map((timeOption) => (
+                    <SelectItem key={timeOption} value={timeOption}>
+                        {timeOption}
+                    </SelectItem>
+                ))}
+            </SelectContent>
+        </Select>;
+    }
+
+    function showEndDateCalendar() {
+        return <Popover modal={true} open={isEndCalendarOpen} onOpenChange={setIsEndCalendarOpen}>
+            <PopoverTrigger asChild>
+                <Button
+                    variant={"outline"}
+                    className={cn("w-[200px] justify-start text-left font-normal", !endDate && "text-muted-foreground")}
+                    onClick={() => setIsEndCalendarOpen(true)}
+                >
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {endDate ? format(endDate, "MM/dd/yyyy") : <span>Pick a date</span>}
+                </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0">
+                <Calendar mode="single" selected={endDate} disabled={{ before: new Date() }} onSelect={handleEndDateSelect} initialFocus />
+            </PopoverContent>
+        </Popover>;
+    }
+
 }
