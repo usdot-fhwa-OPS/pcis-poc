@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button } from "../ui/button";
 import { Calendar } from "../ui/calendar";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, Info } from "lucide-react";
 import { Checkbox } from "../ui/checkbox";
 import { Label } from "../ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
@@ -83,14 +83,12 @@ export const AddBerthRequest = () => {
                         </SelectContent>
                     </Select>
                 </div>
-                <div className="col-start-2 col-end-6">
-                    <div className="mt-3">
-                        <p className="mb-2">To contact this terminal directly:</p>
-                        <div className="px-8 pb-3">
-                            <p>Terminal Name</p>
-                            <p>Phone: 555-555-5555</p>
-                            <p>Email: name@company.com</p>
-                        </div>
+                <div className="col-start-2 col-end-6 pt-2">
+                    <p className="mb-2"><Info className="h-4 w-4 mr-2" stroke="#0090FF" /> To contact this terminal directly:</p>
+                    <div className="px-8 pb-3">
+                        <p>Terminal Name</p>
+                        <p>Phone: <a href="tel:5555555555">555-555-5555</a></p>
+                        <p>Email: <a href="mailto:name@company.com">name@company.com</a></p>
                     </div>
                 </div>
                 <div className="col-1">
