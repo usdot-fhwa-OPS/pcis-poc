@@ -69,7 +69,7 @@ export const AddBerthRequest = () => {
                         Terminal
                     </Label>
                 </div>
-                <div className="col-span-2">
+                <div className="col-span-2 py-2">
                     <Select>
                         <SelectTrigger>
                             <SelectValue />
@@ -85,10 +85,10 @@ export const AddBerthRequest = () => {
                     </Select>
                 </div>
                 <div className="col-span-2 col-start-2 text-sm text-muted-foreground">
-                    <div className="flex items-center mb-1">
+                    <div className="flex items-center">
                         <Info className="inline-block h-4 w-4 mr-1" stroke="#0090FF" /><p>To contact this terminal directly:</p>
                     </div>
-                    <div className="px-8 pb-3">
+                    <div className="px-8 py-2">
                         <p>Terminal Name</p>
                         <p>Phone: <a href="tel:5555555555" className="text-blue-500 hover:underline">555-555-5555</a></p>
                         <p>Email: <a href="mailto:name@company.com" className="text-blue-500 hover:underline">name@company.com</a></p>
@@ -99,7 +99,7 @@ export const AddBerthRequest = () => {
                         Estimated Arrival
                     </Label>
                 </div>
-                <div className="col-span-2 flex items-center space-x-4">
+                <div className="col-span-2 py-2 flex items-center space-x-4">
                     {showStartDateCalendar()}
                     {showStartTime()}
                 </div>
@@ -108,14 +108,14 @@ export const AddBerthRequest = () => {
                         Estimated Departure
                     </Label>
                 </div>
-                <div className="col-span-2 flex items-center space-x-4">
+                <div className="col-span-2 py-2 flex items-center space-x-4">
                     {showEndDateCalendar()}
                     {showEndTime()}
                 </div>
                 <div>
                     <span className="text-sm font-medium leading-none">Services Required</span>
                 </div>
-                <div className="col-span-2 flex space-x-4">
+                <div className="col-span-2 py-2 flex space-x-4">
                     <div className="flex items-center">
                         <Checkbox className="mr-2" id="berthRequestServicesFuel" value="Fuel"/>
                         <Label htmlFor="berthRequestServicesFuel">
