@@ -89,8 +89,8 @@ export const AddBerthRequest = () => {
                     <p className="mb-1"><Info className="inline-block h-4 w-4 mr-1" stroke="#0090FF" />To contact this terminal directly:</p>
                     <div className="px-8 pb-3">
                         <p>Terminal Name</p>
-                        <p>Phone: <Link href="tel:5555555555" className="text-blue-500 hover:underline">555-555-5555</Link></p>
-                        <p>Email: <Link href="mailto:name@company.com" className="text-blue-500 hover:underline">name@company.com</Link></p>
+                        <p>Phone: <Link to="tel:5555555555" className="text-blue-500 hover:underline">555-555-5555</Link></p>
+                        <p>Email: <Link to="mailto:name@company.com" className="text-blue-500 hover:underline">name@company.com</Link></p>
                     </div>
                 </div>
                 <div className="col-1">
