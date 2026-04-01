@@ -5,7 +5,6 @@ import { CalendarIcon, Info } from "lucide-react";
 import { Checkbox } from "../ui/checkbox";
 import { FileUploader } from '@aws-amplify/ui-react-storage';
 import { Label } from "../ui/label";
-import { Link } from "@tanstack/react-router"
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import { cn } from "../../lib/utils";
@@ -89,8 +88,8 @@ export const AddBerthRequest = () => {
                     <p className="mb-1"><Info className="inline-block h-4 w-4 mr-1" stroke="#0090FF" />To contact this terminal directly:</p>
                     <div className="px-8 pb-3">
                         <p>Terminal Name</p>
-                        <p>Phone: <Link to="tel:5555555555" className="text-blue-500 hover:underline">555-555-5555</Link></p>
-                        <p>Email: <Link to="mailto:name@company.com" className="text-blue-500 hover:underline">name@company.com</Link></p>
+                        <p>Phone: <a href="tel:5555555555" className="text-blue-500 hover:underline">555-555-5555</a></p>
+                        <p>Email: <a href="mailto:name@company.com" className="text-blue-500 hover:underline">name@company.com</a></p>
                     </div>
                 </div>
                 <div className="col-1">
