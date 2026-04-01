@@ -115,32 +115,32 @@ export const AddBerthRequest = () => {
                 <div>
                     <span className="text-sm font-medium leading-none">Services Required</span>
                 </div>
-                <div className="col-span-2 py-2 flex space-x-4">
-                    <div className="flex items-center">
+                <div className="col-span-2 flex flex-wrap">
+                    <div className="flex items-center py-2 pr-4">
                         <Checkbox className="mr-2" id="berthRequestServicesFuel" value="Fuel"/>
                         <Label htmlFor="berthRequestServicesFuel">
                             Fuel
                         </Label>
                     </div>
-                    <div className="flex items-center">
+                    <div className="flex items-center py-2 pr-4">
                         <Checkbox className="mr-2" id="berthRequestServicesFood" value="Food"/>
                         <Label htmlFor="berthRequestServicesFood">
                             Food
                         </Label>
                     </div>
-                    <div className="flex items-center">
+                    <div className="flex items-center py-2 pr-4">
                         <Checkbox className="mr-2" id="berthRequestServicesWater" value="Water"/>
                         <Label htmlFor="berthRequestServicesWater">
                             Water
                         </Label>
                     </div>
-                    <div className="flex items-center">
+                    <div className="flex items-center py-2 pr-4">
                         <Checkbox className="mr-2" id="berthRequestServicesCrew" value="Crew Services"/>
                         <Label htmlFor="berthRequestServicesCrew">
                             Crew Services
                         </Label>
                     </div>
-                    <div className="flex items-center">
+                    <div className="flex items-center py-2">
                         <Checkbox className="mr-2" id="berthRequestServicesWaste" value="Waste Disposal"/>
                         <Label htmlFor="berthRequestServicesWaste">
                             Waste Disposal
