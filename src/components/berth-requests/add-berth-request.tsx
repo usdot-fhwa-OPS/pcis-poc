@@ -5,6 +5,7 @@ import { CalendarIcon, Info } from "lucide-react";
 import { Checkbox } from "../ui/checkbox";
 import { FileUploader } from '@aws-amplify/ui-react-storage';
 import { Label } from "../ui/label";
+import { Link } from "@tanstack/react-router"
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import { cn } from "../../lib/utils";
@@ -84,12 +85,12 @@ export const AddBerthRequest = () => {
                         </SelectContent>
                     </Select>
                 </div>
-                <div className="col-start-2 col-end-6 pt-2">
-                    <p className="mb-2"><Info className="inline-block h-4 w-4 mr-1" stroke="#0090FF" />To contact this terminal directly:</p>
+                <div className="col-start-2 col-end-6 text-sm text-muted-foreground">
+                    <p className="mb-1"><Info className="inline-block h-4 w-4 mr-1" stroke="#0090FF" />To contact this terminal directly:</p>
                     <div className="px-8 pb-3">
                         <p>Terminal Name</p>
-                        <p>Phone: <a href="tel:5555555555">555-555-5555</a></p>
-                        <p>Email: <a href="mailto:name@company.com">name@company.com</a></p>
+                        <p>Phone: <Link href="tel:5555555555" className="text-blue-500 hover:underline">555-555-5555</Link></p>
+                        <p>Email: <Link href="mailto:name@company.com" className="text-blue-500 hover:underline">name@company.com</Link></p>
                     </div>
                 </div>
                 <div className="col-1">
@@ -117,32 +118,32 @@ export const AddBerthRequest = () => {
                 <div className="col-1">
                     <span className="text-sm font-medium leading-none">Services Required</span>
                 </div>
-                <div className="col-start-2 col-end-6 flex items-center">
-                    <div className="pr-4">
+                <div className="col-start-2 col-end-6 flex space-x-4">
+                    <div className="flex items-center">
                         <Checkbox className="mr-2" id="berthRequestServicesFuel" value="Fuel"/>
                         <Label htmlFor="berthRequestServicesFuel">
                             Fuel
                         </Label>
                     </div>
-                    <div className="pr-4">
+                    <div className="flex items-center">
                         <Checkbox className="mr-2" id="berthRequestServicesFood" value="Food"/>
                         <Label htmlFor="berthRequestServicesFood">
                             Food
                         </Label>
                     </div>
-                    <div className="pr-4">
+                    <div className="flex items-center">
                         <Checkbox className="mr-2" id="berthRequestServicesWater" value="Water"/>
                         <Label htmlFor="berthRequestServicesWater">
                             Water
                         </Label>
                     </div>
-                    <div className="pr-4">
+                    <div className="flex items-center">
                         <Checkbox className="mr-2" id="berthRequestServicesCrew" value="Crew Services"/>
                         <Label htmlFor="berthRequestServicesCrew">
                             Crew Services
                         </Label>
                     </div>
-                    <div>
+                    <div className="flex items-center">
                         <Checkbox className="mr-2" id="berthRequestServicesWaste" value="Waste Disposal"/>
                         <Label htmlFor="berthRequestServicesWaste">
                             Waste Disposal

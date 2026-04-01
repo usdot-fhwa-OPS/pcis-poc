@@ -13,8 +13,8 @@ function AddBerthRequestComponent() {
     <div className="flex flex-col w-full p-10">
         <h1 className="text-2xl font-semibold mb-6">Add New Berth Request</h1>
         <AddBerthRequest/>
-        <div>
-          <Button>
+        <div className="flex space-x-4 mt-8">
+          <Button variant="outline">
             Cancel
           </Button>
           <Button>
