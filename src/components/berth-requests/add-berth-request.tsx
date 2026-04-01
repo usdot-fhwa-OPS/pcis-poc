@@ -63,13 +63,13 @@ export const AddBerthRequest = () => {
     return (
     <>
         <div className="max-w-2xl">
-            <div className="grid grid-cols-5 gap-2 items-center">
-                <div className="col-1">
+            <div className="grid grid-cols-3 gap-2 items-center">
+                <div>
                     <Label htmlFor="berthRequestTerminal">
                         Terminal
                     </Label>
                 </div>
-                <div className="col-start-2 col-end-6">
+                <div className="col-span-2">
                     <Select>
                         <SelectTrigger>
                             <SelectValue />
@@ -84,7 +84,7 @@ export const AddBerthRequest = () => {
                         </SelectContent>
                     </Select>
                 </div>
-                <div className="col-start-2 col-end-6 text-sm text-muted-foreground">
+                <div className="col-span-2 col-start-2 text-sm text-muted-foreground">
                     <div className="flex items-center mb-1">
                         <Info className="inline-block h-4 w-4 mr-1" stroke="#0090FF" /><p>To contact this terminal directly:</p>
                     </div>
@@ -94,32 +94,28 @@ export const AddBerthRequest = () => {
                         <p>Email: <a href="mailto:name@company.com" className="text-blue-500 hover:underline">name@company.com</a></p>
                     </div>
                 </div>
-                <div className="col-1">
+                <div>
                     <Label htmlFor="berthRequestEta">
                         Estimated Arrival
                     </Label>
                 </div>
-                <div className="col-span-2 col-end-4">
+                <div className="col-span-2 flex items-center space-x-4">
                     {showStartDateCalendar()}
-                </div>
-                <div className="col-start-4 col-end-6">
                     {showStartTime()}
                 </div>
-                <div className="col-1">
+                <div>
                     <Label htmlFor="berthRequestEtd">
                         Estimated Departure
                     </Label>
                 </div>
-                <div className="col-span-2 col-end-4">
+                <div className="col-span-2 flex items-center space-x-4">
                     {showEndDateCalendar()}
-                </div>
-                <div className="col-start-4 col-end-6">
                     {showEndTime()}
                 </div>
-                <div className="col-1">
+                <div>
                     <span className="text-sm font-medium leading-none">Services Required</span>
                 </div>
-                <div className="col-start-2 col-end-6 flex space-x-4">
+                <div className="col-span-2 flex space-x-4">
                     <div className="flex items-center">
                         <Checkbox className="mr-2" id="berthRequestServicesFuel" value="Fuel"/>
                         <Label htmlFor="berthRequestServicesFuel">
@@ -151,7 +147,7 @@ export const AddBerthRequest = () => {
                         </Label>
                     </div>
                 </div>
-                <div className="col-span-5 mt-8 mb-6">
+                <div className="col-span-3 mt-8 mb-6">
                     <h2 className="text-xl font-semibold mb-4">Attach a Cargo Manifest</h2>
                     <p className="mb-3">Instructions for file attachment:</p>
                     <ol className="space-y-4 list-decimal list-inside">
@@ -160,7 +156,7 @@ export const AddBerthRequest = () => {
                         <li>A check mark will appear next to your file&rsquo;s name when it is uploaded.</li>
                     </ol>
                 </div>
-                <div className="col-span-5 mb-8">
+                <div className="col-span-3 mb-8">
                     <FileUploader
                         acceptedFileTypes={[
                         '.csv',
