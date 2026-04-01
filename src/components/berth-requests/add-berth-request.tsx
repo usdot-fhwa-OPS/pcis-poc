@@ -85,7 +85,9 @@ export const AddBerthRequest = () => {
                     </Select>
                 </div>
                 <div className="col-start-2 col-end-6 text-sm text-muted-foreground">
-                    <p className="mb-1"><Info className="inline-block h-4 w-4 mr-1" stroke="#0090FF" />To contact this terminal directly:</p>
+                    <div className="flex items-center mb-1">
+                        <Info className="inline-block h-4 w-4 mr-1" stroke="#0090FF" /><p>To contact this terminal directly:</p>
+                    </div>
                     <div className="px-8 pb-3">
                         <p>Terminal Name</p>
                         <p>Phone: <a href="tel:5555555555" className="text-blue-500 hover:underline">555-555-5555</a></p>
@@ -175,7 +177,7 @@ export const AddBerthRequest = () => {
 
     function showStartTime() {
         return <Select onValueChange={setStartTime}>
-            <SelectTrigger className={cn("w-[150px]")}>
+            <SelectTrigger className={cn("w-[110px]")}>
                 <SelectValue placeholder={startTime} />
             </SelectTrigger>
             <SelectContent>
@@ -193,7 +195,7 @@ export const AddBerthRequest = () => {
             <PopoverTrigger asChild>
                 <Button
                     variant={"outline"}
-                    className={cn("w-[200px] justify-start text-left font-normal", !startDate && "text-muted-foreground")}
+                    className={cn("w-[144px] justify-start text-left font-normal", !startDate && "text-muted-foreground")}
                     onClick={() => setIsStartCalendarOpen(true)}
                 >
                     <CalendarIcon className="mr-2 h-4 w-4" />
@@ -208,7 +210,7 @@ export const AddBerthRequest = () => {
 
     function showEndTime() {
         return <Select onValueChange={setEndTime}>
-            <SelectTrigger className={cn("w-[150px]")}>
+            <SelectTrigger className={cn("w-[110px]")}>
                 <SelectValue placeholder={endTime} />
             </SelectTrigger>
             <SelectContent>
@@ -226,7 +228,7 @@ export const AddBerthRequest = () => {
             <PopoverTrigger asChild>
                 <Button
                     variant={"outline"}
-                    className={cn("w-[200px] justify-start text-left font-normal", !endDate && "text-muted-foreground")}
+                    className={cn("w-[144px] justify-start text-left font-normal", !endDate && "text-muted-foreground")}
                     onClick={() => setIsEndCalendarOpen(true)}
                 >
                     <CalendarIcon className="mr-2 h-4 w-4" />
