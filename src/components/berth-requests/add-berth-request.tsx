@@ -62,14 +62,14 @@ export const AddBerthRequest = () => {
 
     return (
     <>
-        <div className="max-w-2xl">
-            <div className="grid grid-cols-1 md:grid-cols-[max-content_1fr] gap-2 items-center">
+        <div className="md:max-w-2xl">
+            <div className="grid grid-cols-1 md:grid-cols-[max-content_1fr] gap-2 md:items-center">
                 <div className="pr-8">
                     <Label htmlFor="berthRequestTerminal">
                         Terminal
                     </Label>
                 </div>
-                <div className="py-2">
+                <div className="pb-4 md:py-2">
                     <Select>
                         <SelectTrigger>
                             <SelectValue />
@@ -99,7 +99,7 @@ export const AddBerthRequest = () => {
                         Estimated Arrival
                     </Label>
                 </div>
-                <div className="py-2 flex items-center space-x-4">
+                <div className="pb-4 md:py-2 flex items-center space-x-4">
                     {showStartDateCalendar()}
                     {showStartTime()}
                 </div>
@@ -108,11 +108,11 @@ export const AddBerthRequest = () => {
                         Estimated Departure
                     </Label>
                 </div>
-                <div className="py-2 flex items-center space-x-4">
+                <div className="pb-4 md:py-2 flex items-center space-x-4">
                     {showEndDateCalendar()}
                     {showEndTime()}
                 </div>
-                <div className="self-start pt-1 pr-8">
+                <div className="md:self-start md:pt-1 pr-8">
                     <span className="text-sm font-medium leading-none">Services Required</span>
                 </div>
                 <div className="flex flex-wrap">
