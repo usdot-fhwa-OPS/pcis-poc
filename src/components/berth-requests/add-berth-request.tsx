@@ -63,7 +63,7 @@ export const AddBerthRequest = () => {
     return (
     <>
         <div className="max-w-2xl">
-            <div className="grid grid-cols-[max-content_1fr] gap-2 items-center">
+            <div className="grid grid-cols-1 md:grid-cols-[max-content_1fr] gap-2 items-center">
                 <div className="pr-8">
                     <Label htmlFor="berthRequestTerminal">
                         Terminal
@@ -84,7 +84,7 @@ export const AddBerthRequest = () => {
                         </SelectContent>
                     </Select>
                 </div>
-                <div className="col-start-2 text-sm text-muted-foreground">
+                <div className="md:col-start-2 text-sm text-muted-foreground">
                     <div className="flex items-center">
                         <Info className="inline-block h-4 w-4 mr-1" stroke="#0090FF" /><p>To contact this terminal directly:</p>
                     </div>
@@ -147,7 +147,7 @@ export const AddBerthRequest = () => {
                         </Label>
                     </div>
                 </div>
-                <div className="col-span-2 mt-8 mb-6">
+                <div className="md:col-span-2 mt-8 mb-6">
                     <h2 className="text-xl font-semibold mb-4">Attach a Cargo Manifest</h2>
                     <p className="mb-3">Instructions for file attachment:</p>
                     <ol className="space-y-4 list-decimal list-inside">
@@ -156,7 +156,7 @@ export const AddBerthRequest = () => {
                         <li>A check mark will appear next to your file&rsquo;s name when it is uploaded.</li>
                     </ol>
                 </div>
-                <div className="col-span-2 mb-8">
+                <div className="md:col-span-2 mb-8">
                     <FileUploader
                         acceptedFileTypes={[
                         '.csv',
