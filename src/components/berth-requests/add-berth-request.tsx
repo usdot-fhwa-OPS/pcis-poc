@@ -150,7 +150,7 @@ export const AddBerthRequest = () => {
                 <div className="md:col-span-2 mt-8 mb-6">
                     <h2 className="text-xl font-semibold mb-4">Attach a Cargo Manifest</h2>
                     <p className="mb-3">Instructions for file attachment:</p>
-                    <ol className="space-y-4 list-decimal list-inside">
+                    <ol className="list-decimal list-outside pl-6 space-y-4">
                         <li>Locate your cargo manifest file on your computer. <span className="text-sm text-muted-foreground">(Supported file formats: .csv, .xls, .txt)</span></li>
                         <li>Drag and drop the file into the upload area below or select &ldquo;Browse Files&rdquo; to find it.</li>
                         <li>A check mark will appear next to your file&rsquo;s name when it is uploaded.</li>
