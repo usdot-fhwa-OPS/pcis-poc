@@ -64,7 +64,7 @@ export const AddBerthRequest = () => {
     <>
         <div className="max-w-2xl">
             <div className="grid grid-cols-[max-content_1fr] gap-2 items-center">
-                <div className={cn("max-w-[160px]")}>
+                <div className="pr-8">
                     <Label htmlFor="berthRequestTerminal">
                         Terminal
                     </Label>
@@ -94,7 +94,7 @@ export const AddBerthRequest = () => {
                         <p>Email: <a href="mailto:name@company.com" className="text-blue-500 hover:underline">name@company.com</a></p>
                     </div>
                 </div>
-                <div className={cn("max-w-[160px]")}>
+                <div className="pr-8">
                     <Label htmlFor="berthRequestEta">
                         Estimated Arrival
                     </Label>
@@ -103,7 +103,7 @@ export const AddBerthRequest = () => {
                     {showStartDateCalendar()}
                     {showStartTime()}
                 </div>
-                <div className={cn("max-w-[160px]")}>
+                <div className="pr-8">
                     <Label htmlFor="berthRequestEtd">
                         Estimated Departure
                     </Label>
@@ -112,7 +112,7 @@ export const AddBerthRequest = () => {
                     {showEndDateCalendar()}
                     {showEndTime()}
                 </div>
-                <div className={cn("max-w-[160px] self-start pt-1")}>
+                <div className="self-start pt-1 pr-8">
                     <span className="text-sm font-medium leading-none">Services Required</span>
                 </div>
                 <div className="flex flex-wrap">
