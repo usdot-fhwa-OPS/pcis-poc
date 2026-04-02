@@ -112,7 +112,7 @@ export const AddBerthRequest = () => {
                     {showEndDateCalendar()}
                     {showEndTime()}
                 </div>
-                <div>
+                <div className="self-start pt-1">
                     <span className="text-sm font-medium leading-none">Services Required</span>
                 </div>
                 <div className="col-span-2 flex flex-wrap">
