@@ -9,6 +9,7 @@ import {
   ColumnFiltersState,
   getFilteredRowModel,
   getSortedRowModel,
+  getPaginationRowModel,
 } from "@tanstack/react-table"
 
 import {
@@ -34,14 +35,21 @@ interface DataTableProps<TData, TValue> {
 export function DataTable<TData, TValue>({ columns, data, meta }: DataTableProps<TData, TValue>) {
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
 
+  const [pagination, setPagination] = React.useState({
+          pageIndex: 0,
+          pageSize: 10,
+      })
+
   const table = useReactTable({
     data,
     columns,
     meta: meta as BCODataTableMeta,
     getCoreRowModel: getCoreRowModel(),
+    onPaginationChange: setPagination,
     getFilteredRowModel: getFilteredRowModel(),
     onColumnFiltersChange: setColumnFilters,
-    state: { columnFilters },
+    getPaginationRowModel: getPaginationRowModel(),
+    state: { columnFilters, pagination },
     initialState: {
       sorting: [
         {id: "updatedAt", desc:true }
@@ -96,6 +104,48 @@ export function DataTable<TData, TValue>({ columns, data, meta }: DataTableProps
           )}
         </TableBody>
       </Table>
+      /* Pagination Controls */
+      <div className="flex items-center justify-between mt-4">
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => table.previousPage()}
+            disabled={!table.getCanPreviousPage()}
+            className="px-3 py-1 border rounded disabled:opacity-50"
+          >
+            Previous
+          </button>
+
+          <button
+            onClick={() => table.nextPage()}
+            disabled={!table.getCanNextPage()}
+            className="px-3 py-1 border rounded disabled:opacity-50"
+          >
+            Next
+          </button>
+        </div>
+
+        <span className="text-sm">
+          Page{" "}
+          <strong>
+            {table.getState().pagination.pageIndex + 1} of{" "}
+            {table.getPageCount()}
+          </strong>
+        </span>
+
+        <select
+          value={table.getState().pagination.pageSize}
+          onChange={(e) =>
+            table.setPageSize(Number(e.target.value))
+          }
+          className="border p-1 rounded"
+        >
+          {[5, 10, 20, 50].map((size) => (
+            <option key={size} value={size}>
+              Show {size}
+            </option>
+          ))}
+        </select>
+      </div>
       </div>
     </div>
   )

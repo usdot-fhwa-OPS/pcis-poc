@@ -83,6 +83,11 @@ const items = [
     url: "/analytics",
     icon: BarChart,
   },
+  {
+    title: "Berth Reservations",
+    url: "/berth-vessel",
+    icon: Anchor,
+  },
 ]
 
 export function AppSidebar() {
@@ -131,6 +136,9 @@ export function AppSidebar() {
     if (userAttributes.role === "Terminal Operator") {
       // Terminal Operators have access to all items except Berth Request.
       return allowedForTerminalOperatorRole.includes(item.title)
+    }
+    if (userAttributes.role === "Vessel Agent") {
+      return item.title ==="Berth Reservations";
     }
 
     if (
