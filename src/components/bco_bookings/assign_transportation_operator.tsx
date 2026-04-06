@@ -1,5 +1,4 @@
-import { Dialog } from "@radix-ui/react-dialog";
-import { DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
 import { Button } from "../ui/button";
 import { Input } from "@aws-amplify/ui-react";
@@ -11,51 +10,51 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem,
 import { LucideChevronDown, LucideTramFront, LucideTruck, LucideUsers } from "lucide-react";
 
 
-export const assignTransportationCoordinator = (table: any, row: any) => {
+export default function TransportationCoordinator({ row, table }: { row: any, table: any }) {
 
-        const [data, setData] = useState<User[]>([])
-        const [tempName, setTempName] = useState("")
-        const [tempEmail, setTempEmail] = useState("")
-        const [isDialogOpen, setIsDialogOpen] = useState(false)
-       
-        const handleOpen = async () => {
-          setIsDialogOpen(true)
-          const result = await (table.options.meta as BCODataTableMeta)?.fetchTransportationCoordinators();
-          setData(result)
-        }
+    const [data, setData] = useState<User[]>([])
+    const [tempName, setTempName] = useState("")
+    const [tempEmail, setTempEmail] = useState("")
+    const [isDialogOpen, setIsDialogOpen] = useState(false)
 
-        const handleOperatorSelect = (value: string) => {
-          setTempEmail(value);
-          const selectedUser = data.find(
+    const handleOpen = async () => {
+        setIsDialogOpen(true)
+        const result = await (table.options.meta as BCODataTableMeta)?.fetchTransportationCoordinators();
+        setData(result)
+    }
+
+    const handleOperatorSelect = (value: string) => {
+        setTempEmail(value);
+        const selectedUser = data.find(
             (user) => `${user.email}` === value
-          );
-          if (selectedUser) {
-            setTempName( `${selectedUser.given_name} ${selectedUser.family_name}`);
-          }
-        };
-
-        function handleSubmit() {
-          // Use the parent's updateCargo method:
-          (table.options.meta as BCODataTableMeta)?.assignTransOp(row.original.cargoUnitID, tempName, tempEmail, "Pending Transportation Coordinator Approval")
-          setIsDialogOpen(false)
+        );
+        if (selectedUser) {
+            setTempName(`${selectedUser.given_name} ${selectedUser.family_name}`);
         }
+    };
 
-        
-                const getMenuItem = (user: User) => {
-            const fullName = `${user.given_name} ${user.family_name}`;
-            return (
-                <div className="flex">
-                    <DropdownMenuItem  onClick={()=>handleOperatorSelect(user.email)} > &nbsp;&nbsp;&nbsp;&nbsp;{user["custom:organization"] ? user["custom:organization"] : fullName} </DropdownMenuItem>
-                    
-                </div>
-
-            );
-        };
-
-    return (
-        <>
+    function handleSubmit() {
+        // Use the parent's updateCargo method:
+        (table.options.meta as BCODataTableMeta)?.assignTransOp(row.original.cargoUnitID, tempName, tempEmail, "Pending Transportation Coordinator Approval")
+        setIsDialogOpen(false)
+    }
 
 
+    const getMenuItem = (user: User) => {
+        const fullName = `${user.given_name} ${user.family_name}`;
+        return (
+            <div className="flex">
+                <DropdownMenuItem onClick={() => handleOperatorSelect(user.email)} > &nbsp;&nbsp;&nbsp;&nbsp;{user["custom:organization"] ? user["custom:organization"] : fullName} </DropdownMenuItem>
+
+            </div>
+
+        );
+    };
+    // If either operator OR email is missing, show "Book" button
+    const isMissing = !row.original.transopName?.trim() || !row.original.transopEmail?.trim()
+    if (isMissing) {
+        return (
+            //assignTransportationCoordinator( table, row)
             <Dialog
                 open={isDialogOpen}
                 onOpenChange={(open) => {
@@ -155,9 +154,9 @@ export const assignTransportationCoordinator = (table: any, row: any) => {
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
+        )
+    }
 
-
-        </>
-    );
-
+    // If both operator and email are already filled, just display operator's name
+    return <span>{row.original.transopName}</span>
 }

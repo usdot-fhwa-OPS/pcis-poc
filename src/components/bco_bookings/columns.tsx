@@ -12,7 +12,9 @@ const client = generateClient<Schema>();
 
 import { format } from "date-fns";
 
-import { assignTransportationCoordinator} from "./assign_transportation_operator.tsx";
+import TransportationCoordinator from "./assign_transportation_operator.tsx";
+
+
 
 export const columns = (): ColumnDef<any>[] => {
   const baseColumns: ColumnDef<any>[] = [
@@ -25,36 +27,7 @@ export const columns = (): ColumnDef<any>[] => {
     { 
       accessorKey: "transopName", 
       header: "Transportation Coordinator",
-      cell: ({ row, table }) => {
-
-
-        // If either operator OR email is missing, show "Book" button
-        const isMissing = !row.original.transopName?.trim() || !row.original.transopEmail?.trim()
-        if (isMissing) {
-          return (
-            assignTransportationCoordinator( table, row)
-          )
-        }
-
-        // If both operator and email are already filled, just display operator's name
-        return <span>{row.original.transopName}</span>
-      },
-    },
-    {
-      accessorKey: "containerStatus",
-      header: "Container Status",
-      cell: ({ row }) => {
-        const status = row.original.containerStatus; // Get status value
-        const isOnShip = status === "On-Ship"; // Check if status is "Late"
-
-        return (
-          <span className={`px-2 py-1 rounded-md ${isOnShip ? "bg-blue-500 text-black rounded-md font-bold" : "font-bold text-black bg-purple-500 rounded-md"} text-center block`}>
-
-            {status}
-          </span>
-        );
-
-      }
+      cell: ({ row, table }) => <TransportationCoordinator row ={row} table={table} />
     },
     { accessorKey: "arrivalDate", header: "Estimated Day of Arrival" },
   ];
