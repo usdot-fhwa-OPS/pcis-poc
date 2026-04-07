@@ -8,10 +8,9 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table'
+} from "@/components/ui/table"
 
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
+import { Button } from "../components/ui/button";
 
 export const Route = createFileRoute('/berth-manager')({
   component: RouteComponent,
