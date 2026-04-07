@@ -18,10 +18,10 @@ function AddBerthRequestComponent() {
   }
 
   const handleSubmit = () => {
-    navigate({
-      to: "/berth-request-confirmation",
-      state: { formData: formDataRef.current },
-    });
+    if (formDataRef.current) {
+      sessionStorage.setItem('berthRequestDraft', JSON.stringify(formDataRef.current));
+    }
+    navigate({ to: "/berth-request-confirmation" });
   }
 
   return (

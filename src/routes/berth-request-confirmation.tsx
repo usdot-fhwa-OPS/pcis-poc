@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate, useLocation } from '@tanstack/react-router'
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { useState } from 'react';
 import { format } from 'date-fns';
 import { FileIcon, CheckCircle2Icon } from 'lucide-react';
@@ -11,7 +11,6 @@ import {
   DialogTitle,
   DialogDescription,
   DialogFooter,
-  DialogClose,
 } from "../components/ui/dialog";
 import { BerthRequestFormData } from '../components/berth-requests/add-berth-request';
 
@@ -21,8 +20,8 @@ export const Route = createFileRoute('/berth-request-confirmation')({
 
 function BerthRequestConfirmationComponent() {
   const navigate = useNavigate();
-  const location = useLocation();
-  const formData = (location.state as { formData: BerthRequestFormData | null })?.formData ?? null;
+  const raw = sessionStorage.getItem('berthRequestDraft');
+  const formData: BerthRequestFormData | null = raw ? JSON.parse(raw) : null;
 
   const [cancelOpen, setCancelOpen] = useState(false);
   const [successOpen, setSuccessOpen] = useState(false);
