@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { Calendar } from "../ui/calendar";
 import { CalendarIcon, Info } from "lucide-react";
@@ -10,12 +10,38 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 import { cn } from "../../lib/utils";
 import { format } from "date-fns";
 
-export const AddBerthRequest = () => {
+export interface BerthRequestFormData {
+    terminalId: string;
+    terminalName: string;
+    terminalPhone: string;
+    terminalEmail: string;
+    startDate: Date;
+    startTime: string;
+    endDate: Date;
+    endTime: string;
+    services: string[];
+    cargoManifestName?: string;
+}
 
+const TERMINALS: Record<string, { name: string; phone: string; email: string }> = {
+    "terminal-1": { name: "Port City Terminal", phone: "322-555-2368", email: "cmartinez@cityport.com" },
+    "terminal-2": { name: "Harbor Terminal", phone: "555-867-5309", email: "info@harborterminal.com" },
+}
+
+const ALL_SERVICES = ["Fuel", "Food", "Water", "Crew Services", "Waste Disposal"];
+
+interface AddBerthRequestProps {
+    onDataChange?: (data: BerthRequestFormData) => void;
+}
+
+export const AddBerthRequest = ({ onDataChange }: AddBerthRequestProps) => {
+
+    const [selectedTerminalId, setSelectedTerminalId] = useState<string>("")
     const [startDate, setStartDate] = useState<Date>(new Date())
-    const [endDate, setEndDate] = useState<Date>(new Date())    
+    const [endDate, setEndDate] = useState<Date>(new Date())
     const [isStartCalendarOpen, setIsStartCalendarOpen] = useState(false)
     const [isEndCalendarOpen, setIsEndCalendarOpen] = useState(false)
+    const [selectedServices, setSelectedServices] = useState<string[]>([])
 
     const timeOptions = [
             "12:00 AM",
@@ -43,9 +69,31 @@ export const AddBerthRequest = () => {
             "10:00 PM",
             "11:00 PM",
             ]
-    const [startTime, setStartTime] = useState<string | undefined>(timeOptions[0])
-    const [endTime, setEndTime] = useState<string | undefined>(timeOptions[0])
-    
+    const [startTime, setStartTime] = useState<string>(timeOptions[0])
+    const [endTime, setEndTime] = useState<string>(timeOptions[0])
+
+    const toggleService = (service: string, checked: boolean) => {
+        setSelectedServices(prev =>
+            checked ? [...prev, service] : prev.filter(s => s !== service)
+        );
+    };
+
+    useEffect(() => {
+        if (!onDataChange) return;
+        const terminal = TERMINALS[selectedTerminalId];
+        onDataChange({
+            terminalId: selectedTerminalId,
+            terminalName: terminal?.name ?? "",
+            terminalPhone: terminal?.phone ?? "",
+            terminalEmail: terminal?.email ?? "",
+            startDate,
+            startTime,
+            endDate,
+            endTime,
+            services: selectedServices,
+        });
+    }, [selectedTerminalId, startDate, startTime, endDate, endTime, selectedServices]);
+
     const handleStartDateSelect = (selectedDate: Date | undefined) => {
         if (!selectedDate) return;
         setStartDate(selectedDate)
@@ -70,30 +118,29 @@ export const AddBerthRequest = () => {
                     </Label>
                 </div>
                 <div className="pb-4 md:py-2">
-                    <Select>
+                    <Select onValueChange={setSelectedTerminalId}>
                         <SelectTrigger>
                             <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="Terminal Name 1">
-                                Terminal Name 1
-                            </SelectItem>
-                            <SelectItem value="Terminal Name 2">
-                                Terminal Name 2
-                            </SelectItem>
+                            {Object.entries(TERMINALS).map(([id, t]) => (
+                                <SelectItem key={id} value={id}>{t.name}</SelectItem>
+                            ))}
                         </SelectContent>
                     </Select>
                 </div>
-                <div className="md:col-start-2 text-sm text-muted-foreground">
-                    <div className="flex items-center">
-                        <Info className="inline-block h-4 w-4 mr-1" stroke="#0090FF" /><p>To contact this terminal directly:</p>
+                {selectedTerminalId && (
+                    <div className="md:col-start-2 text-sm text-muted-foreground">
+                        <div className="flex items-center">
+                            <Info className="inline-block h-4 w-4 mr-1" stroke="#0090FF" /><p>To contact this terminal directly:</p>
+                        </div>
+                        <div className="px-8 py-2">
+                            <p>{TERMINALS[selectedTerminalId].name}</p>
+                            <p>Phone: <a href={`tel:${TERMINALS[selectedTerminalId].phone}`} className="text-blue-500 hover:underline">{TERMINALS[selectedTerminalId].phone}</a></p>
+                            <p>Email: <a href={`mailto:${TERMINALS[selectedTerminalId].email}`} className="text-blue-500 hover:underline">{TERMINALS[selectedTerminalId].email}</a></p>
+                        </div>
                     </div>
-                    <div className="px-8 py-2">
-                        <p>Terminal Name</p>
-                        <p>Phone: <a href="tel:5555555555" className="text-blue-500 hover:underline">555-555-5555</a></p>
-                        <p>Email: <a href="mailto:name@company.com" className="text-blue-500 hover:underline">name@company.com</a></p>
-                    </div>
-                </div>
+                )}
                 <div className="pr-8">
                     <Label htmlFor="berthRequestEta">
                         Estimated Arrival
@@ -116,36 +163,19 @@ export const AddBerthRequest = () => {
                     <span className="text-sm font-medium leading-none">Services Required</span>
                 </div>
                 <div className="flex flex-wrap">
-                    <div className="flex items-center py-2 pr-4">
-                        <Checkbox className="mr-2" id="berthRequestServicesFuel" value="Fuel"/>
-                        <Label htmlFor="berthRequestServicesFuel">
-                            Fuel
-                        </Label>
-                    </div>
-                    <div className="flex items-center py-2 pr-4">
-                        <Checkbox className="mr-2" id="berthRequestServicesFood" value="Food"/>
-                        <Label htmlFor="berthRequestServicesFood">
-                            Food
-                        </Label>
-                    </div>
-                    <div className="flex items-center py-2 pr-4">
-                        <Checkbox className="mr-2" id="berthRequestServicesWater" value="Water"/>
-                        <Label htmlFor="berthRequestServicesWater">
-                            Water
-                        </Label>
-                    </div>
-                    <div className="flex items-center py-2 pr-4">
-                        <Checkbox className="mr-2" id="berthRequestServicesCrew" value="Crew Services"/>
-                        <Label htmlFor="berthRequestServicesCrew">
-                            Crew Services
-                        </Label>
-                    </div>
-                    <div className="flex items-center py-2">
-                        <Checkbox className="mr-2" id="berthRequestServicesWaste" value="Waste Disposal"/>
-                        <Label htmlFor="berthRequestServicesWaste">
-                            Waste Disposal
-                        </Label>
-                    </div>
+                    {ALL_SERVICES.map((service) => (
+                        <div key={service} className="flex items-center py-2 pr-4">
+                            <Checkbox
+                                className="mr-2"
+                                id={`berthRequestServices${service.replace(/\s/g, "")}`}
+                                checked={selectedServices.includes(service)}
+                                onCheckedChange={(checked) => toggleService(service, !!checked)}
+                            />
+                            <Label htmlFor={`berthRequestServices${service.replace(/\s/g, "")}`}>
+                                {service}
+                            </Label>
+                        </div>
+                    ))}
                 </div>
                 <div className="md:col-span-2 mt-8 mb-6">
                     <h2 className="text-xl font-semibold mb-4">Attach a Cargo Manifest</h2>
