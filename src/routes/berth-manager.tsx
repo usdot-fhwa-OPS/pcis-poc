@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/table"
 
 import { Button } from "../components/ui/button";
+import { Badge } from "../components/ui/badge";
 
 export const Route = createFileRoute('/berth-manager')({
   component: RouteComponent,
@@ -29,7 +30,7 @@ function RouteComponent() {
   const [loading, setLoading] = useState(true)
 
   // 🔹 mock data
-  const fetchBerthRequests = async () => {
+  const fetchBerthRequests = async (): Promise<BerthRequest[]> => {
     return [
       {
         id: 1,
