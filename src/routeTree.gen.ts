@@ -19,6 +19,7 @@ import { Route as CargoRouteImport } from './routes/cargo'
 import { Route as CapacityRouteImport } from './routes/capacity'
 import { Route as BerthVesselRouteImport } from './routes/berth-vessel'
 import { Route as BerthRequestsRouteImport } from './routes/berth-requests'
+import { Route as BerthRequestConfirmationRouteImport } from './routes/berth-request-confirmation'
 import { Route as BerthRequestAddRouteImport } from './routes/berth-request-add'
 import { Route as BerthManagerRouteImport } from './routes/berth-manager'
 import { Route as AnalyticsRouteImport } from './routes/analytics'
@@ -72,6 +73,11 @@ const BerthVesselRoute = BerthVesselRouteImport.update({
 const BerthRequestsRoute = BerthRequestsRouteImport.update({
   id: '/berth-requests',
   path: '/berth-requests',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BerthRequestConfirmationRoute = BerthRequestConfirmationRouteImport.update({
+  id: '/berth-request-confirmation',
+  path: '/berth-request-confirmation',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BerthRequestAddRoute = BerthRequestAddRouteImport.update({
@@ -201,6 +207,7 @@ export interface FileRoutesByFullPath {
   '/hazardous-cargo-manager': typeof HazardousCargoManagerRoute
   '/hazardous-cargo': typeof HazardousCargoRoute
   '/berth-manager': typeof BerthManagerRoute
+  '/berth-request-confirmation': typeof BerthRequestConfirmationRoute
   '/berth-request-add': typeof BerthRequestAddRoute
   '/berth-requests': typeof BerthRequestsRoute
   '/berth-vessel': typeof BerthVesselRoute
@@ -218,6 +225,7 @@ export interface FileRoutesByTo {
   '/hazardous-cargo-manager': typeof HazardousCargoManagerRoute
   '/hazardous-cargo': typeof HazardousCargoRoute
   '/berth-manager': typeof BerthManagerRoute
+  '/berth-request-confirmation': typeof BerthRequestConfirmationRoute
   '/berth-request-add': typeof BerthRequestAddRoute
   '/berth-requests': typeof BerthRequestsRoute
   '/berth-vessel': typeof BerthVesselRoute
@@ -236,6 +244,7 @@ export interface FileRoutesById {
   '/hazardous-cargo-manager': typeof HazardousCargoManagerRoute
   '/hazardous-cargo': typeof HazardousCargoRoute
   '/berth-manager': typeof BerthManagerRoute
+  '/berth-request-confirmation': typeof BerthRequestConfirmationRoute
   '/berth-request-add': typeof BerthRequestAddRoute
   '/berth-requests': typeof BerthRequestsRoute
   '/berth-vessel': typeof BerthVesselRoute
@@ -255,6 +264,7 @@ export interface FileRouteTypes {
     | '/hazardous-cargo-manager'
     | '/hazardous-cargo'
     | '/berth-manager'
+    | '/berth-request-confirmation'
     | '/berth-request-add'
     | '/berth-requests'
     | '/berth-vessel'
@@ -272,6 +282,7 @@ export interface FileRouteTypes {
     | '/hazardous-cargo-manager'
     | '/hazardous-cargo'
     | '/berth-manager'
+    | '/berth-request-confirmation'
     | '/berth-request-add'
     | '/berth-requests'
     | '/berth-vessel'
@@ -289,6 +300,7 @@ export interface FileRouteTypes {
     | '/hazardous-cargo-manager'
     | '/hazardous-cargo'
     | '/berth-manager'
+    | '/berth-request-confirmation'
     | '/berth-request-add'
     | '/berth-requests'
     | '/berth-vessel'
@@ -307,6 +319,7 @@ export interface RootRouteChildren {
   HazardousCargoManagerRoute: typeof HazardousCargoManagerRoute
   HazardousCargoRoute: typeof HazardousCargoRoute
   BerthManagerRoute: typeof BerthManagerRoute
+  BerthRequestConfirmationRoute: typeof BerthRequestConfirmationRoute
   BerthRequestAddRoute: typeof BerthRequestAddRoute
   BerthRequestsRoute: typeof BerthRequestsRoute
   BerthVesselRoute: typeof BerthVesselRoute
@@ -384,6 +397,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BerthRequestsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/berth-request-confirmation': {
+      id: '/berth-request-confirmation'
+      path: '/berth-request-confirmation'
+      fullPath: '/berth-request-confirmation'
+      preLoaderRoute: typeof BerthRequestConfirmationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/berth-request-add': {
       id: '/berth-request-add'
       path: '/berth-request-add'
@@ -421,6 +441,7 @@ const rootRouteChildren: RootRouteChildren = {
   HazardousCargoManagerRoute: HazardousCargoManagerRoute,
   HazardousCargoRoute: HazardousCargoRoute,
   BerthManagerRoute: BerthManagerRoute,
+  BerthRequestConfirmationRoute: BerthRequestConfirmationRoute,
   BerthRequestAddRoute: BerthRequestAddRoute,
   BerthRequestsRoute: BerthRequestsRoute,
   BerthVesselRoute: BerthVesselRoute,
