@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router"
 import { BerthAvailability } from "../components/berth/berth-availability"
 import { Button } from "../components/ui/button"
@@ -19,7 +19,7 @@ export const Route = createFileRoute('/berth-manager')({
           <Button type="button" onClick={() => handleOpen()}>
               Berth Availability
           </Button>
-          <BerthAvailability isDialogOpen={isOpen} />
+          <BerthAvailability isDialogOpen={isOpen} handleCloseDialog={() => setIsOpen(false)} />
         </div>
     )
 }

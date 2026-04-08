@@ -6,14 +6,17 @@ import { Button } from "../ui/button"
 import { Label } from "../ui/label"
 
 export const BerthAvailability = (
-    { isDialogOpen}: { isDialogOpen:boolean;}) =>{
+    { isDialogOpen, handleCloseDialog}: { isDialogOpen:boolean; handleCloseDialog:any}) =>{
         useEffect(() => {
             handleClickOpen();
         }, []);
 
     const handleClickOpen = () => {
-
     };
+
+    const handleClose = () => {
+        handleCloseDialog(false);
+     };
 
     let limit: number = 10;
     const [berths, setBerths] = useState(["","","","","","","","","",""]); //default 10
@@ -122,9 +125,9 @@ export const BerthAvailability = (
                     <br/>
                     <br/>
                     <div className="flex justify-end gap-2 mr-4">
-                        {/* <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
+                        <Button type="button" variant="outline" onClick={() => handleClose()}>
                                 Cancel
-                        </Button> */}
+                        </Button>
                         <Button type="submit">Enter Berth Availability</Button>
                     </div>
                     <br/>
