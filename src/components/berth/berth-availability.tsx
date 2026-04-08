@@ -122,9 +122,9 @@ export const BerthAvailability = (
                     <br/>
                     <br/>
                     <div className="flex justify-end gap-2 mr-4">
-                        <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
+                        {/* <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
                                 Cancel
-                        </Button>
+                        </Button> */}
                         <Button type="submit">Enter Berth Availability</Button>
                     </div>
                     <br/>
