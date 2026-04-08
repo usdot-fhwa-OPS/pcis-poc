@@ -6,20 +6,20 @@ import { Button } from "../components/ui/button"
 export const Route = createFileRoute('/berth-manager')({
   component: RouteComponent,
 })
-    const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(false);
 
-    const handleOpenDialog = async () => {
-          setIsDialogOpen(!isDialogOpen)
-    }
+  const handleOpen = () => {
+    setIsOpen(!isOpen);
+  };
 
     function RouteComponent() {
       return (
         <div className="p-2">
           <h1 className="text-2xl font-bold text-center">Berth Reservations</h1>
-          <Button type="button" onClick={(handleOpenDialog)}>
+          <Button type="button" onClick={() => handleOpen()}>
               Berth Availability
           </Button>
-          <BerthAvailability isDialogOpen={isDialogOpen} />
+          <BerthAvailability isDialogOpen={isOpen} />
         </div>
     )
 }

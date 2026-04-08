@@ -1,12 +1,20 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Dialog, DialogContent, DialogHeader } from "../ui/dialog"
 import { Button } from "../ui/button"
 import { Label } from "../ui/label"
 
 export const BerthAvailability = (
-    { isDialogOpen}: { isDialogOpen:boolean;}) => {
+    { isDialogOpen}: { isDialogOpen:boolean;}) =>{
+        useEffect(() => {
+            handleClickOpen();
+        }, []);
+
+    const handleClickOpen = () => {
+
+    };
+
     let limit: number = 10;
     const [berths, setBerths] = useState(["","","","","","","","","",""]); //default 10
 
@@ -44,13 +52,13 @@ export const BerthAvailability = (
         setBerths(updated);
     };    
 
-   // const [isDialogOpen, setIsDialogOpen] = useState(true)
+    //const [isDialogOpen, setIsDialogOpen] = useState(true)
 
     const [berthAvailability, setBerthAvailability] = useState(limit)
 
     const handleSubmit = async () => {
     }
-  
+ 
     return (      
         <Dialog open={isDialogOpen}>
             <DialogContent className="max-w-56 p-0">
