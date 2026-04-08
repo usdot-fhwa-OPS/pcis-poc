@@ -29,7 +29,10 @@ function RouteComponent() {
   const [data, setData] = useState<BerthRequest[]>([])
   const [loading, setLoading] = useState(true)
 
-  // 🔹 mock data
+  const [currentPage, setCurrentPage] = useState(1)
+  const pageSize = 5
+
+  // mock data
   const fetchBerthRequests = async (): Promise<BerthRequest[]> => {
     return [
       {
@@ -58,6 +61,17 @@ function RouteComponent() {
 
     fetchData()
   }, [])
+
+  useEffect(() => {
+    setCurrentPage(1)
+  }, [data])
+
+  const totalPages = Math.ceil(data.length / pageSize)
+
+  const paginatedData = data.slice(
+    (currentPage - 1) * pageSize,
+    currentPage * pageSize
+  )
 
   const handleModify = (id: number) => {
     alert(`Modify request ${id}`)
@@ -88,7 +102,7 @@ function RouteComponent() {
     return <div>Loading...</div>
   }
 
-  return (
+    return (
     <div className="p-2">
       <h1 className="text-2xl font-bold text-center">
         Berth Reservations
@@ -110,7 +124,7 @@ function RouteComponent() {
           </TableHeader>
 
           <TableBody>
-            {data.map((row) => (
+            {paginatedData.map((row) => (
               <TableRow key={row.id}>
                 <TableCell>{row.vesselId}</TableCell>
 
@@ -120,7 +134,6 @@ function RouteComponent() {
 
                 <TableCell>{row.dateRequested}</TableCell>
 
-                {/* Respond */}
                 <TableCell className="space-x-2">
                   <Button
                     size="sm"
@@ -143,7 +156,6 @@ function RouteComponent() {
                   </Button>
                 </TableCell>
 
-                {/* Status */}
                 <TableCell>
                   <Badge
                     variant={
@@ -158,7 +170,6 @@ function RouteComponent() {
                   </Badge>
                 </TableCell>
 
-                {/* Actions */}
                 <TableCell className="text-right space-x-2">
                   <Button
                     size="sm"
@@ -179,7 +190,7 @@ function RouteComponent() {
               </TableRow>
             ))}
 
-            {data.length === 0 && (
+            {paginatedData.length === 0 && (
               <TableRow>
                 <TableCell colSpan={6} className="text-center">
                   No berth requests found.
@@ -188,6 +199,45 @@ function RouteComponent() {
             )}
           </TableBody>
         </Table>
+
+        {/* ✅ Pagination Controls */}
+        <div className="flex justify-between items-center mt-4">
+          <Button
+            variant="outline"
+            disabled={currentPage === 1}
+            onClick={() =>
+              setCurrentPage((prev) => prev - 1)
+            }
+          >
+            Previous
+          </Button>
+
+          <div className="flex space-x-2">
+            {Array.from({ length: totalPages }, (_, i) => (
+              <Button
+                key={i}
+                variant={
+                  currentPage === i + 1
+                    ? 'default'
+                    : 'outline'
+                }
+                onClick={() => setCurrentPage(i + 1)}
+              >
+                {i + 1}
+              </Button>
+            ))}
+          </div>
+
+          <Button
+            variant="outline"
+            disabled={currentPage === totalPages}
+            onClick={() =>
+              setCurrentPage((prev) => prev + 1)
+            }
+          >
+            Next
+          </Button>
+        </div>
       </div>
     </div>
   )
