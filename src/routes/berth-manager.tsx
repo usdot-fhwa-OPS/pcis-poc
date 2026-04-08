@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router"
 import { BerthAvailability } from "../components/berth/berth-availability"
 import { Button } from "../components/ui/button"
@@ -5,10 +6,10 @@ import { Button } from "../components/ui/button"
 export const Route = createFileRoute('/berth-manager')({
   component: RouteComponent,
 })
-    let isOpen:boolean = false;
+    const [isDialogOpen, setIsDialogOpen] = useState(false)
 
-    const handleOpenDialog = () => {
-      isOpen = !isOpen;
+    const handleOpenDialog = async () => {
+          setIsDialogOpen(true)
     }
 
     function RouteComponent() {
@@ -18,7 +19,7 @@ export const Route = createFileRoute('/berth-manager')({
           <Button type="button" onClick={handleOpenDialog}>
               Berth Availability
           </Button>
-          {isOpen && <BerthAvailability/>}                    
+          <BerthAvailability onShowDialog={() => setIsDialogOpen(true)}/>
         </div>
     )
 }
