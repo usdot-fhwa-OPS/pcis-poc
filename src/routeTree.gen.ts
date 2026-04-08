@@ -19,6 +19,7 @@ import { Route as CargoRouteImport } from './routes/cargo'
 import { Route as CapacityRouteImport } from './routes/capacity'
 import { Route as BerthVesselRouteImport } from './routes/berth-vessel'
 import { Route as BerthRequestsRouteImport } from './routes/berth-requests'
+import { Route as BerthRequestAddRouteImport } from './routes/berth-request-add'
 import { Route as BerthManagerRouteImport } from './routes/berth-manager'
 import { Route as AnalyticsRouteImport } from './routes/analytics'
 import { Route as IndexRouteImport } from './routes/index'
@@ -71,6 +72,11 @@ const BerthVesselRoute = BerthVesselRouteImport.update({
 const BerthRequestsRoute = BerthRequestsRouteImport.update({
   id: '/berth-requests',
   path: '/berth-requests',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BerthRequestAddRoute = BerthRequestAddRouteImport.update({
+  id: '/berth-request-add',
+  path: '/berth-request-add',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BerthManagerRoute = BerthManagerRouteImport.update({
@@ -195,6 +201,7 @@ export interface FileRoutesByFullPath {
   '/hazardous-cargo-manager': typeof HazardousCargoManagerRoute
   '/hazardous-cargo': typeof HazardousCargoRoute
   '/berth-manager': typeof BerthManagerRoute
+  '/berth-request-add': typeof BerthRequestAddRoute
   '/berth-requests': typeof BerthRequestsRoute
   '/berth-vessel': typeof BerthVesselRoute
   '/capacity': typeof CapacityRoute
@@ -211,6 +218,7 @@ export interface FileRoutesByTo {
   '/hazardous-cargo-manager': typeof HazardousCargoManagerRoute
   '/hazardous-cargo': typeof HazardousCargoRoute
   '/berth-manager': typeof BerthManagerRoute
+  '/berth-request-add': typeof BerthRequestAddRoute
   '/berth-requests': typeof BerthRequestsRoute
   '/berth-vessel': typeof BerthVesselRoute
   '/capacity': typeof CapacityRoute
@@ -228,6 +236,7 @@ export interface FileRoutesById {
   '/hazardous-cargo-manager': typeof HazardousCargoManagerRoute
   '/hazardous-cargo': typeof HazardousCargoRoute
   '/berth-manager': typeof BerthManagerRoute
+  '/berth-request-add': typeof BerthRequestAddRoute
   '/berth-requests': typeof BerthRequestsRoute
   '/berth-vessel': typeof BerthVesselRoute
   '/capacity': typeof CapacityRoute
@@ -246,6 +255,7 @@ export interface FileRouteTypes {
     | '/hazardous-cargo-manager'
     | '/hazardous-cargo'
     | '/berth-manager'
+    | '/berth-request-add'
     | '/berth-requests'
     | '/berth-vessel'
     | '/capacity'
@@ -262,6 +272,7 @@ export interface FileRouteTypes {
     | '/hazardous-cargo-manager'
     | '/hazardous-cargo'
     | '/berth-manager'
+    | '/berth-request-add'
     | '/berth-requests'
     | '/berth-vessel'
     | '/capacity'
@@ -278,6 +289,7 @@ export interface FileRouteTypes {
     | '/hazardous-cargo-manager'
     | '/hazardous-cargo'
     | '/berth-manager'
+    | '/berth-request-add'
     | '/berth-requests'
     | '/berth-vessel'
     | '/capacity'
@@ -295,6 +307,7 @@ export interface RootRouteChildren {
   HazardousCargoManagerRoute: typeof HazardousCargoManagerRoute
   HazardousCargoRoute: typeof HazardousCargoRoute
   BerthManagerRoute: typeof BerthManagerRoute
+  BerthRequestAddRoute: typeof BerthRequestAddRoute
   BerthRequestsRoute: typeof BerthRequestsRoute
   BerthVesselRoute: typeof BerthVesselRoute
   CapacityRoute: typeof CapacityRoute
@@ -371,6 +384,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BerthRequestsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/berth-request-add': {
+      id: '/berth-request-add'
+      path: '/berth-request-add'
+      fullPath: '/berth-request-add'
+      preLoaderRoute: typeof BerthRequestAddRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/berth-manager': {
       id: '/berth-manager'
       path: '/berth-manager'
@@ -401,6 +421,7 @@ const rootRouteChildren: RootRouteChildren = {
   HazardousCargoManagerRoute: HazardousCargoManagerRoute,
   HazardousCargoRoute: HazardousCargoRoute,
   BerthManagerRoute: BerthManagerRoute,
+  BerthRequestAddRoute: BerthRequestAddRoute,
   BerthRequestsRoute: BerthRequestsRoute,
   BerthVesselRoute: BerthVesselRoute,
   CapacityRoute: CapacityRoute,

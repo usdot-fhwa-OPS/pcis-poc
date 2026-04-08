@@ -114,7 +114,7 @@ const [endTime, setEndTime] = useState<string | undefined>(timeOptions[0])
             return 'Other' === reason;
        }
         
-const showCustomRepeat = (): boolean =>{
+    const showCustomRepeat = (): boolean =>{
 
             return 'Custom' === repeatOption;
        }
@@ -165,9 +165,9 @@ const showCustomRepeat = (): boolean =>{
             setRepeatOption(respTc.repeat);
             setReason(respTc.reason);
             setOtherReason(respTc.reason);
-            if (respTc.repeatConfig) {
+            if (('Custom' === respTc.repeat) && respTc.repeatConfig) {
 
-                setRepeatOption('Custom');
+                //setRepeatOption('Custom');
                 const frequency = respTc.repeatConfig.frequency;
                 setFrequency(frequency)
                 if ('Daily' === frequency) {
