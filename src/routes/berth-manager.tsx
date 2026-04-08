@@ -9,7 +9,7 @@ export const Route = createFileRoute('/berth-manager')({
   
 function RouteComponent() {
       const [isOpen, setIsOpen] = useState(false);
-      
+
       const handleOpen = () => {
         setIsOpen(!isOpen);
       };
@@ -18,7 +18,7 @@ function RouteComponent() {
         <div className="p-2">
           <h1 className="text-2xl font-bold text-center">Berth Reservations</h1>
           <Button type="button" onClick={() => handleOpen()}>
-              Berth Availability
+              Set Berth Availability
           </Button>
           <BerthAvailability isDialogOpen={isOpen} handleCloseDialog={() => setIsOpen(false)} />
         </div>
