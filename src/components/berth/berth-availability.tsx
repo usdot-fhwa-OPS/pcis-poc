@@ -6,7 +6,7 @@ import { Button } from "../ui/button"
 import { Label } from "../ui/label"
 
 export const BerthAvailability = (
-    { isDialogOpen}) => {
+    { isDialogOpen}: { isDialogOpen:boolean;}) => {
     let limit: number = 10;
     const [berths, setBerths] = useState(["","","","","","","","","",""]); //default 10
 
