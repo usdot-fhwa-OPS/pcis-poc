@@ -1,20 +1,24 @@
-import { createFileRoute } from '@tanstack/react-router'
-import { BerthAvailability } from '../components/berth/berth-availability.tsx'
+import { createFileRoute } from "@tanstack/react-router"
+import { BerthAvailability } from "../components/berth/berth-availability"
+import { Button } from "../components/ui/button"
 
 export const Route = createFileRoute('/berth-manager')({
   component: RouteComponent,
 })
+    let isOpen:boolean = false;
+
     const handleOpenDialog = () => {
-      <BerthAvailability></BerthAvailability>
+      isOpen = !isOpen;
     }
 
-function RouteComponent() {
-  return (
-    <div className="p-2">
-      <h1 className="text-2xl font-bold text-center">Berth Reservations</h1>
-      <button onClick={handleOpenDialog}>
-          Berth Availability
-      </button>      
-    </div>
-  )
+    function RouteComponent() {
+      return (
+        <div className="p-2">
+          <h1 className="text-2xl font-bold text-center">Berth Reservations</h1>
+          <Button type="button" onClick={handleOpenDialog}>
+              Berth Availability
+          </Button>
+          {isOpen && <BerthAvailability/>}                    
+        </div>
+    )
 }
