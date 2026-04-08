@@ -1,11 +1,23 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Dialog, DialogContent, DialogHeader } from "../ui/dialog"
 import { Button } from "../ui/button"
 import { Label } from "../ui/label"
 
-export const BerthAvailability = () => {
+export const BerthAvailability = (
+    { isDialogOpen, handleCloseDialog}: { isDialogOpen:boolean; handleCloseDialog:any}) =>{
+        useEffect(() => {
+            handleClickOpen();
+        }, []);
+
+    const handleClickOpen = () => {
+    };
+
+    const handleClose = () => {
+        handleCloseDialog(false);
+     };
+
     let limit: number = 10;
     const [berths, setBerths] = useState(["","","","","","","","","",""]); //default 10
 
@@ -43,15 +55,15 @@ export const BerthAvailability = () => {
         setBerths(updated);
     };    
 
-    const [isDialogOpen, setIsDialogOpen] = useState(true)
+    //const [isDialogOpen, setIsDialogOpen] = useState(true)
 
     const [berthAvailability, setBerthAvailability] = useState(limit)
 
     const handleSubmit = async () => {
     }
-  
+ 
     return (      
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <Dialog open={isDialogOpen}>
             <DialogContent className="max-w-56 p-0">
                 <form onSubmit={handleSubmit}>
                     <DialogHeader className="p-4 border-b-0">
@@ -113,7 +125,7 @@ export const BerthAvailability = () => {
                     <br/>
                     <br/>
                     <div className="flex justify-end gap-2 mr-4">
-                        <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
+                        <Button type="button" onClick={() => handleClose()}>
                                 Cancel
                         </Button>
                         <Button type="submit">Enter Berth Availability</Button>
