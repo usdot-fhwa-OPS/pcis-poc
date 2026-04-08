@@ -55,8 +55,6 @@ export const BerthAvailability = (
         setBerths(updated);
     };    
 
-    //const [isDialogOpen, setIsDialogOpen] = useState(true)
-
     const [berthAvailability, setBerthAvailability] = useState(limit)
 
     const handleSubmit = async () => {

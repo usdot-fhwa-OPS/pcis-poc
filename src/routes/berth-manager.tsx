@@ -6,13 +6,14 @@ import { Button } from "../components/ui/button"
 export const Route = createFileRoute('/berth-manager')({
   component: RouteComponent,
 })
-  const [isOpen, setIsOpen] = useState(false);
+  
+function RouteComponent() {
+      const [isOpen, setIsOpen] = useState(false);
+      
+      const handleOpen = () => {
+        setIsOpen(!isOpen);
+      };
 
-  const handleOpen = () => {
-    setIsOpen(!isOpen);
-  };
-
-    function RouteComponent() {
       return (
         <div className="p-2">
           <h1 className="text-2xl font-bold text-center">Berth Reservations</h1>
