@@ -5,7 +5,8 @@ import { Dialog, DialogContent, DialogHeader } from "../ui/dialog"
 import { Button } from "../ui/button"
 import { Label } from "../ui/label"
 
-export const BerthAvailability = ({onShowDialog}) => {
+export const BerthAvailability = (
+    { isDialogOpen}) => {
     let limit: number = 10;
     const [berths, setBerths] = useState(["","","","","","","","","",""]); //default 10
 
@@ -51,7 +52,7 @@ export const BerthAvailability = ({onShowDialog}) => {
     }
   
     return (      
-        <Dialog open={onShowDialog} onOpenChange={setIsDialogOpen}>
+        <Dialog open={isDialogOpen}>
             <DialogContent className="max-w-56 p-0">
                 <form onSubmit={handleSubmit}>
                     <DialogHeader className="p-4 border-b-0">
