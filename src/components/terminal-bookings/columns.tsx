@@ -1,7 +1,7 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "../ui/button.tsx";
 import { useState } from "react";
-import { Flag } from "lucide-react";
+import { Flag, XIcon, Check } from "lucide-react";
 import {TerminalOperatorDataTableMeta} from './data-table.tsx'
 import { generateClient } from 'aws-amplify/data';
 import type { Schema } from '../../../amplify/data/resource';
@@ -36,14 +36,14 @@ export const columns = (status: string): ColumnDef<any>[] => {
           <Button
             className="bg-green-500 hover:bg-green-500/90"
           >
-            Approve
+            <Check className="inline-block h-4 w-4 mr-1" />Approve
           </Button>
 
           {/* Deny Button */}
           <Button
             variant="destructive"
           >
-            Deny
+            <XIcon className="inline-block h-4 w-4 mr-1" />Deny
           </Button>
 
           {/* Old Approve Button */}
