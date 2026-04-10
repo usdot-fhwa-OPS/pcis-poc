@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { Calendar } from "../ui/calendar";
 import { CalendarIcon, Info } from "lucide-react";
@@ -9,13 +9,20 @@ import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import { cn } from "../../lib/utils";
 import { format } from "date-fns";
+import { useAppDispatch, useAppSelector } from "../../hooks";
+import { berthConfigList } from "./berth-request-client";
+import { getBerthConfigList, populate } from '../../components/berth-requests/berth-config-state';
+import { BerthRequestDomain } from "./berth-request-domain";
+import { events } from "aws-amplify/api";
 
-export const AddBerthRequest = () => {
+export const AddBerthRequest = ({berthRequest}:{berthRequest:BerthRequestDomain}) => {
 
     const [startDate, setStartDate] = useState<Date>(new Date())
     const [endDate, setEndDate] = useState<Date>(new Date())    
     const [isStartCalendarOpen, setIsStartCalendarOpen] = useState(false)
     const [isEndCalendarOpen, setIsEndCalendarOpen] = useState(false)
+
+    
 
     const timeOptions = [
             "12:00 AM",
@@ -60,6 +67,46 @@ export const AddBerthRequest = () => {
         setIsEndCalendarOpen(!isEndCalendarOpen)
     };
 
+    const dispatch = useAppDispatch();
+    const fetchBerthConfigList = async () => {
+
+        dispatch(populate(await berthConfigList()));
+    }
+    const brConfig = useAppSelector(getBerthConfigList);
+    
+
+    useEffect(() => {
+        fetchBerthConfigList();
+        berthRequest.etaAt = format(startDate, "MM/dd/yyyy")+' '+startTime;
+        berthRequest.etdAt = format(endDate, "MM/dd/yyyy")+' '+endTime;
+    }, []);
+  
+    const handleTerminalSelection = (value: string) => {
+        berthRequest.berthAssignment.berthId = value;
+        berthRequest.berthAssignment.designation = value;
+  };
+    const handleServiceSelectionChange = (checked: string | boolean, value: string) => {
+
+        if (checked === true) {
+
+            berthRequest.services.push(value)
+
+        } else if (checked === false){
+            
+            const index = berthRequest.services.indexOf(value);
+
+            if (index > -1) {
+                berthRequest.services.splice(index, 1);
+            }
+
+        }
+
+    };
+
+const getFileInfo = ($event) =>{
+    berthRequest.manifestPath = $event.key;
+}
+
     return (
     <>
         <div className="md:max-w-2xl">
@@ -70,18 +117,21 @@ export const AddBerthRequest = () => {
                     </Label>
                 </div>
                 <div className="pb-4 md:py-2">
-                    <Select>
+                    <Select onValueChange={handleTerminalSelection}>
                         <SelectTrigger>
                             <SelectValue />
                         </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="Terminal Name 1">
-                                Terminal Name 1
-                            </SelectItem>
-                            <SelectItem value="Terminal Name 2">
-                                Terminal Name 2
-                            </SelectItem>
-                        </SelectContent>
+                            <SelectContent>
+                                {brConfig.berthDesignations.map((item) => {
+                                    return (
+                                        <SelectItem value={item}>
+                                            {item}
+                                        </SelectItem>
+                                    )
+                                })}
+
+
+                            </SelectContent>
                     </Select>
                 </div>
                 <div className="md:col-start-2 text-sm text-muted-foreground">
@@ -117,31 +167,36 @@ export const AddBerthRequest = () => {
                 </div>
                 <div className="flex flex-wrap">
                     <div className="flex items-center py-2 pr-4">
-                        <Checkbox className="mr-2" id="berthRequestServicesFuel" value="Fuel"/>
+                        <Checkbox className="mr-2" id="berthRequestServicesFuel" value="Fuel"
+                        onCheckedChange={(checked) => handleServiceSelectionChange(checked, 'Fuel')} />
                         <Label htmlFor="berthRequestServicesFuel">
                             Fuel
                         </Label>
                     </div>
                     <div className="flex items-center py-2 pr-4">
-                        <Checkbox className="mr-2" id="berthRequestServicesFood" value="Food"/>
+                        <Checkbox className="mr-2" id="berthRequestServicesFood" value="Food"
+                        onCheckedChange={(checked) => handleServiceSelectionChange(checked, 'Food')}/>
                         <Label htmlFor="berthRequestServicesFood">
                             Food
                         </Label>
                     </div>
                     <div className="flex items-center py-2 pr-4">
-                        <Checkbox className="mr-2" id="berthRequestServicesWater" value="Water"/>
+                        <Checkbox className="mr-2" id="berthRequestServicesWater" value="Water"
+                        onCheckedChange={(checked) => handleServiceSelectionChange(checked, 'Water')}/>
                         <Label htmlFor="berthRequestServicesWater">
                             Water
                         </Label>
                     </div>
                     <div className="flex items-center py-2 pr-4">
-                        <Checkbox className="mr-2" id="berthRequestServicesCrew" value="Crew Services"/>
+                        <Checkbox className="mr-2" id="berthRequestServicesCrew" value="Crew Services"
+                        onCheckedChange={(checked) => handleServiceSelectionChange(checked, 'Crew Services')}/>
                         <Label htmlFor="berthRequestServicesCrew">
                             Crew Services
                         </Label>
                     </div>
                     <div className="flex items-center py-2">
-                        <Checkbox className="mr-2" id="berthRequestServicesWaste" value="Waste Disposal"/>
+                        <Checkbox className="mr-2" id="berthRequestServicesWaste" value="Waste Disposal"
+                        onCheckedChange={(checked) => handleServiceSelectionChange(checked, 'Waste Disposal')}/>
                         <Label htmlFor="berthRequestServicesWaste">
                             Waste Disposal
                         </Label>
@@ -164,6 +219,7 @@ export const AddBerthRequest = () => {
                         path="stowPlans/"
                         maxFileCount={1}
                         isResumable
+                        onUploadSuccess={($event) => getFileInfo($event)}
                     />
                 </div>
             </div>
