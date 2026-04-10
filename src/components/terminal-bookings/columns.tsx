@@ -34,9 +34,7 @@ export const columns = (status: string): ColumnDef<any>[] => {
         <div className="flex space-x-4 justify-center">
           {/* Approve Button */}
           <Button
-            variant="outline"
-            className="text-green-700"
-            onClick={() =>  (table.options.meta as TerminalOperatorDataTableMeta)?.updateBooking(row.original.cargoUnitID, "Pending Pick Up")} 
+            className="bg-green-500 hover:bg-green-500/90"
           >
             Approve
           </Button>
@@ -44,6 +42,23 @@ export const columns = (status: string): ColumnDef<any>[] => {
           {/* Deny Button */}
           <Button
             variant="destructive"
+          >
+            Deny
+          </Button>
+
+          {/* Old Approve Button */}
+          <Button
+            variant="outline"
+            className="hidden text-green-700"
+            onClick={() =>  (table.options.meta as TerminalOperatorDataTableMeta)?.updateBooking(row.original.cargoUnitID, "Pending Pick Up")} 
+          >
+            Approve
+          </Button>
+
+          {/* Old Deny Button */}
+          <Button
+            variant="destructive"
+            className="hidden"
             onClick={() => (table.options.meta as TerminalOperatorDataTableMeta)?.updateBooking(row.original.cargoUnitID, "unassigned")} 
           >
             Deny
