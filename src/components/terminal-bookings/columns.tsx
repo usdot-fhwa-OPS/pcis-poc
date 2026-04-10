@@ -34,16 +34,18 @@ export const columns = (status: string): ColumnDef<any>[] => {
         <div className="flex space-x-4 justify-center">
           {/* Approve Button */}
           <Button
-            className="bg-green-500 hover:bg-green-500/90"
+            size="sm"
+            className="bg-green-600 hover:bg-green-600/90"
           >
-            <Check className="inline-block h-4 w-4 mr-1" />Approve
+            <Check className="inline-block h-4 w-4" />Approve
           </Button>
 
           {/* Deny Button */}
           <Button
             variant="destructive"
+            size="sm"
           >
-            <XIcon className="inline-block h-4 w-4 mr-1" />Deny
+            <XIcon className="inline-block h-4 w-4" />Deny
           </Button>
 
           {/* Old Approve Button */}
