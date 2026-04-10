@@ -33,15 +33,9 @@ export const columns = (status: string): ColumnDef<any>[] => {
       header: () => <div className="text-center min-w-[200px]">Status</div>,
       cell: ({ row,table }) => (
         <div className="flex space-x-4 justify-center">
-          <ApproveReservation/>
 
           {/* Approve Button */}
-          <Button
-            size="sm"
-            className="hidden bg-green-600 hover:bg-green-600/90"
-          >
-            <Check className="inline-block h-4 w-4" />Approve
-          </Button>
+          <ApproveReservation/>
 
           {/* Deny Button */}
           <Button
