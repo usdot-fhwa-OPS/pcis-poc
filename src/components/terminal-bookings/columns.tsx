@@ -7,6 +7,7 @@ import { generateClient } from 'aws-amplify/data';
 import type { Schema } from '../../../amplify/data/resource';
 import { TermOperatorCompletedBookings } from "../../routes/reservation.tsx"
 import { Checkbox } from "../ui/checkbox.tsx";
+import { ApproveReservation } from "../reservations/approve-reservation.tsx";
 const client = generateClient<Schema>();
 export const columns = (status: string): ColumnDef<any>[] => {
   const baseColumns: ColumnDef<any>[] = [
@@ -32,10 +33,12 @@ export const columns = (status: string): ColumnDef<any>[] => {
       header: () => <div className="text-center min-w-[200px]">Status</div>,
       cell: ({ row,table }) => (
         <div className="flex space-x-4 justify-center">
+          <ApproveReservation/>
+
           {/* Approve Button */}
           <Button
             size="sm"
-            className="bg-green-600 hover:bg-green-600/90"
+            className="hidden bg-green-600 hover:bg-green-600/90"
           >
             <Check className="inline-block h-4 w-4" />Approve
           </Button>
