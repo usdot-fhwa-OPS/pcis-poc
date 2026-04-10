@@ -1,7 +1,7 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "../ui/button.tsx";
 import { useState } from "react";
-import { Flag, XIcon, Check } from "lucide-react";
+import { Flag, XIcon } from "lucide-react";
 import {TerminalOperatorDataTableMeta} from './data-table.tsx'
 import { generateClient } from 'aws-amplify/data';
 import type { Schema } from '../../../amplify/data/resource';
