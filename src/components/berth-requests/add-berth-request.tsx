@@ -12,7 +12,6 @@ import { format } from "date-fns";
 import { useAppDispatch } from "../../hooks";
 import { berthConfigList } from "./berth-request-client";
 import { populate } from '../../components/berth-requests/berth-config-state';
-import { BerthRequestDomain } from "./berth-request-domain";
 import { BerthConfigDomain } from "./berth-config-domain";
 
 export interface BerthRequestFormData {

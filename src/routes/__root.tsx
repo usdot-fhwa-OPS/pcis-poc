@@ -31,7 +31,7 @@ export const Route = createRootRoute({
 
 function RootComponent() {
   const { user } = useAuthenticator()
-  const [userAttributes, setUserAttributes] = useState<{ fullName: string; role: string, email:string }>({ fullName: "", role: "" , email:""})
+  const [userAttributes, setUserAttributes] = useState<{ fullName: string; role: string, email:string|undefined }>({ fullName: "", role: "" , email:""})
 
   const [userSecurityAttrubutes, setUserSecurityAttrubutes] = useState<UserAttributes>({});
   

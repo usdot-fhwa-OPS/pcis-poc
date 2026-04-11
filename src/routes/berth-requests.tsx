@@ -7,8 +7,8 @@ import { useEffect, useState } from "react";
 import { Button } from "../components/ui/button";
 import { Plus } from "lucide-react";
 import { berthRequestList } from '../components/berth-requests/berth-request-client';
-import { getBerthRequestList, populate } from '../components/berth-requests/berth-request-state';
-import { useAppDispatch, useAppSelector } from '../hooks';
+import { populate } from '../components/berth-requests/berth-request-state';
+import { useAppDispatch } from '../hooks';
 
 export const Route = createFileRoute('/berth-requests')({
   component: BerthRequestComponent,
@@ -31,13 +31,13 @@ function BerthRequestComponent() {
 function AddNewBerthRequestButton() {
 
   const { user } = useAuthenticator();
-  const [loading, setLoading] = useState(true)
+  //const [loading, setLoading] = useState(true)
   const [userAttributes, setUserAttributes] = useState<{ role: string; email: string }>({
     role: '',
     email: '',
   });
 
-   const brReqList = useAppSelector(getBerthRequestList);
+   //const brReqList = useAppSelector(getBerthRequestList);
 
   const navigate = useNavigate();
   const navigateToBerthRequestAdd = () => {
@@ -50,7 +50,7 @@ const dispatch = useAppDispatch()
 const fetchBerthRequestList = async () => {
   
       dispatch(populate(await berthRequestList()));
-      setLoading(false);
+      //setLoading(false);
 }
 
   useEffect(() => {
