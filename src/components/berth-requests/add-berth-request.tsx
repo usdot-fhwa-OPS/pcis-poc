@@ -9,18 +9,43 @@ import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import { cn } from "../../lib/utils";
 import { format } from "date-fns";
-import { useAppDispatch, useAppSelector } from "../../hooks";
+import { useAppDispatch } from "../../hooks";
 import { berthConfigList } from "./berth-request-client";
-import { getBerthConfigList, populate } from '../../components/berth-requests/berth-config-state';
+import { populate } from '../../components/berth-requests/berth-config-state';
 import { BerthRequestDomain } from "./berth-request-domain";
-import { events } from "aws-amplify/api";
+import { BerthConfigDomain } from "./berth-config-domain";
 
-export const AddBerthRequest = ({berthRequest}:{berthRequest:BerthRequestDomain}) => {
+export interface BerthRequestFormData {
+    terminalId: string;
+    terminalName: string;
+    terminalPhone: string;
+    terminalEmail: string;
+    startDate: Date;
+    startTime: string;
+    endDate: Date;
+    endTime: string;
+    services: string[];
+    cargoManifestName?: string;
+    cargoManifestPath: string;
+}
 
+
+
+const ALL_SERVICES = ["Fuel", "Food", "Water", "Crew Services", "Waste Disposal"];
+
+interface AddBerthRequestProps {
+    onDataChange?: (data: BerthRequestFormData) => void;
+}
+
+export const AddBerthRequest = ({ onDataChange }: AddBerthRequestProps) => {
+
+    const [selectedTerminalId, setSelectedTerminalId] = useState<string>("")
     const [startDate, setStartDate] = useState<Date>(new Date())
-    const [endDate, setEndDate] = useState<Date>(new Date())    
+    const [endDate, setEndDate] = useState<Date>(new Date())
     const [isStartCalendarOpen, setIsStartCalendarOpen] = useState(false)
     const [isEndCalendarOpen, setIsEndCalendarOpen] = useState(false)
+    const [selectedServices, setSelectedServices] = useState<string[]>([])
+    const [selectedCargoManifestPath, setSelectedCargoManifestPath] = useState<string>('')
 
     
 
@@ -50,9 +75,38 @@ export const AddBerthRequest = ({berthRequest}:{berthRequest:BerthRequestDomain}
             "10:00 PM",
             "11:00 PM",
             ]
-    const [startTime, setStartTime] = useState<string | undefined>(timeOptions[0])
-    const [endTime, setEndTime] = useState<string | undefined>(timeOptions[0])
-    
+    const [startTime, setStartTime] = useState<string>(timeOptions[0])
+    const [endTime, setEndTime] = useState<string>(timeOptions[0])
+
+    const toggleService = (service: string, checked: boolean) => {
+        setSelectedServices(prev =>
+            checked ? [...prev, service] : prev.filter(s => s !== service)
+        );
+    };
+const [TERMINALS, setTerminals] = useState<Record<string, { name: string; phone: string; email: string }>>({});
+    useEffect(() => {
+        if (!onDataChange) return;
+        fetchBerthConfigList();
+        
+        const terminal = TERMINALS[selectedTerminalId];
+        onDataChange({
+            terminalId: selectedTerminalId,
+            terminalName: terminal?.name ?? "",
+            terminalPhone: terminal?.phone ?? "",
+            terminalEmail: terminal?.email ?? "",
+            startDate,
+            startTime,
+            endDate,
+            endTime,
+            services: selectedServices,
+            cargoManifestPath: selectedCargoManifestPath,
+        });
+    }, [selectedTerminalId, startDate, startTime, endDate, endTime, selectedServices, selectedCargoManifestPath]);
+
+    const getFileInfo = ($event: any) =>{
+        setSelectedCargoManifestPath($event.key);
+   };
+
     const handleStartDateSelect = (selectedDate: Date | undefined) => {
         if (!selectedDate) return;
         setStartDate(selectedDate)
@@ -70,43 +124,21 @@ export const AddBerthRequest = ({berthRequest}:{berthRequest:BerthRequestDomain}
     const dispatch = useAppDispatch();
     const fetchBerthConfigList = async () => {
 
-        dispatch(populate(await berthConfigList()));
-    }
-    const brConfig = useAppSelector(getBerthConfigList);
-    
-
-    useEffect(() => {
-        fetchBerthConfigList();
-        berthRequest.etaAt = format(startDate, "MM/dd/yyyy")+' '+startTime;
-        berthRequest.etdAt = format(endDate, "MM/dd/yyyy")+' '+endTime;
-    }, []);
-  
-    const handleTerminalSelection = (value: string) => {
-        berthRequest.berthAssignment.berthId = value;
-        berthRequest.berthAssignment.designation = value;
-  };
-    const handleServiceSelectionChange = (checked: string | boolean, value: string) => {
-
-        if (checked === true) {
-
-            berthRequest.services.push(value)
-
-        } else if (checked === false){
-            
-            const index = berthRequest.services.indexOf(value);
-
-            if (index > -1) {
-                berthRequest.services.splice(index, 1);
+        const brConfigList = await berthConfigList();
+        const terminal: Record<string, { name: string; phone: string; email: string }>={};
+        brConfigList.map((berthConfig: BerthConfigDomain) => {
+            terminal[berthConfig.terminalId] = {
+                name: berthConfig.terminalName,
+                phone: berthConfig.terminalPhone, email: berthConfig.terminalEmail
             }
-
-        }
-
-    };
-
-const getFileInfo = ($event) =>{
-    berthRequest.manifestPath = $event.key;
-}
-
+            
+        });
+        setTerminals(terminal);
+        dispatch(populate(brConfigList));
+    }
+    
+    
+    
     return (
     <>
         <div className="md:max-w-2xl">
@@ -117,33 +149,29 @@ const getFileInfo = ($event) =>{
                     </Label>
                 </div>
                 <div className="pb-4 md:py-2">
-                    <Select onValueChange={handleTerminalSelection}>
+                    <Select onValueChange={setSelectedTerminalId}>
                         <SelectTrigger>
                             <SelectValue />
                         </SelectTrigger>
-                            <SelectContent>
-                                {brConfig.berthDesignations.map((item) => {
-                                    return (
-                                        <SelectItem value={item}>
-                                            {item}
-                                        </SelectItem>
-                                    )
-                                })}
-
-
-                            </SelectContent>
+                        <SelectContent>
+                            {Object.entries(TERMINALS).map(([id, t]) => (
+                                <SelectItem key={id} value={id}>{t.name}</SelectItem>
+                            ))}
+                        </SelectContent>
                     </Select>
                 </div>
-                <div className="md:col-start-2 text-sm text-muted-foreground">
-                    <div className="flex items-center">
-                        <Info className="inline-block h-4 w-4 mr-1" stroke="#0090FF" /><p>To contact this terminal directly:</p>
+                {selectedTerminalId && (
+                    <div className="md:col-start-2 text-sm text-muted-foreground">
+                        <div className="flex items-center">
+                            <Info className="inline-block h-4 w-4 mr-1" stroke="#0090FF" /><p>To contact this terminal directly:</p>
+                        </div>
+                        <div className="px-8 py-2">
+                            <p>{TERMINALS[selectedTerminalId].name}</p>
+                            <p>Phone: <a href={`tel:${TERMINALS[selectedTerminalId].phone}`} className="text-blue-500 hover:underline">{TERMINALS[selectedTerminalId].phone}</a></p>
+                            <p>Email: <a href={`mailto:${TERMINALS[selectedTerminalId].email}`} className="text-blue-500 hover:underline">{TERMINALS[selectedTerminalId].email}</a></p>
+                        </div>
                     </div>
-                    <div className="px-8 py-2">
-                        <p>Terminal Name</p>
-                        <p>Phone: <a href="tel:5555555555" className="text-blue-500 hover:underline">555-555-5555</a></p>
-                        <p>Email: <a href="mailto:name@company.com" className="text-blue-500 hover:underline">name@company.com</a></p>
-                    </div>
-                </div>
+                )}
                 <div className="pr-8">
                     <Label htmlFor="berthRequestEta">
                         Estimated Arrival
@@ -166,41 +194,19 @@ const getFileInfo = ($event) =>{
                     <span className="text-sm font-medium leading-none">Services Required</span>
                 </div>
                 <div className="flex flex-wrap">
-                    <div className="flex items-center py-2 pr-4">
-                        <Checkbox className="mr-2" id="berthRequestServicesFuel" value="Fuel"
-                        onCheckedChange={(checked) => handleServiceSelectionChange(checked, 'Fuel')} />
-                        <Label htmlFor="berthRequestServicesFuel">
-                            Fuel
-                        </Label>
-                    </div>
-                    <div className="flex items-center py-2 pr-4">
-                        <Checkbox className="mr-2" id="berthRequestServicesFood" value="Food"
-                        onCheckedChange={(checked) => handleServiceSelectionChange(checked, 'Food')}/>
-                        <Label htmlFor="berthRequestServicesFood">
-                            Food
-                        </Label>
-                    </div>
-                    <div className="flex items-center py-2 pr-4">
-                        <Checkbox className="mr-2" id="berthRequestServicesWater" value="Water"
-                        onCheckedChange={(checked) => handleServiceSelectionChange(checked, 'Water')}/>
-                        <Label htmlFor="berthRequestServicesWater">
-                            Water
-                        </Label>
-                    </div>
-                    <div className="flex items-center py-2 pr-4">
-                        <Checkbox className="mr-2" id="berthRequestServicesCrew" value="Crew Services"
-                        onCheckedChange={(checked) => handleServiceSelectionChange(checked, 'Crew Services')}/>
-                        <Label htmlFor="berthRequestServicesCrew">
-                            Crew Services
-                        </Label>
-                    </div>
-                    <div className="flex items-center py-2">
-                        <Checkbox className="mr-2" id="berthRequestServicesWaste" value="Waste Disposal"
-                        onCheckedChange={(checked) => handleServiceSelectionChange(checked, 'Waste Disposal')}/>
-                        <Label htmlFor="berthRequestServicesWaste">
-                            Waste Disposal
-                        </Label>
-                    </div>
+                    {ALL_SERVICES.map((service) => (
+                        <div key={service} className="flex items-center py-2 pr-4">
+                            <Checkbox
+                                className="mr-2"
+                                id={`berthRequestServices${service.replace(/\s/g, "")}`}
+                                checked={selectedServices.includes(service)}
+                                onCheckedChange={(checked) => toggleService(service, !!checked)}
+                            />
+                            <Label htmlFor={`berthRequestServices${service.replace(/\s/g, "")}`}>
+                                {service}
+                            </Label>
+                        </div>
+                    ))}
                 </div>
                 <div className="md:col-span-2 mt-8 mb-6">
                     <h2 className="text-xl font-semibold mb-4">Attach a Cargo Manifest</h2>
@@ -294,3 +300,4 @@ const getFileInfo = ($event) =>{
     }
 
 }
+

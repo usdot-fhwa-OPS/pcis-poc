@@ -4,17 +4,12 @@ import { BerthConfigDomain } from './berth-config-domain'
 
 // Define a type for the slice state
 interface BerthConfigState {
-  value: BerthConfigDomain
+  value: BerthConfigDomain[]
 }
 
 // Define the initial state using that type
 const initialState: BerthConfigState = {
-  value: {
-    terminalId: '',
-    berthCapacity: 0,
-    assignmentMode: '',
-    berthDesignations: ['Select']
-  },
+  value: [],
 }
 
 export const berthConfigSlice = createSlice({
@@ -23,7 +18,7 @@ export const berthConfigSlice = createSlice({
   initialState,
   reducers: {
     // Use the PayloadAction type to declare the contents of `action.payload`
-    populate: (state, action: PayloadAction<BerthConfigDomain>) => {
+    populate: (state, action: PayloadAction<BerthConfigDomain[]>) => {
       state.value = action.payload
     },
   },

@@ -18,6 +18,7 @@ import { Route as HazardousCargoRouteImport } from './routes/hazardous-cargo'
 import { Route as CargoRouteImport } from './routes/cargo'
 import { Route as CapacityRouteImport } from './routes/capacity'
 import { Route as BerthRequestsRouteImport } from './routes/berth-requests'
+import { Route as BerthRequestConfirmationRouteImport } from './routes/berth-request-confirmation'
 import { Route as BerthRequestAddRouteImport } from './routes/berth-request-add'
 import { Route as BerthManagerRouteImport } from './routes/berth-manager'
 import { Route as AnalyticsRouteImport } from './routes/analytics'
@@ -68,6 +69,12 @@ const BerthRequestsRoute = BerthRequestsRouteImport.update({
   path: '/berth-requests',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BerthRequestConfirmationRoute =
+  BerthRequestConfirmationRouteImport.update({
+    id: '/berth-request-confirmation',
+    path: '/berth-request-confirmation',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const BerthRequestAddRoute = BerthRequestAddRouteImport.update({
   id: '/berth-request-add',
   path: '/berth-request-add',
@@ -94,6 +101,7 @@ export interface FileRoutesByFullPath {
   '/analytics': typeof AnalyticsRoute
   '/berth-manager': typeof BerthManagerRoute
   '/berth-request-add': typeof BerthRequestAddRoute
+  '/berth-request-confirmation': typeof BerthRequestConfirmationRoute
   '/berth-requests': typeof BerthRequestsRoute
   '/capacity': typeof CapacityRoute
   '/cargo': typeof CargoRoute
@@ -109,6 +117,7 @@ export interface FileRoutesByTo {
   '/analytics': typeof AnalyticsRoute
   '/berth-manager': typeof BerthManagerRoute
   '/berth-request-add': typeof BerthRequestAddRoute
+  '/berth-request-confirmation': typeof BerthRequestConfirmationRoute
   '/berth-requests': typeof BerthRequestsRoute
   '/capacity': typeof CapacityRoute
   '/cargo': typeof CargoRoute
@@ -125,6 +134,7 @@ export interface FileRoutesById {
   '/analytics': typeof AnalyticsRoute
   '/berth-manager': typeof BerthManagerRoute
   '/berth-request-add': typeof BerthRequestAddRoute
+  '/berth-request-confirmation': typeof BerthRequestConfirmationRoute
   '/berth-requests': typeof BerthRequestsRoute
   '/capacity': typeof CapacityRoute
   '/cargo': typeof CargoRoute
@@ -142,6 +152,7 @@ export interface FileRouteTypes {
     | '/analytics'
     | '/berth-manager'
     | '/berth-request-add'
+    | '/berth-request-confirmation'
     | '/berth-requests'
     | '/capacity'
     | '/cargo'
@@ -157,6 +168,7 @@ export interface FileRouteTypes {
     | '/analytics'
     | '/berth-manager'
     | '/berth-request-add'
+    | '/berth-request-confirmation'
     | '/berth-requests'
     | '/capacity'
     | '/cargo'
@@ -172,6 +184,7 @@ export interface FileRouteTypes {
     | '/analytics'
     | '/berth-manager'
     | '/berth-request-add'
+    | '/berth-request-confirmation'
     | '/berth-requests'
     | '/capacity'
     | '/cargo'
@@ -188,6 +201,7 @@ export interface RootRouteChildren {
   AnalyticsRoute: typeof AnalyticsRoute
   BerthManagerRoute: typeof BerthManagerRoute
   BerthRequestAddRoute: typeof BerthRequestAddRoute
+  BerthRequestConfirmationRoute: typeof BerthRequestConfirmationRoute
   BerthRequestsRoute: typeof BerthRequestsRoute
   CapacityRoute: typeof CapacityRoute
   CargoRoute: typeof CargoRoute
@@ -264,6 +278,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BerthRequestsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/berth-request-confirmation': {
+      id: '/berth-request-confirmation'
+      path: '/berth-request-confirmation'
+      fullPath: '/berth-request-confirmation'
+      preLoaderRoute: typeof BerthRequestConfirmationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/berth-request-add': {
       id: '/berth-request-add'
       path: '/berth-request-add'
@@ -300,6 +321,7 @@ const rootRouteChildren: RootRouteChildren = {
   AnalyticsRoute: AnalyticsRoute,
   BerthManagerRoute: BerthManagerRoute,
   BerthRequestAddRoute: BerthRequestAddRoute,
+  BerthRequestConfirmationRoute: BerthRequestConfirmationRoute,
   BerthRequestsRoute: BerthRequestsRoute,
   CapacityRoute: CapacityRoute,
   CargoRoute: CargoRoute,

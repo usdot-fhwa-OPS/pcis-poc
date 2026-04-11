@@ -4,9 +4,9 @@ import { format } from "date-fns"
 import { BerthConfigDomain } from "./berth-config-domain";
 
 
-export const berthConfigList = async (): Promise<BerthConfigDomain> => {
+export const berthConfigList = async (): Promise<BerthConfigDomain[]> => {
     const session = await fetchAuthSession();
-    const response = await fetch("https://ewutyf2fml.execute-api.us-east-1.amazonaws.com/dev/berthConfig", {
+    const response = await fetch("https://ewutyf2fml.execute-api.us-east-1.amazonaws.com/dev/berthConfig/list", {
         method: 'GET',
         headers: {
             "Authorization": `Bearer ${session.tokens?.accessToken?.toString()}`,
@@ -14,7 +14,7 @@ export const berthConfigList = async (): Promise<BerthConfigDomain> => {
             "Accept": "*/*"
         }
     });
-    const result = (await response.json()) as BerthConfigDomain;
+    const result = (await response.json()) as BerthConfigDomain[];
     return result;
 }
 

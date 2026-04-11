@@ -82,11 +82,6 @@ const fetchBerthRequestList = async () => {
           <Button onClick={navigateToBerthRequestAdd}>
             <Plus /> Add New Berth Request
           </Button>
-          <table>
-              {brReqList.map((bReq, index) => (
-                  bReq.terminalId
-                ))}
-          </table>
         </div>
       </>
     )
