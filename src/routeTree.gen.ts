@@ -17,6 +17,7 @@ import { Route as HazardousCargoManagerRouteImport } from './routes/hazardous-ca
 import { Route as HazardousCargoRouteImport } from './routes/hazardous-cargo'
 import { Route as CargoRouteImport } from './routes/cargo'
 import { Route as CapacityRouteImport } from './routes/capacity'
+import { Route as BerthVesselRouteImport } from './routes/berth-vessel'
 import { Route as BerthRequestsRouteImport } from './routes/berth-requests'
 import { Route as BerthRequestConfirmationRouteImport } from './routes/berth-request-confirmation'
 import { Route as BerthRequestAddRouteImport } from './routes/berth-request-add'
@@ -64,6 +65,11 @@ const CapacityRoute = CapacityRouteImport.update({
   path: '/capacity',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BerthVesselRoute = BerthVesselRouteImport.update({
+  id: '/berth-vessel',
+  path: '/berth-vessel',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BerthRequestsRoute = BerthRequestsRouteImport.update({
   id: '/berth-requests',
   path: '/berth-requests',
@@ -103,6 +109,7 @@ export interface FileRoutesByFullPath {
   '/berth-request-add': typeof BerthRequestAddRoute
   '/berth-request-confirmation': typeof BerthRequestConfirmationRoute
   '/berth-requests': typeof BerthRequestsRoute
+  '/berth-vessel': typeof BerthVesselRoute
   '/capacity': typeof CapacityRoute
   '/cargo': typeof CargoRoute
   '/hazardous-cargo': typeof HazardousCargoRoute
@@ -119,6 +126,7 @@ export interface FileRoutesByTo {
   '/berth-request-add': typeof BerthRequestAddRoute
   '/berth-request-confirmation': typeof BerthRequestConfirmationRoute
   '/berth-requests': typeof BerthRequestsRoute
+  '/berth-vessel': typeof BerthVesselRoute
   '/capacity': typeof CapacityRoute
   '/cargo': typeof CargoRoute
   '/hazardous-cargo': typeof HazardousCargoRoute
@@ -136,6 +144,7 @@ export interface FileRoutesById {
   '/berth-request-add': typeof BerthRequestAddRoute
   '/berth-request-confirmation': typeof BerthRequestConfirmationRoute
   '/berth-requests': typeof BerthRequestsRoute
+  '/berth-vessel': typeof BerthVesselRoute
   '/capacity': typeof CapacityRoute
   '/cargo': typeof CargoRoute
   '/hazardous-cargo': typeof HazardousCargoRoute
@@ -154,6 +163,7 @@ export interface FileRouteTypes {
     | '/berth-request-add'
     | '/berth-request-confirmation'
     | '/berth-requests'
+    | '/berth-vessel'
     | '/capacity'
     | '/cargo'
     | '/hazardous-cargo'
@@ -170,6 +180,7 @@ export interface FileRouteTypes {
     | '/berth-request-add'
     | '/berth-request-confirmation'
     | '/berth-requests'
+    | '/berth-vessel'
     | '/capacity'
     | '/cargo'
     | '/hazardous-cargo'
@@ -186,6 +197,7 @@ export interface FileRouteTypes {
     | '/berth-request-add'
     | '/berth-request-confirmation'
     | '/berth-requests'
+    | '/berth-vessel'
     | '/capacity'
     | '/cargo'
     | '/hazardous-cargo'
@@ -203,6 +215,7 @@ export interface RootRouteChildren {
   BerthRequestAddRoute: typeof BerthRequestAddRoute
   BerthRequestConfirmationRoute: typeof BerthRequestConfirmationRoute
   BerthRequestsRoute: typeof BerthRequestsRoute
+  BerthVesselRoute: typeof BerthVesselRoute
   CapacityRoute: typeof CapacityRoute
   CargoRoute: typeof CargoRoute
   HazardousCargoRoute: typeof HazardousCargoRoute
@@ -271,6 +284,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CapacityRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/berth-vessel': {
+      id: '/berth-vessel'
+      path: '/berth-vessel'
+      fullPath: '/berth-vessel'
+      preLoaderRoute: typeof BerthVesselRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/berth-requests': {
       id: '/berth-requests'
       path: '/berth-requests'
@@ -323,6 +343,7 @@ const rootRouteChildren: RootRouteChildren = {
   BerthRequestAddRoute: BerthRequestAddRoute,
   BerthRequestConfirmationRoute: BerthRequestConfirmationRoute,
   BerthRequestsRoute: BerthRequestsRoute,
+  BerthVesselRoute: BerthVesselRoute,
   CapacityRoute: CapacityRoute,
   CargoRoute: CargoRoute,
   HazardousCargoRoute: HazardousCargoRoute,
