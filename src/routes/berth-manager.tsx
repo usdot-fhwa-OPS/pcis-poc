@@ -74,11 +74,11 @@ function RouteComponent() {
     currentPage * pageSize
   )
 
-  const handleModify = (id: number) => {
+  const handleModify = (id: string) => {
     alert(`Modify request ${id}`)
   }
 
-  const handleDelete = (id: number) => {
+  const handleDelete = (id: string) => {
     const confirmed = window.confirm(
       'Are you sure you want to delete this berth request?'
     )
@@ -89,7 +89,7 @@ function RouteComponent() {
   }
 
   const handleRespond = (
-    id: number,
+    id: string,
     status: 'Approved' | 'Rejected'
   ) => {
     setData((prev) =>
