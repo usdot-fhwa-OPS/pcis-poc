@@ -85,7 +85,7 @@ const items = [
   },
   {
     title: "Berth Reservations",
-    url: "/berth-vessel",
+    url: "/berth-requests",
     icon: Anchor,
   },
 ]

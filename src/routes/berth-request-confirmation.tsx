@@ -58,7 +58,8 @@ function BerthRequestConfirmationComponent() {
           services: [''],
           manifestFileName: "",
           manifestPath: "",
-          manifestCsvContent: ""
+          manifestCsvContent: "",
+          status:"",
       };
   
     const userContext = useContext(UserContext);

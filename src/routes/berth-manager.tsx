@@ -12,17 +12,20 @@ import {
 
 import { Button } from "../components/ui/button";
 import { Badge } from "../components/ui/badge";
+import { useAppDispatch } from '../hooks';
+import { populate } from '../components/berth-requests/berth-request-state';
+import { berthRequestList } from '../components/berth-requests/berth-request-client';
 
 export const Route = createFileRoute('/berth-manager')({
   component: RouteComponent,
 })
 
 type BerthRequest = {
-  id: number
+  id: string
   vesselId: string
   departureDateTime: string
   dateRequested: string
-  status: 'Pending' | 'Approved' | 'Rejected'
+  status: 'Pending' | 'Approved' | 'Rejected' | string
 }
 
 function RouteComponent() {
@@ -31,25 +34,23 @@ function RouteComponent() {
 
   const [currentPage, setCurrentPage] = useState(1)
   const pageSize = 5
-
+  const dispatch = useAppDispatch()
+  
   // mock data
   const fetchBerthRequests = async (): Promise<BerthRequest[]> => {
-    return [
-      {
-        id: 1,
-        vesselId: 'VSL-001',
-        departureDateTime: '2026-04-10 14:00',
-        dateRequested: '2026-04-05 09:30',
-        status: 'Pending',
-      },
-      {
-        id: 2,
-        vesselId: 'VSL-002',
-        departureDateTime: '2026-04-12 08:00',
-        dateRequested: '2026-04-06 11:15',
-        status: 'Approved',
-      },
-    ]
+    const brList = await berthRequestList()
+    dispatch(populate(brList));
+    const result:BerthRequest[] = [];
+    brList.map((br) =>{
+      result.push({
+        id: br.terminalId,
+        vesselId: br.vesselID,
+        departureDateTime: br.etdAt,
+        dateRequested: br.etaAt,
+        status: br.status,
+      })
+    });
+    return result;
   }
 
   useEffect(() => {
