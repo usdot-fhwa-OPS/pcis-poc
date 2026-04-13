@@ -33,7 +33,14 @@ export const ApproveReservation = () => {
                     <DialogTitle>Approve Reservation</DialogTitle>
                     <DialogDescription></DialogDescription>
                 </DialogHeader>
-                <div className="p-8">Content Here</div>
+                <div>
+                    <p>Are you sure you want to approve the reservation for container XX-000?</p>
+                    <p>This reservation will be moved to the Ongoing tab and the transportation operator will be notified.</p>
+                    <p>Show Details</p>
+                    <p>(Details here)</p>
+                    <p>Is a TWIC escort required for this reservation?</p>
+                    <p>Yes No</p>
+                </div>
                 <DialogFooter>
                     <Button variant="outline" onClick={() => setIsDialogOpen(false)}>Cancel</Button>
                     <Button>Yes, Approve</Button>
