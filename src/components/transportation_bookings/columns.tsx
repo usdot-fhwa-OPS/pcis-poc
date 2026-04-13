@@ -13,7 +13,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "../ui/tooltip"
-import { format } from "date-fns"
+import { differenceInDays, format, isWeekend } from "date-fns"
 import { cn } from "../../lib/utils"
 import { TransOpUpcomingBookings, TransOpOngoingBookings } from "../../routes/reservation.tsx";
 //Four Imports needed for Amplify Data Queries and CRUD methods
@@ -26,6 +26,10 @@ const client = generateClient<Schema>();
 import { TransOperatorCompletedBookings } from "../../routes/reservation.tsx"
 import { Checkbox } from "../ui/checkbox.tsx";
 import { toast } from "sonner";
+import { useAppDispatch } from "../../hooks.tsx";
+import { populate } from "../terminal-capacity/terminal-capacity-state.tsx";
+import { TerminalCapacityDomain } from "../terminal-capacity/terminal-capacity-domain.tsx";
+import { terminalCapacityList } from "../terminal-capacity/terminal-capacity-client.tsx";
 
 
 export const columns = (): ColumnDef<any>[] => {
@@ -236,25 +240,193 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
         const [isCalendarOpen, setIsCalendarOpen] = useState(false)
         const [isDialogOpen, setIsDialogOpen] = useState(false)
         const [isAtCapacity, setIsAtCapacity] = useState(false)
-        
+        const dispatch = useAppDispatch()   
         
         const isDateTimeSelected = (): boolean => {
           return !!date && !!time
         }
-
         
+        async function getTerminalCapacityLimit(date: Date, time: string) {
+          let limit = 0;
+          try {
+
+            const termCapList = await terminalCapacityList();
+            dispatch(populate(termCapList));
+            termCapList.map((item) => {
+              try {
+                if (item) {
+                  if ('MAXIMUM' === item.capacityType) {
+
+                    limit = limit + item.capacity;
+
+                  } else if ((item.startDate) && (item.endDate)
+                    && (item.startTime) && (item.endTime)) {
+
+                    if ('Never' === item.repeat) {
+                      if (differenceInDays(date, item.startDate) === 0) {
+                        // same day as start date
+                        addLimit(item);
+                      }
+
+                    } else if ('Daily' === item.repeat) {
+
+                      addLimit(item);
+
+                    } else if ('Weekdays' === item.repeat) {
+
+                      if (!isWeekend(date)) {
+                        addLimit(item);
+                      }
+
+                    } else if ('Weekends' === item.repeat) {
+
+                      if (isWeekend(date)) {
+                        addLimit(item);
+                      }
+
+
+                    } else if ('Weekly' === item.repeat) {
+
+                      let daysAfterStart = differenceInDays(date, item.startDate);
+                      if ((daysAfterStart % 7) == 0) {
+                        addLimit(item);
+
+                      }
+
+                    } else if ('Biweekly' === item.repeat) {
+
+                      let daysAfterStart = differenceInDays(date, item.startDate);
+                      //even
+                      if ((daysAfterStart % 2) == 0) {
+                        // bi weekly
+                        addLimit(item);
+
+                      }
+
+                    } else if ('Monthly' === item.repeat) {
+
+                      let daysAfterStart = differenceInDays(date, item.startDate);
+
+                      if ((daysAfterStart % 30) == 0) {
+
+                        addLimit(item);
+
+                      }
+
+                    } else if ('Every 3 months' === item.repeat) {
+
+                      let daysAfterStart = differenceInDays(date, item.startDate);
+
+                      if ((daysAfterStart % (30 * 3)) == 0) {
+
+                        addLimit(item);
+
+                      }
+
+                    } else if ('Every 6 months' === item.repeat) {
+
+                      let daysAfterStart = differenceInDays(date, item.startDate);
+
+                      if ((daysAfterStart % (30 * 6)) == 0) {
+
+                        addLimit(item);
+
+                      }
+
+                    } else if ('Yearly' === item.repeat) {
+
+                      let daysAfterStart = differenceInDays(date, item.startDate);
+
+                      if ((daysAfterStart % 365) == 0) {
+
+                        addLimit(item);
+
+                      }
+
+                    } else if ('Custom' === item.repeat) {
+
+                      if ('Daily' === item.repeatConfig?.frequency) {
+
+                        let daysCount = differenceInDays(date, item.startDate);
+                        if ((item.repeatConfig.interval) &&
+                          ((daysCount % item.repeatConfig.interval) == 0)) {
+
+                          addLimit(item);
+                        }
+
+                      } else if ('Weekly' === item.repeatConfig?.frequency) {
+
+                        let daysCount = differenceInDays(date, item.startDate);
+                        if ((item.repeatConfig.interval) &&
+                          ((daysCount % (item.repeatConfig.interval * 7)) == 0)) {
+
+                          addLimit(item);
+                        }
+
+                      } else if ('Monthly' === item.repeatConfig?.frequency) {
+
+                        let daysCount = differenceInDays(date, item.startDate);
+                        if ((item.repeatConfig.interval) &&
+                          ((daysCount % (item.repeatConfig.interval * 30)) == 0)) {
+
+                          addLimit(item);
+                        }
+
+                      } else if ('Yearly' === item.repeatConfig?.frequency) {
+
+                        let daysCount = differenceInDays(date, item.startDate);
+                        if ((item.repeatConfig.interval) &&
+                          ((daysCount % (item.repeatConfig.interval * 365)) == 0)) {
+
+                          addLimit(item);
+                        }
+
+                      }
+
+                    }
+
+
+                  }
+                }
+
+              } catch (e) {
+                console.error(e);
+              }
+            })
+
+
+
+
+          } catch (error) {
+            console.error('Error fetching booking limit', error);
+          }
+          return limit;
+
+          function addLimit(item: TerminalCapacityDomain) {
+            const start = new Date(item.startDate + ' ' + item.startTime);
+            const end = new Date(item.endDate + ' ' + item.endTime);
+
+            const pickedDate = new Date(format(date, "MM/dd/yyyy") + ' ' + time);
+            if ((pickedDate >= start) && (pickedDate <= end)) {
+              limit = limit + item.capacity;
+            }
+          }
+        }
 
         const handleBooking = async () => {
-          const limit = await (table.options.meta as TransOpDataTableMeta)?.getTerminalCapacity() 
-          const bookingsLength = await (table.options.meta as TransOpDataTableMeta)?.getBookingsAmount(String(format(date!, "MM/dd/yyyy")))
-          if (bookingsLength >= limit) {
-            setIsAtCapacity(true);
-            toast.error(`Terminal at capacity (Limit ${limit} per day). Please try a different date.`)
-          } else {
-            (table.options.meta as TransOpDataTableMeta)?.updateTransOpBooking(row.original.cargoUnitID, "Pending Reservation Approval", String(format(date!, "MM/dd/yyyy")), time ?? "") 
-            setIsDialogOpen(false)
-            setIsAtCapacity(false)
+          if (date && time) {
+            const limit = await getTerminalCapacityLimit(date, time)
+            const bookingsLength = await (table.options.meta as TransOpDataTableMeta)?.getBookingsAmount(String(format(date!, "MM/dd/yyyy")))
+            if (bookingsLength >= limit) {
+              setIsAtCapacity(true);
+              toast.error(`Terminal at capacity (Limit ${limit} per day). Please try a different date.`)
+            } else {
+              (table.options.meta as TransOpDataTableMeta)?.updateTransOpBooking(row.original.cargoUnitID, "Pending Reservation Approval", String(format(date!, "MM/dd/yyyy")), time ?? "")
+              setIsDialogOpen(false)
+              setIsAtCapacity(false)
+            }
           }
+
         }
 
         const timeOptions = [
