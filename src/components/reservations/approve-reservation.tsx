@@ -34,8 +34,8 @@ export const ApproveReservation = () => {
                     <DialogDescription></DialogDescription>
                 </DialogHeader>
                 <div>
-                    <p className="font=semibold mb-2">Are you sure you want to approve the reservation for container XX-000?</p>
-                    <p className="mb-2">This reservation will be moved to the Ongoing tab and the transportation operator will be notified.</p>
+                    <p className="font-semibold mb-2">Are you sure you want to approve the reservation for container XX-000?</p>
+                    <p className="mb-4">This reservation will be moved to the Ongoing tab and the transportation operator will be notified.</p>
                     <p className="mb-2"><span className="font-semibold underline">Show Details</span></p>
                     <div className="mb-4">
                         <p>(Details will go here here)</p>
