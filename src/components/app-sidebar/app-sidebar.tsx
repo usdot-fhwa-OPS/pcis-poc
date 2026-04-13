@@ -44,7 +44,7 @@ const items = [
     icon: Ship,
   },
   {
-    title: "Berth Reservations",
+    title: "Berth Reservation Management",
     url: "/berth-manager",
     icon: Anchor,
   },
@@ -123,7 +123,7 @@ export function AppSidebar() {
   }, [user]);
 
   // Define which menu items are allowed for Terminal Operator role.
-  const allowedForTerminalOperatorRole = ["Home", "Berth Reservations", "Available Operators", "Import Stow Plan", "Upcoming Cargo", "Reservation Status", "Analytics", "Notifications", "Hazardous Cargo Management"];
+  const allowedForTerminalOperatorRole = ["Home", "Berth Reservation Management", "Available Operators", "Import Stow Plan", "Upcoming Cargo", "Reservation Status", "Analytics", "Notifications", "Hazardous Cargo Management"];
 
   // Define which menu items are allowed for limited roles.
   const allowedForLimitedRoles = ["Home", "Reservation Status", "Analytics", "Notifications"];
@@ -136,9 +136,6 @@ export function AppSidebar() {
     if (userAttributes.role === "Terminal Operator") {
       // Terminal Operators have access to all items except Berth Request.
       return allowedForTerminalOperatorRole.includes(item.title)
-    }
-    if (userAttributes.role === "Vessel Agent") {
-      return item.title ==="Berth Reservations";
     }
 
     if (
