@@ -1,7 +1,7 @@
-import { useState } from "react"
+//import { useState } from "react"
 import { createFileRoute } from "@tanstack/react-router"
-import { BerthAvailability } from "../components/berth/berth-availability"
-import { Button } from "../components/ui/button"
+//import { BerthAvailability } from "../components/berth/berth-availability"
+//import { Button } from "../components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs.tsx"
 
 export const Route = createFileRoute('/berth-manager')({
@@ -9,11 +9,11 @@ export const Route = createFileRoute('/berth-manager')({
 })
   
 function RouteComponent() {
-      const [isOpen, setIsOpen] = useState(false);
+ //     const [isOpen, setIsOpen] = useState(false);
 
-      const handleOpen = () => {
-        setIsOpen(!isOpen);
-      };
+      // const handleOpen = () => {
+      //   setIsOpen(!isOpen);
+      // };
 
      return (
       <div className="w-xl max-w-9/10">
