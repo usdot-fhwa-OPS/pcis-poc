@@ -25,12 +25,12 @@ export const BerthAvailability = (
         if(berthAvailability>berths.length) {
             while(berths.length < berthAvailability) { 
                 limit++;
-                berths.push("");           
+                setBerths(prev => [...prev, ""]);         
             }    
         } else if (berthAvailability<berths.length) {
             while(berths.length > berthAvailability) {   
                limit--;        
-               berths.pop();
+               setBerths(prev => prev.slice(0, -1));
             }
         }
         setBerths([...berths]); //needed for refresh
@@ -61,7 +61,7 @@ export const BerthAvailability = (
     }
  
     return (      
-        <Dialog open={isDialogOpen}>
+       <Dialog open={isDialogOpen} onOpenChange={(open:any) => !open && handleCloseDialog(false)}>
             <DialogContent className="max-w-56 p-0">
                 <form onSubmit={handleSubmit}>
                     <DialogHeader className="p-4 border-b-0">
