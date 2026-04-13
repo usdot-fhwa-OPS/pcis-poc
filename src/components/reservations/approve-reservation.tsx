@@ -34,11 +34,13 @@ export const ApproveReservation = () => {
                     <DialogDescription></DialogDescription>
                 </DialogHeader>
                 <div>
-                    <p>Are you sure you want to approve the reservation for container XX-000?</p>
-                    <p>This reservation will be moved to the Ongoing tab and the transportation operator will be notified.</p>
-                    <p>Show Details</p>
-                    <p>(Details here)</p>
-                    <p>Is a TWIC escort required for this reservation?</p>
+                    <p className="font=semibold mb-2">Are you sure you want to approve the reservation for container XX-000?</p>
+                    <p className="mb-2">This reservation will be moved to the Ongoing tab and the transportation operator will be notified.</p>
+                    <p className="mb-2"><span className="font-semibold underline">Show Details</span></p>
+                    <div className="mb-4">
+                        <p>(Details will go here here)</p>
+                    </div>
+                    <p className="font-semibold mb-2">Is a TWIC escort required for this reservation?</p>
                     <p>Yes No</p>
                 </div>
                 <DialogFooter>
