@@ -25,12 +25,12 @@ export const BerthAvailability = (
         if(berthAvailability>berths.length) {
             while(berths.length < berthAvailability) { 
                 limit++;
-                setBerths(prev => [...prev, ""]);         
+                berths.push("");           
             }    
         } else if (berthAvailability<berths.length) {
             while(berths.length > berthAvailability) {   
                limit--;        
-               setBerths(prev => prev.slice(0, -1));
+               berths.pop();
             }
         }
         setBerths([...berths]); //needed for refresh
