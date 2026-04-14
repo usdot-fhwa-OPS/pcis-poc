@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { createFileRoute } from "@tanstack/react-router"
 import { BerthAvailability } from "../components/berth/berth-availability"
-import { Button } from "../components/ui/button"
+//import { Button } from "../components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs.tsx"
 
 export const Route = createFileRoute('/berth-manager')({
@@ -17,7 +17,8 @@ function RouteComponent() {
 
      return (
       <div className="w-xl max-w-9/10">
-        <h1>Berth Reservations</h1>
+        <h1 className="text-2xl font-bold text-center">Berth Reservations</h1>
+        <br>
         <Tabs defaultValue="requested" className="">
           <div>
             <TabsList className="mb-4 flex w-full justify-start gap-x-4">
@@ -25,6 +26,7 @@ function RouteComponent() {
                 <TabsTrigger value="modification">Modification Requested</TabsTrigger>
                 <TabsTrigger value="ongoing">Ongoing</TabsTrigger>
                 <TabsTrigger value="completed">Completed</TabsTrigger>
+                <TabsTrigger value="berth_availability" onClick={() => handleOpen()}>Set Berth Availability</TabsTrigger>
             </TabsList>
           </div>
           <div className="w-xl max-w-9/10">
@@ -36,14 +38,10 @@ function RouteComponent() {
             </TabsContent>
             <TabsContent value="completed">
             </TabsContent>
-          </div>
-          <div className="p-2">
-            <h1 className="text-2xl font-bold text-center">Berth Reservations</h1>
-            <Button type="button" onClick={() => handleOpen()}>
-                Set Berth Availability
-            </Button>
-            <BerthAvailability isDialogOpen={isOpen} handleCloseDialog={() => setIsOpen(false)} />
-          </div>           
+            <TabsContent value="berth_availability">
+               <BerthAvailability isDialogOpen={isOpen} handleCloseDialog={() => setIsOpen(false)} />
+            </TabsContent>
+          </div>         
         </Tabs>       
       </div>
     );
