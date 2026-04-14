@@ -14,7 +14,7 @@ export const Route = createFileRoute('/berth-requests')({
   component: BerthRequestComponent,
 })
 
-function BerthRequestComponent() {
+export function BerthRequestComponent() {
   
   return (
   <>
