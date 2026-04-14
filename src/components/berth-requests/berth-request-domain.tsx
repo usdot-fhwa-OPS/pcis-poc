@@ -9,6 +9,7 @@ export type BerthRequestDomain = {
   },
   etaAt: string,
   etdAt: string,
+  requestedAt: string,
   services: string[],
   manifestFileName: string,
   manifestPath: string,

@@ -31,9 +31,9 @@ export const berthRequestList = async (): Promise<BerthRequestDomain[]> => {
     const result = (await response.json()).items as BerthRequestDomain[];
     result.map((item)=>{
         try{
-            item.etaAt= format(item.etaAt?item.etaAt:'', "MM/dd/yyyy");
-            item.etdAt = format(item.etdAt?item.etdAt:'', "MM/dd/yyyy");
-
+            item.etaAt= format(item.etaAt?item.etaAt:'', "MM/dd/yyyy hh mm aa");
+            item.etdAt = format(item.etdAt?item.etdAt:'', "MM/dd/yyyy  hh mm aa");
+            item.requestedAt = format(item.requestedAt?item.requestedAt:'', "MM/dd/yyyy  hh mm aa");
         }catch(e){
             console.error(e);
         }
