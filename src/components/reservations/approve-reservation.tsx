@@ -28,14 +28,14 @@ export const ApproveReservation = () => {
                     <Check className="inline-block h-4 w-4" />Approve
                 </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-lg">
+            <DialogContent className="sm:max-w-md gap-6">
                 <DialogHeader>
                     <DialogTitle>Approve Reservation</DialogTitle>
                     <DialogDescription></DialogDescription>
                 </DialogHeader>
                 <div>
-                    <div className="flex gap-4 mb-4">
-                        <span className="inline-flex shrink-0 rounded-full p-2 bg-green-200">
+                    <div className="flex items-start gap-4 mb-4">
+                        <span className="inline-flex shrink-0 rounded-full p-2 bg-green-100">
                             <CircleCheckBig className="size-6 stroke-green-600" />
                         </span>
                         <div>
@@ -47,15 +47,17 @@ export const ApproveReservation = () => {
                         Show Details
                         <ChevronDownIcon className="ml-auto group-data-[state=open]:rotate-180" />
                     </Button>
-                    <div className="mt-2 mb-4">
+                    <div className="pt-2">
                         <p>(Details will go here here)</p>
                     </div>
-                    <p className="font-semibold mb-2">Is a TWIC escort required for this reservation?</p>
-                    <p>Yes No</p>
+                    <div className="pt-4">
+                        <p className="font-semibold mb-2">Is a TWIC escort required for this reservation?</p>
+                        <p>Yes No</p>
+                    </div>
                 </div>
                 <DialogFooter>
                     <Button variant="outline" onClick={() => setIsDialogOpen(false)}>Cancel</Button>
-                    <Button>Yes, Approve</Button>
+                    <Button className="bg-green-600 hover:bg-green-600/90">Yes, Approve</Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>
