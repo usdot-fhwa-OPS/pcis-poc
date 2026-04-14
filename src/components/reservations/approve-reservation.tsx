@@ -53,15 +53,15 @@ export const ApproveReservation = () => {
                         <p>(Details will go here here)</p>
                     </div>
                     <div className="pt-4">
-                        <p className="font-semibold mb-2">Is a TWIC escort required for this reservation?</p>
-                        <RadioGroup defaultValue="r1" className="w-fit">
-                            <div className="flex items-center gap-3">
-                                <RadioGroupItem value="yes" id="r1" />
-                                <Label htmlFor="r1">Yes</Label>
+                        <p className="font-semibold mb-4">Is a TWIC escort required for this reservation?</p>
+                        <RadioGroup defaultValue="not-required" className="grid-cols-2 grid-rows-1 gap-6 w-fit">
+                            <div className="flex items-center gap-2">
+                                <RadioGroupItem value="true" id="required" />
+                                <Label className="font-normal" htmlFor="required">Yes</Label>
                             </div>
-                            <div className="flex items-center gap-3">
-                                <RadioGroupItem value="no" id="r2" />
-                                <Label htmlFor="r2">No</Label>
+                            <div className="flex items-center gap-2">
+                                <RadioGroupItem value="false" id="not-required" />
+                                <Label className="font-normal" htmlFor="not-required">No</Label>
                             </div>
                         </RadioGroup>
                     </div>
