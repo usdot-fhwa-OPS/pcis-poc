@@ -36,14 +36,14 @@ function RouteComponent() {
             <TabsContent value="completed">
             </TabsContent>
           </div>
-        </Tabs>
-        <div className="p-2">
-          <h1 className="text-2xl font-bold text-center">Berth Reservations</h1>
-          <Button type="button" onClick={() => handleOpen()}>
-              Set Berth Availability
-          </Button>
-          <BerthAvailability isDialogOpen={isOpen} handleCloseDialog={() => setIsOpen(false)} />
-        </div>        
+          <div className="p-2">
+            <h1 className="text-2xl font-bold text-center">Berth Reservations</h1>
+            <Button type="button" onClick={() => handleOpen()}>
+                Set Berth Availability
+            </Button>
+            <BerthAvailability isDialogOpen={isOpen} handleCloseDialog={() => setIsOpen(false)} />
+          </div>           
+        </Tabs>       
       </div>
     );
 }
