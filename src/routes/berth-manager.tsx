@@ -18,7 +18,7 @@ function RouteComponent() {
      return (
       <div className="w-xl max-w-9/10">
         <h1 className="text-2xl font-bold text-center">Berth Reservations</h1>
-        <br>
+        <br/>
         <Tabs defaultValue="requested" className="">
           <div>
             <TabsList className="mb-4 flex w-full justify-start gap-x-4">
