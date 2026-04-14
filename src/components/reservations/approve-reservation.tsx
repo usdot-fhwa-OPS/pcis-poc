@@ -30,12 +30,12 @@ export const ApproveReservation = () => {
                     <Check className="inline-block h-4 w-4" />Approve
                 </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-md gap-6">
-                <DialogHeader>
+            <DialogContent className="sm:max-w-md gap-6 p-0">
+                <DialogHeader className="p-4 border-b">
                     <DialogTitle>Approve Reservation</DialogTitle>
                     <DialogDescription></DialogDescription>
                 </DialogHeader>
-                <div>
+                <div className="px-4">
                     <div className="flex items-start gap-4 mb-4">
                         <span className="inline-flex shrink-0 rounded-full p-4 bg-green-100">
                             <CircleCheckBig className="size-8 stroke-green-600" />
@@ -66,7 +66,7 @@ export const ApproveReservation = () => {
                         </RadioGroup>
                     </div>
                 </div>
-                <DialogFooter>
+                <DialogFooter className="mx-0 mb-0">
                     <Button variant="outline" onClick={() => setIsDialogOpen(false)}>Cancel</Button>
                     <Button className="bg-green-600 hover:bg-green-600/90">Yes, Approve</Button>
                 </DialogFooter>
