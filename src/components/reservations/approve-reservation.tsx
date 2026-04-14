@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button } from "../ui/button";
 import { Check, ChevronDownIcon, CircleCheckBig } from "lucide-react";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
 import { Label } from "../ui/label";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 
@@ -31,9 +31,8 @@ export const ApproveReservation = () => {
                 </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-md gap-6 p-0">
-                <DialogHeader className="p-4 border-b">
+                <DialogHeader className="gap-0 p-4 border-b">
                     <DialogTitle>Approve Reservation</DialogTitle>
-                    <DialogDescription></DialogDescription>
                 </DialogHeader>
                 <div className="px-4">
                     <div className="flex items-start gap-4 mb-4">
