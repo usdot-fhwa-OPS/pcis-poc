@@ -2,6 +2,8 @@ import { useState } from "react";
 import { Button } from "../ui/button";
 import { Check, ChevronDownIcon, CircleCheckBig } from "lucide-react";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
+import { Label } from "../ui/label";
+import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 
 export const ApproveReservation = () => {
 
@@ -52,7 +54,16 @@ export const ApproveReservation = () => {
                     </div>
                     <div className="pt-4">
                         <p className="font-semibold mb-2">Is a TWIC escort required for this reservation?</p>
-                        <p>Yes No</p>
+                        <RadioGroup defaultValue="r1" className="w-fit">
+                            <div className="flex items-center gap-3">
+                                <RadioGroupItem value="yes" id="r1" />
+                                <Label htmlFor="r1">Yes</Label>
+                            </div>
+                            <div className="flex items-center gap-3">
+                                <RadioGroupItem value="no" id="r2" />
+                                <Label htmlFor="r2">No</Label>
+                            </div>
+                        </RadioGroup>
                     </div>
                 </div>
                 <DialogFooter>
