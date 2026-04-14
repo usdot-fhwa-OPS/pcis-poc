@@ -37,8 +37,8 @@ export const ApproveReservation = () => {
                 </DialogHeader>
                 <div>
                     <div className="flex items-start gap-4 mb-4">
-                        <span className="inline-flex shrink-0 rounded-full p-2 bg-green-100">
-                            <CircleCheckBig className="size-6 stroke-green-600" />
+                        <span className="inline-flex shrink-0 rounded-full p-4 bg-green-100">
+                            <CircleCheckBig className="size-8 stroke-green-600" />
                         </span>
                         <div>
                             <p className="font-semibold mb-2">Are you sure you want to approve the reservation for container XX-000?</p>
