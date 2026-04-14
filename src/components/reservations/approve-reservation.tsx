@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button } from "../ui/button";
-import { Check } from "lucide-react";
+import { Check, ChevronDownIcon, CircleCheckBig } from "lucide-react";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
 
 export const ApproveReservation = () => {
@@ -28,16 +28,26 @@ export const ApproveReservation = () => {
                     <Check className="inline-block h-4 w-4" />Approve
                 </Button>
             </DialogTrigger>
-            <DialogContent>
+            <DialogContent className="sm:max-w-lg">
                 <DialogHeader>
                     <DialogTitle>Approve Reservation</DialogTitle>
                     <DialogDescription></DialogDescription>
                 </DialogHeader>
                 <div>
-                    <p className="font-semibold mb-2">Are you sure you want to approve the reservation for container XX-000?</p>
-                    <p className="mb-4">This reservation will be moved to the Ongoing tab and the transportation operator will be notified.</p>
-                    <p className="mb-2"><span className="font-semibold underline">Show Details</span></p>
-                    <div className="mb-4">
+                    <div className="flex gap-4 mb-4">
+                        <span className="inline-flex shrink-0 rounded-full p-2 bg-green-200">
+                            <CircleCheckBig className="size-6 stroke-green-600" />
+                        </span>
+                        <div>
+                            <p className="font-semibold mb-2">Are you sure you want to approve the reservation for container XX-000?</p>
+                            <p>This reservation will be moved to the Ongoing tab and the transportation operator will be notified.</p>
+                        </div>
+                    </div>
+                    <Button variant="ghost" className="group w-full">
+                        Show Details
+                        <ChevronDownIcon className="ml-auto group-data-[state=open]:rotate-180" />
+                    </Button>
+                    <div className="mt-2 mb-4">
                         <p>(Details will go here here)</p>
                     </div>
                     <p className="font-semibold mb-2">Is a TWIC escort required for this reservation?</p>
