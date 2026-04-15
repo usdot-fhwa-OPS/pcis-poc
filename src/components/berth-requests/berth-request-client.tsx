@@ -18,9 +18,9 @@ export const berthConfigList = async (): Promise<BerthConfigDomain[]> => {
     return result;
 }
 
-export const berthRequestList = async (): Promise<BerthRequestDomain[]> => {
+const fetchBerthRequestList = async (url:string):Promise<BerthRequestDomain[]> =>{
     const session = await fetchAuthSession();
-    const response = await fetch("https://ewutyf2fml.execute-api.us-east-1.amazonaws.com/dev/berthRequests", {
+    const response = await fetch(url, {
         method: 'GET',
         headers: {
             "Authorization": `Bearer ${session.tokens?.accessToken?.toString()}`,
@@ -39,6 +39,16 @@ export const berthRequestList = async (): Promise<BerthRequestDomain[]> => {
         }
     })
     return result;
+}
+
+export const berthRequestList = async (): Promise<BerthRequestDomain[]> => {
+    
+    return fetchBerthRequestList("https://ewutyf2fml.execute-api.us-east-1.amazonaws.com/dev/berthRequests")
+}
+
+export const berthRequestListForVesselAgent = async (vesselAgentEmail:string): Promise<BerthRequestDomain[]> => {
+    
+    return fetchBerthRequestList(`https://ewutyf2fml.execute-api.us-east-1.amazonaws.com/dev/berthRequests?vesselAgentEmail=${vesselAgentEmail}`)
 }
 
 export const berthRequestDecision = async (requestId:string, decision:string): Promise<BerthRequestDomain[]> => {
