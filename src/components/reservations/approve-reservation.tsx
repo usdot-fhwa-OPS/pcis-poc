@@ -35,13 +35,13 @@ export const ApproveReservation = () => {
                     <DialogTitle>Approve Reservation</DialogTitle>
                 </DialogHeader>
                 <div className="px-4">
-                    <div className="flex items-start gap-4 mb-4">
-                        <span className="inline-flex shrink-0 rounded-full p-4 bg-green-100">
-                            <CircleCheckBig className="size-8 stroke-green-600" />
+                    <div className="flex items-start gap-4 mb-6">
+                        <span className="inline-flex shrink-0 rounded-full p-3 bg-green-100">
+                            <CircleCheckBig className="size-6 stroke-green-600" />
                         </span>
                         <div>
-                            <p className="font-semibold mb-2">Are you sure you want to approve the reservation for container XX-000?</p>
-                            <p>This reservation will be moved to the Ongoing tab and the transportation operator will be notified.</p>
+                            <p className="text-base font-semibold mb-2">Are you sure you want to approve the reservation for container XX-000?</p>
+                            <p className="text-gray-600">This reservation will be moved to the Ongoing tab and the transportation operator will be notified.</p>
                         </div>
                     </div>
                     <Button variant="ghost" className="group w-full">
