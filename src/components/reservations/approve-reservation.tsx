@@ -47,12 +47,12 @@ export const ApproveReservation = () => {
                     </div>
                     <Collapsible className="mb-6 pb-4 border-b">
                         <CollapsibleTrigger asChild>
-                            <Button variant="link" className="group w-full">
+                            <Button variant="link" className="group w-fit">
                                 Show Details
                                 <ChevronDownIcon className="ml-auto group-data-[state=open]:rotate-180" />
                             </Button>
                         </CollapsibleTrigger>
-                        <CollapsibleContent className="mt-2 pt-4 border-t">
+                        <CollapsibleContent className="mt-4 pt-4 border-t">
                             <p>(Details will go here here)</p>
                         </CollapsibleContent>
                     </Collapsible>
