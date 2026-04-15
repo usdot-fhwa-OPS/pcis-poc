@@ -4,7 +4,7 @@ import { useContext, useEffect, useState } from 'react'
 
 import { useAppDispatch, useAppSelector } from '../hooks';
 import { populate } from '../components/berth-requests/berth-request-state';
-import { berthConfigList, berthRequestList, berthRequestListForVesselAgent } from '../components/berth-requests/berth-request-client';
+import { berthConfigList, berthRequestListForVesselAgent } from '../components/berth-requests/berth-request-client';
 import { getBerthConfigList, populate as populateBerthConfig } from '../components/berth-requests/berth-config-state';
 import { BerthRequestComponent } from './berth-requests';
 import { BerthRequestDomain } from '../components/berth-requests/berth-request-domain';
