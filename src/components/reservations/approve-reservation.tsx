@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Button } from "../ui/button";
 import { Check, ChevronDownIcon, CircleCheckBig } from "lucide-react";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "../ui/collapsible";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
 import { Label } from "../ui/label";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
@@ -44,13 +45,19 @@ export const ApproveReservation = () => {
                             <p className="text-gray-600">This reservation will be moved to the Ongoing tab and the transportation operator will be notified.</p>
                         </div>
                     </div>
-                    <Button variant="ghost" className="group w-full">
-                        Show Details
-                        <ChevronDownIcon className="ml-auto group-data-[state=open]:rotate-180" />
-                    </Button>
-                    <div className="pt-2">
-                        <p>(Details will go here here)</p>
-                    </div>
+                    <Collapsible>
+                        <CollapsibleTrigger>
+                            <Button variant="ghost" className="group w-full">
+                                Show Details
+                                <ChevronDownIcon className="ml-auto group-data-[state=open]:rotate-180" />
+                            </Button>
+                        </CollapsibleTrigger>
+                        <CollapsibleContent>
+                            <div className="pt-2">
+                                <p>(Details will go here here)</p>
+                            </div>
+                        </CollapsibleContent>
+                    </Collapsible>
                     <div className="pt-4">
                         <p className="font-semibold mb-4">Is a TWIC escort required for this reservation?</p>
                         <RadioGroup defaultValue="not-required" className="grid-cols-2 grid-rows-1 gap-6 w-fit">
