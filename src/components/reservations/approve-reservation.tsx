@@ -53,7 +53,7 @@ export const ApproveReservation = () => {
                             </Button>
                         </CollapsibleTrigger>
                         <CollapsibleContent className="mt-4 pt-4 border-t">
-                            <div className="grid grid-cols-1 md:grid-cols-[max-content_1fr] gap-2 md:items-start">
+                            <div className="grid grid-cols-1 md:grid-cols-[max-content_1fr] gap-x-8 gap-y-4 items-start">
                                 <div className="font-semibold">Vessel ID:</div>
                                 <div>Number</div>
                                 <div className="font-semibold">Reservation ID:</div>
@@ -61,13 +61,28 @@ export const ApproveReservation = () => {
                                 <div className="font-semibold">Terminal Origin:</div>
                                 <div>Country</div>
                                 <div className="font-semibold">Terminal Manager:</div>
-                                <div>Info</div>
+                                <div>
+                                    <p>Name</p>
+                                    <p>email@emailcompany.com</p>
+                                    <p>555-555-5555</p>
+                                </div>
                                 <div className="font-semibold">BCO:</div>
-                                <div>Info</div>
+                                <div>
+                                    <p>Name</p>
+                                    <p>email@emailcompany.com</p>
+                                    <p>555-555-5555</p>
+                                </div>
                                 <div className="font-semibold">Transportation Operator:</div>
-                                <div>Info</div>
+                                <div>
+                                    <p>Name</p>
+                                    <p>email@emailcompany.com</p>
+                                    <p>555-555-5555</p>
+                                </div>
                                 <div className="font-semibold">Date and Time Requested:</div>
-                                <div>00/00/0000 00:00 AM</div>
+                                <div className="flex gap-4 items-center">
+                                    <div>00/00/0000</div>
+                                    <div>00:00 AM</div>
+                                </div>
                             </div>
                         </CollapsibleContent>
                     </Collapsible>
