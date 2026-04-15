@@ -21,10 +21,9 @@ import {
   TableRow,
 } from "../../ui/table"
 
-import { Input } from "../../ui/input"
 
 export interface TerminalOperatorBerthRequestsTableMeta {
-  fetchTerminalCapacityList: any
+  decideBerthRequest: any
 }
 
 interface DataTableProps<TData, TValue> {

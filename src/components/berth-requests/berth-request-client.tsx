@@ -41,6 +41,21 @@ export const berthRequestList = async (): Promise<BerthRequestDomain[]> => {
     return result;
 }
 
+export const berthRequestDecision = async (requestId:string, decision:string): Promise<BerthRequestDomain[]> => {
+    const session = await fetchAuthSession();
+    const response = await fetch(`https://ewutyf2fml.execute-api.us-east-1.amazonaws.com/dev/berthRequests/${requestId}/decision`, {
+        method: 'POST',
+        headers: {
+            "Authorization": `Bearer ${session.tokens?.accessToken?.toString()}`,
+            "Content-Type": "application/json",
+            "Accept": "*/*"
+        },
+        body: JSON.stringify({"decision":decision})
+    });
+    const result = (await response.json());
+    return result;
+}
+
 export const saveBerthRequest = async (berthRequestDomain: BerthRequestDomain): Promise<string> => {
     const session = await fetchAuthSession();
     const response = await fetch("https://ewutyf2fml.execute-api.us-east-1.amazonaws.com/dev/berthRequests", {

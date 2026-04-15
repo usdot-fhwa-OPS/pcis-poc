@@ -55,6 +55,7 @@ function BerthRequestConfirmationComponent() {
           },
           etaAt: "",
           etdAt: "",
+          requestedAt:"",
           services: [''],
           manifestFileName: "",
           manifestPath: "",

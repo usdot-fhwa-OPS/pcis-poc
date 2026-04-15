@@ -41,7 +41,7 @@ function RouteComponent() {
     }
     
     fetchData()
-  }, [data])
+  }, [])
 
   
 

@@ -1,5 +1,6 @@
 export type BerthRequestDomain = {
   
+  requestId: string,
   terminalId: string,
   vesselAgentEmail: string,
   vesselID: string,

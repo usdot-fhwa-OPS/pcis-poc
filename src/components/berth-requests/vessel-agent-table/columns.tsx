@@ -8,18 +8,18 @@ import { VesselAgentBerthRequestsTableMeta } from "./data-table"
 
 const showTerminal = (
   id: string
-) => {}
+) => {id}
 
 const showContact = (
   contact: string
-) => {}
+) => {contact}
 
 const handleModify = (id: string) => {
   alert(`Modify request ${id}`)
 }
 const handleDelete = (id: string) => {
   const confirmed = window.confirm(
-    'Are you sure you want to delete this berth request?'
+    'Are you sure you want to delete this berth request?'+id
   )
 
   if (confirmed) {

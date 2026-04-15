@@ -2,33 +2,9 @@
 
 import { ColumnDef } from "@tanstack/react-table"
 import { Button } from "../../ui/button"
-import { Badge } from "../../ui/badge"
 import { BerthRequestDomain } from "../berth-request-domain"
+import { TerminalOperatorBerthRequestsTableMeta } from "./data-table"
 
-
-
-const handleRespond = (
-  id: string,
-  status: 'Approved' | 'Rejected'
-) => {
-  /* setData((prev) =>
-    prev.map((item) =>
-      item.id === id ? { ...item, status } : item
-    )
-  ) */
-}
-const handleModify = (id: string) => {
-  alert(`Modify request ${id}`)
-}
-const handleDelete = (id: string) => {
-  const confirmed = window.confirm(
-    'Are you sure you want to delete this berth request?'
-  )
-
-  if (confirmed) {
-    //setData((prev) => prev.filter((item) => item.id !== id))
-  }
-}
 export const columns: ColumnDef<BerthRequestDomain>[] = [
   // Define the columns for the table based on the database items (refer to resources.ts for schema names)
   {
@@ -40,7 +16,8 @@ export const columns: ColumnDef<BerthRequestDomain>[] = [
           size="sm"
           variant="link"
           onClick={() =>
-            handleRespond(row.original.vesselID, 'Approved')
+            {}
+            //handleRespond(row.original.vesselID, 'Approved')
           }
         >
           {row.original.vesselID}
@@ -49,7 +26,7 @@ export const columns: ColumnDef<BerthRequestDomain>[] = [
           size="sm"
           variant="link"
           onClick={() =>
-            handleRespond(row.original.vesselID, 'Approved')
+          {}
           }
         >
           Contact
@@ -60,13 +37,14 @@ export const columns: ColumnDef<BerthRequestDomain>[] = [
 {
     accessorKey: "respond",
     header: () => <div style={{ minWidth: "50px" }}>Respond to Request</div>,
-    cell: ({ row }) => (
+    cell: ({ row, table }) => (
       <div className="flex space-x-8 ">
         <Button
           size="sm"
           variant="outline"
           onClick={() =>
-            handleRespond(row.original.vesselID, 'Approved')
+             (table.options.meta  as TerminalOperatorBerthRequestsTableMeta)
+                  .decideBerthRequest(row.original.requestId, 'APPROVED')
           }
         >
           Approve
@@ -75,7 +53,8 @@ export const columns: ColumnDef<BerthRequestDomain>[] = [
           size="sm"
           variant="destructive"
           onClick={() =>
-            handleRespond(row.original.vesselID, 'Rejected')
+             (table.options.meta  as TerminalOperatorBerthRequestsTableMeta)
+                  .decideBerthRequest(row.original.requestId, 'DENIED')
           }
         >
           Deny
@@ -104,7 +83,10 @@ export const columns: ColumnDef<BerthRequestDomain>[] = [
         <Button
           size="sm"
           variant="ghost"
-          onClick={() => handleModify(row.original.vesselID)}
+          onClick={() => 
+          {row.original.requestId}
+            //handleModify(row.original.vesselID)
+            }
         >
           Modify
         </Button>
@@ -112,7 +94,10 @@ export const columns: ColumnDef<BerthRequestDomain>[] = [
         <Button
           size="sm"
           variant="ghost"
-          onClick={() => handleDelete(row.original.vesselID)}
+          onClick={() => 
+          {}
+           // handleDelete(row.original.vesselID)
+          }
         >
           Delete
         </Button>
