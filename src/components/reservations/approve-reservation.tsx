@@ -31,7 +31,7 @@ export const ApproveReservation = () => {
                 </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-md gap-6 p-0">
-                <DialogHeader className="gap-0 p-4 border-b">
+                <DialogHeader className="flex flex-row items-center gap-0 min-h-[53px] p-4 border-b">
                     <DialogTitle>Approve Reservation</DialogTitle>
                 </DialogHeader>
                 <div className="px-4">
