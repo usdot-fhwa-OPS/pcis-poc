@@ -45,32 +45,28 @@ export const ApproveReservation = () => {
                             <p className="text-gray-600">This reservation will be moved to the Ongoing tab and the transportation operator will be notified.</p>
                         </div>
                     </div>
-                    <Collapsible className="mb-6">
+                    <Collapsible className="mb-6 pb-4 border-b">
                         <CollapsibleTrigger asChild>
                             <Button variant="link" className="group w-full">
                                 Show Details
                                 <ChevronDownIcon className="ml-auto group-data-[state=open]:rotate-180" />
                             </Button>
                         </CollapsibleTrigger>
-                        <CollapsibleContent className="mt-2 border-t">
-                            <div className="py-4 border-b">
-                                <p>(Details will go here here)</p>
-                            </div>
+                        <CollapsibleContent className="mt-2 pt-4 border-t">
+                            <p>(Details will go here here)</p>
                         </CollapsibleContent>
                     </Collapsible>
-                    <div>
-                        <p className="font-semibold mb-4">Is a TWIC escort required for this reservation?</p>
-                        <RadioGroup defaultValue="not-required" className="grid-cols-2 grid-rows-1 gap-6 w-fit">
-                            <div className="flex items-center gap-2">
-                                <RadioGroupItem value="true" id="required" />
-                                <Label className="font-normal" htmlFor="required">Yes</Label>
-                            </div>
-                            <div className="flex items-center gap-2">
-                                <RadioGroupItem value="false" id="not-required" />
-                                <Label className="font-normal" htmlFor="not-required">No</Label>
-                            </div>
-                        </RadioGroup>
-                    </div>
+                    <p className="font-semibold mb-4">Is a TWIC escort required for this reservation?</p>
+                    <RadioGroup defaultValue="not-required" className="grid-cols-2 grid-rows-1 gap-6 w-fit">
+                        <div className="flex items-center gap-2">
+                            <RadioGroupItem value="true" id="required" />
+                            <Label className="font-normal" htmlFor="required">Yes</Label>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <RadioGroupItem value="false" id="not-required" />
+                            <Label className="font-normal" htmlFor="not-required">No</Label>
+                        </div>
+                    </RadioGroup>
                 </div>
                 <DialogFooter className="mx-0 mb-0">
                     <Button variant="outline" onClick={() => setIsDialogOpen(false)}>Cancel</Button>
