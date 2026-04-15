@@ -46,6 +46,7 @@ function BerthRequestConfirmationComponent() {
   };
 
    const berthRequest:BerthRequestDomain =  {
+          requestId:"",
           terminalId: "",
           vesselAgentEmail: "",
           vesselID: "",
