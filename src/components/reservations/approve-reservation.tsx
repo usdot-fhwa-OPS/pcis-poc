@@ -69,19 +69,19 @@ export const ApproveReservation = () => {
                                 <div className="font-semibold pt-4 sm:pt-0">Terminal Manager:</div>
                                 <div>
                                     <p>Name</p>
-                                    <p>email@emailcompany.com</p>
+                                    <p className="break-all">email@emailcompany.com</p>
                                     <p>555-555-5555</p>
                                 </div>
                                 <div className="font-semibold pt-4 sm:pt-0">BCO:</div>
                                 <div>
                                     <p>Name</p>
-                                    <p>email@emailcompany.com</p>
+                                    <p className="break-all">email@emailcompany.com</p>
                                     <p>555-555-5555</p>
                                 </div>
                                 <div className="font-semibold pt-4 sm:pt-0">Transportation Operator:</div>
                                 <div>
                                     <p>Name</p>
-                                    <p>email@emailcompany.com</p>
+                                    <p className="break-all">email@emailcompany.com</p>
                                     <p>555-555-5555</p>
                                 </div>
                                 <div className="font-semibold pt-4 sm:pt-0">Date and Time Requested:</div>
@@ -92,7 +92,7 @@ export const ApproveReservation = () => {
                             </div>
                         </CollapsibleContent>
                     </Collapsible>
-                    <p className="font-semibold mb-4">Is a <abbr title="Transportation Worker Identification Credential">TWIC</abbr> escort required for this reservation?</p>
+                    <p className="font-semibold mb-4">Is a <abbr className="decoration-[1px] decoration-dotted underline-offset-4" title="Transportation Worker Identification Credential">TWIC</abbr> escort required for this reservation?</p>
                     <RadioGroup defaultValue="not-required" className="grid-cols-2 grid-rows-1 gap-6 w-fit">
                         <div className="flex items-center gap-2">
                             <RadioGroupItem value="true" id="required" />
