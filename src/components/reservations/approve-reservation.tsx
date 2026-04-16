@@ -43,7 +43,7 @@ export const ApproveReservation = () => {
                             <CircleCheckBig className="size-6 stroke-green-600" />
                         </span>
                         <div>
-                            <p className="text-base font-semibold mb-2">Are you sure you want to approve the reservation for container XX-000?</p>
+                            <p className="text-base font-semibold mb-2">Are you sure you want to approve the reservation for container <span className="inline-block">XX-000</span>?</p>
                             <p className="text-gray-600">This reservation will be moved to the Ongoing tab and the transportation operator will be notified.</p>
                         </div>
                     </div>
@@ -92,7 +92,7 @@ export const ApproveReservation = () => {
                             </div>
                         </CollapsibleContent>
                     </Collapsible>
-                    <p className="font-semibold mb-4">Is a TWIC escort required for this reservation?</p>
+                    <p className="font-semibold mb-4">Is a <abbr title="Transportation Worker Identification Credential">TWIC</abbr> escort required for this reservation?</p>
                     <RadioGroup defaultValue="not-required" className="grid-cols-2 grid-rows-1 gap-6 w-fit">
                         <div className="flex items-center gap-2">
                             <RadioGroupItem value="true" id="required" />
