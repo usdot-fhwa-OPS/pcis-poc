@@ -1,7 +1,7 @@
 "use client"
 
 import { useMemo, useState } from "react"
-import { BerthRequest } from "./BerthRequest";
+import { BerthRequest } from "./berth-request"
 
 interface Props {
   data: BerthRequest[]
