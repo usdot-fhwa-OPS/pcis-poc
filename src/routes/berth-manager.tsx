@@ -1,10 +1,13 @@
 import { createFileRoute } from '@tanstack/react-router'
-import {TerminalBookingsTable} from "../components/terminal-bookings/terminal-bookings-table.tsx"
+//import {TerminalBookingsTable} from "../components/terminal-bookings/terminal-bookings-table.tsx"
+import { RequestedBerthTable } from "../components/berth-requests/requested-berth-table.tsx"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs.tsx"
-import { toast } from "sonner"
+//import { toast } from "sonner"
 import { fetchUserAttributes } from 'aws-amplify/auth';
 import { useEffect, useState } from "react";
 import { useAuthenticator } from "@aws-amplify/ui-react";
+
+import { BerthRequest } from "../components/berth-requests/berth-request.tsx";
 
 //Three Imports needed for Amplify Data Queries and CRUD methods
 import { generateClient, SelectionSet } from 'aws-amplify/data';
@@ -19,29 +22,73 @@ export const Route = createFileRoute('/reservation')({
 })
 
 //Define the selection of data that will be used for the table
-const selectionSetTerminalOPUpcoming = ['vesselID', 'cargoUnitID', 'origin', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail','reservationDate','reservationTime','reservationStatus', 'flag'] as const; 
+//const selectionSetTerminalOPUpcoming = ['vesselID', 'cargoUnitID', 'origin', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail','reservationDate','reservationTime','reservationStatus', 'flag'] as const; 
 const selectionSetTerminalOPOngoing = ['vesselID', 'cargoUnitID', 'origin', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail','reservationDate','reservationTime','reservationStatus', 'flag'] as const; 
 
 export type TerminalOPOngoingBookings= SelectionSet<Schema['Container']['type'], typeof selectionSetTerminalOPOngoing >
 
-//Define the selection of data that will be used for the table
-/* const selectionSetTerminal_CompletedData = [ 
-  'vesselID',
-  'cargoUnitID',  
-  'origin',
-  'bcoName',
-  'bcoEmail',
-  'transopName',
-  'transopEmail',
-  'reservationDate',
-  'resApprovalDate',
-  'reservationStatus',
-  'resPickupDate',
-  'reservationTime',
-] as const; */
+//const selectionSetBerthReservations = ['id','vesselId','terminalName','terminalEmail','eta','etd','requestedAt'] as const;
+//export type BerthReservations = SelectionSet<Schema['Container']['type'], typeof selectionSetBerthReservations >
 
-//Create a type based on your selectionSet that will be later used for the terminal-bookings/columns.tsx file of the able
-//export type TermOperatorCompletedBookings = SelectionSet<Schema['Container']['type'], typeof selectionSetTerminal_CompletedData>;
+export const sampleBerthRequests: BerthRequest[] = [
+  {
+    id: "BR-1001",
+    vesselId: "VSL-7782",
+    terminalName: "Port of Los Angeles - Terminal 3",
+    terminalEmail: "t3.ops@portla.gov",
+    eta: "2026-04-18T08:30:00Z",
+    etd: "2026-04-19T22:00:00Z",
+    requestedAt: "2026-04-15T14:12:00Z",
+  },
+  {
+    id: "BR-1002",
+    vesselId: "VSL-5521",
+    terminalName: "Port of Long Beach - Pier A",
+    terminalEmail: "piera@polb.com",
+    eta: "2026-04-20T05:00:00Z",
+    etd: "2026-04-21T18:30:00Z",
+    requestedAt: "2026-04-16T09:45:00Z",
+  },
+  {
+    id: "BR-1003",
+    vesselId: "VSL-9934",
+    terminalName: "Port of New York - Red Hook Terminal",
+    terminalEmail: "ops@redhookterminals.com",
+    eta: "2026-04-22T11:15:00Z",
+    etd: "2026-04-23T23:00:00Z",
+    requestedAt: "2026-04-16T12:20:00Z",
+  },
+  {
+    id: "BR-1004",
+    vesselId: "VSL-6610",
+    terminalName: "Port of Houston - Bayport Terminal",
+    terminalEmail: "bayport.ops@porthouston.com",
+    eta: "2026-04-19T16:45:00Z",
+    etd: "2026-04-20T20:15:00Z",
+    requestedAt: "2026-04-14T18:05:00Z",
+  },
+  {
+    id: "BR-1005",
+    vesselId: "VSL-4407",
+    terminalName: "Port of Seattle - Terminal 18",
+    terminalEmail: "t18@nwseaportalliance.com",
+    eta: "2026-04-21T07:00:00Z",
+    etd: "2026-04-22T19:30:00Z",
+    requestedAt: "2026-04-16T07:55:00Z",
+  },
+];
+
+//Define the selection of data that will be used for the table
+//TBD
+/* export interface BerthRequest {
+  id: string
+  vesselId: string
+  terminalName: string
+  terminalEmail: string
+  eta: string
+  etd: string
+  requestedAt: string
+} */
 
 function RouteComponent() {
   const { user } = useAuthenticator();
@@ -104,14 +151,14 @@ function RouteComponent() {
  
   // Fetch containers on initial mount and when role/email changes
   useEffect(() => {
-    fetchterminal_operator_requested();
+    //fetchterminal_operator_requested();
   }, [userAttributes.role, refresh]);
 
   //getting Data
-  const [terminalopBookingsupcoming, setData] = useState<TerminalOPOngoingBookings[]>([])
+  //const [terminalopBookingsupcoming, setData] = useState<TerminalOPOngoingBookings[]>([])
 
   //Fetch the data from the database
-  const fetchterminal_operator_requested = async () => {
+/*   const fetchterminal_operator_requested = async () => {
     //Query the data from the database with selection set and auth mode (always apiKey)
     const { data: cargo } = await client.models.Container.list({
       selectionSet:selectionSetTerminalOPUpcoming ,
@@ -124,9 +171,9 @@ function RouteComponent() {
     });
     setData(cargo);
   }
-
+ */
 //Update Terminal Operator Booking
-async function updateBooking(id: string, status: string, reservationDate?: string, reservationTime?: string): Promise<boolean> {
+/* async function updateBooking(id: string, status: string, reservationDate?: string, reservationTime?: string): Promise<boolean> {
   if (!navigator.onLine) {
     console.error("No internet connection. Update not submitted. Please check your connection and try again.");
     toast.error("No internet connection. Update not submitted. Please check your connection and try again.");
@@ -186,10 +233,10 @@ async function updateBooking(id: string, status: string, reservationDate?: strin
     toast.error("Error updating booking status. Please try again.");
     return false; // Explicitly return false when the update fails
   }
-}  
+}   */
 
 useEffect(() => {
-  fetchterminal_operator_requested();
+  //fetchterminal_operator_requested();
 }, [userAttributes.role, refresh]);
 
   if (userAttributes.role === "Terminal Operator") {
@@ -210,7 +257,11 @@ useEffect(() => {
           </div>
           <div className="w-xl max-w-9/10">
             <TabsContent value="requested">
-              <TerminalBookingsTable data={terminalopBookingsupcoming} status="Requested" meta={{updateBooking}} />
+              <RequestedBerthTable data={sampleBerthRequests} userRole="VESSEL_AGENT" 
+                                   onView={(id) => console.log("view berth request:", id)}
+                                   onModify={(id) => console.log("view berth request:", id)}
+                                   onDelete={(id) => console.log("view berth request:", id)} />
+              {/* <RequestedBerthTable data={terminalopBookingsupcoming} status="Requested" meta={{updateBooking}} /> */}
             </TabsContent>
             <TabsContent value="modification">
             </TabsContent>
