@@ -25,23 +25,7 @@ const selectionSetTerminalOPOngoing = ['vesselID', 'cargoUnitID', 'origin', 'bco
 export type TerminalOPOngoingBookings= SelectionSet<Schema['Container']['type'], typeof selectionSetTerminalOPOngoing >
 
 //Define the selection of data that will be used for the table
-/* const selectionSetTransportation_CompletedData = [ 
-  'vesselID',
-  'cargoUnitID', 
-  'origin',
-  'bcoName',
-  'bcoEmail',
-  'transopName',
-  'transopEmail',
-  'reservationDate',
-  'resApprovalDate',
-  'reservationStatus',
-  'resPickupDate',
-  'reservationTime',
-] as const; */
-
-//Define the selection of data that will be used for the table
-const selectionSetTerminal_CompletedData = [ 
+/* const selectionSetTerminal_CompletedData = [ 
   'vesselID',
   'cargoUnitID',  
   'origin',
@@ -54,13 +38,10 @@ const selectionSetTerminal_CompletedData = [
   'reservationStatus',
   'resPickupDate',
   'reservationTime',
-] as const;
-
-//Create a type based on your selectionSet that will be later used for the columns.tsx file of the able
-//export type TransOperatorCompletedBookings = SelectionSet<Schema['Container']['type'], typeof selectionSetTransportation_CompletedData>;
+] as const; */
 
 //Create a type based on your selectionSet that will be later used for the terminal-bookings/columns.tsx file of the able
-export type TermOperatorCompletedBookings = SelectionSet<Schema['Container']['type'], typeof selectionSetTerminal_CompletedData>;
+//export type TermOperatorCompletedBookings = SelectionSet<Schema['Container']['type'], typeof selectionSetTerminal_CompletedData>;
 
 function RouteComponent() {
   const { user } = useAuthenticator();
@@ -143,7 +124,6 @@ function RouteComponent() {
     });
     setData(cargo);
   }
-
 
 //Update Terminal Operator Booking
 async function updateBooking(id: string, status: string, reservationDate?: string, reservationTime?: string): Promise<boolean> {
