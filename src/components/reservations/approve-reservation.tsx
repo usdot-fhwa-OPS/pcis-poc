@@ -53,32 +53,32 @@ export const ApproveReservation = () => {
                             </Button>
                         </CollapsibleTrigger>
                         <CollapsibleContent className="mt-4 pt-4 border-t">
-                            <div className="grid grid-cols-1 md:grid-cols-[max-content_1fr] gap-x-8 gap-y-4 items-start">
-                                <div className="font-semibold">Vessel ID:</div>
+                            <div className="grid grid-cols-1 sm:grid-cols-[max-content_1fr] gap-y-2 sm:gap-x-8 sm:gap-y-4 items-start pb-3 sm:pb-0">
+                                <div className="font-semibold pt-4 sm:pt-0">Vessel ID:</div>
                                 <div>Number</div>
-                                <div className="font-semibold">Reservation ID:</div>
+                                <div className="font-semibold pt-4 sm:pt-0">Reservation ID:</div>
                                 <div>Number</div>
-                                <div className="font-semibold">Terminal Origin:</div>
+                                <div className="font-semibold pt-4 sm:pt-0">Terminal Origin:</div>
                                 <div>Country</div>
-                                <div className="font-semibold">Terminal Manager:</div>
+                                <div className="font-semibold pt-4 sm:pt-0">Terminal Manager:</div>
                                 <div>
                                     <p>Name</p>
                                     <p>email@emailcompany.com</p>
                                     <p>555-555-5555</p>
                                 </div>
-                                <div className="font-semibold">BCO:</div>
+                                <div className="font-semibold pt-4 sm:pt-0">BCO:</div>
                                 <div>
                                     <p>Name</p>
                                     <p>email@emailcompany.com</p>
                                     <p>555-555-5555</p>
                                 </div>
-                                <div className="font-semibold">Transportation Operator:</div>
+                                <div className="font-semibold pt-4 sm:pt-0">Transportation Operator:</div>
                                 <div>
                                     <p>Name</p>
                                     <p>email@emailcompany.com</p>
                                     <p>555-555-5555</p>
                                 </div>
-                                <div className="font-semibold">Date and Time Requested:</div>
+                                <div className="font-semibold pt-4 sm:pt-0">Date and Time Requested:</div>
                                 <div className="flex gap-4 items-center">
                                     <div>00/00/0000</div>
                                     <div>00:00 AM</div>
