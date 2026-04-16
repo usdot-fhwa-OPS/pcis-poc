@@ -61,10 +61,10 @@ export function RequestedBerthTable({
             <th className="p-3">Vessel ID</th>
             <th className="p-3">Terminal</th>
             <th className="p-3">
-              <abbr title="Estimated Time of Arrival">ETA</abbr>
+              <abbr title="Estimated Time of Arrival">Arrival</abbr>
             </th>
             <th className="p-3">
-              <abbr title="Estimated Time of Departure">ETD</abbr>
+              <abbr title="Estimated Time of Departure">Departure</abbr>
             </th>
             <th className="p-3">Date Requested</th>
             <th className="p-3">Actions</th>
