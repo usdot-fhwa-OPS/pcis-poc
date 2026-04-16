@@ -35,7 +35,7 @@ export const ApproveReservation = () => {
             </DialogTrigger>
             <DialogContent className="sm:max-w-md gap-6 p-0">
                 <DialogHeader className="flex flex-row items-center gap-0 min-h-[53px] p-4 border-b">
-                    <DialogTitle>Approve Reservation</DialogTitle>
+                    <DialogTitle className="text-lg">Approve Reservation</DialogTitle>
                 </DialogHeader>
                 <div className="px-4">
                     <div className="flex items-start gap-4 mb-6">
@@ -53,7 +53,7 @@ export const ApproveReservation = () => {
                         className="mb-6 pb-4 border-b"
                     >
                         <CollapsibleTrigger asChild>
-                            <Button variant="link" className="group w-fit">
+                            <Button variant="ghost" className="group w-fit">
                                 {isOpen ? "Hide Details" : "Show Details"}
                                 <ChevronDownIcon className="ml-auto group-data-[state=open]:rotate-180" />
                             </Button>
