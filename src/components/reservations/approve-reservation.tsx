@@ -14,6 +14,8 @@ export const ApproveReservation = () => {
         setIsDialogOpen(true)
     }
 
+    const [isOpen, setIsOpen] = useState(false)
+
     return (
         <>
         <Dialog
@@ -45,10 +47,14 @@ export const ApproveReservation = () => {
                             <p className="text-gray-600">This reservation will be moved to the Ongoing tab and the transportation operator will be notified.</p>
                         </div>
                     </div>
-                    <Collapsible className="mb-6 pb-4 border-b">
+                    <Collapsible 
+                        open={isOpen}
+                        onOpenChange={setIsOpen}
+                        className="mb-6 pb-4 border-b"
+                    >
                         <CollapsibleTrigger asChild>
                             <Button variant="link" className="group w-fit">
-                                Show Details
+                                {isOpen ? "Hide Details" : "Show Details"}
                                 <ChevronDownIcon className="ml-auto group-data-[state=open]:rotate-180" />
                             </Button>
                         </CollapsibleTrigger>
