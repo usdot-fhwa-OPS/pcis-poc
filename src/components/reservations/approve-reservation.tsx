@@ -69,20 +69,20 @@ export const ApproveReservation = () => {
                                 <div className="font-semibold pt-4 sm:pt-0">Terminal Manager:</div>
                                 <div>
                                     <p>Name</p>
-                                    <p className="break-all">email@emailcompany.com</p>
-                                    <p>555-555-5555</p>
+                                    <p className="break-all"><a href="mailto:email@emailcompany.com" className="text-blue-500 hover:underline">email@emailcompany.com</a></p>
+                                    <p><a href="tel:15555555555" className="text-blue-500 hover:underline">555-555-5555</a></p>
                                 </div>
                                 <div className="font-semibold pt-4 sm:pt-0">BCO:</div>
                                 <div>
                                     <p>Name</p>
-                                    <p className="break-all">email@emailcompany.com</p>
-                                    <p>555-555-5555</p>
+                                    <p className="break-all"><a href="mailto:email@emailcompany.com" className="text-blue-500 hover:underline">email@emailcompany.com</a></p>
+                                    <p><a href="tel:15555555555" className="text-blue-500 hover:underline">555-555-5555</a></p>
                                 </div>
                                 <div className="font-semibold pt-4 sm:pt-0">Transportation Operator:</div>
                                 <div>
                                     <p>Name</p>
-                                    <p className="break-all">email@emailcompany.com</p>
-                                    <p>555-555-5555</p>
+                                    <p className="break-all"><a href="mailto:email@emailcompany.com" className="text-blue-500 hover:underline">email@emailcompany.com</a></p>
+                                    <p><a href="tel:15555555555" className="text-blue-500 hover:underline">555-555-5555</a></p>
                                 </div>
                                 <div className="font-semibold pt-4 sm:pt-0">Date and Time Requested:</div>
                                 <div className="flex gap-4 items-center">
@@ -92,15 +92,15 @@ export const ApproveReservation = () => {
                             </div>
                         </CollapsibleContent>
                     </Collapsible>
-                    <p className="font-semibold mb-4">Is a <abbr className="decoration-[1px] decoration-dotted underline-offset-4" title="Transportation Worker Identification Credential">TWIC</abbr> escort required for this reservation?</p>
+                    <p className="text-base font-semibold mb-4">Is a <abbr className="decoration-[1px] decoration-dotted underline-offset-4" title="Transportation Worker Identification Credential">TWIC</abbr> escort required for this reservation?</p>
                     <RadioGroup defaultValue="not-required" className="grid-cols-2 grid-rows-1 gap-6 w-fit">
                         <div className="flex items-center gap-2">
                             <RadioGroupItem value="true" id="required" />
-                            <Label className="font-normal" htmlFor="required">Yes</Label>
+                            <Label className="text-base font-normal" htmlFor="required">Yes</Label>
                         </div>
                         <div className="flex items-center gap-2">
                             <RadioGroupItem value="false" id="not-required" />
-                            <Label className="font-normal" htmlFor="not-required">No</Label>
+                            <Label className="text-base font-normal" htmlFor="not-required">No</Label>
                         </div>
                     </RadioGroup>
                 </div>
