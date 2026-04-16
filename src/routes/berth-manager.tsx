@@ -19,40 +19,13 @@ export const Route = createFileRoute('/reservation')({
 })
 
 //Define the selection of data that will be used for the table
-//const selectionSetTransOpUpcomingBookings = ['vesselID', 'cargoUnitID', 'origin', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail', 'assignmentDate', 'reservationStatus','flag'] as const; 
-//Create a type based on your selectionSet that will be later used for the columns.tsx file of the able
-//export type TransOpUpcomingBookings = SelectionSet<Schema['Container']['type'], typeof selectionSetTransOpUpcomingBookings>
-
-//const selectionSetTransOpOngoingBookings = ['vesselID', 'cargoUnitID', 'origin', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail', 'reservationDate', 'reservationTime', 'reservationStatus', 'flag', 'containerStatus'] as const; 
-//export type TransOpOngoingBookings = SelectionSet<Schema['Container']['type'], typeof selectionSetTransOpOngoingBookings>
-
 const selectionSetTerminalOPUpcoming = ['vesselID', 'cargoUnitID', 'origin', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail','reservationDate','reservationTime','reservationStatus', 'flag'] as const; 
-
-//const selectionSetTerminalOpModified = ['vesselID', 'cargoUnitID', 'origin', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail','reservationDate','reservationTime', 'reservationStatus', 'modifiedReservationDate', 'modifiedReservationTime'] as const; 
-
-//export type TerminalOpModifiedBookings = SelectionSet<Schema['Container']['type'], typeof selectionSetTerminalOpModified>
-//Define the selection of data that will be used for the table
-//const selectionSetBCOUpcomingBookings = ['vesselID', 'cargoUnitID', 'origin', 'destination', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail', 'containerStatus','arrivalDate', 'flag'] as const; 
-//Create a type based on your selectionSet that will be later used for the columns.tsx file of the able
-
 const selectionSetTerminalOPOngoing = ['vesselID', 'cargoUnitID', 'origin', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail','reservationDate','reservationTime','reservationStatus', 'flag'] as const; 
-//export type BCOUpcomingBookings = SelectionSet<Schema['Container']['type'], typeof selectionSetBCOUpcomingBookings>
-
-//Create a type based on your selectionSet that will be later used for the columns.tsx file of the able
-//export type TerminalOPUpcomingBookings= SelectionSet<Schema['Container']['type'], typeof selectionSetTerminalOPUpcoming>
 
 export type TerminalOPOngoingBookings= SelectionSet<Schema['Container']['type'], typeof selectionSetTerminalOPOngoing >
- 
-//const selectionSetBCOOngoing = ['vesselID', 'cargoUnitID', 'origin','destination', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail','reservationDate','resApprovalDate','reservationStatus', 'resPickupDate','flag', 'updatedAt'] as const; 
-
-//export type BCOOngoingBooking= SelectionSet<Schema['Container']['type'], typeof selectionSetBCOOngoing>
-
-//const selectionSetBCOCompleted = ['vesselID', 'cargoUnitID', 'origin', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail','reservationDate','resApprovalDate','reservationStatus','destination', 'resPickupDate','flag'] as const; 
-
-//export type BCOCompletedBooking= SelectionSet<Schema['Container']['type'], typeof selectionSetBCOCompleted>
 
 //Define the selection of data that will be used for the table
-const selectionSetTransportation_CompletedData = [ 
+/* const selectionSetTransportation_CompletedData = [ 
   'vesselID',
   'cargoUnitID', 
   'origin',
@@ -65,7 +38,7 @@ const selectionSetTransportation_CompletedData = [
   'reservationStatus',
   'resPickupDate',
   'reservationTime',
-] as const;
+] as const; */
 
 //Define the selection of data that will be used for the table
 const selectionSetTerminal_CompletedData = [ 
@@ -84,7 +57,7 @@ const selectionSetTerminal_CompletedData = [
 ] as const;
 
 //Create a type based on your selectionSet that will be later used for the columns.tsx file of the able
-export type TransOperatorCompletedBookings = SelectionSet<Schema['Container']['type'], typeof selectionSetTransportation_CompletedData>;
+//export type TransOperatorCompletedBookings = SelectionSet<Schema['Container']['type'], typeof selectionSetTransportation_CompletedData>;
 
 //Create a type based on your selectionSet that will be later used for the terminal-bookings/columns.tsx file of the able
 export type TermOperatorCompletedBookings = SelectionSet<Schema['Container']['type'], typeof selectionSetTerminal_CompletedData>;
@@ -150,8 +123,6 @@ function RouteComponent() {
  
   // Fetch containers on initial mount and when role/email changes
   useEffect(() => {
-    //fetchContainers();
-    //fetch_bco_completed();
     fetchterminal_operator_requested();
   }, [userAttributes.role, refresh]);
 
