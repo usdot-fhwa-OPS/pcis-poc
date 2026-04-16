@@ -2,7 +2,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import {TerminalBookingsTable} from "../components/terminal-bookings/terminal-bookings-table.tsx"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs.tsx"
 import { toast } from "sonner"
-import { fetchAuthSession, fetchUserAttributes } from 'aws-amplify/auth';
+import { fetchUserAttributes } from 'aws-amplify/auth';
 import { useEffect, useState } from "react";
 import { useAuthenticator } from "@aws-amplify/ui-react";
 
@@ -121,56 +121,6 @@ function RouteComponent() {
     getUserAttributes();
   }, [user]);
 
-  async function fetchTransportationCoordinators() {
-    try {
-      const session = await fetchAuthSession();
-      const response = await fetch("https://xlj2x9eurh.execute-api.us-east-1.amazonaws.com/dev/", {
-        method: 'GET',
-        headers: {
-          "Authorization": `Bearer ${session.tokens?.accessToken?.toString()}`,
-          "Content-Type": "application/json",
-          "Accept": "*/*"
-        }
-      });
-      const result = await response.json();
-      return result
-    } catch (error) {
-
-    }
-  }
-
-    async function getTerminalCapacity() { 
-      try {
-        const { data: limit } = await client.models.Limit.get(
-          {id: '0c1aee99-e95e-4c61-920d-52faea4dbbd5'},
-          {
-            authMode: 'apiKey',
-          }
-        );
-        
-        if (limit) {
-          return limit.terminalCapacity; 
-        }
-      } catch (error) {
-        console.error('Error fetching booking limit', error);
-      }
-  }
-
-  async function getBookingsAmount(reservationDate: string) {
-    try {
-      const { data: bookings } = await client.models.Container.list({
-        authMode: 'apiKey',
-        filter: {
-          reservationDate: {eq: reservationDate}
-        },  
-      });
-      if (bookings) {
-        return bookings.length;
-      }
-    } catch (error) {
-      console.error('Error fetching bookings', error);
-    }
-  }
 
   const [refresh, setRefresh] = useState(0);
   
@@ -200,42 +150,10 @@ function RouteComponent() {
     
 
   // State for Transportation Operator Completed bookings
-  const [Transportation_CompletedData, setTransportation_CompletedData] = useState<TransOperatorCompletedBookings[]>([]);
+ // const [Transportation_CompletedData, setTransportation_CompletedData] = useState<TransOperatorCompletedBookings[]>([]);
   
   
-  async function fetchTransOperatorCBookingsContainers() {
-    if (((userAttributes.role === 'Trucking Operator') 
-          || (userAttributes.role === 'Rail Operator')
-          || (userAttributes.role === 'Third Party Logistics Provider')) && userAttributes.email) {
-      try {
-        const { data: cargo } = await client.models.Container.list({
-          selectionSet:selectionSetTransportation_CompletedData,
-          authMode: 'apiKey',
-          filter: {
-            and: [
-              {
-                transopEmail: { eq: userAttributes.email }
-              },
-              {
-                reservationStatus: { eq: 'Picked Up' }
-              }
-            ]
-          },
-        });
-        setTransportation_CompletedData(cargo);
-      } catch (error) {
-        console.error('Error fetching completed bookings:', error);
-      }
-    }
-  }
 
-  // Fetch containers on initial mount and when role/email changes
-  useEffect(() => {
-    if (userAttributes.email) {
-      fetchTransOperatorCBookingsContainers();
-    }
-  }, [userAttributes.role, userAttributes.email, refresh]);  // Updates when email changes
-  
 
   // State for Terminal Operator Completed bookings
  // const [Terminal_CompletedData, setTerminal_CompletedData] = useState<TermOperatorCompletedBookings[]>([]);
@@ -267,183 +185,32 @@ function RouteComponent() {
   }, [userAttributes.role, refresh]);
  */
   // State for BCO upcoming bookings
-   const [bcoUpcomingBookings, setBcoUpcomingBookings] = useState<BCOUpcomingBookings[]>([]);
+ //  const [bcoUpcomingBookings, setBcoUpcomingBookings] = useState<BCOUpcomingBookings[]>([]);
   
-   // Move fetchContainers outside of useEffect so it can be reused
-   async function fetchContainers() {
-    if (userAttributes.role === 'Beneficiary Cargo Owner') {
-      try {
-        const { data: cargo } = await client.models.Container.list({
-          filter: {
-            and: [
-              {
-                bcoEmail: { eq: userAttributes.email }
-              },
-              {
-                reservationStatus: { eq: 'unassigned' }
-              }
-            ]
-          },
-          selectionSet: selectionSetBCOUpcomingBookings,
-          authMode: 'apiKey',
-        });
-        setBcoUpcomingBookings(cargo);
-      } catch (error) {
-        console.error('Error fetching containers:', error);
-      }
-    }
-  }
+
 
 
 
   //fetch complted BCOBokkings
 
-  const [bcocompletedBookings, setBcoCompletedBookings] = useState<BCOCompletedBooking[]>([]);
+//  const [bcocompletedBookings, setBcoCompletedBookings] = useState<BCOCompletedBooking[]>([]);
 
-  // Move fetchContainers outside of useEffect so it can be reused
-  async function fetch_bco_completed() {
-       
-          try{
-          const { data: cargo } = await client.models.Container.list({
-            selectionSet:selectionSetBCOCompleted ,
-            authMode: 'apiKey',
-            filter: {
-    
-              and: [
-                {
-                  bcoEmail: { eq: userAttributes.email }
-                },
-                {
-                  reservationStatus: {
-                    eq: 'Picked Up'
-                  }
-                }
-              ]
-         
-            }
-          });
-          setBcoCompletedBookings(cargo);
-        }
-        catch(error )
-        {console.error('Error fetching BCO Completed:', error);
-    
-        }
-        
-      
-        //Fetch the data on the first render
-    
-      }
+
 
 
   // Fetch containers on initial mount and when role/email changes
   useEffect(() => {
-    fetchContainers();
-    fetch_bco_completed();
+    //fetchContainers();
+    //fetch_bco_completed();
     fetchterminal_operator_requested();
   }, [userAttributes.role, refresh]);
 
-  const [transOpUpcomingBookings, setTransOpUpcomingBookings] = useState<TransOpUpcomingBookings[]>([]);
-
-  async function fetchTransOpUpcoming() {
-    if ((userAttributes.role === 'Trucking Operator') 
-          || (userAttributes.role === 'Rail Operator')
-          || (userAttributes.role === 'Third Party Logistics Provider')) {
-      try {
-        const { data: cargo } = await client.models.Container.list({
-          filter: {
-            and: [
-              {
-                transopEmail: { eq: userAttributes.email }
-              },
-              {
-                reservationStatus: { eq: 'Pending Transportation Coordinator Approval' }
-              }
-            ]
-          },
-          selectionSet: selectionSetTransOpUpcomingBookings,
-          authMode: 'apiKey',
-        });
-        setTransOpUpcomingBookings(cargo);
-      } catch (error) {
-        console.error('Error fetching containers:', error);
-      }
-    }
-  }
-  useEffect(() => {
-    fetchTransOpUpcoming();
-  }, [userAttributes.role, refresh]);
-
-  const [transOpOngoingBookings, setTransOpOngoingBookings] = useState<TransOpOngoingBookings[]>([]);
-
-  async function fetchTransOpOngoing() {
-    if ((userAttributes.role === 'Trucking Operator') 
-          || (userAttributes.role === 'Rail Operator')
-          || (userAttributes.role === 'Third Party Logistics Provider')) {
-      try {
-        const { data: cargo } = await client.models.Container.list({
-          filter: {
-            and: [
-              {
-                transopEmail: { eq: userAttributes.email }
-              },
-              {
-                reservationStatus: { ne: 'unassigned' }
-              },
-              {
-                reservationStatus: { ne: 'Pending Transportation Coordinator Approval' }
-              },
-              {
-                reservationStatus: { ne: 'Picked Up'}
-              }
-            ]
-          },
-          selectionSet: selectionSetTransOpOngoingBookings,
-          authMode: 'apiKey',
-          });
-        setTransOpOngoingBookings(cargo);
-      } catch (error) {
-        console.error('Error fetching containers:', error);
-      }
-    }
-  }
-  useEffect(() => {
-    fetchTransOpOngoing();
-  }, [userAttributes.role, refresh]);
+ // const [transOpUpcomingBookings, setTransOpUpcomingBookings] = useState<TransOpUpcomingBookings[]>([]);
 
 
-  async function assignTransOp(cargoUnitID: string, newName: string, newEmail: string, reservationStatus: string): Promise<boolean> { 
-    if (!navigator.onLine) {
-      console.error("No internet connection. Update not submitted. Please check your connection and try again.");
-      toast.error("No internet connection. Update not submitted. Please check your connection and try again.");
-      return false; // Explicitly return false when offline
-    }
-  
-    try {
-      const { data: assignTransportationOp } = await client.models.Container.update({
-        cargoUnitID: cargoUnitID,  
-        transopName: newName,
-        transopEmail: newEmail,
-        reservationStatus: reservationStatus,
-        assignmentDate: new Date().toLocaleDateString('en-US'),
-        isTransportationNotify: true,
-        isBCONotify: false,
-        isTerminalNotify: false,
-      });
-  
-      console.log("Updated container status:", assignTransportationOp);
-      toast.success("Transportation Coordinator assigned successfully");
-  
-      // Refetch data to reflect changes
-      await fetchContainers();
-  
-      return true;
-    } catch (error) {
-      console.error("Error updating container status:", error);
-      toast.error("Error assigning Transportation Coordinator. Please try again.");
-      return false; // Explicitly return false when the update fails
-    }
-  }
-  
+ // const [transOpOngoingBookings, setTransOpOngoingBookings] = useState<TransOpOngoingBookings[]>([]);
+
+
 
   //getting Data
   const [terminalopBookingsupcoming, setData] = useState<TerminalOPOngoingBookings[]>([])
@@ -530,69 +297,6 @@ function RouteComponent() {
     
 //Update Transporation Operator Booking
 
-    async function updateTransOpBooking(
-      id: string,
-      status: string,
-      reservationDate?: string,
-      reservationTime?: string
-    ): Promise<boolean> {
-      if (!navigator.onLine) {
-        console.error("No internet connection. Update not submitted. Please check your connection and try again.");
-        toast.error("No internet connection. Update not submitted. Please check your connection and try again.");
-        return false; // Explicitly return false when offline
-      }
-      try {
-        let updatePayload = { cargoUnitID: id, reservationStatus: status, isTransportationNotify: false, isBCONotify: false, isTerminalNotify: false }; 
-    
-        if (status === "unassigned") {
-          Object.assign(updatePayload, {
-            transopName: "",
-            transopEmail: "",
-            isTransportationNotify: false,
-            isBCONotify: true,
-            isTerminalNotify: false,
-          });
-        } else if (status === "Pending Reservation Approval") {
-          Object.assign(updatePayload, {
-            reservationDate,
-            reservationTime,
-            isTerminalNotify: true,
-            isBCONotify: true,
-            isTransportationNotify: false,
-          });
-        } else if (status === "Picked Up") {
-          Object.assign(updatePayload, {
-            resPickupDate: reservationDate,
-            isTransportationNotify: false,
-            isBCONotify:false,
-            isTerminalNotify: false
-          });
-        } else if (status === "Pickup Modification Requested") {
-          Object.assign(updatePayload, {
-            modifiedReservationDate: reservationDate,
-            modifiedReservationTime: reservationTime,
-            isTerminalNotify: true,
-            isBCONotify: true,
-            isTransportationNotify: false,
-          });
-        }
-        
-        const { data: updatedContainerStatus } = await client.models.Container.update(updatePayload);
-        console.log("Updated container status:", updatedContainerStatus);
-        toast.success("Container status updated successfully");
-    
-        // Refresh data after successful update
-        await fetchTransOpUpcoming();
-        await fetchTransOpOngoing();
-        
-        return true; // Update succeeded
-      } catch (error) {
-        console.error("Error updating container:", error);
-        toast.error("Error submitting modification");
-        return false; // Update failed
-      }
-    }
-
 //Update Terminal Operator Booking
 
 async function updateBooking(id: string, status: string, reservationDate?: string, reservationTime?: string): Promise<boolean> {
@@ -658,42 +362,15 @@ async function updateBooking(id: string, status: string, reservationDate?: strin
   }
 }       
 
-const [BCOOngoingData, setBCOOngoingBookings] = useState<BCOOngoingBooking[]>([]);
+//const [BCOOngoingData, setBCOOngoingBookings] = useState<BCOOngoingBooking[]>([]);
 
 // Move fetchContainers outside of useEffect so it can be reused
-async function fetch_bco_ongoing() {
- 
-    try{
-    const { data: cargo } = await client.models.Container.list({
-      selectionSet:selectionSetBCOOngoing ,
-      authMode: 'apiKey',
-      filter: {
-        and: [
-          {
-            bcoEmail: { eq: userAttributes.email }
-          },
-          {
-            reservationStatus: { ne: 'unassigned' }
-          },
-          {
-            reservationStatus: { ne: 'Picked Up' }
-          }
-        ]
-      },
-    });
-    setBCOOngoingBookings(cargo);
-  }
-  catch(error )
-  {console.error('Error fetching BCO OnGoing', error);
 
-  }
-  //Fetch the data on the first render
-}
 
 useEffect(() => {
-  fetchContainers();
+ // fetchContainers();
   //fetch_bco_completed();
-  fetch_bco_ongoing();
+  //fetch_bco_ongoing();
   fetchterminal_operator_requested();
   //fetchTerminalOperatorModified();
 }, [userAttributes.role, refresh]);
