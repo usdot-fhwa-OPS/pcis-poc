@@ -247,7 +247,8 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
         }
         
         async function getTerminalCapacityLimit(date: Date, time: string) {
-          let limit = 0;
+          let maxLimit = 0;
+          let tempLimit = 0;
           try {
 
             const termCapList = await terminalCapacityList();
@@ -257,7 +258,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
                 if (item) {
                   if ('MAXIMUM' === item.capacityType) {
 
-                    limit = limit + item.capacity;
+                    maxLimit =  item.capacity;
 
                   } else if ((item.startDate) && (item.endDate)
                     && (item.startTime) && (item.endTime)) {
@@ -265,23 +266,23 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
                     if ('Never' === item.repeat) {
                       if (differenceInDays(date, item.startDate) === 0) {
                         // same day as start date
-                        addLimit(item);
+                        getTempLimit(item);
                       }
 
                     } else if ('Daily' === item.repeat) {
 
-                      addLimit(item);
+                      getTempLimit(item);
 
                     } else if ('Weekdays' === item.repeat) {
 
                       if (!isWeekend(date)) {
-                        addLimit(item);
+                        getTempLimit(item);
                       }
 
                     } else if ('Weekends' === item.repeat) {
 
                       if (isWeekend(date)) {
-                        addLimit(item);
+                        getTempLimit(item);
                       }
 
 
@@ -289,7 +290,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
 
                       let daysAfterStart = differenceInDays(date, item.startDate);
                       if ((daysAfterStart % 7) == 0) {
-                        addLimit(item);
+                        getTempLimit(item);
 
                       }
 
@@ -299,7 +300,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
                       //even
                       if ((daysAfterStart % 2) == 0) {
                         // bi weekly
-                        addLimit(item);
+                        getTempLimit(item);
 
                       }
 
@@ -309,7 +310,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
 
                       if ((daysAfterStart % 30) == 0) {
 
-                        addLimit(item);
+                        getTempLimit(item);
 
                       }
 
@@ -319,7 +320,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
 
                       if ((daysAfterStart % (30 * 3)) == 0) {
 
-                        addLimit(item);
+                        getTempLimit(item);
 
                       }
 
@@ -329,7 +330,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
 
                       if ((daysAfterStart % (30 * 6)) == 0) {
 
-                        addLimit(item);
+                        getTempLimit(item);
 
                       }
 
@@ -339,7 +340,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
 
                       if ((daysAfterStart % 365) == 0) {
 
-                        addLimit(item);
+                        getTempLimit(item);
 
                       }
 
@@ -351,7 +352,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
                         if ((item.repeatConfig.interval) &&
                           ((daysCount % item.repeatConfig.interval) == 0)) {
 
-                          addLimit(item);
+                          getTempLimit(item);
                         }
 
                       } else if ('Weekly' === item.repeatConfig?.frequency) {
@@ -360,7 +361,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
                         if ((item.repeatConfig.interval) &&
                           ((daysCount % (item.repeatConfig.interval * 7)) == 0)) {
 
-                          addLimit(item);
+                          getTempLimit(item);
                         }
 
                       } else if ('Monthly' === item.repeatConfig?.frequency) {
@@ -369,7 +370,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
                         if ((item.repeatConfig.interval) &&
                           ((daysCount % (item.repeatConfig.interval * 30)) == 0)) {
 
-                          addLimit(item);
+                          getTempLimit(item);
                         }
 
                       } else if ('Yearly' === item.repeatConfig?.frequency) {
@@ -378,7 +379,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
                         if ((item.repeatConfig.interval) &&
                           ((daysCount % (item.repeatConfig.interval * 365)) == 0)) {
 
-                          addLimit(item);
+                          getTempLimit(item);
                         }
 
                       }
@@ -400,16 +401,24 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
           } catch (error) {
             console.error('Error fetching booking limit', error);
           }
-          return limit;
+          return {'maxLimit':maxLimit, "tempLimit":tempLimit};
 
-          function addLimit(item: TerminalCapacityDomain) {
-            const start = new Date(item.startDate + ' ' + item.startTime);
-            const end = new Date(item.endDate + ' ' + item.endTime);
+          function getTempLimit(item: TerminalCapacityDomain) {
+            if (item.startDate && item.endDate
+              && item.startTime && item.endTime) {
+              const startDay = new Date(format(item.startDate, "MM/dd/yyyy"));
+              const endDay = new Date(format(item.endDate, "MM/dd/yyyy"));
 
-            const pickedDate = new Date(format(date, "MM/dd/yyyy") + ' ' + time);
-            if ((pickedDate >= start) && (pickedDate <= end)) {
-              limit = limit + item.capacity;
+              const pickeupDay = new Date(format(date, "MM/dd/yyyy"));
+              const startTime = new Date(format(pickeupDay, "MM/dd/yyyy") + ' ' + item.startTime);
+              const endTime = new Date(format(pickeupDay, "MM/dd/yyyy") + ' ' + item.endTime);
+              const pickupTime = new Date(format(pickeupDay, "MM/dd/yyyy") + ' ' + time);
+              if (((pickeupDay >= startDay) && (pickeupDay <= endDay)) &&
+                    ((pickupTime >= startTime) && (pickupTime <= endTime))){
+                tempLimit = item.capacity;
+              }
             }
+
           }
         }
 
@@ -417,9 +426,10 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
           if (date && time) {
             const limit = await getTerminalCapacityLimit(date, time)
             const bookingsLength = await (table.options.meta as TransOpDataTableMeta)?.getBookingsAmount(String(format(date!, "MM/dd/yyyy")))
-            if (bookingsLength >= limit) {
+            if ((limit.tempLimit !== 0 && bookingsLength >= limit.tempLimit) 
+                || (limit.tempLimit === 0 && bookingsLength >= limit.maxLimit)) {
               setIsAtCapacity(true);
-              toast.error(`Terminal at capacity (Limit ${limit} per day). Please try a different date.`)
+              toast.error(`Terminal at capacity (Limit ${limit.tempLimit==0?limit.maxLimit:limit.tempLimit} per day). Please try a different date.`)
             } else {
               (table.options.meta as TransOpDataTableMeta)?.updateTransOpBooking(row.original.cargoUnitID, "Pending Reservation Approval", String(format(date!, "MM/dd/yyyy")), time ?? "")
               setIsDialogOpen(false)
