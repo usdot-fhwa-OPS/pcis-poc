@@ -17,15 +17,18 @@ const showContact = (
 const handleModify = (id: string) => {
   alert(`Modify request ${id}`)
 }
-const handleDelete = (id: string) => {
+const handleDelete = (id: string, table: any) => {
   const confirmed = window.confirm(
     'Are you sure you want to delete this berth request?'+id
   )
 
   if (confirmed) {
-    //setData((prev) => prev.filter((item) => item.id !== id))
+     {(table.options.meta )
+                      .deleteBerthRequest(id)}
+               
+              }
   }
-}
+
 export const columns: ColumnDef<BerthRequestDomain>[] = [
   // Define the columns for the table based on the database items (refer to resources.ts for schema names)
   {
@@ -78,12 +81,12 @@ export const columns: ColumnDef<BerthRequestDomain>[] = [
   {
     accessorKey: "actions",
     header: () => <div style={{ minWidth: "50px" }}>Actions</div>,
-    cell: ({ row }) => (
+    cell: ({ row, table }) => (
       <div className="flex space-x-8 ">
         <Button
           size="sm"
           variant="link"
-          onClick={() => handleModify(row.original.vesselID)}
+          onClick={() => handleModify(row.original.requestId)}
         >
           Modify
         </Button>
@@ -91,7 +94,7 @@ export const columns: ColumnDef<BerthRequestDomain>[] = [
         <Button
           size="sm"
           variant="link"
-          onClick={() => handleDelete(row.original.vesselID)}
+          onClick={() => handleDelete(row.original.requestId, table)}
         >
           Delete
         </Button>

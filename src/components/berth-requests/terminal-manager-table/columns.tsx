@@ -78,7 +78,7 @@ export const columns: ColumnDef<BerthRequestDomain>[] = [
   {
     accessorKey: "actions",
     header: () => <div style={{ minWidth: "50px" }}>Actions</div>,
-    cell: ({ row }) => (
+    cell: ({ row, table }) => (
       <div className="flex space-x-8 ">
         <Button
           size="sm"
@@ -95,8 +95,9 @@ export const columns: ColumnDef<BerthRequestDomain>[] = [
           size="sm"
           variant="ghost"
           onClick={() => 
-          {}
-           // handleDelete(row.original.vesselID)
+          {(table.options.meta  as TerminalOperatorBerthRequestsTableMeta)
+                  .deleteBerthRequest(row.original.requestId)}
+           
           }
         >
           Delete

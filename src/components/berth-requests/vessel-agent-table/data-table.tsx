@@ -24,7 +24,8 @@ import { BerthConfigDomain } from "../berth-config-domain"
 
 
 export interface VesselAgentBerthRequestsTableMeta {
-  brConfigList: BerthConfigDomain[]
+  brConfigList: BerthConfigDomain[],
+  deleteBerthRequest: any
 }
 
 interface DataTableProps<TData, TValue> {

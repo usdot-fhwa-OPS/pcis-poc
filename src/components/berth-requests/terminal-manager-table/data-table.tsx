@@ -23,7 +23,8 @@ import {
 
 
 export interface TerminalOperatorBerthRequestsTableMeta {
-  decideBerthRequest: any
+  decideBerthRequest: any,
+  deleteBerthRequest: any
 }
 
 interface DataTableProps<TData, TValue> {

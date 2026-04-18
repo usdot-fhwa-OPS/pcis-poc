@@ -83,7 +83,7 @@ export const saveBerthRequest = async (berthRequestDomain: BerthRequestDomain): 
 
 export const deleteBerthRequest = async (berthRequestUid:string): Promise<any> => {
     const session = await fetchAuthSession();
-    const response = await fetch(`https://xlj2x9eurh.execute-api.us-east-1.amazonaws.com/dev/berthRequest/${berthRequestUid}`, {
+    const response = await fetch(`https://ewutyf2fml.execute-api.us-east-1.amazonaws.com/dev/berthRequest/${berthRequestUid}`, {
         method: 'DELETE',
         headers: {
             "Authorization": `Bearer ${session.tokens?.accessToken?.toString()}`,

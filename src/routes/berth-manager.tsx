@@ -26,14 +26,12 @@ function RouteComponent() {
     
     return brList;
   }
-
-  useEffect(() => {
-    const fetchData = async () => {
+const fetchData = async () => {
       const result = await fetchBerthRequests()
       setData(result)
       setLoading(false)
     }
-
+  useEffect(() => {
     fetchData()
   }, [])
 
@@ -45,6 +43,6 @@ function RouteComponent() {
 
     return (
  
-    userContext['custom:role']==='Terminal Operator'?<TerminalOperatorBerthRequestsTable data={data} />:undefined
+    userContext['custom:role']==='Terminal Operator'?<TerminalOperatorBerthRequestsTable data={data} refresh={fetchData} />:undefined
     )
 }

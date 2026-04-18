@@ -4,7 +4,7 @@ import { useContext, useEffect, useState } from 'react'
 
 import { useAppDispatch, useAppSelector } from '../hooks';
 import { populate } from '../components/berth-requests/berth-request-state';
-import { berthConfigList, berthRequestListForVesselAgent } from '../components/berth-requests/berth-request-client';
+import { berthConfigList, berthRequestListForVesselAgent, deleteBerthRequest } from '../components/berth-requests/berth-request-client';
 import { getBerthConfigList, populate as populateBerthConfig } from '../components/berth-requests/berth-config-state';
 import { BerthRequestComponent } from './berth-requests';
 import { BerthRequestDomain } from '../components/berth-requests/berth-request-domain';
@@ -33,8 +33,7 @@ function RouteComponent() {
     return brList;
   }
 
-  useEffect(() => {
-    const fetchData = async () => {
+      const fetchData = async () => {
       dispatch(populateBerthConfig(await berthConfigList()))
       const result = await fetchBerthRequests()
       setData(result)
@@ -42,6 +41,14 @@ function RouteComponent() {
 
     }
     
+
+    const delBerthRequest = (requestId: string) =>{
+    
+    deleteBerthRequest(requestId);
+    fetchData();
+  }
+  
+  useEffect(() => {
     fetchData()
   }, [])
 
@@ -55,7 +62,7 @@ function RouteComponent() {
  <>
   <BerthRequestComponent/>
     
-   <VesselAgentBerthRequestsTable  data = {data} meta = {{brConfigList}} />
+   <VesselAgentBerthRequestsTable  data = {data} meta = {{brConfigList, deleteBerthRequest:delBerthRequest}} />
   </>      
     
   )
