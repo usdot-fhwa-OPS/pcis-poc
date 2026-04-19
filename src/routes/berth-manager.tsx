@@ -4,7 +4,7 @@ import { useContext, useEffect, useState } from 'react'
 
 import { useAppDispatch } from '../hooks';
 import { populate } from '../components/berth-requests/berth-request-state';
-import { berthRequestList } from '../components/berth-requests/berth-request-client';
+import { berthRequestList, deleteBerthRequest } from '../components/berth-requests/berth-request-client';
 import { TerminalOperatorBerthRequestsTable } from '../components/berth-requests/terminal-manager-table/berth-request-terminal-manager-table';
 import { UserContext } from '../AppContext';
 import { BerthRequestDomain } from '../components/berth-requests/berth-request-domain';
@@ -35,7 +35,11 @@ const fetchData = async () => {
     fetchData()
   }, [])
 
-  
+  const delBerthRequest = (requestId: string) =>{
+      
+      deleteBerthRequest(requestId);
+      fetchData();
+    }
   
   if (loading) {
     return <div>Loading...</div>
@@ -43,6 +47,7 @@ const fetchData = async () => {
 
     return (
  
-    userContext['custom:role']==='Terminal Operator'?<TerminalOperatorBerthRequestsTable data={data} refresh={fetchData} />:undefined
+    userContext['custom:role']==='Terminal Operator'?<TerminalOperatorBerthRequestsTable data={data} 
+    deleteBerthRequest={delBerthRequest } />:undefined
     )
 }
