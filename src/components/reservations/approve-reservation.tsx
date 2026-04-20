@@ -7,11 +7,18 @@ import { Label } from "../ui/label";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 
 interface ApproveButtonProps {
-    data: string
-    reservation: string
+    vesselId: string
+    cargoId: string
+    origin: string
+    bcoName: string
+    bcoEmail: string
+    transopName: string
+    transopEmail: string
+    reservationDate: string
+    reservationTime: string
 }
 
-export function ApproveReservation({data, reservation}: ApproveButtonProps) {
+export function ApproveReservation({vesselId, cargoId, origin, bcoName, bcoEmail, transopName, transopEmail, reservationDate, reservationTime}: ApproveButtonProps) {
 
     const [isDialogOpen, setIsDialogOpen] = useState(false)
 
@@ -48,7 +55,7 @@ export function ApproveReservation({data, reservation}: ApproveButtonProps) {
                             <CircleCheckBig className="size-6 stroke-green-600" />
                         </span>
                         <div>
-                            <p className="text-base font-semibold mb-2">Are you sure you want to approve the reservation for container <span className="inline-block">{reservation}</span>?</p>
+                            <p className="text-base font-semibold mb-2">Are you sure you want to approve the reservation for container <span className="inline-block">{cargoId}</span>?</p>
                             <p className="text-gray-600">This reservation will be moved to the Ongoing tab and the transportation operator will be notified.</p>
                         </div>
                     </div>
@@ -66,11 +73,11 @@ export function ApproveReservation({data, reservation}: ApproveButtonProps) {
                         <CollapsibleContent className="mt-4 pt-4 border-t">
                             <div className="grid grid-cols-1 sm:grid-cols-[max-content_1fr] gap-y-2 sm:gap-x-8 sm:gap-y-4 items-start pb-3 sm:pb-0">
                                 <div className="font-semibold pt-4 sm:pt-0">Vessel ID:</div>
-                                <div>{data}</div>
+                                <div>{vesselId}</div>
                                 <div className="font-semibold pt-4 sm:pt-0">Reservation ID:</div>
                                 <div>Number</div>
                                 <div className="font-semibold pt-4 sm:pt-0">Terminal Origin:</div>
-                                <div>Country</div>
+                                <div>{origin}</div>
                                 <div className="font-semibold pt-4 sm:pt-0">Terminal Manager:</div>
                                 <div>
                                     <p>Name</p>
@@ -79,20 +86,20 @@ export function ApproveReservation({data, reservation}: ApproveButtonProps) {
                                 </div>
                                 <div className="font-semibold pt-4 sm:pt-0">BCO:</div>
                                 <div>
-                                    <p>Name</p>
-                                    <p className="break-all"><a href="mailto:email@emailcompany.com" className="text-blue-500 hover:underline">email@emailcompany.com</a></p>
+                                    <p>{bcoName}</p>
+                                    <p className="break-all"><a href={`mailto:${bcoEmail}`} className="text-blue-500 hover:underline">{bcoEmail}</a></p>
                                     <p><a href="tel:15555555555" className="text-blue-500 hover:underline">555-555-5555</a></p>
                                 </div>
                                 <div className="font-semibold pt-4 sm:pt-0">Transportation Operator:</div>
                                 <div>
-                                    <p>Name</p>
-                                    <p className="break-all"><a href="mailto:email@emailcompany.com" className="text-blue-500 hover:underline">email@emailcompany.com</a></p>
+                                    <p>{transopName}</p>
+                                    <p className="break-all"><a href={`mailto:${transopEmail}`} className="text-blue-500 hover:underline">{transopEmail}</a></p>
                                     <p><a href="tel:15555555555" className="text-blue-500 hover:underline">555-555-5555</a></p>
                                 </div>
                                 <div className="font-semibold pt-4 sm:pt-0">Date and Time Requested:</div>
                                 <div className="flex gap-4 items-center">
-                                    <div>00/00/0000</div>
-                                    <div>00:00 AM</div>
+                                    <div>{reservationDate}</div>
+                                    <div>{reservationTime}</div>
                                 </div>
                             </div>
                         </CollapsibleContent>
