@@ -6,13 +6,11 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogT
 import { Label } from "../ui/label";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 
-export const ApproveReservation = ({ReservationData}) => {
+export const ApproveReservation = () => {
 
     const [isDialogOpen, setIsDialogOpen] = useState(false)
-    const [valueofRow, setValueOfRow] = useState();
 
-    const handleOpen = ({ReservationData}) => {
-        setValueOfRow(ReservationData);
+    const handleOpen = () => {
         setIsDialogOpen(true);
     }
 
@@ -45,7 +43,7 @@ export const ApproveReservation = ({ReservationData}) => {
                             <CircleCheckBig className="size-6 stroke-green-600" />
                         </span>
                         <div>
-                            <p className="text-base font-semibold mb-2">Are you sure you want to approve the reservation for container <span className="inline-block">{valueofRow}</span>?</p>
+                            <p className="text-base font-semibold mb-2">Are you sure you want to approve the reservation for container <span className="inline-block">XX-000</span>?</p>
                             <p className="text-gray-600">This reservation will be moved to the Ongoing tab and the transportation operator will be notified.</p>
                         </div>
                     </div>
