@@ -7,10 +7,11 @@ import { Label } from "../ui/label";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 
 interface ApproveButtonProps {
+    data: any[]
     reservation: string
 }
 
-export function ApproveReservation({reservation}: ApproveButtonProps) {
+export function ApproveReservation({data, reservation}: ApproveButtonProps) {
 
     const [isDialogOpen, setIsDialogOpen] = useState(false)
 
@@ -47,7 +48,7 @@ export function ApproveReservation({reservation}: ApproveButtonProps) {
                             <CircleCheckBig className="size-6 stroke-green-600" />
                         </span>
                         <div>
-                            <p className="text-base font-semibold mb-2">Are you sure you want to approve the reservation for container <span className="inline-block">${reservation}</span>?</p>
+                            <p className="text-base font-semibold mb-2">Are you sure you want to approve the reservation for container <span className="inline-block">{reservation}</span>?</p>
                             <p className="text-gray-600">This reservation will be moved to the Ongoing tab and the transportation operator will be notified.</p>
                         </div>
                     </div>
@@ -65,7 +66,7 @@ export function ApproveReservation({reservation}: ApproveButtonProps) {
                         <CollapsibleContent className="mt-4 pt-4 border-t">
                             <div className="grid grid-cols-1 sm:grid-cols-[max-content_1fr] gap-y-2 sm:gap-x-8 sm:gap-y-4 items-start pb-3 sm:pb-0">
                                 <div className="font-semibold pt-4 sm:pt-0">Vessel ID:</div>
-                                <div>Number</div>
+                                <div>{data.vesselID}</div>
                                 <div className="font-semibold pt-4 sm:pt-0">Reservation ID:</div>
                                 <div>Number</div>
                                 <div className="font-semibold pt-4 sm:pt-0">Terminal Origin:</div>
