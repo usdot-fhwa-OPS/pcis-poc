@@ -7,7 +7,7 @@ import { Label } from "../ui/label";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 
 interface ApproveButtonProps {
-    data: any[]
+    data: string
     reservation: string
 }
 
