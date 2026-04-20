@@ -35,7 +35,7 @@ export const columns = (status: string): ColumnDef<any>[] => {
         <div className="flex space-x-4 justify-center">
 
           {/* Approve Button */}
-          <ApproveReservation/>
+          <ApproveReservation reservation = {(row.original.cargoUnitID)}/>
 
           {/* Old Approve Button - Hidden */}
           <Button
