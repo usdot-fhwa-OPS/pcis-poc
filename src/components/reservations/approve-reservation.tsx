@@ -66,7 +66,7 @@ export function ApproveReservation({data, reservation}: ApproveButtonProps) {
                         <CollapsibleContent className="mt-4 pt-4 border-t">
                             <div className="grid grid-cols-1 sm:grid-cols-[max-content_1fr] gap-y-2 sm:gap-x-8 sm:gap-y-4 items-start pb-3 sm:pb-0">
                                 <div className="font-semibold pt-4 sm:pt-0">Vessel ID:</div>
-                                <div>{data.vesselID}</div>
+                                <div>{data}</div>
                                 <div className="font-semibold pt-4 sm:pt-0">Reservation ID:</div>
                                 <div>Number</div>
                                 <div className="font-semibold pt-4 sm:pt-0">Terminal Origin:</div>
