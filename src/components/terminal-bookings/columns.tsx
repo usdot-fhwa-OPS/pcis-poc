@@ -35,17 +35,9 @@ export const columns = (status: string): ColumnDef<any>[] => {
         <div className="flex space-x-4 justify-center">
 
           {/* Approve Button */}
-          <ApproveReservation/>
+          <ApproveReservation ReservationData = {(row.original.cargoUnitID)}/>
 
-          {/* Deny Button */}
-          <Button
-            variant="destructive"
-            size="sm"
-          >
-            <XIcon className="inline-block h-4 w-4" />Deny
-          </Button>
-
-          {/* Old Approve Button */}
+          {/* Old Approve Button - Hidden */}
           <Button
             variant="outline"
             className="hidden text-green-700"
@@ -54,13 +46,13 @@ export const columns = (status: string): ColumnDef<any>[] => {
             Approve
           </Button>
 
-          {/* Old Deny Button */}
+          {/* Deny Button */}
           <Button
             variant="destructive"
-            className="hidden"
+            size="sm"
             onClick={() => (table.options.meta as TerminalOperatorDataTableMeta)?.updateBooking(row.original.cargoUnitID, "unassigned")} 
           >
-            Deny
+            <XIcon className="inline-block h-4 w-4" />Deny
           </Button>
         </div>
       ),
