@@ -189,6 +189,9 @@ function RouteComponent() {
           <h1 className="text-2xl font-bold">
             Berth Reservations
           </h1>
+          <Button variant="outline" type="button">
+            Add New Berth Request
+          </Button>          
           <Button type="button" onClick={() => handleOpen()}>
             Set Berth Availability
           </Button>
