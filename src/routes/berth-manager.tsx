@@ -185,17 +185,17 @@ function RouteComponent() {
   if (userAttributes.role === "Terminal Operator") {
     return (
       <div className="w-xl max-w-9/10">
-        <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold">
-            Berth Reservations
-          </h1>
-          <Button variant="outline" type="button">
-            Add New Berth Request
-          </Button>          
-          <Button type="button" onClick={() => handleOpen()}>
-            Set Berth Availability
-          </Button>
-          <BerthAvailability isDialogOpen={isOpen} handleCloseDialog={() => setIsOpen(false)} />          
+        <div className="flex items-center">
+          <h1 className="text-2xl font-bold">Berth Reservations</h1>
+          <div className="ml-auto flex items-center gap-2">
+            <Button variant="outline" type="button">
+              Add New Berth Request
+            </Button>
+            <Button type="button" onClick={() => handleOpen()}>
+              Set Berth Availability
+            </Button>
+          </div>
+          <BerthAvailability isDialogOpen={isOpen} handleCloseDialog={() => setIsOpen(false)} />
         </div>
         <br/>
         <Tabs defaultValue="requested" className="">
@@ -205,7 +205,6 @@ function RouteComponent() {
                 <TabsTrigger value="modification">Modification Requested</TabsTrigger>
                 <TabsTrigger value="ongoing">Ongoing</TabsTrigger>
                 <TabsTrigger value="completed">Completed</TabsTrigger>
-                <TabsTrigger value="add_new_berth_request">Add New Berth Request</TabsTrigger>
             </TabsList>
           </div>
           <div className="w-xl max-w-9/10">
