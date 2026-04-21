@@ -35,9 +35,9 @@ const fetchData = async () => {
     fetchData()
   }, [])
 
-  const delBerthRequest = (requestId: string) =>{
+  const delBerthRequest = async(requestId: string) =>{
       
-      deleteBerthRequest(requestId);
+      await deleteBerthRequest(requestId);
       fetchData();
     }
   
