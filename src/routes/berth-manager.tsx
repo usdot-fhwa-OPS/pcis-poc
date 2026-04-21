@@ -185,9 +185,14 @@ function RouteComponent() {
   if (userAttributes.role === "Terminal Operator") {
     return (
       <div className="w-xl max-w-9/10">
-        <h1 className="text-2xl font-bold text-left">Berth Reservations</h1>
-        <Button className="text-right" variant="outline" onClick={() => handleOpen()}>Set Berth Availability</Button>
-        <br/>
+        <div className="flex items-center justify-between">
+          <h1 className="text-2xl font-bold">
+            Berth Reservations
+          </h1>
+          <Button type="button" onClick={() => handleOpen()}>
+            Set Berth Availability
+          </Button>
+        </div>
         <Tabs defaultValue="requested" className="">
           <div>
             <TabsList className="mb-4 flex w-full justify-start gap-x-4">
