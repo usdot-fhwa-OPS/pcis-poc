@@ -192,6 +192,7 @@ function RouteComponent() {
           <Button type="button" onClick={() => handleOpen()}>
             Set Berth Availability
           </Button>
+          <BerthAvailability isDialogOpen={isOpen} handleCloseDialog={() => setIsOpen(false)} />          
         </div>
         <br/>
         <Tabs defaultValue="requested" className="">
