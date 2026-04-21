@@ -13,7 +13,7 @@ export const Route = createFileRoute('/reservation')({
   component: RouteComponent,
 })
 
-export const sampleBerthRequests: BerthRequest[] = [
+export const sampleBerthRequests: BerthRequest[] = [/* 
   {
     id: "BR-1001",
     vesselId: "VSL-7782",
@@ -148,7 +148,7 @@ export const sampleBerthRequests: BerthRequest[] = [
     eta: "2026-05-02T06:40:00Z",
     etd: "2026-05-03T17:20:00Z",
     requestedAt: "2026-04-19T13:25:00Z",
-  },  
+  },   */
 ];
 
 function RouteComponent() {
