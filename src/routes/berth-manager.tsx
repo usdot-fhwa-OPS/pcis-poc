@@ -209,10 +209,19 @@ function RouteComponent() {
           </div>
           <div className="w-xl max-w-9/10">
             <TabsContent value="requested">
-              <RequestedBerthTable data={sampleBerthRequests} userRole="VESSEL_AGENT" 
-                                   onView={(id) => console.log("view berth request:", id)}
-                                   onModify={(id) => console.log("view berth request:", id)}
-                                   onDelete={(id) => console.log("view berth request:", id)} />
+              {sampleBerthRequests.length > 0 ? (
+                  <RequestedBerthTable
+                    data={sampleBerthRequests}
+                    userRole="VESSEL_AGENT"
+                    onView={(id) => console.log("view berth request:", id)}
+                    onModify={(id) => console.log("view berth request:", id)}
+                    onDelete={(id) => console.log("view berth request:", id)}
+                  />
+                ) : (
+                  <p className="text-sm text-muted-foreground">
+                    There are no pending berth requests.
+                  </p>
+                )}           
             </TabsContent>
             <TabsContent value="modification">
             </TabsContent>
