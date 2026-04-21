@@ -1,6 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { RequestedBerthTable } from "../components/berth-requests/requested-berth-table.tsx"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs.tsx"
+import { Button } from "../components/ui/button.tsx"
 import { fetchUserAttributes } from 'aws-amplify/auth';
 import { useEffect, useState } from "react";
 import { useAuthenticator } from "@aws-amplify/ui-react";
@@ -185,6 +186,7 @@ function RouteComponent() {
     return (
       <div className="w-xl max-w-9/10">
         <h1 className="text-2xl font-bold text-left">Berth Reservations</h1>
+        <Button className="text-right" variant="outline" onClick={() => handleOpen()}>Set Berth Availability</Button>
         <br/>
         <Tabs defaultValue="requested" className="">
           <div>
@@ -194,7 +196,6 @@ function RouteComponent() {
                 <TabsTrigger value="ongoing">Ongoing</TabsTrigger>
                 <TabsTrigger value="completed">Completed</TabsTrigger>
                 <TabsTrigger value="add_new_berth_request">Add New Berth Request</TabsTrigger>
-                <TabsTrigger value="berth_availability" onClick={() => handleOpen()}>Set Berth Availability</TabsTrigger>
             </TabsList>
           </div>
           <div className="w-xl max-w-9/10">
