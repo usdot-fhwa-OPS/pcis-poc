@@ -5,7 +5,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "../ui/colla
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
 import { Label } from "../ui/label";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
-import {TerminalOperatorDataTableMeta} from "../terminal-bookings/data-table.tsx"
+import { TerminalOperatorDataTableMeta } from "../terminal-bookings/data-table.tsx";
 
 interface ApproveButtonProps {
     vesselId: string
@@ -29,6 +29,12 @@ export function ApproveReservation({vesselId, cargoId, origin, bcoName, bcoEmail
     }
 
     const [isOpen, setIsOpen] = useState(false)
+
+    const [selected, setSelected] = useState(false);
+
+    const handleChange = (event: any) => {
+        setSelected(event.target.value);
+    };
 
     return (
         <>
@@ -97,13 +103,13 @@ export function ApproveReservation({vesselId, cargoId, origin, bcoName, bcoEmail
                         </CollapsibleContent>
                     </Collapsible>
                     <p className="text-base font-semibold mb-4">Is a <abbr className="decoration-[1px] decoration-dotted underline-offset-4" title="Transportation Worker Identification Credential">TWIC</abbr> escort required for this reservation?</p>
-                    <RadioGroup defaultValue="not-required" className="grid-cols-2 grid-rows-1 gap-6 w-fit">
+                    <RadioGroup defaultValue="false" onValueChange={handleChange} className="grid-cols-2 grid-rows-1 gap-6 w-fit">
                         <div className="flex items-center gap-2">
-                            <RadioGroupItem value="true" id="required" />
+                            <RadioGroupItem value="true" id="required"/>
                             <Label className="text-base font-normal" htmlFor="required">Yes</Label>
                         </div>
                         <div className="flex items-center gap-2">
-                            <RadioGroupItem value="false" id="not-required" />
+                            <RadioGroupItem value="false" id="not-required"/>
                             <Label className="text-base font-normal" htmlFor="not-required">No</Label>
                         </div>
                     </RadioGroup>
@@ -112,7 +118,7 @@ export function ApproveReservation({vesselId, cargoId, origin, bcoName, bcoEmail
                     <Button variant="outline" onClick={() => setIsDialogOpen(false)}>Cancel</Button>
                     <Button
                         className="bg-green-600 hover:bg-green-600/90"
-                        onClick={() =>  (dataTableMeta as TerminalOperatorDataTableMeta)?.updateBooking(cargoId, "Pending Pick Up")}
+                        onClick={() =>  {(dataTableMeta as TerminalOperatorDataTableMeta)?.updateBooking(cargoId, "Pending Pick Up"); (dataTableMeta as TerminalOperatorDataTableMeta)?.updateTwicEscortRequired(cargoId, selected)}}
                     >
                         Yes, Approve
                     </Button>
