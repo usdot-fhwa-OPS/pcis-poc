@@ -74,27 +74,17 @@ export function ApproveReservation({vesselId, cargoId, origin, bcoName, bcoEmail
                             <div className="grid grid-cols-1 sm:grid-cols-[max-content_1fr] gap-y-2 sm:gap-x-8 sm:gap-y-4 items-start pb-3 sm:pb-0">
                                 <div className="font-semibold pt-4 sm:pt-0">Vessel ID:</div>
                                 <div>{vesselId}</div>
-                                <div className="font-semibold pt-4 sm:pt-0">Reservation ID:</div>
-                                <div>Number</div>
                                 <div className="font-semibold pt-4 sm:pt-0">Terminal Origin:</div>
                                 <div>{origin}</div>
-                                <div className="font-semibold pt-4 sm:pt-0">Terminal Manager:</div>
-                                <div>
-                                    <p>Name</p>
-                                    <p className="break-all"><a href="mailto:email@emailcompany.com" className="text-blue-500 hover:underline">email@emailcompany.com</a></p>
-                                    <p><a href="tel:15555555555" className="text-blue-500 hover:underline">555-555-5555</a></p>
-                                </div>
                                 <div className="font-semibold pt-4 sm:pt-0">BCO:</div>
                                 <div>
                                     <p>{bcoName}</p>
                                     <p className="break-all"><a href={`mailto:${bcoEmail}`} className="text-blue-500 hover:underline">{bcoEmail}</a></p>
-                                    <p><a href="tel:15555555555" className="text-blue-500 hover:underline">555-555-5555</a></p>
                                 </div>
                                 <div className="font-semibold pt-4 sm:pt-0">Transportation Operator:</div>
                                 <div>
                                     <p>{transopName}</p>
                                     <p className="break-all"><a href={`mailto:${transopEmail}`} className="text-blue-500 hover:underline">{transopEmail}</a></p>
-                                    <p><a href="tel:15555555555" className="text-blue-500 hover:underline">555-555-5555</a></p>
                                 </div>
                                 <div className="font-semibold pt-4 sm:pt-0">Date and Time Requested:</div>
                                 <div className="flex gap-4 items-center">
