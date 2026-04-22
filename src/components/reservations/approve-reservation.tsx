@@ -5,6 +5,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "../ui/colla
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
 import { Label } from "../ui/label";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
+import {TerminalOperatorDataTableMeta} from "../terminal-bookings/data-table.tsx"
 
 interface ApproveButtonProps {
     vesselId: string
@@ -16,9 +17,10 @@ interface ApproveButtonProps {
     transopEmail: string
     reservationDate: string
     reservationTime: string
+    dataTableMeta: any
 }
 
-export function ApproveReservation({vesselId, cargoId, origin, bcoName, bcoEmail, transopName, transopEmail, reservationDate, reservationTime}: ApproveButtonProps) {
+export function ApproveReservation({vesselId, cargoId, origin, bcoName, bcoEmail, transopName, transopEmail, reservationDate, reservationTime, dataTableMeta}: ApproveButtonProps) {
 
     const [isDialogOpen, setIsDialogOpen] = useState(false)
 
@@ -108,7 +110,12 @@ export function ApproveReservation({vesselId, cargoId, origin, bcoName, bcoEmail
                 </div>
                 <DialogFooter className="mx-0 mb-0">
                     <Button variant="outline" onClick={() => setIsDialogOpen(false)}>Cancel</Button>
-                    <Button className="bg-green-600 hover:bg-green-600/90">Yes, Approve</Button>
+                    <Button
+                        className="bg-green-600 hover:bg-green-600/90"
+                        onClick={() =>  (dataTableMeta as TerminalOperatorDataTableMeta)?.updateBooking(cargoId, "Pending Pick Up")}
+                    >
+                        Yes, Approve
+                    </Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>
