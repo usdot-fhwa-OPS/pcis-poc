@@ -23,14 +23,12 @@ interface ApproveButtonProps {
 export function ApproveReservation({vesselId, cargoId, origin, bcoName, bcoEmail, transopName, transopEmail, reservationDate, reservationTime, dataTableMeta}: ApproveButtonProps) {
 
     const [isDialogOpen, setIsDialogOpen] = useState(false)
+    const [isOpen, setIsOpen] = useState(false)
+    const [selectedValue, setSelectedValue] = useState(false)
 
     const handleOpen = () => {
         setIsDialogOpen(true);
     }
-
-    const [isOpen, setIsOpen] = useState(false)
-
-    const [selectedValue, setSelectedValue] = useState(false);
 
     return (
         <>
