@@ -112,7 +112,10 @@ export function ApproveReservation({vesselId, cargoId, origin, bcoName, bcoEmail
                     <Button variant="outline" onClick={() => setIsDialogOpen(false)}>Cancel</Button>
                     <Button
                         className="bg-green-600 hover:bg-green-600/90"
-                        onClick={() =>  {(dataTableMeta as TerminalOperatorDataTableMeta)?.updateTwicEscortRequired(cargoId, selectedValue); (dataTableMeta as TerminalOperatorDataTableMeta)?.updateBooking(cargoId, "Pending Pick Up")}}
+                        onClick={() =>  {
+                            (dataTableMeta as TerminalOperatorDataTableMeta)?.updateBooking(cargoId, "Pending Pick Up"); 
+                            (dataTableMeta as TerminalOperatorDataTableMeta)?.updateTwicEscortRequired(cargoId, selectedValue);
+                        }}
                     >
                         Yes, Approve
                     </Button>

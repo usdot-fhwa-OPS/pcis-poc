@@ -48,15 +48,6 @@ export const columns = (status: string): ColumnDef<any>[] => {
             dataTableMeta = {(table.options.meta)}
           />
 
-          {/* Old Approve Button - Hidden */}
-          <Button
-            variant="outline"
-            className="hidden text-green-700"
-            onClick={() =>  (table.options.meta as TerminalOperatorDataTableMeta)?.updateBooking(row.original.cargoUnitID, "Pending Pick Up")} 
-          >
-            Approve
-          </Button>
-
           {/* Deny Button */}
           <Button
             variant="destructive"
