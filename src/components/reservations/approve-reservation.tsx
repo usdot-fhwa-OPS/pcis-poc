@@ -97,7 +97,7 @@ export function ApproveReservation({vesselId, cargoId, origin, bcoName, bcoEmail
                         </CollapsibleContent>
                     </Collapsible>
                     <p className="text-base font-semibold mb-4">Is a <abbr className="decoration-[1px] decoration-dotted underline-offset-4" title="Transportation Worker Identification Credential">TWIC</abbr> escort required for this reservation?</p>
-                    <RadioGroup defaultValue={selectedValue} onValueChange={(value) => setSelectedValue(value === "true")} className="grid-cols-2 grid-rows-1 gap-6 w-fit">
+                    <RadioGroup defaultValue={String(selectedValue)} onValueChange={(value) => setSelectedValue(value === "true")} className="grid-cols-2 grid-rows-1 gap-6 w-fit">
                         <div className="flex items-center gap-2">
                             <RadioGroupItem value="true" id="required"/>
                             <Label className="text-base font-normal" htmlFor="required">Yes</Label>
