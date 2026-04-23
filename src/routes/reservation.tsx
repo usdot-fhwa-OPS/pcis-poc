@@ -672,7 +672,6 @@ async function updateTwicEscortRequired(id: string, twicEscortRequired: boolean)
     const { data: updatedContainerStatus } = await client.models.Container.update(updatePayload);
     
     console.log("Updated TWIC escort requirement:", updatedContainerStatus);
-    toast.success("TWIC escort requirement updated successfully");
 
     // Refresh relevant data after successful update
     await fetchterminal_operator_requested();
