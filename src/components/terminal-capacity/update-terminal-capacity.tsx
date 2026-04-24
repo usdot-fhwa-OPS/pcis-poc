@@ -146,7 +146,7 @@ const [endTime, setEndTime] = useState<string | undefined>(timeOptions[0])
 
        const [monthlyEvery, setMonthlyEvery] = useState<number | undefined>()
        const [repeatCycle, setRepeatCycle] = React.useState<string | undefined>()
-       const [daysOfMonth, setDaysOfMonth] = React.useState<number[] | undefined>([])
+       const [daysOfMonth, setDaysOfMonth] = React.useState<string[] | undefined>([])
        const [onTheWeek, setOnTheWeek] = React.useState<string | undefined>()
        const [onTheWeekDay, setOnTheWeekDay] = React.useState<string | undefined>()
        
