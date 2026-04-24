@@ -13,7 +13,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "../ui/tooltip"
-import { differenceInDays, format, isWeekend } from "date-fns"
+import { differenceInDays, format, getWeekOfMonth, isWeekend } from "date-fns"
 import { cn } from "../../lib/utils"
 import { TransOpUpcomingBookings, TransOpOngoingBookings } from "../../routes/reservation.tsx";
 //Four Imports needed for Amplify Data Queries and CRUD methods
@@ -358,20 +358,63 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
                       } else if ('Weekly' === item.repeatConfig?.frequency) {
 
                         let daysCount = differenceInDays(date, item.startDate);
-                        if ((item.repeatConfig.interval) &&
-                          ((daysCount % (item.repeatConfig.interval * 7)) == 0)) {
+                        if (item.repeatConfig.interval) {
 
-                          getTempLimit(item);
+                          const intervalLength = item.repeatConfig.interval * 7;
+                          const whicDay = daysCount % intervalLength;
+                          if ((whicDay >= 0) && (whicDay < intervalLength)) {
+                            const dayName = format(date, 'EEEE');
+
+                            if (item.repeatConfig?.daysOfWeek?.find(day => dayName === day)) {
+                              getTempLimit(item);
+                            }
+
+                          }
                         }
 
                       } else if ('Monthly' === item.repeatConfig?.frequency) {
 
                         let daysCount = differenceInDays(date, item.startDate);
-                        if ((item.repeatConfig.interval) &&
-                          ((daysCount % (item.repeatConfig.interval * 30)) == 0)) {
+                        if (item.repeatConfig.interval) {
 
-                          getTempLimit(item);
+                          const intervalLength = item.repeatConfig.interval * 30;
+                          const whicDay = daysCount % intervalLength;
+                          if ((whicDay >= 0) && (whicDay < intervalLength)) {
+                              
+                            if ('Each' === item.repeatConfig.cycle) {
+
+                              const dayOfMonth = format(date, 'dd');
+                              if (item.repeatConfig?.daysOfMonth?.find(day => dayOfMonth === day)) {
+                                getTempLimit(item);
+                              }
+
+                            } else if ('OnThe' === item.repeatConfig.cycle) {
+                              
+                              const weekNumber = getWeekOfMonth(date);
+                              const weekNumberStr = weekNumber===1?'First':weekNumber===2?'Second':
+                                                      weekNumber===3?'Third':weekNumber===4?'Fourth':'Last';
+                              
+                              if (item.repeatConfig?.weekNumber === weekNumberStr) {
+
+                                 const dayName = format(date, 'EEEE');
+                                if (item.repeatConfig?.dayOfWeek === dayName) {
+                                  getTempLimit(item);
+                                }
+
+                              }
+                              
+
+                            }
+
+                            const dayName = format(date, 'EEEE');
+
+                            if (item.repeatConfig?.daysOfWeek?.find(day => dayName === day)) {
+                              getTempLimit(item);
+                            }
+
+                          }
                         }
+                        
 
                       } else if ('Yearly' === item.repeatConfig?.frequency) {
 
@@ -414,8 +457,12 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
               const endTime = new Date(format(pickeupDay, "MM/dd/yyyy") + ' ' + item.endTime);
               const pickupTime = new Date(format(pickeupDay, "MM/dd/yyyy") + ' ' + time);
               if (((pickeupDay >= startDay) && (pickeupDay <= endDay)) &&
-                    ((pickupTime >= startTime) && (pickupTime <= endTime))){
-                tempLimit = item.capacity;
+                ((pickupTime >= startTime) && (pickupTime <= endTime))) {
+
+                if ((tempLimit === 0) || (item.capacity < tempLimit)) {
+                  tempLimit = item.capacity;
+                }
+
               }
             }
 
