@@ -13,7 +13,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "../ui/tooltip"
-import { differenceInDays, format, getWeekOfMonth, isWeekend } from "date-fns"
+import { differenceInDays, format, isWeekend } from "date-fns"
 import { cn } from "../../lib/utils"
 import { TransOpUpcomingBookings, TransOpOngoingBookings } from "../../routes/reservation.tsx";
 //Four Imports needed for Amplify Data Queries and CRUD methods
