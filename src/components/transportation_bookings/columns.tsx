@@ -30,6 +30,7 @@ import { useAppDispatch } from "../../hooks.tsx";
 import { populate } from "../terminal-capacity/terminal-capacity-state.tsx";
 import { TerminalCapacityDomain } from "../terminal-capacity/terminal-capacity-domain.tsx";
 import { terminalCapacityList } from "../terminal-capacity/terminal-capacity-client.tsx";
+import { matchDayAndOrder } from "../../lib/date-utils.tsx";
 
 
 export const columns = (): ColumnDef<any>[] => {
@@ -389,20 +390,13 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
                               }
 
                             } else if ('OnThe' === item.repeatConfig.cycle) {
-                              
-                              const weekNumber = getWeekOfMonth(date);
-                              const weekNumberStr = weekNumber===1?'First':weekNumber===2?'Second':
-                                                      weekNumber===3?'Third':weekNumber===4?'Fourth':'Last';
-                              
-                              if (item.repeatConfig?.weekNumber === weekNumberStr) {
 
-                                 const dayName = format(date, 'EEEE');
-                                if (item.repeatConfig?.dayOfWeek === dayName) {
+                              if (item.repeatConfig?.weekNumber && item.repeatConfig?.dayOfWeek) {
+                                if (matchDayAndOrder(date, item.repeatConfig.dayOfWeek, item.repeatConfig.weekNumber)){
                                   getTempLimit(item);
                                 }
 
                               }
-                              
 
                             }
 
