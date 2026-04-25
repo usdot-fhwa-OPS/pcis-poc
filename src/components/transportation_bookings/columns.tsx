@@ -399,13 +399,6 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
                               }
 
                             }
-
-                            const dayName = format(date, 'EEEE');
-
-                            if (item.repeatConfig?.daysOfWeek?.find(day => dayName === day)) {
-                              getTempLimit(item);
-                            }
-
                           }
                         }
                         
@@ -413,10 +406,27 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
                       } else if ('Yearly' === item.repeatConfig?.frequency) {
 
                         let daysCount = differenceInDays(date, item.startDate);
-                        if ((item.repeatConfig.interval) &&
-                          ((daysCount % (item.repeatConfig.interval * 365)) == 0)) {
+                        if (item.repeatConfig.interval) {
 
-                          getTempLimit(item);
+                          const intervalLength = item.repeatConfig.interval * 365;
+                          const whicDay = daysCount % intervalLength;
+                          if ((whicDay >= 0) && (whicDay < intervalLength)) {
+
+                            const month = format(date, 'MMMM');
+                            if (item.repeatConfig.months?.indexOf(month) != -1) {
+
+                              if (item.repeatConfig?.weekNumber && item.repeatConfig?.dayOfWeek) {
+                                if (matchDayAndOrder(date, item.repeatConfig.dayOfWeek, item.repeatConfig.weekNumber)) {
+                                  getTempLimit(item);
+                                }
+
+                              } else {
+
+                                getTempLimit(item);
+
+                              }
+                            }
+                          }
                         }
 
                       }
