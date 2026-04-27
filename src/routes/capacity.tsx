@@ -19,6 +19,7 @@ export const Route = createFileRoute('/capacity')({
 export default function TerminalCapacityComponent() {
  
   const data = useAppSelector(getTerminalCapacityList)
+  const maxTerminalCapacity = data.filter((item)=>(item.capacityType==='MAXIMUM'))
   const [loading, setLoading] = useState(true)
   
   const dispatch = useAppDispatch()
@@ -46,14 +47,14 @@ if (loading) {
 
    <div className="p-2">
       <h1 className="text-2xl font-bold text-center">Terminal Capacity</h1>
-       <p className="text-left">Maximum Terminal Capacity: 5 Reservations per day&nbsp;&nbsp;
-        <UpdateTerminalCapacityButton limit={5}/>      
+       <p className="text-left">Maximum Terminal Capacity: {maxTerminalCapacity[0].capacity} Reservations per day&nbsp;&nbsp;
+        <UpdateTerminalCapacityButton maxTerminalCapacity={maxTerminalCapacity[0]}/>      
        </p>
       <div className="container mx-auto p-10">
         <div className="parent-container">
           <AddTerminalCapacity/>
         </div>
-              <TerminalCapacityTable data={data}/>
+              <TerminalCapacityTable data={data.filter((item)=>(item.capacityType==='TEMPORARY'))}/>
             </div>
     </div>    
     

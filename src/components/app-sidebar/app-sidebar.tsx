@@ -44,7 +44,7 @@ const items = [
     icon: Ship,
   },
   {
-    title: "Berth Reservations",
+    title: "Berth Reservation Management",
     url: "/berth-manager",
     icon: Anchor,
   },
@@ -74,9 +74,19 @@ const items = [
     icon: TriangleAlert,
   },
   {
+    title: "Hazardous Cargo Management",
+    url: "/hazardous-cargo-manager",
+    icon: TriangleAlert,
+  },
+  {
     title: "Analytics",
     url: "/analytics",
     icon: BarChart,
+  },
+  {
+    title: "Berth Reservations",
+    url: "/berth-vessel",
+    icon: Anchor,
   },
 ]
 
@@ -113,13 +123,13 @@ export function AppSidebar() {
   }, [user]);
 
   // Define which menu items are allowed for Terminal Operator role.
-  const allowedForTerminalOperatorRole = ["Home", "Berth Reservations", "Available Operators", "Import Stow Plan", "Upcoming Cargo", "Reservation Status", "Analytics", "Notifications"];
+  const allowedForTerminalOperatorRole = ["Home", "Berth Reservation Management", "Available Operators", "Import Stow Plan", "Upcoming Cargo", "Reservation Status", "Analytics", "Notifications", "Hazardous Cargo Management"];
 
   // Define which menu items are allowed for limited roles.
   const allowedForLimitedRoles = ["Home", "Reservation Status", "Analytics", "Notifications"];
 
    // Define which menu items are allowed for Vessel Agent Role.
-  const allowedForVesselAgentRole = ["Home", "Notifications", "Berth Requests", "Hazardous Cargo"];
+  const allowedForVesselAgentRole = ["Home", "Notifications", "Berth Requests", "Berth Reservations", "Hazardous Cargo"];
 
   // Filter menu items based on the custom role.
   const filteredItems = items.filter((item) => {
