@@ -122,6 +122,7 @@ export function ApproveReservation({vesselId, cargoId, origin, bcoName, bcoEmail
                         className="bg-green-600 hover:bg-green-600/90"
                         onClick={() =>  {
                             (dataTableMeta as TerminalOperatorDataTableMeta)?.updateBooking(cargoId, "Pending Pick Up", selectedValue); 
+                            (dataTableMeta as TerminalOperatorDataTableMeta)?.updateTwicEscortRequired(cargoId, selectedValue);
                         }}
                     >
                         Yes, Approve
