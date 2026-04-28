@@ -665,10 +665,6 @@ async function updateTwicEscortRequired(id: string, twicEscortRequired: boolean)
   try {
     let updatePayload: any = { cargoUnitID: id, twicEscortRequired: twicEscortRequired };
 
-    Object.assign(updatePayload, {
-      twicEscortRequired,
-    });
-
     const { data: updatedContainerStatus } = await client.models.Container.update(updatePayload);
     
     console.log("Updated TWIC escort requirement:", updatedContainerStatus);
