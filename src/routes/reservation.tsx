@@ -598,7 +598,7 @@ async function updateBooking(id: string, status: string, reservationDate?: strin
   }
 
   try {
-    let updatePayload: any = { cargoUnitID: id, reservationStatus: status };
+    let updatePayload: any = { cargoUnitID: id, reservationStatus: status, twicEscortRequired: twicEscortRequired };
 
     if (status === "unassigned") {
       Object.assign(updatePayload, {
