@@ -689,7 +689,7 @@ function Index() {
       }
     
       try {
-        let updatePayload: any = { cargoUnitID: id, reservationStatus: status, twicEscortRequired: twicEscortRequired }; 
+        let updatePayload: any = { cargoUnitID: id, reservationStatus: status }; 
     
         if (status === "unassigned") {
           Object.assign(updatePayload, {
@@ -732,9 +732,6 @@ function Index() {
         
         console.log("Updated booking status:", updatedContainerStatus);
         toast.success("Booking status updated successfully");
-
-        const { data: updatedTwicRequirement } = await client.models.Container.update({twicEscortRequired});
-        console.log("Updated TWIC escort requirement:", updatedTwicRequirement);
     
         // Refresh relevant data after successful update
         await fetchterminal_operator_requested();
