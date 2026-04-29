@@ -37,33 +37,34 @@ const COMPLETED: BerthRequest[] = [
   { vesselId: "403", terminal: "Los Angeles Terminal", terminalEmail: "info@laterminal.com",    arrivalDate: "03/10/2026", arrivalTime: "6:00 AM", departureDate: "03/11/2026", departureTime: "6:00 AM", dateRequested: "02/15/2026", timeRequested: "2:00 PM"  },
 ]
 
-const TABS = [
-  { value: "requested",              label: "Requested",              data: REQUESTED,              columns: editableColumns() },
-  { value: "modification-requested", label: "Modification Requested", data: MODIFICATION_REQUESTED, columns: editableColumns() },
-  { value: "ongoing",                label: "Ongoing",                data: ONGOING,                columns: readOnlyColumns() },
-  { value: "completed",              label: "Completed",              data: COMPLETED,              columns: readOnlyColumns() },
-]
 
 export function BerthVesselTable() {
   return (
-    <Tabs defaultValue="requested">
-      <TabsList className="h-auto gap-0 bg-transparent p-0 border-b rounded-none w-full justify-start mb-4">
-        {TABS.map(({ value, label }) => (
-          <TabsTrigger
-            key={value}
-            value={value}
-            className="rounded-none border-b-2 border-transparent data-[state=active]:border-foreground data-[state=active]:bg-transparent data-[state=active]:shadow-none px-4 pb-2"
-          >
-            {label}
-          </TabsTrigger>
-        ))}
-      </TabsList>
-
-      {TABS.map(({ value, data, columns }) => (
-        <TabsContent key={value} value={value}>
-          <DataTable columns={columns} data={data} />
-        </TabsContent>
-      ))}
-    </Tabs>
+    <div className="w-xl max-w-9/10">
+      <Tabs defaultValue="requested">
+        <div>
+          <TabsList className="mb-4 flex w-full justify-start gap-x-4">
+            <TabsTrigger value="requested">Requested</TabsTrigger>
+            <TabsTrigger value="modification-requested">Modification Requested</TabsTrigger>
+            <TabsTrigger value="ongoing">Ongoing</TabsTrigger>
+            <TabsTrigger value="completed">Completed</TabsTrigger>
+          </TabsList>
+        </div>
+        <div className="w-xl max-w-9/10">
+          <TabsContent value="requested">
+            <DataTable columns={editableColumns()} data={REQUESTED} />
+          </TabsContent>
+          <TabsContent value="modification-requested">
+            <DataTable columns={editableColumns()} data={MODIFICATION_REQUESTED} />
+          </TabsContent>
+          <TabsContent value="ongoing">
+            <DataTable columns={readOnlyColumns()} data={ONGOING} />
+          </TabsContent>
+          <TabsContent value="completed">
+            <DataTable columns={readOnlyColumns()} data={COMPLETED} />
+          </TabsContent>
+        </div>
+      </Tabs>
+    </div>
   )
 }
