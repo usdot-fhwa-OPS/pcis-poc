@@ -24,7 +24,6 @@ import {
 export interface TerminalOperatorDataTableMeta {
   updateBooking: (id: string, status: string, reservationDate?: string, reservationTime?: string, twicEscortRequired?: boolean)  => Promise<boolean>;
   markBookingLate: (id: string, status: string) => Promise<boolean>;
-  updateTwicEscortRequired: (id: string, twicEscortRequired: boolean) => Promise<boolean>;
 }
 
 interface DataTableProps<TData, TValue> {
