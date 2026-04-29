@@ -681,7 +681,7 @@ function Index() {
         }
         
     
-    async function updateBooking(id: string, status: string, reservationDate?: string, reservationTime?: string): Promise<boolean> {
+    async function updateBooking(id: string, status: string, reservationDate?: string, reservationTime?: string, twicEscortRequired?: boolean): Promise<boolean> {
       if (!navigator.onLine) {
         console.error("No internet connection. Update not submitted. Please check your connection and try again.");
         toast.error("No internet connection. Update not submitted. Please check your connection and try again.");
@@ -721,6 +721,7 @@ function Index() {
           //Approving a Booking -> Pending Pick Up
           Object.assign(updatePayload, {
             resApprovalDate: new Date().toLocaleDateString("en-US"),
+            twicEscortRequired,
             isTerminalNotify: false,
             isBCONotify: true,
             isTransportationNotify: true,

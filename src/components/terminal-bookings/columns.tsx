@@ -1,12 +1,13 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "../ui/button.tsx";
 import { useState } from "react";
-import { Flag } from "lucide-react";
+import { Flag, XIcon } from "lucide-react";
 import {TerminalOperatorDataTableMeta} from './data-table.tsx'
 import { generateClient } from 'aws-amplify/data';
 import type { Schema } from '../../../amplify/data/resource';
 import { TermOperatorCompletedBookings } from "../../routes/reservation.tsx"
 import { Checkbox } from "../ui/checkbox.tsx";
+import { ApproveReservation } from "../reservations/approve-reservation.tsx";
 const client = generateClient<Schema>();
 export const columns = (status: string): ColumnDef<any>[] => {
   const baseColumns: ColumnDef<any>[] = [
@@ -32,21 +33,28 @@ export const columns = (status: string): ColumnDef<any>[] => {
       header: () => <div className="text-center min-w-[200px]">Status</div>,
       cell: ({ row,table }) => (
         <div className="flex space-x-4 justify-center">
+
           {/* Approve Button */}
-          <Button
-            variant="outline"
-            className="text-green-700"
-            onClick={() =>  (table.options.meta as TerminalOperatorDataTableMeta)?.updateBooking(row.original.cargoUnitID, "Pending Pick Up")} 
-          >
-            Approve
-          </Button>
+          <ApproveReservation
+            vesselId = {(row.original.vesselID)}
+            cargoId = {(row.original.cargoUnitID)}
+            origin = {(row.original.origin)}
+            bcoName = {(row.original.bcoName)}
+            bcoEmail = {(row.original.bcoEmail)}
+            transopName = {(row.original.transopName)}
+            transopEmail = {(row.original.transopEmail)}
+            reservationDate = {(row.original.reservationDate)}
+            reservationTime = {(row.original.reservationTime)}
+            dataTableMeta = {(table.options.meta)}
+          />
 
           {/* Deny Button */}
           <Button
             variant="destructive"
+            size="sm"
             onClick={() => (table.options.meta as TerminalOperatorDataTableMeta)?.updateBooking(row.original.cargoUnitID, "unassigned")} 
           >
-            Deny
+            <XIcon className="inline-block h-4 w-4" />Deny
           </Button>
         </div>
       ),
