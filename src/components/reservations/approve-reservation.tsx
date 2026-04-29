@@ -30,12 +30,8 @@ export function ApproveReservation({vesselId, cargoId, origin, bcoName, bcoEmail
         setIsDialogOpen(true);
     }
 
-    const handleChange = (value: any) => {
-        if (value && typeof value === "string") {
-            if (value === "true") return true;
-            if (value === "false") return false;
-        }
-        return setSelectedValue(value);
+    const handleChange = (value: string) => {
+        setSelectedValue(value === "true");
     }
 
     return (
