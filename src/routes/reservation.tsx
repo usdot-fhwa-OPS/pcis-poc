@@ -653,8 +653,6 @@ async function updateBooking(id: string, status: string, reservationDate?: strin
     return false; // Explicitly return false when the update fails
   }
 }
-       
-//Update TWIC Requirement
 
 
 const [BCOOngoingData, setBCOOngoingBookings] = useState<BCOOngoingBooking[]>([]);
