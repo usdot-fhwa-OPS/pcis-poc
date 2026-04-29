@@ -656,31 +656,6 @@ async function updateBooking(id: string, status: string, reservationDate?: strin
        
 //Update TWIC Requirement
 
-async function updateTwicEscortRequired(id: string, twicEscortRequired: boolean): Promise<boolean> {
-  if (!navigator.onLine) {
-    console.error("No internet connection. Update not submitted. Please check your connection and try again.");
-    toast.error("No internet connection. Update not submitted. Please check your connection and try again.");
-    return false; // Explicitly return false when offline
-  }
-
-  try {
-    let updatePayload: any = { cargoUnitID: id, twicEscortRequired: twicEscortRequired };
-
-    const { data: updatedContainerStatus } = await client.models.Container.update(updatePayload);
-    
-    console.log("Updated TWIC escort requirement:", updatedContainerStatus);
-
-    // Refresh relevant data after successful update
-    await fetchterminal_operator_requested();
-    await fetchTerminalOperatorModified();
-
-    return true;
-  } catch (error) {
-    console.error("Error updating TWIC escort requirement:", error);
-    toast.error("Error updating TWIC escort requirement. Please try again.");
-    return false; // Explicitly return false when the update fails
-  }
-}
 
 const [BCOOngoingData, setBCOOngoingBookings] = useState<BCOOngoingBooking[]>([]);
 
@@ -741,10 +716,10 @@ useEffect(() => {
         </div>
         <div className="w-xl max-w-9/10">
         <TabsContent value="requested">
-          <TerminalBookingsTable data={terminalopBookingsupcoming} status="Requested" meta={{updateBooking, updateTwicEscortRequired}} />
+          <TerminalBookingsTable data={terminalopBookingsupcoming} status="Requested" meta={{updateBooking}} />
         </TabsContent>
         <TabsContent value="modification">
-          <TerminalBookingsTable data={terminalOpModifiedBookings} status="Modified" meta={{updateBooking, updateTwicEscortRequired}} />
+          <TerminalBookingsTable data={terminalOpModifiedBookings} status="Modified" meta={{updateBooking}} />
         </TabsContent>
         <TabsContent value="ongoing">
           <TerminalBookingsTable data={terminalopBookingongoing} status="Ongoing" meta={{updateBooking, markBookingLate}} />
