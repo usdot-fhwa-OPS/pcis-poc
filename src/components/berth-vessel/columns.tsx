@@ -11,40 +11,78 @@ export interface BerthRequest {
   departureTime: string
   dateRequested: string
   timeRequested: string
+  status?: string
+  berthAssignment?: string
+  actualArrivalDate?: string
+  actualArrivalTime?: string
+  actualDepartureDate?: string
+  actualDepartureTime?: string
 }
 
-const baseColumns: ColumnDef<BerthRequest>[] = [
-  { accessorKey: "vesselId", header: "Vessel ID" },
-  {
-    accessorKey: "terminal",
-    header: "Terminal",
-    cell: ({ row }) => (
-      <span className="flex items-center gap-2">
-        {row.original.terminal}
-        <a href={`mailto:${row.original.terminalEmail}`}>
-          <Button variant="outline" size="sm" className="h-6 px-2 text-xs">
-            Contact
-          </Button>
-        </a>
-      </span>
-    ),
-  },
-  {
-    id: "arrival",
-    header: "Arrival (ETA)",
-    cell: ({ row }) => `${row.original.arrivalDate} ${row.original.arrivalTime}`,
-  },
-  {
-    id: "departure",
-    header: "Departure (ETD)",
-    cell: ({ row }) => `${row.original.departureDate} ${row.original.departureTime}`,
-  },
-  {
-    id: "dateRequested",
-    header: "Date Requested",
-    cell: ({ row }) => `${row.original.dateRequested} ${row.original.timeRequested}`,
-  },
-]
+const vesselIdColumn: ColumnDef<BerthRequest> = {
+  accessorKey: "vesselId",
+  header: "Vessel ID",
+}
+
+const terminalColumn: ColumnDef<BerthRequest> = {
+  accessorKey: "terminal",
+  header: "Terminal",
+  cell: ({ row }) => (
+    <span className="flex items-center gap-2">
+      {row.original.terminal}
+      <a href={`mailto:${row.original.terminalEmail}`}>
+        <Button variant="outline" size="sm" className="h-6 px-2 text-xs">
+          Contact
+        </Button>
+      </a>
+    </span>
+  ),
+}
+
+const berthAssignmentColumn: ColumnDef<BerthRequest> = {
+  accessorKey: "berthAssignment",
+  header: "Berth Assignment",
+}
+
+const actualArrivalColumn: ColumnDef<BerthRequest> = {
+  id: "actualArrival",
+  header: "Actual Arrival (ATA)",
+  cell: ({ row }) => `${row.original.actualArrivalDate} ${row.original.actualArrivalTime}`,
+}
+
+const actualDepartureColumn: ColumnDef<BerthRequest> = {
+  id: "actualDeparture",
+  header: "Actual Departure (ATD)",
+  cell: ({ row }) => `${row.original.actualDepartureDate} ${row.original.actualDepartureTime}`,
+}
+
+const arrivalColumn: ColumnDef<BerthRequest> = {
+  id: "arrival",
+  header: "Arrival (ETA)",
+  cell: ({ row }) => `${row.original.arrivalDate} ${row.original.arrivalTime}`,
+}
+
+const departureColumn: ColumnDef<BerthRequest> = {
+  id: "departure",
+  header: "Departure (ETD)",
+  cell: ({ row }) => `${row.original.departureDate} ${row.original.departureTime}`,
+}
+
+const dateRequestedColumn: ColumnDef<BerthRequest> = {
+  id: "dateRequested",
+  header: "Date Requested",
+  cell: ({ row }) => `${row.original.dateRequested} ${row.original.timeRequested}`,
+}
+
+const statusColumn: ColumnDef<BerthRequest> = {
+  accessorKey: "status",
+  header: "Status",
+  cell: ({ row }) => (
+    <span className="px-2 py-1 text-sm font-bold rounded-md bg-gray-300 text-black whitespace-nowrap">
+      {row.original.status}
+    </span>
+  ),
+}
 
 const actionsColumn: ColumnDef<BerthRequest> = {
   id: "actions",
@@ -57,9 +95,43 @@ const actionsColumn: ColumnDef<BerthRequest> = {
   ),
 }
 
-export const editableColumns = (): ColumnDef<BerthRequest>[] => [
-  ...baseColumns,
+export const requestedColumns = (): ColumnDef<BerthRequest>[] => [
+  vesselIdColumn,
+  terminalColumn,
+  arrivalColumn,
+  departureColumn,
+  dateRequestedColumn,
+  statusColumn,
   actionsColumn,
 ]
 
-export const readOnlyColumns = (): ColumnDef<BerthRequest>[] => [...baseColumns]
+export const modificationRequestedColumns = (): ColumnDef<BerthRequest>[] => [
+  vesselIdColumn,
+  terminalColumn,
+  arrivalColumn,
+  departureColumn,
+  dateRequestedColumn,
+  actionsColumn,
+]
+
+export const ongoingColumns = (): ColumnDef<BerthRequest>[] => [
+  vesselIdColumn,
+  terminalColumn,
+  berthAssignmentColumn,
+  actualArrivalColumn,
+  arrivalColumn,
+  departureColumn,
+  dateRequestedColumn,
+  actionsColumn,
+]
+
+export const completedColumns = (): ColumnDef<BerthRequest>[] => [
+  vesselIdColumn,
+  terminalColumn,
+  berthAssignmentColumn,
+  actualArrivalColumn,
+  actualDepartureColumn,
+  arrivalColumn,
+  departureColumn,
+  dateRequestedColumn,
+]
