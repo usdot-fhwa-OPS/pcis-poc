@@ -74,15 +74,6 @@ const dateRequestedColumn: ColumnDef<BerthRequest> = {
   cell: ({ row }) => `${row.original.dateRequested} ${row.original.timeRequested}`,
 }
 
-const statusColumn: ColumnDef<BerthRequest> = {
-  accessorKey: "status",
-  header: "Status",
-  cell: ({ row }) => (
-    <span className="px-2 py-1 text-sm font-bold rounded-md bg-gray-300 text-black whitespace-nowrap">
-      {row.original.status}
-    </span>
-  ),
-}
 
 const actionsColumn: ColumnDef<BerthRequest> = {
   id: "actions",
@@ -101,7 +92,6 @@ export const requestedColumns = (): ColumnDef<BerthRequest>[] => [
   arrivalColumn,
   departureColumn,
   dateRequestedColumn,
-  statusColumn,
   actionsColumn,
 ]
 
