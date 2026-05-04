@@ -228,176 +228,179 @@ const [endTime, setEndTime] = useState<string | undefined>(timeOptions[0])
                     </TooltipProvider>
                 </DialogTrigger>
                 <DialogContent className="DialogContent">
-                    <ScrollArea className="h-[400px] w-full rounded-md border p-4">
-                        <div className="space-y-4">
-                            <div className="grid grid-cols-5 gap-2">
-                                <div className="h-10 col-span-3 col-start-1 ...">
-                                    <DialogHeader>
-                                        <DialogTitle>Add Temporrary Capacity</DialogTitle>
-                                        <DialogDescription></DialogDescription>
-                                    </DialogHeader>
-                                </div>
-                                <div className="col-start-1 col-end-2 ...">
-                                    <Label htmlFor="terminalCapacity" className="text-right">
-                                        Terminal Capacity
-                                    </Label>
-                                </div>
-                                <div className="col-3">
-                                    <Input
-                                        id="terminalCapacity"
-                                        type="number"
-                                        value={terminalCapacity}
-                                        onChange={(e) => setTerminalCapacity(Number(e.target.value))}
-                                        className="col-span-1"
-                                        min="0"
-                                        step="1"
-                                    />
-                                </div>
-                                <div className="col-start-3 col-end-6 ...">
-                                    <Label htmlFor="terminalCapacity" className="text-left">
-                                        reservation(s) per day
-                                    </Label>
-                                </div>
-                                <div className="col-1">
-                                    <Label htmlFor="terminalCapacity" className="text-right">Start</Label>
-                                </div>
-
-                                <div className="col-span-2 col-end-4 ...">{showStartDateCalendar()}</div>
-                                <div className="col-start-4 col-end-6 ...">{showStartTime()}</div>
-                                <div className="col-1">
-                                    <Label htmlFor="terminalCapacity" className="text-right">End</Label>
-                                </div>
-
-                                <div className="col-span-2 col-end-4 ...">
-                                    {showEndDateCalendar()}
-
-                                </div>
-                                <div className="col-start-4 col-end-6 ...">
-                                    {showEndTime()}
-
-                                </div>
-                                <div className="col-start-1 col-end-2 ...">Repeat</div>
-                                <div className="col-start-2 col-end-5 ...">
-                                    <Select onValueChange={setRepeatOption}>
-                                        <SelectTrigger className={cn("w-[150px]",)}>
-                                            <SelectValue placeholder={repeatOption} />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            {repeatOptionList.map((repeatOption) => (
-                                                <SelectItem key={repeatOption} value={repeatOption}>
-                                                    {repeatOption}
-                                                </SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
-
-                                </div>
-                                {showCustomRepeat() &&
-                                    <>
-                                        <div className="col-start-1 col-end-2 ...">Frequency</div>
-                                        <div className="col-start-2 col-end-5 ...">
-                                            <Select onValueChange={setFrequency}>
-                                                <SelectTrigger className={cn("w-[150px]",)}>
-                                                    <SelectValue placeholder={frequency} />
-                                                </SelectTrigger>
-                                                <SelectContent>
-                                                    {frequencyList.map((frequency) => (
-                                                        <SelectItem key={frequency} value={frequency}>
-                                                            {frequency}
-                                                        </SelectItem>
-                                                    ))}
-                                                </SelectContent>
-                                            </Select>
-
-                                        </div>
-                                        {showDailyRepeatOption() &&
-                                            <DailyRepeatOptions
-                                                dailyEvery={dailyEvery}
-                                                setDailyEvery={setDailyEvery} />
-                                        }
-
-                                        {showWeeklyRepeatOption() &&
-
-                                            <WeeklyRepeatOptions
-                                                weeklyEvery={weeklyEvery}
-                                                setWeeklyEvery={setWeeklyEvery}
-                                                weeklyOnDays={weeklyOnDays}
-                                                setWeeklyOnDays={setWeeklyOnDays}></WeeklyRepeatOptions>
-                                        }
-
-                                        {showMonthlyRepeatOption() &&
-
-                                            <MonthlyRepeatOptions
-                                                monthlyEvery={monthlyEvery}
-                                                setMonthlyEvery={setMonthlyEvery}
-                                                repeatCycle={repeatCycle}
-                                                setRepeatCycle={setRepeatCycle}
-                                                daysOfMonth={daysOfMonth}
-                                                setDaysOfMonth={setDaysOfMonth}
-                                                onTheWeek={onTheWeek}
-                                                setOnTheWeek={setOnTheWeek}
-                                                onTheWeekDay={onTheWeekDay}
-                                                setOnTheWeekDay={setOnTheWeekDay} />
-
-                                        }
-                                        {showYearlyRepeatOption() &&
-
-                                            <YearlyRepeatOptions
-                                                yearlyEvery={yearlyEvery}
-                                                setYearlyEvery={setYearlyEvery}
-                                                monthsOfYear={monthsOfYear}
-                                                setMonthsOfYear={setMonthsOfYear}
-                                                dayOfWeekforYearly={dayOfWeekforYearly}
-                                                setDayOfWeekforYearly={setDayOfWeekforYearly}
-                                                onTheWeek={onTheWeek}
-                                                setOnTheWeek={setOnTheWeek}
-                                                onTheWeekDay={onTheWeekDay}
-                                                setOnTheWeekDay={setOnTheWeekDay} />
-
-                                        }
-                                    </>
-                                }
-
-                                <div className="col-start-1 col-end-2 ...">Reason</div>
-                                <div className="col-start-2 col-end-5 ...">
-                                    <Select onValueChange={setReason}>
-                                        <SelectTrigger className={cn("w-[150px]",)}>
-                                            <SelectValue placeholder={reason} />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            {reasonList.map((reason) => (
-                                                <SelectItem key={reason} value={reason}>
-                                                    {reason}
-                                                </SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
-                                </div>
-                                <div className="col-start-2 col-end-5 ...">
-                                    {showOtherReason() &&
+                    <div className="-mx-4 no-scrollbar max-h-[100vh] overflow-y-auto px-4">
+                        <ScrollArea className="h-[800px] w-full rounded-md border p-4">
+                            <div className="space-y-4">
+                                <div className="grid grid-cols-5 gap-2">
+                                    <div className="h-10 col-span-3 col-start-1 ...">
+                                        <DialogHeader>
+                                            <DialogTitle>Add Temporrary Capacity</DialogTitle>
+                                            <DialogDescription></DialogDescription>
+                                        </DialogHeader>
+                                    </div>
+                                    <div className="col-start-1 col-end-2 ...">
+                                        <Label htmlFor="terminalCapacity" className="text-right">
+                                            Terminal Capacity
+                                        </Label>
+                                    </div>
+                                    <div className="col-3">
                                         <Input
-                                            id="otherReason"
-                                            type="string"
-                                            value={otherReason}
-                                            onChange={(e) => setOtherReason(e.target.value)}
+                                            id="terminalCapacity"
+                                            type="number"
+                                            value={terminalCapacity}
+                                            onChange={(e) => setTerminalCapacity(Number(e.target.value))}
                                             className="col-span-1"
+                                            min="0"
+                                            step="1"
                                         />
+                                    </div>
+                                    <div className="col-start-3 col-end-6 ...">
+                                        <Label htmlFor="terminalCapacity" className="text-left">
+                                            reservation(s) per day
+                                        </Label>
+                                    </div>
+                                    <div className="col-1">
+                                        <Label htmlFor="terminalCapacity" className="text-right">Start</Label>
+                                    </div>
+
+                                    <div className="col-span-2 col-end-4 ...">{showStartDateCalendar()}</div>
+                                    <div className="col-start-4 col-end-6 ...">{showStartTime()}</div>
+                                    <div className="col-1">
+                                        <Label htmlFor="terminalCapacity" className="text-right">End</Label>
+                                    </div>
+
+                                    <div className="col-span-2 col-end-4 ...">
+                                        {showEndDateCalendar()}
+
+                                    </div>
+                                    <div className="col-start-4 col-end-6 ...">
+                                        {showEndTime()}
+
+                                    </div>
+                                    <div className="col-start-1 col-end-2 ...">Repeat</div>
+                                    <div className="col-start-2 col-end-5 ...">
+                                        <Select onValueChange={setRepeatOption}>
+                                            <SelectTrigger className={cn("w-[150px]",)}>
+                                                <SelectValue placeholder={repeatOption} />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                {repeatOptionList.map((repeatOption) => (
+                                                    <SelectItem key={repeatOption} value={repeatOption}>
+                                                        {repeatOption}
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+
+                                    </div>
+                                    {showCustomRepeat() &&
+                                        <>
+                                            <div className="col-start-1 col-end-2 ...">Frequency</div>
+                                            <div className="col-start-2 col-end-5 ...">
+                                                <Select onValueChange={setFrequency}>
+                                                    <SelectTrigger className={cn("w-[150px]",)}>
+                                                        <SelectValue placeholder={frequency} />
+                                                    </SelectTrigger>
+                                                    <SelectContent>
+                                                        {frequencyList.map((frequency) => (
+                                                            <SelectItem key={frequency} value={frequency}>
+                                                                {frequency}
+                                                            </SelectItem>
+                                                        ))}
+                                                    </SelectContent>
+                                                </Select>
+
+                                            </div>
+                                            {showDailyRepeatOption() &&
+                                                <DailyRepeatOptions
+                                                    dailyEvery={dailyEvery}
+                                                    setDailyEvery={setDailyEvery} />
+                                            }
+
+                                            {showWeeklyRepeatOption() &&
+
+                                                <WeeklyRepeatOptions
+                                                    weeklyEvery={weeklyEvery}
+                                                    setWeeklyEvery={setWeeklyEvery}
+                                                    weeklyOnDays={weeklyOnDays}
+                                                    setWeeklyOnDays={setWeeklyOnDays}></WeeklyRepeatOptions>
+                                            }
+
+                                            {showMonthlyRepeatOption() &&
+
+                                                <MonthlyRepeatOptions
+                                                    monthlyEvery={monthlyEvery}
+                                                    setMonthlyEvery={setMonthlyEvery}
+                                                    repeatCycle={repeatCycle}
+                                                    setRepeatCycle={setRepeatCycle}
+                                                    daysOfMonth={daysOfMonth}
+                                                    setDaysOfMonth={setDaysOfMonth}
+                                                    onTheWeek={onTheWeek}
+                                                    setOnTheWeek={setOnTheWeek}
+                                                    onTheWeekDay={onTheWeekDay}
+                                                    setOnTheWeekDay={setOnTheWeekDay} />
+
+                                            }
+                                            {showYearlyRepeatOption() &&
+
+                                                <YearlyRepeatOptions
+                                                    yearlyEvery={yearlyEvery}
+                                                    setYearlyEvery={setYearlyEvery}
+                                                    monthsOfYear={monthsOfYear}
+                                                    setMonthsOfYear={setMonthsOfYear}
+                                                    dayOfWeekforYearly={dayOfWeekforYearly}
+                                                    setDayOfWeekforYearly={setDayOfWeekforYearly}
+                                                    onTheWeek={onTheWeek}
+                                                    setOnTheWeek={setOnTheWeek}
+                                                    onTheWeekDay={onTheWeekDay}
+                                                    setOnTheWeekDay={setOnTheWeekDay} />
+
+                                            }
+                                        </>
                                     }
+
+                                    <div className="col-start-1 col-end-2 ...">Reason</div>
+                                    <div className="col-start-2 col-end-5 ...">
+                                        <Select onValueChange={setReason}>
+                                            <SelectTrigger className={cn("w-[150px]",)}>
+                                                <SelectValue placeholder={reason} />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                {reasonList.map((reason) => (
+                                                    <SelectItem key={reason} value={reason}>
+                                                        {reason}
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+                                    <div className="col-start-2 col-end-5 ...">
+                                        {showOtherReason() &&
+                                            <Input
+                                                id="otherReason"
+                                                type="string"
+                                                value={otherReason}
+                                                onChange={(e) => setOtherReason(e.target.value)}
+                                                className="col-span-1"
+                                            />
+                                        }
+                                    </div>
+
                                 </div>
 
+
+                                <DialogFooter>
+                                    <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
+                                        Cancel
+                                    </Button>
+                                    <Button onClick={() => { save() }}>
+                                        Save
+                                    </Button>
+                                </DialogFooter>
                             </div>
+                        </ScrollArea>
+                    </div>
 
-
-                            <DialogFooter>
-                                <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
-                                    Cancel
-                                </Button>
-                                <Button onClick={() => { save() }}>
-                                    Save
-                                </Button>
-                            </DialogFooter>
-                        </div>
-                    </ScrollArea>
 
                 </DialogContent>
             </Dialog>

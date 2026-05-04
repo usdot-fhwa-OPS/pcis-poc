@@ -363,7 +363,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
 
                           const intervalLength = item.repeatConfig.interval * 7;
                           const whicDay = daysCount % intervalLength;
-                          if ((whicDay >= 0) && (whicDay < intervalLength)) {
+                          if ((whicDay >= 0) && (whicDay <= 7)) {
                             const dayName = format(date, 'EEEE');
 
                             if (item.repeatConfig?.daysOfWeek?.find(day => dayName === day)) {
@@ -380,7 +380,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
 
                           const intervalLength = item.repeatConfig.interval * 30;
                           const whicDay = daysCount % intervalLength;
-                          if ((whicDay >= 0) && (whicDay < intervalLength)) {
+                          if ((whicDay >= 0) && (whicDay <= 30)) {
                               
                             if ('Each' === item.repeatConfig.cycle) {
 
@@ -410,7 +410,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
 
                           const intervalLength = item.repeatConfig.interval * 365;
                           const whicDay = daysCount % intervalLength;
-                          if ((whicDay >= 0) && (whicDay < intervalLength)) {
+                          if ((whicDay >= 0) && (whicDay <= 365)) {
 
                             const month = format(date, 'MMMM');
                             if (item.repeatConfig.months?.indexOf(month) != -1) {
