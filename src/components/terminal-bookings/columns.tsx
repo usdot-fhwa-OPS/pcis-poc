@@ -105,14 +105,14 @@ export const columns = (status: string): ColumnDef<any>[] => {
   if (status === "Ongoing") {
     baseColumns.push({
       accessorKey: "reservationStatus",
-      header: () => <div className="w-[150px] text-center ">Status</div>,
+      header: () => <div className="w-[150px] text-center">Status</div>,
      // Adjust width as needed
       cell: ({ row }) => {
         const status = row.original.reservationStatus; // Get status value
         const isLate = status === "Late for Pick Up"; // Check if status is "Late"
   
         return (
-          <div className="w-[150px]">
+          <div className="w-[150px] text-center">
           <Badge
             variant="secondary"
             className={`font-semibold ${
