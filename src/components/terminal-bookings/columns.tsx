@@ -8,6 +8,7 @@ import type { Schema } from '../../../amplify/data/resource';
 import { TermOperatorCompletedBookings } from "../../routes/reservation.tsx"
 import { Checkbox } from "../ui/checkbox.tsx";
 import { ApproveReservation } from "../reservations/approve-reservation.tsx";
+import { Badge } from "../ui/badge.tsx";
 const client = generateClient<Schema>();
 export const columns = (status: string): ColumnDef<any>[] => {
   const baseColumns: ColumnDef<any>[] = [
@@ -119,6 +120,8 @@ export const columns = (status: string): ColumnDef<any>[] => {
           >
             {status}
           </span>
+
+          <Badge variant="secondary">{status}</Badge>
         </div>
         );
       },
