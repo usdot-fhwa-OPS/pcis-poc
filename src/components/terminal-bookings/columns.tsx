@@ -112,16 +112,16 @@ export const columns = (status: string): ColumnDef<any>[] => {
         const isLate = status === "Late for Pick Up"; // Check if status is "Late"
   
         return (
-          <div className="w-[150px] flex justify-center">
-          <span
-            className={`px-2 py-1 text-sm font-bold rounded-md bg-gray-300 w-full ${
+          <div className="w-[150px] flex flex-col justify-start">
+          <Badge
+            variant="secondary"
+            className={`font-semibold ${
               isLate ? "text-red-500" : "text-black"
             } text-center whitespace-normal break-words`}
           >
             {status}
-          </span>
-
-          <Badge variant="secondary">{status}</Badge>
+          </Badge>
+          <Badge variant="secondary" className="mt-2">{status}</Badge>
         </div>
         );
       },
