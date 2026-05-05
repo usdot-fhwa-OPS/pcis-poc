@@ -155,18 +155,23 @@ export const columns = (status: string): ColumnDef<any>[] => {
       enableColumnFilter: false,
     },
     {
+      accessorKey: "twicEscortRequired",
       header: "TWIC",
-      cell: () => {
-        return (
-          <div className="min-w-[162px]">
-            <Badge 
-              className="border-amber-200 rounded-full bg-amber-100 text-amber-700 hover:bg-amber-100/80 gap-1"
-            >
-              <ShieldHalf fill="#fff" className="inline-block w-4 h-4" />
-              TWIC Escort Required
-            </Badge>
-          </div>
-        );
+      cell: ({ row }) => {
+        const required = row.original.twicEscortRequired; // Get TWIC value
+        
+        if (required === true) {
+          return (
+            <div className="min-w-[162px]">
+              <Badge 
+                className="border-amber-200 rounded-full bg-amber-100 text-amber-700 hover:bg-amber-100/80 gap-1"
+              >
+                <ShieldHalf fill="#fff" className="inline-block w-4 h-4" />
+                TWIC Escort Required
+              </Badge>
+            </div>
+          );
+        }
       },
     });
   }
