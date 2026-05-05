@@ -155,11 +155,11 @@ export const columns = (status: string): ColumnDef<any>[] => {
       enableColumnFilter: false,
     },
     {
-      header: "TWIC",
+      header: () => <div className="min-w-[180px]"><abbr className="decoration-[1px] decoration-dotted underline-offset-4" title="Transportation Worker Identification Credential">TWIC</abbr></div>,
       cell: () => {
         return (
           <Badge 
-            className="border-amber-200 rounded-full bg-amber-100 text-amber-700 hover:bg-amber-100/80 gap-1 mt-2"
+            className="border-amber-200 rounded-full bg-amber-100 text-amber-700 hover:bg-amber-100/80 gap-1"
           >
             <ShieldHalf fill="#fff" className="inline-block w-4 h-4" />
             TWIC Escort Required
