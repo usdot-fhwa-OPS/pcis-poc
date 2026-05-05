@@ -1,7 +1,7 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "../ui/button.tsx";
 import { useState } from "react";
-import { Flag, XIcon } from "lucide-react";
+import { Flag, XIcon, ShieldHalf } from "lucide-react";
 import {TerminalOperatorDataTableMeta} from './data-table.tsx'
 import { generateClient } from 'aws-amplify/data';
 import type { Schema } from '../../../amplify/data/resource';
@@ -114,14 +114,18 @@ export const columns = (status: string): ColumnDef<any>[] => {
         return (
           <div className="w-[150px] text-center">
           <Badge
-            variant="secondary"
-            className={`font-semibold ${
-              isLate ? "text-red-500" : "text-black"
-            } text-center whitespace-normal break-words`}
+            className={`border-transparent rounded-full ${
+              isLate ? "bg-red-100 hover:bg-red-100/80 text-red-700" : "bg-blue-50 hover:bg-blue-50/80 text-blue-700"
+            } whitespace-normal break-words`}
           >
             {status}
           </Badge>
-          <Badge variant="secondary" className="mt-2">{status}</Badge>
+          <Badge 
+            className="border-amber-200 rounded-full bg-amber-100 text-amber-700 hover:bg-amber-100/80 mt-2"
+          >
+            <ShieldHalf fill="#fff" className="inline-block" />
+            TWIC Escort Required
+          </Badge>
         </div>
         );
       },
