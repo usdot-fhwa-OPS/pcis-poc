@@ -155,11 +155,7 @@ export const columns = (status: string): ColumnDef<any>[] => {
       enableColumnFilter: false,
     },
     {
-      header: () => {
-        return (
-          <abbr className="decoration-[1px] decoration-dotted underline-offset-4" title="Transportation Worker Identification Credential">TWIC</abbr>
-        );
-      },
+      header: "TWIC",
       cell: () => {
         return (
           <div className="min-w-[180px]">
