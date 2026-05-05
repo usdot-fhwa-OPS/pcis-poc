@@ -121,9 +121,9 @@ export const columns = (status: string): ColumnDef<any>[] => {
             {status}
           </Badge>
           <Badge 
-            className="border-amber-200 rounded-full bg-amber-100 text-amber-700 hover:bg-amber-100/80 mt-2"
+            className="border-amber-200 rounded-full bg-amber-100 text-amber-700 hover:bg-amber-100/80 gap-1 mt-2"
           >
-            <ShieldHalf fill="#fff" className="inline-block" />
+            <ShieldHalf fill="#fff" className="inline-block w-4 h-4" />
             TWIC Escort Required
           </Badge>
         </div>
