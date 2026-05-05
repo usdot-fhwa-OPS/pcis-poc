@@ -158,7 +158,7 @@ export const columns = (status: string): ColumnDef<any>[] => {
       header: "TWIC",
       cell: () => {
         return (
-          <div className="min-w-[180px]">
+          <div className="min-w-[162px]">
             <Badge 
               className="border-amber-200 rounded-full bg-amber-100 text-amber-700 hover:bg-amber-100/80 gap-1"
             >
