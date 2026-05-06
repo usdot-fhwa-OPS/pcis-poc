@@ -261,13 +261,13 @@ export const CompletedColumn = (): ColumnDef<any>[] => {
     },
     {
       accessorKey: "reservationStatus",
-      header: "Reservation Status",
+      header: <div className="min-w-[112px] text-center">Reservation Status</div>>,
       cell: ({ row }) => {
         const status = row.original.reservationStatus; // Get status value
         const isLate = status === "Late for Pick Up"; // Check if status is "Late"
 
         return (
-          <div className="w-[150px] text-center">
+          <div className="min-w-[112px] text-center">
             <Badge
               className={`border-transparent rounded-full ${
                 isLate ? "bg-red-100 hover:bg-red-100/80 text-red-700" : "bg-secondary hover:bg-secondary/80 text-secondary-foreground"
