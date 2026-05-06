@@ -162,7 +162,7 @@ export const columns = (status: string): ColumnDef<any>[] => {
         
         if (required === true) {
           return (
-            <div className="min-w-[162px]">
+            <div className="min-w-[164px]">
               <Badge 
                 className="border-amber-200 rounded-full bg-amber-100 text-amber-700 hover:bg-amber-100/80 gap-1"
               >
@@ -285,6 +285,26 @@ export const CompletedColumn = (): ColumnDef<any>[] => {
       accessorKey: "resPickupDate",
       header: "Reservation Pickup Date",
     },
+    {
+      accessorKey: "twicEscortRequired",
+      header: "TWIC",
+      cell: ({ row }) => {
+        const required = row.original.twicEscortRequired; // Get TWIC value
+        
+        if (required === true) {
+          return (
+            <div className="min-w-[172px]">
+              <Badge 
+                className="border-green-100 rounded-full bg-green-50 text-green-600 hover:bg-green-50/80 gap-1"
+              >
+                <ShieldHalf fill="#fff" className="inline-block w-4 h-4" />
+                TWIC Escort Confirmed
+              </Badge>
+            </div>
+          );
+        }
+      },
+    }
   ];
 
   return baseColumns1;
