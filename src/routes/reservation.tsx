@@ -82,6 +82,7 @@ const selectionSetTerminal_CompletedData = [
   'reservationStatus',
   'resPickupDate',
   'reservationTime',
+  'twicEscortRequired',
 ] as const;
 
 //Create a type based on your selectionSet that will be later used for the columns.tsx file of the able
