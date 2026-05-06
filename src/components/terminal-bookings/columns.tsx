@@ -261,7 +261,7 @@ export const CompletedColumn = (): ColumnDef<any>[] => {
     },
     {
       accessorKey: "reservationStatus",
-      header: <div className="min-w-[112px] text-center">Reservation Status</div>>,
+      header: () => <div className="min-w-[112px] text-center">Reservation Status</div>>,
       cell: ({ row }) => {
         const status = row.original.reservationStatus; // Get status value
         const isLate = status === "Late for Pick Up"; // Check if status is "Late"
