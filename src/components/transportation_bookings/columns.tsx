@@ -1,7 +1,8 @@
 import { ColumnDef } from "@tanstack/react-table";
+import { Badge } from "../ui/badge.tsx";
 import { Button } from "../ui/button.tsx";
 import { useState } from "react";
-import { Flag, CalendarIcon, Clock, Pencil} from "lucide-react";
+import { Flag, CalendarIcon, Clock, Pencil, ShieldHalf } from "lucide-react";
 //import { Checkbox } from "../ui/checkbox.tsx"
 import { Calendar } from "../ui/calendar"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog"
