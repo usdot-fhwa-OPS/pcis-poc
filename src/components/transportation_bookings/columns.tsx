@@ -90,26 +90,6 @@ export const columns = (): ColumnDef<any>[] => {
       
     },
     {
-      accessorKey: "twicEscortRequired",
-      header: () => <abbr className="decoration-[1px] decoration-dotted underline-offset-4" title="Transportation Worker Identification Credential">TWIC</abbr>,
-      cell: ({ row }) => {
-        const required = row.original.twicEscortRequired; // Get TWIC value
-        
-        if (required === true) {
-          return (
-            <div className="min-w-[164px]">
-              <Badge 
-                className="border-amber-200 rounded-full bg-amber-100 text-amber-700 hover:bg-amber-100/80 gap-1"
-              >
-                <ShieldHalf fill="#fff" className="inline-block w-4 h-4" />
-                TWIC Escort Required
-              </Badge>
-            </div>
-          );
-        }
-      }
-    },
-    {
       accessorKey: "contact_bco",
       header: "Contact BCO",
       cell: ({ row }) => {
@@ -752,6 +732,26 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
         </Dialog>
         )
       },
+    },
+    {
+      accessorKey: "twicEscortRequired",
+      header: () => <abbr className="decoration-[1px] decoration-dotted underline-offset-4" title="Transportation Worker Identification Credential">TWIC</abbr>,
+      cell: ({ row }) => {
+        const required = row.original.twicEscortRequired; // Get TWIC value
+        
+        if (required === true) {
+          return (
+            <div className="min-w-[164px]">
+              <Badge 
+                className="border-amber-200 rounded-full bg-amber-100 text-amber-700 hover:bg-amber-100/80 gap-1"
+              >
+                <ShieldHalf fill="#fff" className="inline-block w-4 h-4" />
+                TWIC Escort Required
+              </Badge>
+            </div>
+          );
+        }
+      }
     },
     {
       accessorKey: "contact_bco",
