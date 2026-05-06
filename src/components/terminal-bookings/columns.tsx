@@ -156,7 +156,7 @@ export const columns = (status: string): ColumnDef<any>[] => {
     },
     {
       accessorKey: "twicEscortRequired",
-      header: "TWIC",
+      header: () => <abbr className="decoration-[1px] decoration-dotted underline-offset-4" title="Transportation Worker Identification Credential">TWIC</abbr>,
       cell: ({ row }) => {
         const required = row.original.twicEscortRequired; // Get TWIC value
         
@@ -287,7 +287,7 @@ export const CompletedColumn = (): ColumnDef<any>[] => {
     },
     {
       accessorKey: "twicEscortRequired",
-      header: "TWIC",
+      header: () => <abbr className="decoration-[1px] decoration-dotted underline-offset-4" title="Transportation Worker Identification Credential">TWIC</abbr>,
       cell: ({ row }) => {
         const required = row.original.twicEscortRequired; // Get TWIC value
         
