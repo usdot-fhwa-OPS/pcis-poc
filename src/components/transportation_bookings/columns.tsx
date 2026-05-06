@@ -214,6 +214,26 @@ export const CompletedColumn = (): ColumnDef<any>[] => {
       accessorKey: "resPickupDate",
       header: "Reservation Pickup Date",
     },
+    {
+      accessorKey: "twicEscortRequired",
+      header: () => <abbr className="decoration-[1px] decoration-dotted underline-offset-4" title="Transportation Worker Identification Credential">TWIC</abbr>,
+      cell: ({ row }) => {
+        const required = row.original.twicEscortRequired; // Get TWIC value
+        
+        if (required === true) {
+          return (
+            <div className="min-w-[172px]">
+              <Badge 
+                className="border-green-100 rounded-full bg-green-50 text-green-600 hover:bg-green-50/80 gap-1"
+              >
+                <ShieldHalf fill="#fff" className="inline-block w-4 h-4" />
+                TWIC Escort Confirmed
+              </Badge>
+            </div>
+          );
+        }
+      },
+    }
   ];
   return baseColumns;
 };
