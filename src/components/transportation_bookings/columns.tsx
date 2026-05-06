@@ -189,22 +189,20 @@ export const CompletedColumn = (): ColumnDef<any>[] => {
     {
       accessorKey: "reservationStatus",
       header: () => (
-        <div className="w-[150px] text-center">
-          Reservation Status
-        </div>
+        <div className="min-w-[112px] text-center">Reservation Status</div>
       ),
       cell: ({ row }) => {
         const status = row.original.reservationStatus; // Get status value
         const isLate = status === "Late for Pick Up"; // Check if status is "Late"
         return (
-          <div className="w-[150px] flex justify-center">
-            <span
-              className={`px-2 py-1 text-sm font-bold rounded-md bg-gray-300 w-full ${
-                isLate ? "text-red-500" : "text-black"
-              } text-center whitespace-normal break-words`}
+          <div className="min-w-[112px] text-center">
+            <Badge
+              className={`border-transparent rounded-full ${
+                isLate ? "bg-red-100 hover:bg-red-100/80 text-red-700" : "bg-secondary hover:bg-secondary/80 text-secondary-foreground"
+              } whitespace-normal break-words`}
             >
               {status}
-            </span>
+            </Badge>
           </div>
         );
 
