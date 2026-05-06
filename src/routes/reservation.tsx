@@ -66,6 +66,7 @@ const selectionSetTransportation_CompletedData = [
   'reservationStatus',
   'resPickupDate',
   'reservationTime',
+  'twicEscortRequired'
 ] as const;
 
 //Define the selection of data that will be used for the table
@@ -82,7 +83,7 @@ const selectionSetTerminal_CompletedData = [
   'reservationStatus',
   'resPickupDate',
   'reservationTime',
-  'twicEscortRequired',
+  'twicEscortRequired'
 ] as const;
 
 //Create a type based on your selectionSet that will be later used for the columns.tsx file of the able

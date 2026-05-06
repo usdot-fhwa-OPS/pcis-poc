@@ -78,6 +78,7 @@ const selectionSetTransportation_CompletedData = [
   'reservationStatus',
   'resPickupDate',
   'reservationTime',
+  'twicEscortRequired',
 ] as const;
 
 //Define the selection of data that will be used for the table
