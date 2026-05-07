@@ -181,7 +181,7 @@ export const columns = (status: string): ColumnDef<any>[] => {
           );
         } else {
           return (
-            <span className="text-gray-500">&ndash;</span>
+            <span className="text-gray-400 font-semibold">&mdash;</span>
           )
         }
       }
@@ -324,7 +324,7 @@ export const CompletedColumn = (): ColumnDef<any>[] => {
           );
         } else {
           return (
-            <span className="text-gray-500">&ndash;</span>
+            <span className="text-gray-400 font-semibold">&mdash;</span>
           )
         }
       },
