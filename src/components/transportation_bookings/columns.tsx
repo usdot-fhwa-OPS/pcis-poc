@@ -480,112 +480,105 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
           setDate(selectedDate)
           // Keep the calendar open after selection
           setIsCalendarOpen(true)
-        };
+        }
 
         return (
-             <div className="w-[150px] flex justify-center">
-              {row.original.reservationStatus === "Pending Reservation" ? (
-          <Dialog 
-            open={isDialogOpen} 
-            onOpenChange={(open) => {
-              setIsDialogOpen(open)
-              if(!open) {
-                setIsAtCapacity(false)
-              }
-            }}
-          >
-            <DialogTrigger>
-            <TooltipProvider>
-              <Tooltip delayDuration={300}>
-                <TooltipTrigger>
-                  <Button variant="outline" onClick={() => setIsDialogOpen(true)} disabled={row.original.containerStatus === "On-Ship"}>Reserve</Button>
-                </TooltipTrigger>
-                {row.original.containerStatus === "On-Ship" && (
-                  <TooltipContent>
-                    <p>Cargo Unit still on ship. Cannot reserve.</p>
-                  </TooltipContent>
-                )}
-              </Tooltip>
-            </TooltipProvider>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px]">
-              <DialogHeader>
-                <DialogTitle>Reserve Cargo Unit Pick-Up</DialogTitle>
-                <div className="text-sm text-muted-foreground">
-                  
-                  {`Vessel ID: ${row.original.vesselID} | Cargo Unit ID: ${row.original.cargoUnitID} | Origin: ${row.original.origin} | BCO: ${row.original.bcoName} | BCO Email: ${row.original.bcoEmail}`}  
-                </div>
-              </DialogHeader>
-                <div className="grid gap-4 py-4">
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <CalendarIcon className="h-4 w-4" />
-                  <Popover modal={true} open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
-                  <PopoverTrigger asChild>
-                    <Button
-                    variant={"outline"}
-                    className={cn("w-[280px] justify-start text-left font-normal", !date && "text-muted-foreground", isAtCapacity && "border-red-500")}
-                    onClick={() => setIsCalendarOpen(true)}
+          <div className="w-[150px] text-center">
+            {row.original.reservationStatus === "Pending Reservation" ? (
+              <Dialog 
+                open={isDialogOpen} 
+                onOpenChange={(open) => {
+                  setIsDialogOpen(open)
+                  if(!open) {
+                    setIsAtCapacity(false)
+                  }
+                }}
+              >
+                <DialogTrigger>
+                <TooltipProvider>
+                  <Tooltip delayDuration={300}>
+                    <TooltipTrigger>
+                      <Button variant="outline" onClick={() => setIsDialogOpen(true)} disabled={row.original.containerStatus === "On-Ship"}>Reserve</Button>
+                    </TooltipTrigger>
+                    {row.original.containerStatus === "On-Ship" && (
+                      <TooltipContent>
+                        <p>Cargo Unit still on ship. Cannot reserve.</p>
+                      </TooltipContent>
+                    )}
+                  </Tooltip>
+                </TooltipProvider>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-[425px]">
+                  <DialogHeader>
+                    <DialogTitle>Reserve Cargo Unit Pick-Up</DialogTitle>
+                    <div className="text-sm text-muted-foreground">
+                      
+                      {`Vessel ID: ${row.original.vesselID} | Cargo Unit ID: ${row.original.cargoUnitID} | Origin: ${row.original.origin} | BCO: ${row.original.bcoName} | BCO Email: ${row.original.bcoEmail}`}  
+                    </div>
+                  </DialogHeader>
+                    <div className="grid gap-4 py-4">
+                    <div className="grid grid-cols-4 items-center gap-4">
+                      <CalendarIcon className="h-4 w-4" />
+                      <Popover modal={true} open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
+                      <PopoverTrigger asChild>
+                        <Button
+                        variant={"outline"}
+                        className={cn("w-[280px] justify-start text-left font-normal", !date && "text-muted-foreground", isAtCapacity && "border-red-500")}
+                        onClick={() => setIsCalendarOpen(true)}
+                        >
+                        <CalendarIcon className="mr-2 h-4 w-4" />
+                        {date ? format(date, "MM/dd/yyyy") : <span>Pick a date</span>}
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0">
+                        <Calendar mode="single" selected={date} disabled={{ before: new Date()}} onSelect={handleDateSelect} initialFocus />
+                      </PopoverContent>
+                      </Popover>
+                    </div>
+                    <div className="grid grid-cols-4 items-center gap-4">
+                      <Clock className="h-4 w-4" />
+                      <Select onValueChange={setTime}>
+                      <SelectTrigger className={cn("w-[280px]", isAtCapacity && "border-red-500")}>
+                        <SelectValue placeholder="Select time" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {timeOptions.map((timeOption) => (
+                        <SelectItem key={timeOption} value={timeOption}>
+                          {timeOption}
+                        </SelectItem>
+                        ))}
+                      </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                  <div className="flex justify-between">
+                    <div className="text-sm text-muted-foreground">
+                      {isDateTimeSelected()
+                        ? `Selected: ${format(date!, "MM/dd/yyyy")} ${time}`
+                        : "Please select both date and time"}
+                    </div>
+                    <Button 
+                      type="submit" 
+                      disabled={!date || !time} 
+                      variant={!date || !time ? "outline" : "default"}
+                      onClick={handleBooking}
                     >
-                    <CalendarIcon className="mr-2 h-4 w-4" />
-                    {date ? format(date, "MM/dd/yyyy") : <span>Pick a date</span>}
+                      Reserve
                     </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0">
-                    <Calendar mode="single" selected={date} disabled={{ before: new Date()}} onSelect={handleDateSelect} initialFocus />
-                  </PopoverContent>
-                  </Popover>
-                </div>
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <Clock className="h-4 w-4" />
-                  <Select onValueChange={setTime}>
-                  <SelectTrigger className={cn("w-[280px]", isAtCapacity && "border-red-500")}>
-                    <SelectValue placeholder="Select time" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {timeOptions.map((timeOption) => (
-                    <SelectItem key={timeOption} value={timeOption}>
-                      {timeOption}
-                    </SelectItem>
-                    ))}
-                  </SelectContent>
-                  </Select>
-                </div>
-              </div>
-              <div className="flex justify-between">
-                <div className="text-sm text-muted-foreground">
-                  {isDateTimeSelected()
-                    ? `Selected: ${format(date!, "MM/dd/yyyy")} ${time}`
-                    : "Please select both date and time"}
-                </div>
-                <Button 
-                  type="submit" 
-                  disabled={!date || !time} 
-                  variant={!date || !time ? "outline" : "default"}
-                  onClick={handleBooking}
-                >
-                  Reserve
-                </Button>
-              </div>
-            </DialogContent>
-          </Dialog>
-        ) : (
-          <span
-          className={`px-2 py-1 text-sm font-bold rounded-md bg-gray-300 text-center whitespace-normal break-words w-full ${
-            row.original.reservationStatus === "Late for Pick Up" ? "text-red-600" : "text-black"
-          }`}
-        >
-          {row.original.reservationStatus}
-        </span>
-        )
-        }
-        </div>
-          );
-
-          
-
-
-
-          
+                  </div>
+                </DialogContent>
+              </Dialog>
+            ) : (
+              <Badge
+                className={`border-transparent rounded-full ${
+                  row.original.reservationStatus === "Late for Pick Up" ? "bg-red-100 hover:bg-red-100/80 text-red-700" : "bg-green-50 text-green-600 hover:bg-green-50/80"
+                } whitespace-normal break-words`}
+              >
+                {row.original.reservationStatus}
+              </Badge>
+            )}
+          </div>
+        );
       },
     
     },
