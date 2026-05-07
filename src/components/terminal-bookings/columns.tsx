@@ -163,10 +163,17 @@ export const columns = (status: string): ColumnDef<any>[] => {
         if (required === true) {
           return (
             <div className="min-w-[164px]">
+              <svg width="0" height="0">
+                <linearGradient id="blue-pink-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop stopColor="#3b82f6" offset="0%" />
+                  <stop stopColor="#ec4899" offset="100%" />
+                </linearGradient>
+              </svg>
+
               <Badge 
                 className="border-amber-200 rounded-full bg-amber-100 text-amber-700 hover:bg-amber-100/80 gap-1"
               >
-                <ShieldHalf fill="#fff" className="inline-block w-4 h-4" />
+                <ShieldHalf fill="url(#blue-pink-gradient)" className="inline-block w-4 h-4" />
                 TWIC Escort Required
               </Badge>
             </div>
