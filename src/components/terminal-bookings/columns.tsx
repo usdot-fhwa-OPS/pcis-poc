@@ -156,23 +156,25 @@ export const columns = (status: string): ColumnDef<any>[] => {
     },
     {
       accessorKey: "twicEscortRequired",
-      header: () => <abbr className="decoration-[1px] decoration-dotted underline-offset-4" title="Transportation Worker Identification Credential">TWIC</abbr>,
+      header: () => <div>
+          <abbr className="decoration-[1px] decoration-dotted underline-offset-4" title="Transportation Worker Identification Credential">TWIC</abbr>
+          <svg width="0" height="0">
+            <linearGradient id="shieldhalf-icon-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop stopColor="#ff6467" offset="50%" />
+              <stop stopColor="#ffffff" offset="50%" />
+            </linearGradient>
+          </svg>
+        </div>, // Includes svg gradient fill for ShieldHalf icon
       cell: ({ row }) => {
         const required = row.original.twicEscortRequired; // Get TWIC value
         
         if (required === true) {
           return (
             <div className="min-w-[164px]">
-              <svg width="0" height="0">
-                <linearGradient id="shieldhalf-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop stopColor="#ff6467" offset="50%" />
-                  <stop stopColor="#ffffff" offset="50%" />
-                </linearGradient>
-              </svg>
               <Badge 
                 className="border-amber-200 rounded-full bg-amber-100 text-amber-700 hover:bg-amber-100/80 gap-1"
               >
-                <ShieldHalf fill="url(#shieldhalf-gradient)" className="inline-block w-4 h-4 text-gray-600" />
+                <ShieldHalf fill="url(#shieldhalf-icon-gradient)" className="inline-block w-4 h-4 text-gray-600" />
                 TWIC Escort Required
               </Badge>
             </div>
@@ -303,7 +305,7 @@ export const CompletedColumn = (): ColumnDef<any>[] => {
               <Badge 
                 className="border-green-100 rounded-full bg-green-50 text-green-600 hover:bg-green-50/80 gap-1"
               >
-                <ShieldHalf fill="#fff" className="inline-block w-4 h-4" />
+                <ShieldHalf fill="url(#shieldhalf-icon-gradient)" className="inline-block w-4 h-4 text-gray-600" />
                 TWIC Escort Confirmed
               </Badge>
             </div>
