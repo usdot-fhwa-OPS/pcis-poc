@@ -179,6 +179,10 @@ export const columns = (status: string): ColumnDef<any>[] => {
               </Badge>
             </div>
           );
+        } else {
+          return (
+            <span className="text-gray-500">&ndash;</span>
+          )
         }
       }
     });
@@ -318,6 +322,10 @@ export const CompletedColumn = (): ColumnDef<any>[] => {
               </Badge>
             </div>
           );
+        } else {
+          return (
+            <span className="text-gray-500">&ndash;</span>
+          )
         }
       },
     }
