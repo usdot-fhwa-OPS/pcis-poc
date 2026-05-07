@@ -222,7 +222,7 @@ export const CompletedColumn = (): ColumnDef<any>[] => {
               <stop stopColor="#ffffff" offset="50%" />
             </linearGradient>
           </svg>
-        </div>, // Includes svg gradient fill for ShieldHalf icon
+        </div>, // Includes svg gradient fill for ShieldHalf icon, left side fill is red-400
       cell: ({ row }) => {
         const required = row.original.twicEscortRequired; // Get TWIC value
         
@@ -233,7 +233,7 @@ export const CompletedColumn = (): ColumnDef<any>[] => {
                 className="border-green-100 rounded-full bg-green-50 text-green-600 hover:bg-green-50/80 gap-1"
               >
                 <ShieldHalf fill="url(#shieldhalf-icon-gradient)" className="inline-block w-4 h-4 text-gray-600" />
-                TWIC Escort Confirmed
+                TWIC Escort Completed
               </Badge>
             </div>
           );
@@ -762,7 +762,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
               <stop stopColor="#ffffff" offset="50%" />
             </linearGradient>
           </svg>
-        </div>, // Includes svg gradient fill for ShieldHalf icon
+        </div>, // Includes svg gradient fill for ShieldHalf icon, left side fill is red-400
       cell: ({ row }) => {
         const required = row.original.twicEscortRequired; // Get TWIC value
         
