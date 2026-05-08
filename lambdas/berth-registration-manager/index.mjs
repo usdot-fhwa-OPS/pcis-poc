@@ -8,6 +8,10 @@ import {
   UpdateCommand,
 } from "@aws-sdk/lib-dynamodb";
 
+import { GetObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import { fromIni } from "@aws-sdk/credential-providers";
+
+
 const BERTH_REQUESTS_TABLE = process.env.BERTH_REQUESTS_TABLE || "BerthRequests";
 const BERTH_MANIFEST_TABLE = process.env.BERTH_MANIFEST_TABLE || "BerthManifestItems";
 const BERTH_CONFIG_TABLE = process.env.BERTH_CONFIG_TABLE || "BerthConfig";
@@ -307,7 +311,8 @@ function validateBerthAssignment(assignment, config) {
 }
 
 async function ingestManifest(requestItem) {
-  const csvText = decodeManifestCsv(requestItem.manifestCsvContent, requestItem.manifestCsvBase64);
+  //const csvText = decodeManifestCsv(requestItem.manifestCsvContent, requestItem.manifestCsvBase64);
+  const csvText = await readFile(requestItem.manifestPath);
   if (!csvText.trim()) {
     throw new Error("Manifest content missing: provide manifestCsvContent or manifestCsvBase64 in request");
   }
@@ -619,7 +624,9 @@ async function decideRequest(event) {
   if (!existing) return response(404, { message: "Request not found" });
 
   // Idempotent approve: if already approved and ingestion completed, return current item.
-  if (decision === "APPROVED" && existing.status === "APPROVED" && existing.ingestionStatus === "COMPLETED") {
+ // if (decision === "APPROVED" && existing.status === "APPROVED" && existing.ingestionStatus === "COMPLETED") {
+ if (decision === "APPROVED" && existing.status === "APPROVED") {
+
     return response(200, existing);
   }
 
@@ -793,4 +800,22 @@ export const handler = async (event) => {
     console.error("berth-registration-manager error:", err);
     return response(500, { message: err?.message || "Internal server error" });
   }
+};
+
+const s3Client = new S3Client({
+  region: "us-east-1", // Replace with your bucket's region
+  // credentials: { accessKeyId: "...", secretAccessKey: "..." } // Optional: Explicitly provide credentials
+  credentials: fromIni(),
+});
+
+
+const readFile = async (filePath) => {
+  const command = new GetObjectCommand({
+    Bucket: "amplify-d19yhr3c3if28a-de-pcisstoragebucketd380729-t6idvpun4aup",
+    Key: filePath,
+  });
+
+  const { Body } = await s3Client.send(command);
+  const content = await Body.transformToString();
+  return content;
 };
