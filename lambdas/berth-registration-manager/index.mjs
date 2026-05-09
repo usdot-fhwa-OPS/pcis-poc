@@ -206,6 +206,7 @@ function mapManifestRow(row, nowIso) {
     isTerminalNotify: false,
     createdAt: nowIso,
     updatedAt: nowIso,
+    isHazardous: (row.isHazardous),
   };
 }
 
@@ -333,44 +334,62 @@ async function ingestManifest(requestItem) {
 
     if (!mapped) {
       skippedCount += 1;
+      continue;
+    }
+    if (row.ishazardous === 'TRUE') {
       await dynamo.send(
         new PutCommand({
-          TableName: BERTH_MANIFEST_TABLE,
+          TableName: "HazardousCargo",
           Item: {
-            berthRequestId: requestItem.requestId,
-            rowKey: `ROW#${rowNumber}`,
-            ingestionStatus: "FAILED",
-            ingestionError: "Missing cargoUnitID",
-            rowNumber,
-            rawRow: row,
-            manifestFileName: requestItem.manifestFileName,
-            createdAt: nowIso,
-            updatedAt: nowIso,
+            "vesselId": row.vesselid,
+            "cargoUnitID": row.cargounitid,
+            "arrivalDate": row.arrivaldate,
+            "bcoEmail": row.bcoemail,
+            "bcoName": row.bconame,
+            "cargoType": row.cargotype,
+            "cargoUnitStatus": row.cargounitstatus,
+            "destination": row.destination,
+            "documentsChecked": false,
+            "flaggedDateTime": row.flaggeddatetime,
+            "isCompliant": false,
+            "isHazardous": true,
+            "origin": row.origin,
+            "priority": row.priority,
+            "reviewStatus": row.reviewstatus,
+            "vesselAgentEmail": row.vesselagentemail,
+            "vesselAgentName": row.vesselagentname,
+            "weight": row.weight,
+          }
+        })
+      );
+
+    } else {
+      await dynamo.send(
+        new PutCommand({
+          TableName: "CargoUnits",
+          Item: {
+            "cargoUnitID": row.cargounitid,
+            "arrivalDate": row.arrivaldate,
+            "bcoEmail": row.bcoemail,
+            "bcoName": row.bconame,
+            "bookingStatus":  row.cargounitstatus,
+            "containerStatus": row.containerstatus,
+            "createdAt": nowIso,
+            "destination": row.destination,
+            "flag": "FALSE",
+            "isBCONotify": "FALSE",
+            "isHazardous": "FALSE",
+            "isTerminalNotify": "FALSE",
+            "isTransportationNotify": "FALSE",
+            "origin": row.origin,
+            "reservationStatus": row.reservationstatus?row.reservationstatus:'UNRESERVED',
+            "updatedAt": nowIso,
+            "vesselID": row.vesselid,
           },
         })
       );
-      continue;
-    }
 
-    await dynamo.send(
-      new PutCommand({
-        TableName: BERTH_MANIFEST_TABLE,
-        Item: {
-          berthRequestId: requestItem.requestId,
-          rowKey: `ROW#${rowNumber}`,
-          rowNumber,
-          ingestionStatus: "COMPLETED",
-          ingestionError: null,
-          manifestFileName: requestItem.manifestFileName,
-          manifestPath: requestItem.manifestPath,
-          cargoUnitID: mapped.cargoUnitID,
-          parsedData: mapped,
-          sourceData: row,
-          createdAt: nowIso,
-          updatedAt: nowIso,
-        },
-      })
-    );
+    }
 
     ingestedCount += 1;
   }
