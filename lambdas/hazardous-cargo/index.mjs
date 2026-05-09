@@ -419,10 +419,10 @@ async function createRequest(event) {
   return response(201, requestItem);
 }
 
-async function listRequests(event) {
-  const terminalId = event.queryStringParameters?.terminalId;
-  const vesselAgentEmail = event.queryStringParameters?.vesselAgentEmail;
-  const status = event.queryStringParameters?.status;
+async function listHazardousCargo(event) {
+  const vesselId = event.queryStringParameters?.vesselId;
+  const vesselAgentEmail = getUserIdentity(event);
+  const reviewStatus = event.queryStringParameters?.reviewStatus;
 
   const requestedLimit = Number(event.queryStringParameters?.limit || 25);
   const limit = Number.isFinite(requestedLimit)
@@ -439,10 +439,10 @@ async function listRequests(event) {
   const expressionValues = {};
   const clauses = [];
 
-  if (terminalId) {
-    expressionNames["#terminalId"] = "terminalId";
-    expressionValues[":terminalId"] = terminalId;
-    clauses.push("#terminalId = :terminalId");
+  if (vesselId) {
+    expressionNames["#vesselId"] = "vesselId";
+    expressionValues[":vesselId"] = vesselId;
+    clauses.push("#vesselId = :vesselId");
   }
 
   if (vesselAgentEmail) {
@@ -451,14 +451,14 @@ async function listRequests(event) {
     clauses.push("#vesselAgentEmail = :vesselAgentEmail");
   }
 
-  if (status) {
-    expressionNames["#status"] = "status";
-    expressionValues[":status"] = status;
-    clauses.push("#status = :status");
+  if (reviewStatus) {
+    expressionNames["#reviewStatus"] = "reviewStatus";
+    expressionValues[":reviewStatus"] = reviewStatus;
+    clauses.push("#reviewStatus = :reviewStatus");
   }
 
   const scanInput = {
-    TableName: BERTH_REQUESTS_TABLE,
+    TableName: HAZARDOUS_CARGO_TABLE,
     Limit: limit,
     ExclusiveStartKey: exclusiveStartKey || undefined,
     FilterExpression: clauses.length ? clauses.join(" AND ") : undefined,
@@ -478,22 +478,22 @@ async function listRequests(event) {
   });
 }
 
-async function getRequest(event) {
+async function getHazardousCargo(event) {
   const vesselId = event.pathParameters?.vesselId;
   if (!vesselId) return response(400, { message: "vesselId is required" });
 
   const result = await dynamo.send(
     new GetCommand({
-      TableName: BERTH_REQUESTS_TABLE,
+      TableName: HAZARDOUS_CARGO_TABLE,
       Key: { vesselId },
     })
   );
 
-  if (!result.Item) return response(404, { message: "Request not found" });
+  if (!result.Item) return response(404, { message: "HazardousCargo not found" });
   return response(200, result.Item);
 }
 
-async function updateRequest(event) {
+async function updateHazardousCargo(event) {
   const vesselId = event.pathParameters?.vesselId;
   const body = parseBody(event);
   if (!vesselId) return response(400, { message: "vesselId is required" });
@@ -505,7 +505,7 @@ async function updateRequest(event) {
     })
   );
 
-  if (!existing.Item) return response(404, { message: "Request not found" });
+  if (!existing.Item) return response(404, { message: "HazardousCargo not found" });
 
   const mergedForValidation = {
     ...existing.Item,
@@ -561,10 +561,10 @@ async function updateRequest(event) {
     })
   );
 
-  return getRequest(event);
+  return getHazardousCargo(event);
 }
 
-async function decideRequest(event) {
+async function decideHazardousCargo(event) {
   if (!ensureTerminalOperator(event)) {
     return response(403, { message: "Only Terminal Operator can approve/deny berth requests" });
   }
@@ -585,7 +585,7 @@ async function decideRequest(event) {
     })
   );
   const existing = existingResult.Item;
-  if (!existing) return response(404, { message: "Request not found" });
+  if (!existing) return response(404, { message: "HazardousCargo not found" });
 
   // Idempotent approve: if already approved and ingestion completed, return current item.
   if (decision === "APPROVED" && existing.status === "APPROVED" && existing.ingestionStatus === "COMPLETED") {
@@ -613,7 +613,7 @@ async function decideRequest(event) {
     })
   );
 
-  if (decision === "DENIED") return getRequest(event);
+  if (decision === "DENIED") return getHazardousCargo(event);
 
   try {
     await dynamo.send(
@@ -662,12 +662,12 @@ async function decideRequest(event) {
     );
 
     return response(500, {
-      message: "Request approved but manifest ingestion failed",
+      message: "HazardousCargo approved but manifest ingestion failed",
       error: err?.message || "Unknown ingestion error",
     });
   }
 
-  return getRequest(event);
+  return getHazardousCargo(event);
 }
 
 async function recordArrival(event) {
@@ -694,7 +694,7 @@ async function recordArrival(event) {
     })
   );
 
-  return getRequest(event);
+  return getHazardousCargo(event);
 }
 
 async function recordDeparture(event) {
@@ -721,7 +721,7 @@ async function recordDeparture(event) {
     })
   );
 
-  return getRequest(event);
+  return getHazardousCargo(event);
 }
 
 export const handler = async (event) => {
@@ -734,17 +734,17 @@ export const handler = async (event) => {
 
     switch (routeKey) {
       case "GET /hazardousCargos":
-        return await listRequests(event);
+        return await listHazardousCargo(event);
       case "GET /hazardousCargos/{vesselId}":
-        return await getRequest(event);
+        return await getHazardousCargo(event);
       case "PUT /hazardousCargos/{vesselId}":
-        return await updateRequest(event);
+        return await updateHazardousCargo(event);
       default:
         return response(404, { message: `Unsupported route: ${routeKey}` });
     }
   } catch (err) {
     if (err?.name === "ConditionalCheckFailedException") {
-      return response(404, { message: "Request not found" });
+      return response(404, { message: "HazardousCargo not found" });
     }
 
     console.error("hazardous-cargo-manager error:", err);
