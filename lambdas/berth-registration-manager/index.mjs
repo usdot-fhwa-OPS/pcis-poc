@@ -356,8 +356,8 @@ async function ingestManifest(requestItem) {
             "origin": row.origin,
             "priority": row.priority,
             "reviewStatus": row.reviewstatus,
-            "vesselAgentEmail": row.vesselagentemail,
-            "vesselAgentName": row.vesselagentname,
+            "vesselAgentEmail": requestItem.vesselAgentEmail,
+            "vesselAgentName": requestItem.vesselAgentName,
             "weight": row.weight,
           }
         })
