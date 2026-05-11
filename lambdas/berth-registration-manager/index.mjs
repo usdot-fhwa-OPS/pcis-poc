@@ -376,7 +376,7 @@ async function ingestManifest(requestItem) {
     } else {
       await dynamo.send(
         new PutCommand({
-          TableName: "CargoUnits",
+          TableName: "Container-sfyg4lmhl5axxnl6js6gbcn7fu-NONE",
           Item: {
             "cargoUnitID": row.cargounitid,
             "arrivalDate": row.arrivaldate,
