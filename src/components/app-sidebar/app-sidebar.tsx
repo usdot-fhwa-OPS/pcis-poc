@@ -137,6 +137,9 @@ export function AppSidebar() {
       // Terminal Operators have access to all items except Berth Request.
       return allowedForTerminalOperatorRole.includes(item.title)
     }
+    if (userAttributes.role === "Vessel Agent") {
+      return item.title ==="Berth Reservations";
+    }
 
     if (
       (userAttributes.role === 'Trucking Operator') 

@@ -9,6 +9,10 @@ import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import { cn } from "../../lib/utils";
 import { format } from "date-fns";
+import { useAppDispatch } from "../../hooks";
+import { berthConfigList } from "./berth-request-client";
+import { populate } from '../../components/berth-requests/berth-config-state';
+import { BerthConfigDomain } from "./berth-config-domain";
 
 export interface BerthRequestFormData {
     terminalId: string;
@@ -21,12 +25,10 @@ export interface BerthRequestFormData {
     endTime: string;
     services: string[];
     cargoManifestName?: string;
+    cargoManifestPath: string;
 }
 
-const TERMINALS: Record<string, { name: string; phone: string; email: string }> = {
-    "terminal-1": { name: "Port City Terminal", phone: "322-555-2368", email: "cmartinez@cityport.com" },
-    "terminal-2": { name: "Harbor Terminal", phone: "555-867-5309", email: "info@harborterminal.com" },
-}
+
 
 const ALL_SERVICES = ["Fuel", "Food", "Water", "Crew Services", "Waste Disposal"];
 
@@ -42,6 +44,9 @@ export const AddBerthRequest = ({ onDataChange }: AddBerthRequestProps) => {
     const [isStartCalendarOpen, setIsStartCalendarOpen] = useState(false)
     const [isEndCalendarOpen, setIsEndCalendarOpen] = useState(false)
     const [selectedServices, setSelectedServices] = useState<string[]>([])
+    const [selectedCargoManifestPath, setSelectedCargoManifestPath] = useState<string>('')
+
+    
 
     const timeOptions = [
             "12:00 AM",
@@ -77,9 +82,11 @@ export const AddBerthRequest = ({ onDataChange }: AddBerthRequestProps) => {
             checked ? [...prev, service] : prev.filter(s => s !== service)
         );
     };
-
+const [TERMINALS, setTerminals] = useState<Record<string, { name: string; phone: string; email: string }>>({});
     useEffect(() => {
         if (!onDataChange) return;
+        fetchBerthConfigList();
+        
         const terminal = TERMINALS[selectedTerminalId];
         onDataChange({
             terminalId: selectedTerminalId,
@@ -91,8 +98,13 @@ export const AddBerthRequest = ({ onDataChange }: AddBerthRequestProps) => {
             endDate,
             endTime,
             services: selectedServices,
+            cargoManifestPath: selectedCargoManifestPath,
         });
-    }, [selectedTerminalId, startDate, startTime, endDate, endTime, selectedServices]);
+    }, [selectedTerminalId, startDate, startTime, endDate, endTime, selectedServices, selectedCargoManifestPath]);
+
+    const getFileInfo = ($event: any) =>{
+        setSelectedCargoManifestPath($event.key);
+   };
 
     const handleStartDateSelect = (selectedDate: Date | undefined) => {
         if (!selectedDate) return;
@@ -108,6 +120,24 @@ export const AddBerthRequest = ({ onDataChange }: AddBerthRequestProps) => {
         setIsEndCalendarOpen(!isEndCalendarOpen)
     };
 
+    const dispatch = useAppDispatch();
+    const fetchBerthConfigList = async () => {
+
+        const brConfigList = await berthConfigList();
+        const terminal: Record<string, { name: string; phone: string; email: string }>={};
+        brConfigList.map((berthConfig: BerthConfigDomain) => {
+            terminal[berthConfig.terminalId] = {
+                name: berthConfig.terminalName,
+                phone: berthConfig.terminalPhone, email: berthConfig.terminalEmail
+            }
+            
+        });
+        setTerminals(terminal);
+        dispatch(populate(brConfigList));
+    }
+    
+    
+    
     return (
     <>
         <div className="md:max-w-2xl">
@@ -194,6 +224,7 @@ export const AddBerthRequest = ({ onDataChange }: AddBerthRequestProps) => {
                         path="stowPlans/"
                         maxFileCount={1}
                         isResumable
+                        onUploadSuccess={($event) => getFileInfo($event)}
                     />
                 </div>
             </div>
@@ -268,3 +299,4 @@ export const AddBerthRequest = ({ onDataChange }: AddBerthRequestProps) => {
     }
 
 }
+

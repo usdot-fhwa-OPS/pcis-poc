@@ -6,6 +6,7 @@ import {
   GetCommand,
   ScanCommand,
   UpdateCommand,
+  DeleteCommand,
 } from "@aws-sdk/lib-dynamodb";
 
 const BERTH_REQUESTS_TABLE = process.env.BERTH_REQUESTS_TABLE || "BerthRequests";
@@ -249,6 +250,15 @@ async function getBerthConfig(terminalId) {
   return result.Item || null;
 }
 
+async function getAllBerthConfig() {
+  const result = await dynamo.send(
+    new ScanCommand({
+      TableName: BERTH_CONFIG_TABLE,
+    })
+  );
+  return result.Items || null;
+}
+
 function normalizeBerthConfig(body, user) {
   const nowIso = new Date().toISOString();
   const terminalId = (body.terminalId || "DEFAULT_TERMINAL").toString().trim() || "DEFAULT_TERMINAL";
@@ -399,6 +409,12 @@ async function readBerthConfig(event) {
   return response(200, cfg);
 }
 
+async function listBerthConfig(event) {
+  const list = await getAllBerthConfig();
+  if (!list) return response(404, { message: "Unable to list Berth configs" });
+  return response(200, list);
+}
+
 async function createRequest(event) {
   const body = parseBody(event);
   const validation = validateRequestPayload(body);
@@ -408,10 +424,10 @@ async function createRequest(event) {
 
   const terminalId = (body.terminalId || "DEFAULT_TERMINAL").toString();
   const config = await getBerthConfig(terminalId);
-  const assignmentError = validateBerthAssignment(body.berthAssignment, config);
+  /* const assignmentError = validateBerthAssignment(body.berthAssignment, config);
   if (assignmentError) {
     return response(400, { message: assignmentError });
-  }
+  } */
 
   const nowIso = new Date().toISOString();
   const requestId = randomUUID();
@@ -728,6 +744,20 @@ async function recordArrival(event) {
   return getRequest(event);
 }
 
+async function recordDelete(event) {
+  const requestId = event.pathParameters?.requestId;
+  if (!requestId) return response(400, { message: "requestId is required" });
+  const deleteResp = await dynamo.send(
+    new DeleteCommand({
+      TableName: BERTH_REQUESTS_TABLE,
+      Key: {
+        requestId: requestId,
+      },
+    })
+    
+  );
+  return response(200, `Deleted berth requrest ${requestId}`);
+}
 async function recordDeparture(event) {
   if (!ensureTerminalOperator(event)) {
     return response(403, { message: "Only Terminal Operator can record ATD" });
@@ -766,6 +796,8 @@ export const handler = async (event) => {
     switch (routeKey) {
       case "GET /berthConfig":
         return await readBerthConfig(event);
+      case "GET /berthConfig/list":
+          return await listBerthConfig(event);        
       case "PUT /berthConfig":
         return await createBerthConfig(event);
       case "POST /berthRequests":
@@ -782,7 +814,10 @@ export const handler = async (event) => {
         return await recordArrival(event);
       case "POST /berthRequests/{requestId}/departure":
         return await recordDeparture(event);
-      default:
+      case "DELETE /berthRequest/{requestId}":
+        return await recordDelete(event);
+  
+        default:
         return response(404, { message: `Unsupported route: ${routeKey}` });
     }
   } catch (err) {

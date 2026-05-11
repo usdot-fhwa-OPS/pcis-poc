@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { format } from 'date-fns';
 import { FileIcon, CheckCircle2Icon } from 'lucide-react';
 
@@ -13,6 +13,9 @@ import {
   DialogFooter,
 } from "../components/ui/dialog";
 import { BerthRequestFormData } from '../components/berth-requests/add-berth-request';
+import { BerthRequestDomain } from '../components/berth-requests/berth-request-domain';
+import { UserContext } from '../AppContext';
+import { saveBerthRequest } from '../components/berth-requests/berth-request-client';
 
 export const Route = createFileRoute('/berth-request-confirmation')({
   component: BerthRequestConfirmationComponent,
@@ -32,6 +35,7 @@ function BerthRequestConfirmationComponent() {
   };
 
   const handleConfirmSubmit = () => {
+    save();
     setSuccessOpen(false);
     navigate({ to: '/berth-requests' });
   };
@@ -41,6 +45,40 @@ function BerthRequestConfirmationComponent() {
     return format(new Date(date), 'M/d/yyyy');
   };
 
+   const berthRequest:BerthRequestDomain =  {
+          requestId:"",
+          terminalId: "",
+          vesselAgentEmail: "",
+          vesselID: "",
+          berthAssignment: {
+              berthId: "",
+              designation: ""
+          },
+          etaAt: "",
+          etdAt: "",
+          requestedAt:"",
+          services: [''],
+          manifestFileName: "",
+          manifestPath: "",
+          manifestCsvContent: "",
+          status:"",
+      };
+  
+    const userContext = useContext(UserContext);
+    const save = () => {
+      if (formData) {
+        berthRequest.vesselAgentEmail = userContext.email ? userContext.email : "";
+        berthRequest.terminalId = formData.terminalId;
+        berthRequest.etaAt = format(formData.startDate, "MM/dd/yyyy")+' '+formData.startTime;
+        berthRequest.etdAt = format(formData.endDate, "MM/dd/yyyy")+' '+formData.endTime;
+        berthRequest.manifestPath = formData.cargoManifestPath;
+        berthRequest.services = formData.services;
+        
+      }
+
+      saveBerthRequest(berthRequest)
+    }
+ 
   return (
     <div className="flex flex-col w-full p-10">
       <h1 className="text-2xl font-semibold mb-2">Berth Request</h1>
@@ -77,10 +115,10 @@ function BerthRequestConfirmationComponent() {
 
         <span className="font-medium text-sm">Cargo Manifest:</span>
         <span className="text-sm flex items-center gap-2">
-          {formData?.cargoManifestName ? (
+          {formData?.cargoManifestPath ? (
             <>
               <FileIcon className="h-4 w-4" />
-              {formData.cargoManifestName}
+              {formData.cargoManifestPath}
               <span className="flex items-center gap-1 text-xs border rounded px-2 py-0.5">
                 <CheckCircle2Icon className="h-3 w-3" /> Uploaded
               </span>

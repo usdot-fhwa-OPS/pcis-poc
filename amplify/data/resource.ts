@@ -32,7 +32,6 @@ const schema = a.schema({
       isTransportationNotify: a.boolean().default(false),
       isBCONotify: a.boolean().default(false),
       isTerminalNotify: a.boolean().default(false),
-      twicEscortRequired: a.boolean().default(false),
     })
     .identifier(['cargoUnitID']) 
     .authorization((allow) => [allow.publicApiKey(),]),

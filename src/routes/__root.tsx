@@ -13,6 +13,7 @@ import { UserContext } from '../AppContext';
 export interface UserAttributes {
   given_name?: string;
   family_name?: string;
+  email?:string;
   'custom:role'?: string;
 }
 
@@ -30,7 +31,7 @@ export const Route = createRootRoute({
 
 function RootComponent() {
   const { user } = useAuthenticator()
-  const [userAttributes, setUserAttributes] = useState<{ fullName: string; role: string }>({ fullName: "", role: "" })
+  const [userAttributes, setUserAttributes] = useState<{ fullName: string; role: string, email:string|undefined }>({ fullName: "", role: "" , email:""})
 
   const [userSecurityAttrubutes, setUserSecurityAttrubutes] = useState<UserAttributes>({});
   
@@ -47,6 +48,7 @@ function RootComponent() {
         setUserAttributes({
           fullName,
           role: attributes["custom:role"] ?? "No role assigned",
+          email: attributes.email,
         })
         setUserSecurityAttrubutes({...attributes});
       } catch (error) {
