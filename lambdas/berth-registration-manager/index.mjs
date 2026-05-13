@@ -857,11 +857,7 @@ export const handler = async (event) => {
   }
 };
 
-const s3Client = new S3Client({
-  region: "us-east-1", // Replace with your bucket's region
-  // credentials: { accessKeyId: "...", secretAccessKey: "..." } // Optional: Explicitly provide credentials
-  credentials: fromIni(),
-});
+const s3Client = new S3Client({});
 
 
 const readFile = async (filePath) => {
