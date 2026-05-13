@@ -7,6 +7,7 @@ import {
   ScanCommand,
   UpdateCommand,
 } from "@aws-sdk/lib-dynamodb";
+import { log } from "node:console";
 
 const HAZARDOUS_CARGO_TABLE = process.env.HAZARDOUS_CARGO_TABLE || "HazardousCargo";
 
@@ -647,6 +648,7 @@ async function decideRequest(event) {
       })
     );
   } catch (err) {
+    console.log(err);
     await dynamo.send(
       new UpdateCommand({
         TableName: BERTH_REQUESTS_TABLE,
