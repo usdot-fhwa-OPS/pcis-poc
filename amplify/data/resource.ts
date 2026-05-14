@@ -29,6 +29,7 @@ const schema = a.schema({
       resApprovalDate: a.string(),
       resPickupDate: a.string(),
       flag: a.boolean().default(false),
+      twicEscortRequired: a.boolean(),
       isTransportationNotify: a.boolean().default(false),
       isBCONotify: a.boolean().default(false),
       isTerminalNotify: a.boolean().default(false),
