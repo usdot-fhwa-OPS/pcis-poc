@@ -105,6 +105,20 @@ function toIsoOrNull(value) {
   return dt.toISOString();
 }
 
+function encodeNextToken(lastKey) {
+  if (!lastKey) return null;
+  return Buffer.from(JSON.stringify(lastKey), "utf-8").toString("base64");
+}
+
+function decodeNextToken(token) {
+  if (!token) return null;
+  try {
+    const parsed = JSON.parse(Buffer.from(token, "base64").toString("utf-8"));
+    return parsed && typeof parsed === "object" ? parsed : null;
+  } catch {
+    return null;
+  }
+}
 
 
 
@@ -170,12 +184,13 @@ async function listHazardousCargo(event) {
 
 async function getHazardousCargo(event) {
   const vesselId = event.pathParameters?.vesselId;
-  if (!vesselId) return response(400, { message: "vesselId is required" });
+  const cargoUnitID = event.pathParameters?.cargoUnitID;
+  if (!vesselId || !cargoUnitID) return response(400, { message: "vesselId and cargoUnitID are required" });
 
   const result = await dynamo.send(
     new GetCommand({
       TableName: HAZARDOUS_CARGO_TABLE,
-      Key: { vesselId },
+      Key: { vesselId: vesselId, cargoUnitID: cargoUnitID},
     })
   );
 
@@ -184,74 +199,15 @@ async function getHazardousCargo(event) {
 }
 
 async function updateHazardousCargo(event) {
-  const vesselId = event.pathParameters?.vesselId;
-  const body = parseBody(event);
-  if (!vesselId) return response(400, { message: "vesselId is required" });
+  const body = event.body
+  if (!body) return response(400, { message: "Hazardous Cargo  is required" });
 
-  const existing = await dynamo.send(
-    new GetCommand({
-      TableName: BERTH_REQUESTS_TABLE,
-      Key: { vesselId },
+  return await dynamo.send(
+    new PutCommand({
+      TableName: HAZARDOUS_CARGO_TABLE,
+      Item: body,
     })
   );
-
-  if (!existing.Item) return response(404, { message: "HazardousCargo not found" });
-
-  const mergedForValidation = {
-    ...existing.Item,
-    ...body,
-    etaAt: body.etaAt ?? existing.Item.etaAt,
-    etdAt: body.etdAt ?? existing.Item.etdAt,
-    vesselAgentEmail: body.vesselAgentEmail ?? existing.Item.vesselAgentEmail,
-  };
-
-  const validation = validateRequestPayload(mergedForValidation);
-  if (validation) {
-    return response(400, { message: validation });
-  }
-
-  const terminalId = (existing.Item.terminalId || body.terminalId || "DEFAULT_TERMINAL").toString();
-  const config = await getBerthConfig(terminalId);
-  const assignment = body.berthAssignment ?? existing.Item.berthAssignment;
-  const assignmentError = validateBerthAssignment(assignment, config);
-  if (assignmentError) {
-    return response(400, { message: assignmentError });
-  }
-
-  const nowIso = new Date().toISOString();
-  const updates = {
-    etaAt: toIsoOrNull(body.etaAt ?? existing.Item.etaAt),
-    etdAt: toIsoOrNull(body.etdAt ?? existing.Item.etdAt),
-    berthAssignment: assignment,
-    services: body.services ? normalizeServices(body.services) : existing.Item.services,
-    manifestFileName: body.manifestFileName ?? existing.Item.manifestFileName,
-    manifestPath: body.manifestPath ?? existing.Item.manifestPath,
-    manifestCsvContent: body.manifestCsvContent ?? existing.Item.manifestCsvContent,
-    manifestCsvBase64: body.manifestCsvBase64 ?? existing.Item.manifestCsvBase64,
-    updatedAt: nowIso,
-  };
-
-  await dynamo.send(
-    new UpdateCommand({
-      TableName: BERTH_REQUESTS_TABLE,
-      Key: { vesselId },
-      UpdateExpression:
-        "SET etaAt = :etaAt, etdAt = :etdAt, berthAssignment = :berthAssignment, services = :services, manifestFileName = :manifestFileName, manifestPath = :manifestPath, manifestCsvContent = :manifestCsvContent, manifestCsvBase64 = :manifestCsvBase64, updatedAt = :updatedAt",
-      ExpressionAttributeValues: {
-        ":etaAt": updates.etaAt,
-        ":etdAt": updates.etdAt,
-        ":berthAssignment": updates.berthAssignment,
-        ":services": updates.services,
-        ":manifestFileName": updates.manifestFileName,
-        ":manifestPath": updates.manifestPath,
-        ":manifestCsvContent": updates.manifestCsvContent,
-        ":manifestCsvBase64": updates.manifestCsvBase64,
-        ":updatedAt": updates.updatedAt,
-      },
-    })
-  );
-
-  return getHazardousCargo(event);
 }
 
 async function decideHazardousCargo(event) {
