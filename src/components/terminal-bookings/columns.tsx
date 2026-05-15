@@ -1,13 +1,14 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "../ui/button.tsx";
 import { useState } from "react";
-import { Flag, XIcon } from "lucide-react";
+import { Flag, XIcon, ShieldHalf } from "lucide-react";
 import {TerminalOperatorDataTableMeta} from './data-table.tsx'
 import { generateClient } from 'aws-amplify/data';
 import type { Schema } from '../../../amplify/data/resource';
 import { TermOperatorCompletedBookings } from "../../routes/reservation.tsx"
 import { Checkbox } from "../ui/checkbox.tsx";
 import { ApproveReservation } from "../reservations/approve-reservation.tsx";
+import { Badge } from "../ui/badge.tsx";
 const client = generateClient<Schema>();
 export const columns = (status: string): ColumnDef<any>[] => {
   const baseColumns: ColumnDef<any>[] = [
@@ -104,22 +105,22 @@ export const columns = (status: string): ColumnDef<any>[] => {
   if (status === "Ongoing") {
     baseColumns.push({
       accessorKey: "reservationStatus",
-      header: () => <div className="w-[150px] text-center ">Status</div>,
+      header: () => <div className="w-[150px] text-center">Status</div>,
      // Adjust width as needed
       cell: ({ row }) => {
         const status = row.original.reservationStatus; // Get status value
         const isLate = status === "Late for Pick Up"; // Check if status is "Late"
   
         return (
-          <div className="w-[150px] flex justify-center">
-          <span
-            className={`px-2 py-1 text-sm font-bold rounded-md bg-gray-300 w-full ${
-              isLate ? "text-red-500" : "text-black"
-            } text-center whitespace-normal break-words`}
-          >
-            {status}
-          </span>
-        </div>
+          <div className="w-[150px] text-center">
+            <Badge
+              className={`border-transparent rounded-full ${
+                isLate ? "bg-red-100 hover:bg-red-100/80 text-red-700" : "bg-blue-50 hover:bg-blue-50/80 text-blue-700"
+              } whitespace-normal break-words`}
+            >
+              {status}
+            </Badge>
+          </div>
         );
       },
     },
@@ -152,6 +153,38 @@ export const columns = (status: string): ColumnDef<any>[] => {
       },
       enableSorting: false,
       enableColumnFilter: false,
+    },
+    {
+      accessorKey: "twicEscortRequired",
+      header: () => <div>
+          <abbr className="decoration-[1px] decoration-dotted underline-offset-4" title="Transportation Worker Identification Credential">TWIC</abbr>
+          <svg width="0" height="0">
+            <linearGradient id="shieldhalf-icon-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop stopColor="#ff6467" offset="50%" />
+              <stop stopColor="#ffffff" offset="50%" />
+            </linearGradient>
+          </svg>
+        </div>, // Includes svg gradient fill for ShieldHalf icon, left side fill is red-400
+      cell: ({ row }) => {
+        const required = row.original.twicEscortRequired; // Get TWIC value
+        
+        if (required === true) {
+          return (
+            <div className="min-w-[164px]">
+              <Badge 
+                className="border-amber-200 rounded-full bg-amber-100 text-amber-700 hover:bg-amber-100/80 gap-1"
+              >
+                <ShieldHalf fill="url(#shieldhalf-icon-gradient)" className="inline-block w-4 h-4 text-gray-600" />
+                TWIC Escort Required
+              </Badge>
+            </div>
+          );
+        } else {
+          return (
+            <span className="text-gray-400 font-semibold">&mdash;</span>
+          )
+        }
+      }
     });
   }
   
@@ -240,22 +273,21 @@ export const CompletedColumn = (): ColumnDef<any>[] => {
     },
     {
       accessorKey: "reservationStatus",
-      header: "Reservation Status",
+      header: () => <div className="min-w-[112px] text-center">Reservation Status</div>,
       cell: ({ row }) => {
         const status = row.original.reservationStatus; // Get status value
         const isLate = status === "Late for Pick Up"; // Check if status is "Late"
 
         return (
-          <div className="w-[150px] flex justify-center">
-          <span
-            className={`px-2 py-1 text-sm font-bold rounded-md bg-gray-300 w-full ${
-              isLate ? "text-red-500" : "text-black"
-            } text-center whitespace-normal break-words`}
-          >
-            {status}
-          </span>
-        </div>
-
+          <div className="min-w-[112px] text-center">
+            <Badge
+              className={`border-transparent rounded-full ${
+                isLate ? "bg-red-100 hover:bg-red-100/80 text-red-700" : "bg-secondary hover:bg-secondary/80 text-secondary-foreground"
+              } whitespace-normal break-words`}
+            >
+              {status}
+            </Badge>
+          </div>
         );
       },
       size: 200,
@@ -264,6 +296,38 @@ export const CompletedColumn = (): ColumnDef<any>[] => {
       accessorKey: "resPickupDate",
       header: "Reservation Pickup Date",
     },
+    {
+      accessorKey: "twicEscortRequired",
+      header: () => <div>
+          <abbr className="decoration-[1px] decoration-dotted underline-offset-4" title="Transportation Worker Identification Credential">TWIC</abbr>
+          <svg width="0" height="0">
+            <linearGradient id="shieldhalf-icon-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop stopColor="#ff6467" offset="50%" />
+              <stop stopColor="#ffffff" offset="50%" />
+            </linearGradient>
+          </svg>
+        </div>, // Includes svg gradient fill for ShieldHalf icon, left side fill is red-400
+      cell: ({ row }) => {
+        const required = row.original.twicEscortRequired; // Get TWIC value
+        
+        if (required === true) {
+          return (
+            <div className="min-w-[172px]">
+              <Badge 
+                className="border-green-100 rounded-full bg-green-50 text-green-600 hover:bg-green-50/80 gap-1"
+              >
+                <ShieldHalf fill="url(#shieldhalf-icon-gradient)" className="inline-block w-4 h-4 text-gray-600" />
+                TWIC Escort Completed
+              </Badge>
+            </div>
+          );
+        } else {
+          return (
+            <span className="text-gray-400 font-semibold">&mdash;</span>
+          )
+        }
+      },
+    }
   ];
 
   return baseColumns1;
