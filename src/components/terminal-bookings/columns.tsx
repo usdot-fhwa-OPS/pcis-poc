@@ -288,7 +288,6 @@ export const CompletedColumn = (): ColumnDef<any>[] => {
               {status}
             </Badge>
           </div>
-
         );
       },
       size: 200,

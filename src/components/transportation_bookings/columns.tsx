@@ -205,7 +205,6 @@ export const CompletedColumn = (): ColumnDef<any>[] => {
             </Badge>
           </div>
         );
-
       },
     },
     {
