@@ -208,6 +208,7 @@ function mapManifestRow(row, nowIso) {
     createdAt: nowIso,
     updatedAt: nowIso,
     isHazardous: (row.isHazardous),
+    isCompliant:(row.isCompliant),
   };
 }
 
@@ -361,7 +362,7 @@ async function ingestManifest(requestItem) {
             "destination": row.destination,
             "documentsChecked": false,
             "flaggedDateTime": row.flaggeddatetime,
-            "isCompliant": false,
+            "isCompliant": (row.iscompliant.toLowerCase() === 'true')?true:false,
             "isHazardous": true,
             "origin": row.origin,
             "priority": row.priority,
