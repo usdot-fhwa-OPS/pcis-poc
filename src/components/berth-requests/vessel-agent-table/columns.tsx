@@ -132,21 +132,78 @@ export const columns: ColumnDef<BerthRequestDomain>[] = [
 // columns[2..4] = etaAt, etdAt, requestedAt
 // columns[5]    = actions
 
-export const requestedColumns: ColumnDef<BerthRequestDomain>[] = [...columns]
+const vesselIdOnlyColumn: ColumnDef<BerthRequestDomain> = {
+  accessorKey: "vesselID",
+  header: "Vessel ID",
+  cell: ({ row }) => <div>{row.original.vesselID}</div>,
+}
 
-export const modificationRequestedColumns: ColumnDef<BerthRequestDomain>[] = [...columns]
+const terminalNameOnlyColumn: ColumnDef<BerthRequestDomain> = {
+  id: "terminalName",
+  header: "Terminal",
+  cell: ({ row, table }) => {
+    const terminal = (table.options.meta as VesselAgentBerthRequestsTableMeta)
+      .brConfigList.find((t) => t.terminalId === row.original.terminalId)
+    return <div>{terminal?.terminalName ?? "—"}</div>
+  },
+}
+
+const contactColumn: ColumnDef<BerthRequestDomain> = {
+  id: "contact",
+  header: "Contact",
+  cell: ({ row, table }) => {
+    const terminal = (table.options.meta as VesselAgentBerthRequestsTableMeta)
+      .brConfigList.find((t) => t.terminalId === row.original.terminalId)
+    return (
+      <div>
+        <a href={`mailto:${terminal?.terminalEmail}`}>
+          <Button size="sm" variant="outline">Contact</Button>
+        </a>
+      </div>
+    )
+  },
+}
+
+export const requestedColumns: ColumnDef<BerthRequestDomain>[] = [
+  vesselIdOnlyColumn,
+  terminalNameOnlyColumn,
+  contactColumn,
+  columns[2],
+  columns[3],
+  columns[4],
+  columns[5],
+]
+
+export const modificationRequestedColumns: ColumnDef<BerthRequestDomain>[] = [
+  vesselIdOnlyColumn,
+  terminalNameOnlyColumn,
+  contactColumn,
+  columns[2],
+  columns[3],
+  columns[4],
+  columns[5],
+]
 
 export const ongoingColumns: ColumnDef<BerthRequestDomain>[] = [
-  ...columns.slice(0, 2),
+  vesselIdOnlyColumn,
+  terminalNameOnlyColumn,
+  contactColumn,
   berthAssignmentColumn,
   actualArrivalColumn,
-  ...columns.slice(2),
+  columns[2],
+  columns[3],
+  columns[4],
+  columns[5],
 ]
 
 export const completedColumns: ColumnDef<BerthRequestDomain>[] = [
-  ...columns.slice(0, 2),
+  vesselIdOnlyColumn,
+  terminalNameOnlyColumn,
+  contactColumn,
   berthAssignmentColumn,
   actualArrivalColumn,
   actualDepartureColumn,
-  ...columns.slice(2, 5),
+  columns[2],
+  columns[3],
+  columns[4],
 ]
