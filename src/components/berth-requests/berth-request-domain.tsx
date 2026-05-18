@@ -16,4 +16,6 @@ export type BerthRequestDomain = {
   manifestPath: string,
   manifestCsvContent: string,
   status: string,
+  ataAt?: string,
+  atdAt?: string,
 }

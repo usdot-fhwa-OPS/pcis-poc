@@ -29,6 +29,30 @@ const handleDelete = (id: string, table: any) => {
               }
   }
 
+const berthAssignmentColumn: ColumnDef<BerthRequestDomain> = {
+  id: "berthAssignment",
+  header: "Berth Assignment",
+  cell: ({ row }) => (
+    <div>{row.original.berthAssignment?.designation ?? "—"}</div>
+  ),
+}
+
+const actualArrivalColumn: ColumnDef<BerthRequestDomain> = {
+  accessorKey: "ataAt",
+  header: "Actual Arrival (ATA)",
+  cell: ({ row }) => (
+    <div>{row.original.ataAt ?? "—"}</div>
+  ),
+}
+
+const actualDepartureColumn: ColumnDef<BerthRequestDomain> = {
+  accessorKey: "atdAt",
+  header: "Actual Departure (ATD)",
+  cell: ({ row }) => (
+    <div>{row.original.atdAt ?? "—"}</div>
+  ),
+}
+
 export const columns: ColumnDef<BerthRequestDomain>[] = [
   // Define the columns for the table based on the database items (refer to resources.ts for schema names)
   {
@@ -102,4 +126,84 @@ export const columns: ColumnDef<BerthRequestDomain>[] = [
     ),
 
   },
+]
+
+// columns[0..1] = vesselID, terminal
+// columns[2..4] = etaAt, etdAt, requestedAt
+// columns[5]    = actions
+
+const vesselIdOnlyColumn: ColumnDef<BerthRequestDomain> = {
+  accessorKey: "vesselID",
+  header: "Vessel ID",
+  cell: ({ row }) => <div>{row.original.vesselID}</div>,
+}
+
+const terminalNameOnlyColumn: ColumnDef<BerthRequestDomain> = {
+  id: "terminalName",
+  header: "Terminal",
+  cell: ({ row, table }) => {
+    const terminal = (table.options.meta as VesselAgentBerthRequestsTableMeta)
+      .brConfigList.find((t) => t.terminalId === row.original.terminalId)
+    return <div>{terminal?.terminalName ?? "—"}</div>
+  },
+}
+
+const contactColumn: ColumnDef<BerthRequestDomain> = {
+  id: "contact",
+  header: "Contact",
+  cell: ({ row, table }) => {
+    const terminal = (table.options.meta as VesselAgentBerthRequestsTableMeta)
+      .brConfigList.find((t) => t.terminalId === row.original.terminalId)
+    return (
+      <div>
+        <a href={`mailto:${terminal?.terminalEmail}`}>
+          <Button size="sm" variant="outline">Contact</Button>
+        </a>
+      </div>
+    )
+  },
+}
+
+export const requestedColumns: ColumnDef<BerthRequestDomain>[] = [
+  vesselIdOnlyColumn,
+  terminalNameOnlyColumn,
+  contactColumn,
+  columns[2],
+  columns[3],
+  columns[4],
+  columns[5],
+]
+
+export const modificationRequestedColumns: ColumnDef<BerthRequestDomain>[] = [
+  vesselIdOnlyColumn,
+  terminalNameOnlyColumn,
+  contactColumn,
+  columns[2],
+  columns[3],
+  columns[4],
+  columns[5],
+]
+
+export const ongoingColumns: ColumnDef<BerthRequestDomain>[] = [
+  vesselIdOnlyColumn,
+  terminalNameOnlyColumn,
+  contactColumn,
+  berthAssignmentColumn,
+  actualArrivalColumn,
+  columns[2],
+  columns[3],
+  columns[4],
+  columns[5],
+]
+
+export const completedColumns: ColumnDef<BerthRequestDomain>[] = [
+  vesselIdOnlyColumn,
+  terminalNameOnlyColumn,
+  contactColumn,
+  berthAssignmentColumn,
+  actualArrivalColumn,
+  actualDepartureColumn,
+  columns[2],
+  columns[3],
+  columns[4],
 ]
