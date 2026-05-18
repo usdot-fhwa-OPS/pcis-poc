@@ -14,14 +14,13 @@ interface VesselAgentBerthRequestsTableProps {
 }
 
 export function VesselAgentBerthRequestsTable({ data, meta }: VesselAgentBerthRequestsTableProps) {
-  const requested             = data.filter((r) => r.status === "Pending Approval")
-  const modificationRequested = data.filter((r) => r.status === "Modification Requested")
+  const requested             = data.filter((r) => r.status === "REQUESTED")
+  const modificationRequested = data.filter((r) => r.status === "MODIFIED")
   const ongoing               = data.filter((r) =>
-    r.status === "Ongoing" ||
-    (r.status === "APPROVED" && (!r.ataAt || !r.atdAt))
+    r.status === "APPROVED" && (!r.ataAt || !r.atdAt)
   )
   const completed             = data.filter((r) =>
-    r.status === "Denied" || r.status === "DENIED" || r.status === "Complete" ||
+    r.status === "DENIED" ||
     (r.status === "APPROVED" && r.ataAt && r.atdAt)
   )
 
