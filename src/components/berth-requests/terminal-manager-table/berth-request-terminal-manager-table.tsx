@@ -23,8 +23,14 @@ export function TerminalOperatorBerthRequestsTable({
 
   const requested             = data.filter((r) => r.status === "Pending Approval")
   const modificationRequested = data.filter((r) => r.status === "Modification Requested")
-  const ongoing               = data.filter((r) => r.status === "Ongoing")
-  const completed             = data.filter((r) => r.status === "Denied" || r.status === "Complete")
+  const ongoing               = data.filter((r) =>
+    r.status === "Ongoing" ||
+    (r.status === "APPROVED" && (!r.ataAt || !r.atdAt))
+  )
+  const completed             = data.filter((r) =>
+    r.status === "Denied" || r.status === "DENIED" || r.status === "Complete" ||
+    (r.status === "APPROVED" && r.ataAt && r.atdAt)
+  )
 
   const meta = { decideBerthRequest, deleteBerthRequest }
 

@@ -16,8 +16,14 @@ interface VesselAgentBerthRequestsTableProps {
 export function VesselAgentBerthRequestsTable({ data, meta }: VesselAgentBerthRequestsTableProps) {
   const requested             = data.filter((r) => r.status === "Pending Approval")
   const modificationRequested = data.filter((r) => r.status === "Modification Requested")
-  const ongoing               = data.filter((r) => r.status === "Ongoing")
-  const completed             = data.filter((r) => r.status === "Denied" || r.status === "Complete")
+  const ongoing               = data.filter((r) =>
+    r.status === "Ongoing" ||
+    (r.status === "APPROVED" && (!r.ataAt || !r.atdAt))
+  )
+  const completed             = data.filter((r) =>
+    r.status === "Denied" || r.status === "DENIED" || r.status === "Complete" ||
+    (r.status === "APPROVED" && r.ataAt && r.atdAt)
+  )
 
   return (
     <div className="container mx-auto p-10 overflow-x-auto">
