@@ -5,7 +5,12 @@ import { HazardousCargoDomain } from "./hazardous-cargo-domain";
 
 export const hazardousCargoList = async (vesselId:string, vesselAgentEmail: string): Promise<HazardousCargoDomain[]> => {
     const session = await fetchAuthSession();
-    const response = await fetch(`https://bubcodjacl.execute-api.us-east-1.amazonaws.com/dev/hazardousCargos?vesselId=${vesselId},vesselAgentEmail=${vesselAgentEmail}`, {
+    let url = `https://bubcodjacl.execute-api.us-east-1.amazonaws.com/dev/hazardousCargos?vesselId=${vesselId}`
+    if(vesselAgentEmail){
+      url = url +`&vesselAgentEmail=${vesselAgentEmail}`;
+    }
+    
+    const response = await fetch(url, {
         method: 'GET',
         headers: {
             "Authorization": `Bearer ${session.tokens?.accessToken?.toString()}`,
