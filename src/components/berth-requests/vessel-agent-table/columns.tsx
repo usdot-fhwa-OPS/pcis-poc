@@ -29,6 +29,30 @@ const handleDelete = (id: string, table: any) => {
               }
   }
 
+const berthAssignmentColumn: ColumnDef<BerthRequestDomain> = {
+  id: "berthAssignment",
+  header: "Berth Assignment",
+  cell: ({ row }) => (
+    <div>{row.original.berthAssignment?.designation ?? "—"}</div>
+  ),
+}
+
+const actualArrivalColumn: ColumnDef<BerthRequestDomain> = {
+  accessorKey: "ataAt",
+  header: "Actual Arrival (ATA)",
+  cell: ({ row }) => (
+    <div>{row.original.ataAt ?? "—"}</div>
+  ),
+}
+
+const actualDepartureColumn: ColumnDef<BerthRequestDomain> = {
+  accessorKey: "atdAt",
+  header: "Actual Departure (ATD)",
+  cell: ({ row }) => (
+    <div>{row.original.atdAt ?? "—"}</div>
+  ),
+}
+
 export const columns: ColumnDef<BerthRequestDomain>[] = [
   // Define the columns for the table based on the database items (refer to resources.ts for schema names)
   {
@@ -102,4 +126,27 @@ export const columns: ColumnDef<BerthRequestDomain>[] = [
     ),
 
   },
+]
+
+// columns[0..1] = vesselID, terminal
+// columns[2..4] = etaAt, etdAt, requestedAt
+// columns[5]    = actions
+
+export const requestedColumns: ColumnDef<BerthRequestDomain>[] = [...columns]
+
+export const modificationRequestedColumns: ColumnDef<BerthRequestDomain>[] = [...columns]
+
+export const ongoingColumns: ColumnDef<BerthRequestDomain>[] = [
+  ...columns.slice(0, 2),
+  berthAssignmentColumn,
+  actualArrivalColumn,
+  ...columns.slice(2),
+]
+
+export const completedColumns: ColumnDef<BerthRequestDomain>[] = [
+  ...columns.slice(0, 2),
+  berthAssignmentColumn,
+  actualArrivalColumn,
+  actualDepartureColumn,
+  ...columns.slice(2, 5),
 ]

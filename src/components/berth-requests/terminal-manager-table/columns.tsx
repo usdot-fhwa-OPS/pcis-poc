@@ -1,9 +1,44 @@
 "use client"
 
 import { ColumnDef } from "@tanstack/react-table"
+import { useState } from "react"
 import { Button } from "../../ui/button"
+import { Input } from "../../ui/input"
 import { BerthRequestDomain } from "../berth-request-domain"
 import { TerminalOperatorBerthRequestsTableMeta } from "./data-table"
+
+function InlineTimeInput({
+  initialValue,
+  requestId,
+  field,
+}: {
+  initialValue: string | undefined
+  requestId: string
+  field: "ataAt" | "atdAt"
+}) {
+  const [value, setValue] = useState(initialValue ?? "")
+  const [saving, setSaving] = useState(false)
+
+  const handleSave = async () => {
+    if (value === (initialValue ?? "")) return
+    setSaving(true)
+    // TODO: call updateBerthRequest(requestId, { [field]: value }) once wired up
+    console.log("TODO updateBerthRequest", requestId, field, value)
+    setSaving(false)
+  }
+
+  return (
+    <Input
+      value={value}
+      onChange={(e) => setValue(e.target.value)}
+      onBlur={handleSave}
+      onKeyDown={(e) => { if (e.key === "Enter") handleSave() }}
+      placeholder="MM/DD/YYYY HH:MM"
+      disabled={saving}
+      className="w-40 h-8 text-sm"
+    />
+  )
+}
 
 export const columns: ColumnDef<BerthRequestDomain>[] = [
   // Define the columns for the table based on the database items (refer to resources.ts for schema names)
@@ -105,5 +140,79 @@ export const columns: ColumnDef<BerthRequestDomain>[] = [
       </div>
     ),
 
+  },
+]
+
+// columns[0] = vesselID+Contact, columns[1] = respond (Approve/Deny)
+// columns[2] = etaAt, columns[3] = etdAt, columns[4] = requestedAt, columns[5] = actions
+
+export const requestedColumns: ColumnDef<BerthRequestDomain>[] = [...columns]
+
+export const modificationRequestedColumns: ColumnDef<BerthRequestDomain>[] = [...columns]
+
+export const ongoingColumns: ColumnDef<BerthRequestDomain>[] = [
+  columns[0],
+  {
+    id: "berthAssignment",
+    header: "Berth Assignment",
+    cell: ({ row }) => (
+      <div>{row.original.berthAssignment?.designation ?? "—"}</div>
+    ),
+  },
+  {
+    id: "ataAt",
+    header: "Actual Arrival (ATA)",
+    cell: ({ row }) => (
+      <InlineTimeInput
+        initialValue={row.original.ataAt}
+        requestId={row.original.requestId}
+        field="ataAt"
+      />
+    ),
+  },
+  {
+    id: "atdAt",
+    header: "Actual Departure (ATD)",
+    cell: ({ row }) => (
+      <InlineTimeInput
+        initialValue={row.original.atdAt}
+        requestId={row.original.requestId}
+        field="atdAt"
+      />
+    ),
+  },
+  columns[2],
+  columns[3],
+  columns[4],
+]
+
+export const completedColumns: ColumnDef<BerthRequestDomain>[] = [
+  columns[0],
+  {
+    id: "berthAssignment",
+    header: "Berth Assignment",
+    cell: ({ row }) => (
+      <div>{row.original.berthAssignment?.designation ?? "—"}</div>
+    ),
+  },
+  {
+    id: "ataAt",
+    header: "Actual Arrival (ATA)",
+    cell: ({ row }) => <div>{row.original.ataAt ?? "—"}</div>,
+  },
+  {
+    id: "atdAt",
+    header: "Actual Departure (ATD)",
+    cell: ({ row }) => <div>{row.original.atdAt ?? "—"}</div>,
+  },
+  columns[2],
+  columns[3],
+  columns[4],
+  {
+    accessorKey: "status",
+    header: "Status",
+    cell: ({ row }) => (
+      <div className="font-medium">{row.original.status}</div>
+    ),
   },
 ]
