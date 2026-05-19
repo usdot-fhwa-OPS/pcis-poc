@@ -142,52 +142,75 @@ export const columns: ColumnDef<BerthRequestDomain>[] = [
     header: () => <div style={{ minWidth: "50px" }}>Respond to Request</div>,
     cell: ({ row, table }) => (
       <div className="flex space-x-8 ">
+        <Dialog>
+          <form>
+            <DialogTrigger render={<Button size="sm" variant="outline">Approve</Button>} />
+            <DialogContent className="sm:max-w-sm">
+              <DialogHeader>
+                <DialogTitle>Approve Berth Request</DialogTitle>
+                <DialogDescription>
+                  Review the Berth Request details before approving.
+                </DialogDescription>
+              </DialogHeader>
+              <FieldGroup>
+                <Field>
+                  <Label htmlFor="name-1">Name</Label>
+                  <Input id="name-1" name="name" defaultValue="Pedro Duarte" />
+                </Field>
+                <Field>
+                  <Label htmlFor="username-1">Username</Label>
+                  <Input id="username-1" name="username" defaultValue="@peduarte" />
+                </Field>
+              </FieldGroup>
+              <DialogFooter>
+                <DialogClose render={<Button variant="outline">Cancel</Button>} />
+                <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() =>
+                      (table.options.meta  as TerminalOperatorBerthRequestsTableMeta)
+                            .decideBerthRequest(row.original.requestId, 'APPROVED')
+                    }
+                  >Approve Request</Button>
+              </DialogFooter>
+            </DialogContent>
+          </form>
+        </Dialog>
         
         <Dialog>
-      <form>
-        <DialogTrigger render={<Button variant="outline">Open Dialog</Button>} />
-        <DialogContent className="sm:max-w-sm">
-          <DialogHeader>
-            <DialogTitle>Edit profile</DialogTitle>
-            <DialogDescription>
-              Make changes to your profile here. Click save when you&apos;re
-              done.
-            </DialogDescription>
-          </DialogHeader>
-          <FieldGroup>
-            <Field>
-              <Label htmlFor="name-1">Name</Label>
-              <Input id="name-1" name="name" defaultValue="Pedro Duarte" />
-            </Field>
-            <Field>
-              <Label htmlFor="username-1">Username</Label>
-              <Input id="username-1" name="username" defaultValue="@peduarte" />
-            </Field>
-          </FieldGroup>
-          <DialogFooter>
-            <DialogClose render={<Button variant="outline">Cancel</Button>} />
-            <Button
-                size="sm"
-                variant="outline"
-                onClick={() =>
-                  (table.options.meta  as TerminalOperatorBerthRequestsTableMeta)
-                        .decideBerthRequest(row.original.requestId, 'APPROVED')
-                }
-              ></Button>
-          </DialogFooter>
-        </DialogContent>
-      </form>
-    </Dialog>
-        <Button
-          size="sm"
-          variant="destructive"
-          onClick={() =>
-             (table.options.meta  as TerminalOperatorBerthRequestsTableMeta)
-                  .decideBerthRequest(row.original.requestId, 'DENIED')
-          }
-        >
-          Deny
-        </Button>
+          <form>
+            <DialogTrigger render={<Button size="sm" variant="destructive">Deny</Button>} />
+            <DialogContent className="sm:max-w-sm">
+              <DialogHeader>
+                <DialogTitle>Approve Berth Request</DialogTitle>
+                <DialogDescription>
+                  Review the Berth Request details before approving.
+                </DialogDescription>
+              </DialogHeader>
+              <FieldGroup>
+                <Field>
+                  <Label htmlFor="name-1">Name</Label>
+                  <Input id="name-1" name="name" defaultValue="Pedro Duarte" />
+                </Field>
+                <Field>
+                  <Label htmlFor="username-1">Username</Label>
+                  <Input id="username-1" name="username" defaultValue="@peduarte" />
+                </Field>
+              </FieldGroup>
+              <DialogFooter>
+                <DialogClose render={<Button variant="outline">Cancel</Button>} />
+                <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() =>
+                      (table.options.meta  as TerminalOperatorBerthRequestsTableMeta)
+                            .decideBerthRequest(row.original.requestId, 'DENIED')
+                    }
+                  >Deny</Button>
+              </DialogFooter>
+            </DialogContent>
+          </form>
+        </Dialog>
       </div>
     ),
 
