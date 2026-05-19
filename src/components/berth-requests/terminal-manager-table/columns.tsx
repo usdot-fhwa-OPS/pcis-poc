@@ -23,13 +23,18 @@ import {
 } from "../../../components/ui/dialog"
 import { Textarea } from "../../../components/ui/textarea"
 
-function RequestDetails({ row }: { row: Row<BerthRequestDomain> }) {
+function RequestDetails({ row, table }: { row: Row<BerthRequestDomain>; table: Table<BerthRequestDomain> }) {
+  const meta = table.options.meta as TerminalOperatorBerthRequestsTableMeta
+  const berthConfig = meta.berthConfigs?.find(c => c.terminalId === row.original.terminalId)
+
   return (
     <div className="space-y-2 text-sm">
       <p><span className="font-medium">Vessel ID:</span> {row.original.vesselID}</p>
       <div>
         <p className="font-medium">Contact:</p>
-        <p className="pl-4">Email: {row.original.vesselAgentEmail}</p>
+        <p className="pl-4">{berthConfig?.terminalName ?? '—'}</p>
+        <p className="pl-4">Phone: {berthConfig?.terminalPhone ?? '—'}</p>
+        <p className="pl-4">Email: {berthConfig?.terminalEmail ?? '—'}</p>
       </div>
       <p><span className="font-medium">Estimated Arrival:</span> {row.original.etaAt}</p>
       <p><span className="font-medium">Estimated Departure:</span> {row.original.etdAt}</p>
@@ -64,7 +69,7 @@ function ApproveDialog({ row, table }: { row: Row<BerthRequestDomain>; table: Ta
           <DialogTitle>Approve Berth Request</DialogTitle>
           <DialogDescription>Review the Berth Request details before approving.</DialogDescription>
         </DialogHeader>
-        <RequestDetails row={row} />
+        <RequestDetails row={row} table={table} />
         <hr className="my-1" />
         <div className="flex items-center gap-3 text-sm">
           <span className="font-medium whitespace-nowrap">Select Berth Assignment:</span>
@@ -111,7 +116,7 @@ function DenyDialog({ row, table }: { row: Row<BerthRequestDomain>; table: Table
           <DialogTitle>Deny Berth Request</DialogTitle>
           <DialogDescription>Review the Berth Request details before denying.</DialogDescription>
         </DialogHeader>
-        <RequestDetails row={row} />
+        <RequestDetails row={row} table={table} />
         <hr className="my-1" />
         <div className="space-y-1 text-sm">
           <p className="font-medium">Comment (Optional):</p>
