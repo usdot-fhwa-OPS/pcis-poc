@@ -11,6 +11,19 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 import { cn } from "../../../lib/utils"
 import { BerthRequestDomain } from "../berth-request-domain"
 import { TerminalOperatorBerthRequestsTableMeta } from "./data-table"
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "../../../components/ui/dialog"
+import { Field, FieldGroup } from "../../../components/ui/field"
+import { Input } from "../../../components/ui/input"
+import { Label } from "../../../components/ui/label"
 
 const TIME_OPTIONS = [
   "12:00 AM", "01:00 AM", "02:00 AM", "03:00 AM", "04:00 AM", "05:00 AM",
@@ -129,16 +142,42 @@ export const columns: ColumnDef<BerthRequestDomain>[] = [
     header: () => <div style={{ minWidth: "50px" }}>Respond to Request</div>,
     cell: ({ row, table }) => (
       <div className="flex space-x-8 ">
-        <Button
-          size="sm"
-          variant="outline"
-          onClick={() =>
-             (table.options.meta  as TerminalOperatorBerthRequestsTableMeta)
-                  .decideBerthRequest(row.original.requestId, 'APPROVED')
-          }
-        >
-          Approve
-        </Button>
+        
+        <Dialog>
+      <form>
+        <DialogTrigger render={<Button variant="outline">Open Dialog</Button>} />
+        <DialogContent className="sm:max-w-sm">
+          <DialogHeader>
+            <DialogTitle>Edit profile</DialogTitle>
+            <DialogDescription>
+              Make changes to your profile here. Click save when you&apos;re
+              done.
+            </DialogDescription>
+          </DialogHeader>
+          <FieldGroup>
+            <Field>
+              <Label htmlFor="name-1">Name</Label>
+              <Input id="name-1" name="name" defaultValue="Pedro Duarte" />
+            </Field>
+            <Field>
+              <Label htmlFor="username-1">Username</Label>
+              <Input id="username-1" name="username" defaultValue="@peduarte" />
+            </Field>
+          </FieldGroup>
+          <DialogFooter>
+            <DialogClose render={<Button variant="outline">Cancel</Button>} />
+            <Button
+                size="sm"
+                variant="outline"
+                onClick={() =>
+                  (table.options.meta  as TerminalOperatorBerthRequestsTableMeta)
+                        .decideBerthRequest(row.original.requestId, 'APPROVED')
+                }
+              ></Button>
+          </DialogFooter>
+        </DialogContent>
+      </form>
+    </Dialog>
         <Button
           size="sm"
           variant="destructive"
