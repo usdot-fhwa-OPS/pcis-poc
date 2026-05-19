@@ -13,18 +13,20 @@ import {
 } from "@tanstack/react-table"
 
 import {
-  Table, 
+  Table,
   TableBody,
   TableCell,
   TableHead,
   TableHeader,
   TableRow,
 } from "../../ui/table"
+import { BerthConfigDomain } from "../berth-config-domain"
 
 
 export interface TerminalOperatorBerthRequestsTableMeta {
-  decideBerthRequest: any,
+  decideBerthRequest: (requestId: string, decision: string, options?: { denialComment?: string; berthAssignment?: string }) => void
   deleteBerthRequest: any
+  berthConfigs: BerthConfigDomain[]
 }
 
 interface DataTableProps<TData, TValue> {

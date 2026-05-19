@@ -51,7 +51,11 @@ export const berthRequestListForVesselAgent = async (vesselAgentEmail:string): P
     return fetchBerthRequestList(`https://ewutyf2fml.execute-api.us-east-1.amazonaws.com/dev/berthRequests?vesselAgentEmail=${vesselAgentEmail}`)
 }
 
-export const berthRequestDecision = async (requestId:string, decision:string): Promise<BerthRequestDomain[]> => {
+export const berthRequestDecision = async (
+    requestId: string,
+    decision: string,
+    options?: { denialComment?: string; berthAssignment?: string }
+): Promise<BerthRequestDomain[]> => {
     const session = await fetchAuthSession();
     const response = await fetch(`https://ewutyf2fml.execute-api.us-east-1.amazonaws.com/dev/berthRequests/${requestId}/decision`, {
         method: 'POST',
@@ -60,7 +64,7 @@ export const berthRequestDecision = async (requestId:string, decision:string): P
             "Content-Type": "application/json",
             "Accept": "*/*"
         },
-        body: JSON.stringify({"decision":decision})
+        body: JSON.stringify({ decision, ...options })
     });
     const result = (await response.json());
     return result;

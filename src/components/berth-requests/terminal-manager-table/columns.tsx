@@ -1,6 +1,6 @@
 "use client"
 
-import { ColumnDef } from "@tanstack/react-table"
+import { ColumnDef, Row, Table } from "@tanstack/react-table"
 import { useState } from "react"
 import { format } from "date-fns"
 import { CalendarIcon } from "lucide-react"
@@ -21,9 +21,115 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "../../../components/ui/dialog"
-import { Field, FieldGroup } from "../../../components/ui/field"
-import { Input } from "../../../components/ui/input"
-import { Label } from "../../../components/ui/label"
+import { Textarea } from "../../../components/ui/textarea"
+
+function RequestDetails({ row }: { row: Row<BerthRequestDomain> }) {
+  return (
+    <div className="space-y-2 text-sm">
+      <p><span className="font-medium">Vessel ID:</span> {row.original.vesselID}</p>
+      <div>
+        <p className="font-medium">Contact:</p>
+        <p className="pl-4">Email: {row.original.vesselAgentEmail}</p>
+      </div>
+      <p><span className="font-medium">Estimated Arrival:</span> {row.original.etaAt}</p>
+      <p><span className="font-medium">Estimated Departure:</span> {row.original.etdAt}</p>
+      <p><span className="font-medium">Services Required:</span> {row.original.services?.join(', ')}</p>
+      <p><span className="font-medium">Cargo Manifest:</span> {row.original.manifestFileName}</p>
+    </div>
+  )
+}
+
+function ApproveDialog({ row, table }: { row: Row<BerthRequestDomain>; table: Table<BerthRequestDomain> }) {
+  const [open, setOpen] = useState(false)
+  const [selectedBerth, setSelectedBerth] = useState('')
+  const meta = table.options.meta as TerminalOperatorBerthRequestsTableMeta
+  const berthConfig = meta.berthConfigs?.find(c => c.terminalId === row.original.terminalId)
+  const designations = (berthConfig?.berthDesignations ?? []) as string[]
+
+  const handleOpen = (isOpen: boolean) => {
+    if (isOpen) setSelectedBerth(row.original.berthAssignment?.designation ?? '')
+    setOpen(isOpen)
+  }
+
+  const handleApprove = () => {
+    meta.decideBerthRequest(row.original.requestId, 'APPROVED', { berthAssignment: selectedBerth })
+    setOpen(false)
+  }
+
+  return (
+    <Dialog open={open} onOpenChange={handleOpen}>
+      <DialogTrigger render={<Button size="sm" variant="outline">Approve</Button>} />
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle>Approve Berth Request</DialogTitle>
+          <DialogDescription>Review the Berth Request details before approving.</DialogDescription>
+        </DialogHeader>
+        <RequestDetails row={row} />
+        <hr className="my-1" />
+        <div className="flex items-center gap-3 text-sm">
+          <span className="font-medium whitespace-nowrap">Select Berth Assignment:</span>
+          <Select value={selectedBerth} onValueChange={setSelectedBerth}>
+            <SelectTrigger className="w-28">
+              <SelectValue placeholder="Select" />
+            </SelectTrigger>
+            <SelectContent>
+              {designations.map(d => (
+                <SelectItem key={d} value={d}>{d}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+        <DialogFooter>
+          <DialogClose render={<Button variant="outline">Cancel</Button>} />
+          <Button onClick={handleApprove}>Approve Request</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  )
+}
+
+function DenyDialog({ row, table }: { row: Row<BerthRequestDomain>; table: Table<BerthRequestDomain> }) {
+  const [open, setOpen] = useState(false)
+  const [comment, setComment] = useState('')
+  const meta = table.options.meta as TerminalOperatorBerthRequestsTableMeta
+
+  const handleOpen = (isOpen: boolean) => {
+    if (isOpen) setComment('')
+    setOpen(isOpen)
+  }
+
+  const handleDeny = () => {
+    meta.decideBerthRequest(row.original.requestId, 'DENIED', { denialComment: comment || undefined })
+    setOpen(false)
+  }
+
+  return (
+    <Dialog open={open} onOpenChange={handleOpen}>
+      <DialogTrigger render={<Button size="sm" variant="destructive">Deny</Button>} />
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle>Deny Berth Request</DialogTitle>
+          <DialogDescription>Review the Berth Request details before denying.</DialogDescription>
+        </DialogHeader>
+        <RequestDetails row={row} />
+        <hr className="my-1" />
+        <div className="space-y-1 text-sm">
+          <p className="font-medium">Comment (Optional):</p>
+          <Textarea
+            value={comment}
+            onChange={(e) => setComment(e.target.value)}
+            placeholder="Enter reason for denial..."
+            className="resize-none"
+          />
+        </div>
+        <DialogFooter>
+          <DialogClose render={<Button variant="outline">Cancel</Button>} />
+          <Button variant="destructive" onClick={handleDeny}>Deny Request</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  )
+}
 
 const TIME_OPTIONS = [
   "12:00 AM", "01:00 AM", "02:00 AM", "03:00 AM", "04:00 AM", "05:00 AM",
@@ -141,76 +247,9 @@ export const columns: ColumnDef<BerthRequestDomain>[] = [
     accessorKey: "respond",
     header: () => <div style={{ minWidth: "50px" }}>Respond to Request</div>,
     cell: ({ row, table }) => (
-      <div className="flex space-x-8 ">
-        <Dialog>
-          <form>
-            <DialogTrigger render={<Button size="sm" variant="outline">Approve</Button>} />
-            <DialogContent className="sm:max-w-sm">
-              <DialogHeader>
-                <DialogTitle>Deny Berth Request</DialogTitle>
-                <DialogDescription>
-                  Review the Berth Request details before denying.
-                </DialogDescription>
-              </DialogHeader>
-              <FieldGroup>
-                <Field>
-                  <Label htmlFor="name-1">Name</Label>
-                  <Input id="name-1" name="name" defaultValue="Pedro Duarte" />
-                </Field>
-                <Field>
-                  <Label htmlFor="username-1">Username</Label>
-                  <Input id="username-1" name="username" defaultValue="@peduarte" />
-                </Field>
-              </FieldGroup>
-              <DialogFooter>
-                <DialogClose render={<Button variant="outline">Cancel</Button>} />
-                <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={() =>
-                      (table.options.meta  as TerminalOperatorBerthRequestsTableMeta)
-                            .decideBerthRequest(row.original.requestId, 'APPROVED')
-                    }
-                  >Approve Request</Button>
-              </DialogFooter>
-            </DialogContent>
-          </form>
-        </Dialog>
-        
-        <Dialog>
-          <form>
-            <DialogTrigger render={<Button size="sm" variant="destructive">Deny</Button>} />
-            <DialogContent className="sm:max-w-sm">
-              <DialogHeader>
-                <DialogTitle>Approve Berth Request</DialogTitle>
-                <DialogDescription>
-                  Review the Berth Request details before approving.
-                </DialogDescription>
-              </DialogHeader>
-              <FieldGroup>
-                <Field>
-                  <Label htmlFor="name-1">Name</Label>
-                  <Input id="name-1" name="name" defaultValue="Pedro Duarte" />
-                </Field>
-                <Field>
-                  <Label htmlFor="username-1">Username</Label>
-                  <Input id="username-1" name="username" defaultValue="@peduarte" />
-                </Field>
-              </FieldGroup>
-              <DialogFooter>
-                <DialogClose render={<Button variant="outline">Cancel</Button>} />
-                <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={() =>
-                      (table.options.meta  as TerminalOperatorBerthRequestsTableMeta)
-                            .decideBerthRequest(row.original.requestId, 'DENIED')
-                    }
-                  >Deny</Button>
-              </DialogFooter>
-            </DialogContent>
-          </form>
-        </Dialog>
+      <div className="flex space-x-4">
+        <ApproveDialog row={row} table={table as Table<BerthRequestDomain>} />
+        <DenyDialog row={row} table={table as Table<BerthRequestDomain>} />
       </div>
     ),
 

@@ -7,18 +7,21 @@ import {
   completedColumns,
 } from "./columns.tsx";
 import { berthRequestDecision } from "../berth-request-client.tsx";
+import { BerthConfigDomain } from "../berth-config-domain.tsx";
 
 interface TerminalOperatorBerthRequestsTableProps {
   data: any[];
   deleteBerthRequest: any;
+  berthConfigs: BerthConfigDomain[];
 }
 
 export function TerminalOperatorBerthRequestsTable({
   data,
   deleteBerthRequest,
+  berthConfigs,
 }: TerminalOperatorBerthRequestsTableProps) {
-  const decideBerthRequest = (requestId: string, decision: string) => {
-    berthRequestDecision(requestId, decision);
+  const decideBerthRequest = (requestId: string, decision: string, options?: { denialComment?: string; berthAssignment?: string }) => {
+    berthRequestDecision(requestId, decision, options);
   }
 
   const requested             = data.filter((r) => r.status === "REQUESTED")
@@ -31,7 +34,7 @@ export function TerminalOperatorBerthRequestsTable({
     (r.status === "APPROVED" && r.ataAt && r.atdAt)
   )
 
-  const meta = { decideBerthRequest, deleteBerthRequest }
+  const meta = { decideBerthRequest, deleteBerthRequest, berthConfigs }
 
   return (
     <div className="container mx-auto p-10 overflow-x-auto">
