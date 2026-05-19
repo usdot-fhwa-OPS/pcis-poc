@@ -147,9 +147,9 @@ export const columns: ColumnDef<BerthRequestDomain>[] = [
             <DialogTrigger render={<Button size="sm" variant="outline">Approve</Button>} />
             <DialogContent className="sm:max-w-sm">
               <DialogHeader>
-                <DialogTitle>Approve Berth Request</DialogTitle>
+                <DialogTitle>Deny Berth Request</DialogTitle>
                 <DialogDescription>
-                  Review the Berth Request details before approving.
+                  Review the Berth Request details before denying.
                 </DialogDescription>
               </DialogHeader>
               <FieldGroup>
