@@ -81,6 +81,21 @@ export const saveBerthRequest = async (berthRequestDomain: BerthRequestDomain): 
     return result;
 }
 
+export const updateBerthRequest = async (berthRequestDomain: BerthRequestDomain): Promise<string> => {
+    const session = await fetchAuthSession();
+    const response = await fetch(`https://ewutyf2fml.execute-api.us-east-1.amazonaws.com/dev/berthRequests/${berthRequestDomain.requestId}`, {
+        method: 'PUT',
+        headers: {
+            "Authorization": `Bearer ${session.tokens?.accessToken?.toString()}`,
+            "Content-Type": "application/json",
+            "Accept": "*/*"
+        },
+        body: JSON.stringify(berthRequestDomain)
+    });
+    const result = (await response.json());
+    return result;
+}
+
 export const deleteBerthRequest = async (berthRequestUid:string): Promise<any> => {
     const session = await fetchAuthSession();
     const response = await fetch(`https://ewutyf2fml.execute-api.us-east-1.amazonaws.com/dev/berthRequest/${berthRequestUid}`, {

@@ -11,6 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 import { cn } from "../../../lib/utils"
 import { BerthRequestDomain } from "../berth-request-domain"
 import { TerminalOperatorBerthRequestsTableMeta } from "./data-table"
+import { updateBerthRequest } from "../berth-request-client"
 
 const TIME_OPTIONS = [
   "12:00 AM", "01:00 AM", "02:00 AM", "03:00 AM", "04:00 AM", "05:00 AM",
@@ -45,11 +46,15 @@ function DateTimePicker({
     ? `${format(date, "MM/dd/yyyy")} ${time}`
     : undefined
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!date) return
     const combined = `${format(date, "MM/dd/yyyy")} ${time}`
     setOpen(false)
     // TODO: call updateBerthRequest(requestId, { [field]: combined }) once wired up
+    let bReq:BerthRequestDomain = {} as BerthRequestDomain;
+    bReq[field] = combined;
+    bReq.requestId = requestId;
+    await updateBerthRequest(bReq)
     console.log("TODO updateBerthRequest", requestId, field, combined)
   }
 
