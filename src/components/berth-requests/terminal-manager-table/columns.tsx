@@ -38,6 +38,7 @@ function RequestDetails({ row, table }: { row: Row<BerthRequestDomain>; table: T
       </div>
       <p><span className="font-medium">Estimated Arrival:</span> {row.original.etaAt}</p>
       <p><span className="font-medium">Estimated Departure:</span> {row.original.etdAt}</p>
+      <p><span className="font-medium">Date Requested:</span> {row.original.requestedAt}</p>
       <p><span className="font-medium">Services Required:</span> {row.original.services?.join(', ')}</p>
       <p><span className="font-medium">Cargo Manifest:</span> {row.original.manifestFileName}</p>
     </div>
