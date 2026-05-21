@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "../../ui/tabs.tsx";
 import { DataTable } from "./data-table.tsx";
 import {
@@ -7,18 +8,23 @@ import {
   completedColumns,
 } from "./columns.tsx";
 import { berthRequestDecision } from "../berth-request-client.tsx";
+import { BerthConfigDomain } from "../berth-config-domain.tsx";
+import { Button } from "../../ui/button.tsx";
+import { BerthAvailability } from "../../berth/berth-availability.tsx";
 
 interface TerminalOperatorBerthRequestsTableProps {
   data: any[];
   deleteBerthRequest: any;
+  berthConfigs: BerthConfigDomain[];
 }
 
 export function TerminalOperatorBerthRequestsTable({
   data,
   deleteBerthRequest,
+  berthConfigs,
 }: TerminalOperatorBerthRequestsTableProps) {
-  const decideBerthRequest = (requestId: string, decision: string) => {
-    berthRequestDecision(requestId, decision);
+  const decideBerthRequest = (requestId: string, decision: string, options?: { denialComment?: string; berthAssignment?: string }) => {
+    berthRequestDecision(requestId, decision, options);
   }
 
   const requested             = data.filter((r) => r.status === "REQUESTED")
@@ -31,19 +37,22 @@ export function TerminalOperatorBerthRequestsTable({
     (r.status === "APPROVED" && r.ataAt && r.atdAt)
   )
 
-  const meta = { decideBerthRequest, deleteBerthRequest }
+  const [berthAvailabilityOpen, setBerthAvailabilityOpen] = useState(false)
+  const meta = { decideBerthRequest, deleteBerthRequest, berthConfigs }
 
   return (
     <div className="container mx-auto p-10 overflow-x-auto">
       <Tabs defaultValue="requested">
-        <div>
-          <TabsList className="mb-4 flex w-full justify-start gap-x-4">
+        <div className="flex items-center justify-between mb-4">
+          <TabsList className="flex justify-start gap-x-4">
             <TabsTrigger value="requested">Requested</TabsTrigger>
             <TabsTrigger value="modification-requested">Modification Requested</TabsTrigger>
             <TabsTrigger value="ongoing">Ongoing</TabsTrigger>
             <TabsTrigger value="completed">Completed</TabsTrigger>
           </TabsList>
+          <Button onClick={() => setBerthAvailabilityOpen(true)}>Set Berth Availability</Button>
         </div>
+        <BerthAvailability isDialogOpen={berthAvailabilityOpen} handleCloseDialog={setBerthAvailabilityOpen} />
         <div className="w-xl max-w-9/10">
           <TabsContent value="requested">
             <DataTable columns={requestedColumns} data={requested} meta={meta} />
