@@ -476,7 +476,7 @@ async function createRequest(event) {
     manifestPath: (body.manifestPath || "").toString().trim() || null,
     manifestCsvContent: (body.manifestCsvContent || "").toString() || null,
     manifestCsvBase64: (body.manifestCsvBase64 || "").toString() || null,
-    status: "PENDING",
+    status: "REQUESTED",
     denialComment: null,
     decisionAt: null,
     decidedBy: null,
