@@ -598,10 +598,10 @@ async function updateRequest(event) {
   const terminalId = (existing.Item.terminalId || body.terminalId || "DEFAULT_TERMINAL").toString();
   const config = await getBerthConfig(terminalId);
   const assignment = body.berthAssignment ?? existing.Item.berthAssignment;
-  const assignmentError = validateBerthAssignment(assignment, config);
-  if (assignmentError) {
-    return response(400, { message: assignmentError });
-  }
+  // const assignmentError = validateBerthAssignment(assignment, config);
+  // if (assignmentError) {
+  //   return response(400, { message: assignmentError });
+  // }
 
   const nowIso = new Date().toISOString();
   const updates = {
@@ -624,8 +624,12 @@ async function updateRequest(event) {
       TableName: BERTH_REQUESTS_TABLE,
       Key: { requestId },
       UpdateExpression:
-        "SET etaAt = :etaAt, etdAt = :etdAt, ataAt = :ataAt, atdAt = :atdAt, berthAssignment = :berthAssignment, services = :services, manifestFileName = :manifestFileName, manifestPath = :manifestPath, manifestCsvContent = :manifestCsvContent, manifestCsvBase64 = :manifestCsvBase64, updatedAt = :updatedAt",
+        "SET #s = :newStatus, etaAt = :etaAt, etdAt = :etdAt, ataAt = :ataAt, atdAt = :atdAt, berthAssignment = :berthAssignment, services = :services, manifestFileName = :manifestFileName, manifestPath = :manifestPath, manifestCsvContent = :manifestCsvContent, manifestCsvBase64 = :manifestCsvBase64, updatedAt = :updatedAt",
+      ExpressionAttributeNames: {
+          "#s": "status" // Map the placeholder to the actual keyword
+      },
       ExpressionAttributeValues: {
+        ":newStatus": 'MODIFIED',
         ":etaAt": updates.etaAt,
         ":etdAt": updates.etdAt,
         ":ataAt": updates.ataAt,

@@ -23,10 +23,12 @@ import {
   DialogTrigger,
 } from "../../../components/ui/dialog"
 import { Textarea } from "../../../components/ui/textarea"
+import { useNavigate } from "@tanstack/react-router"
 
 function RequestDetails({ row, table }: { row: Row<BerthRequestDomain>; table: Table<BerthRequestDomain> }) {
   const meta = table.options.meta as TerminalOperatorBerthRequestsTableMeta
   const berthConfig = meta.berthConfigs?.find(c => c.terminalId === row.original.terminalId)
+  
 
   return (
     <div className="space-y-2 text-sm">
@@ -182,7 +184,6 @@ function DateTimePicker({
     await updateBerthRequest(bReq)
     console.log("TODO updateBerthRequest", requestId, field, combined)
   }
-
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
@@ -285,10 +286,12 @@ export const columns: ColumnDef<BerthRequestDomain>[] = [
         <Button
           size="sm"
           variant="ghost"
-          onClick={() => 
-          {row.original.requestId}
-            //handleModify(row.original.vesselID)
-            }
+          onClick={() => {
+            sessionStorage.setItem('berthRequestOriginal', JSON.stringify(row.original))
+            navigation.navigate('/berth-request-modify');
+            
+          }
+        }
         >
           Modify
         </Button>
