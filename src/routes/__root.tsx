@@ -68,7 +68,7 @@ function RootComponent() {
         {userSecurityAttrubutes.given_name && <UserContext.Provider value={userSecurityAttrubutes} >  
         <div className="flex-1 bg-gray-50">
           <Toaster position="top-center" richColors={true} expand={true} />
-          <div className="flex items-center justify-end gap-4 p-3 bg-white border-b">
+          <div className="flex items-center justify-end gap-4 p-3 bg-white border-b mb-4">
             <UserButton fullName={userAttributes.fullName} role={userAttributes.role} />
           </div>
          
