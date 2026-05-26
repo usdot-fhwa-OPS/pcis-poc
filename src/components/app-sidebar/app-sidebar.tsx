@@ -227,8 +227,8 @@ export function AppSidebar() {
   };
 
   return (
-    <Sidebar className="bg-white">
-      <SidebarContent>
+    <Sidebar>
+      <SidebarContent className="bg-white">
         <SidebarGroup>
           <SidebarGroupLabel>PCIS POC</SidebarGroupLabel>
           <SidebarGroupContent>
