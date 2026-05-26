@@ -23,6 +23,7 @@ import {
   DialogTrigger,
 } from "../../../components/ui/dialog"
 import { Textarea } from "../../../components/ui/textarea"
+import { useNavigate } from "@tanstack/react-router"
 
 function RequestDetails({ row, table }: { row: Row<BerthRequestDomain>; table: Table<BerthRequestDomain> }) {
   const meta = table.options.meta as TerminalOperatorBerthRequestsTableMeta
@@ -286,8 +287,9 @@ export const columns: ColumnDef<BerthRequestDomain>[] = [
           size="sm"
           variant="ghost"
           onClick={() => {
+            const navigate = useNavigate();
             sessionStorage.setItem('berthRequestOriginal', JSON.stringify(row.original))
-            navigation.navigate('/berth-request-modify');
+            navigate({to:'/berth-request-modify'});
             
           }
         }
