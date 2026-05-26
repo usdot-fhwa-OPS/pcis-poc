@@ -154,7 +154,6 @@ button:focus-visible {
   }
 }
 .self-help {
-  display: none; /* Temporary change for PCIS2-112 */
   background-color: #007AFF;
   border-top-right-radius: 20px;
   border-top-left-radius: 20px;
@@ -165,6 +164,7 @@ button:focus-visible {
   display: flex;
   justify-content: center;
   align-items: center;
+  display: none; /* Temporary change for PCIS2-112 */
 }
 
 .self-help-right {
