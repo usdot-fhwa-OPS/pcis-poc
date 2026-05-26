@@ -20,7 +20,7 @@ import { Route as CapacityRouteImport } from './routes/capacity'
 import { Route as BerthVesselRouteImport } from './routes/berth-vessel'
 import { Route as BerthRequestsRouteImport } from './routes/berth-requests'
 import { Route as BerthRequestModifyConfirmationRouteImport } from './routes/berth-request-modify-confirmation'
-import { Route as BerthRequestModifyRouteImport } from './routes/b./routes/berth-request-modify-confirmation
+import { Route as BerthRequestModifyRouteImport } from './routes/b./routes/berth-request-modify-confirmation'
 import { Route as BerthRequestConfirmationRouteImport } from './routes/berth-request-confirmation'
 import { Route as BerthRequestAddRouteImport } from './routes/berth-request-add'
 import { Route as BerthManagerRouteImport } from './routes/berth-manager'
