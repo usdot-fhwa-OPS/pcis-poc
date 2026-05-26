@@ -281,14 +281,15 @@ export const columns: ColumnDef<BerthRequestDomain>[] = [
   {
     accessorKey: "actions",
     header: () => <div style={{ minWidth: "50px" }}>Actions</div>,
-    cell: ({ row, table }) => (
+    cell: ({ row, table }) => { 
+      const navigate = useNavigate();
+      return(
       <div className="flex space-x-8 ">
         <Button
           size="sm"
           variant="ghost"
           onClick={() => {
-            const navigate = useNavigate();
-            sessionStorage.setItem('berthRequestOriginal', JSON.stringify(row.original))
+             sessionStorage.setItem('berthRequestOriginal', JSON.stringify(row.original))
             navigate({to:'/berth-request-modify'});
             
           }
@@ -309,7 +310,7 @@ export const columns: ColumnDef<BerthRequestDomain>[] = [
           Delete
         </Button>
       </div>
-    ),
+    )},
 
   },
 ]
