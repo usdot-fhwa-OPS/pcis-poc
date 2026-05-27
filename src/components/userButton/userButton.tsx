@@ -10,16 +10,15 @@ interface UserButtonProps {
 
 const UserButton: React.FC<UserButtonProps> = ({ fullName, role }) => {
     return (
-        <button className="user-button">
-            <Selfhelp />
-            <SettingsButton role={role} />
+        <Selfhelp />
+        <SettingsButton role={role} />
+        <div className="user-button">
             <div className="user-button-content">
-            <span>{fullName}</span>
-            <span className="user-role">{role}</span>
+                <span>{fullName}</span>
+                <span className="user-role">{role}</span>
             </div>
             <div className="user-avatar"></div>
-           
-        </button>
+        </div>
     );
 };
 

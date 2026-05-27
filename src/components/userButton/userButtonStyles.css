@@ -1,12 +1,10 @@
 /* userButtonStyles.css */
 .user-button {
-    margin-left: auto;
 /*
+    margin-left: auto;
     border-radius: 16px;
     padding: 10px;
-*/
     background-color: white;
-/*
     border: 1px solid #E2E2E2;
 */
     display: flex;
