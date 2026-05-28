@@ -3,7 +3,7 @@
 import { ColumnDef, Row, Table } from "@tanstack/react-table"
 import { useState } from "react"
 import { format } from "date-fns"
-import { CalendarIcon } from "lucide-react"
+import { CalendarIcon, CheckIcon, XIcon } from "lucide-react"
 import { Button } from "../../ui/button"
 import { Calendar } from "../../ui/calendar"
 import { Popover, PopoverContent, PopoverTrigger } from "../../ui/popover"
@@ -64,7 +64,7 @@ function ApproveDialog({ row, table }: { row: Row<BerthRequestDomain>; table: Ta
 
   return (
     <Dialog open={open} onOpenChange={handleOpen}>
-      <DialogTrigger render={<Button size="sm" variant="outline">Approve</Button>} />
+      <DialogTrigger render={<Button size="sm" className="bg-green-600 hover:bg-green-700 text-white gap-1"><CheckIcon className="h-4 w-4" />Approve</Button>} />
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Approve Berth Request</DialogTitle>
@@ -111,7 +111,7 @@ function DenyDialog({ row, table }: { row: Row<BerthRequestDomain>; table: Table
 
   return (
     <Dialog open={open} onOpenChange={handleOpen}>
-      <DialogTrigger render={<Button size="sm" variant="destructive">Deny</Button>} />
+      <DialogTrigger render={<Button size="sm" variant="destructive" className="gap-1"><XIcon className="h-4 w-4" />Deny</Button>} />
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Deny Berth Request</DialogTitle>
@@ -131,6 +131,34 @@ function DenyDialog({ row, table }: { row: Row<BerthRequestDomain>; table: Table
         <DialogFooter>
           <DialogClose render={<Button variant="outline">Cancel</Button>} />
           <Button variant="destructive" onClick={handleDeny}>Deny Request</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  )
+}
+
+function DeleteDialog({ row, table }: { row: Row<BerthRequestDomain>; table: Table<BerthRequestDomain> }) {
+  const [open, setOpen] = useState(false)
+  const meta = table.options.meta as TerminalOperatorBerthRequestsTableMeta
+
+  const handleDelete = () => {
+    meta.deleteBerthRequest(row.original.requestId)
+    setOpen(false)
+  }
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger render={<Button size="sm" variant="link" className="text-red-600 p-0 h-auto">Delete</Button>} />
+      <DialogContent className="sm:max-w-sm" showCloseButton={false}>
+        <DialogHeader>
+          <DialogTitle className="uppercase tracking-wide text-center">Confirmation Required</DialogTitle>
+        </DialogHeader>
+        <p className="text-sm text-center py-2">
+          Deleting a Berth Request can't be undone.<br />Do you want to continue?
+        </p>
+        <DialogFooter className="sm:justify-center">
+          <Button onClick={handleDelete}>Yes</Button>
+          <DialogClose render={<Button>No</Button>} />
         </DialogFooter>
       </DialogContent>
     </Dialog>
@@ -276,29 +304,16 @@ export const columns: ColumnDef<BerthRequestDomain>[] = [
     accessorKey: "actions",
     header: () => <div style={{ minWidth: "50px" }}>Actions</div>,
     cell: ({ row, table }) => (
-      <div className="flex space-x-8 ">
+      <div className="flex space-x-4">
         <Button
           size="sm"
-          variant="ghost"
-          onClick={() => 
-          {row.original.requestId}
-            //handleModify(row.original.vesselID)
-            }
+          variant="link"
+          className="text-blue-600 p-0 h-auto"
+          onClick={() => {}}
         >
           Modify
         </Button>
-
-        <Button
-          size="sm"
-          variant="ghost"
-          onClick={() => 
-          {(table.options.meta  as TerminalOperatorBerthRequestsTableMeta)
-                  .deleteBerthRequest(row.original.requestId)}
-           
-          }
-        >
-          Delete
-        </Button>
+        <DeleteDialog row={row} table={table as Table<BerthRequestDomain>} />
       </div>
     ),
 
