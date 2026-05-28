@@ -1,5 +1,5 @@
 
-import { Avatar } from "../ui/avatar";
+import { Avatar, AvatarFallback } from "../ui/avatar";
 import { Selfhelp } from '../self-help/self-help';
 import SettingsButton from '../settings/settingsButton';
 import './userButtonStyles.css';
@@ -20,7 +20,9 @@ const UserButton: React.FC<UserButtonProps> = ({ fullName, role }) => {
                 <span className="user-role">{role}</span>
             </div>
             <div className="user-avatar"></div>
-            <Avatar fallback="J" />
+            <Avatar color="gray">
+                <AvatarFallback>J</AvatarFallback>
+            </Avatar>
         </div>
     </>
     );
