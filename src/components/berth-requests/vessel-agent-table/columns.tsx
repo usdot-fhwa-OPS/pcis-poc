@@ -5,6 +5,7 @@ import { Button } from "../../ui/button"
 import { BerthRequestDomain } from "../berth-request-domain"
 import { BerthConfigDomain } from "../berth-config-domain"
 import { VesselAgentBerthRequestsTableMeta } from "./data-table"
+import { useNavigate } from "@tanstack/react-router"
 
 const showTerminal = (
   id: string
@@ -14,9 +15,7 @@ const showContact = (
   contact: string
 ) => {contact}
 
-const handleModify = (id: string) => {
-  alert(`Modify request ${id}`)
-}
+
 const handleDelete = (id: string, table: any) => {
   const confirmed = window.confirm(
     'Are you sure you want to delete this berth request?'+id
@@ -105,12 +104,19 @@ export const columns: ColumnDef<BerthRequestDomain>[] = [
   {
     accessorKey: "actions",
     header: () => <div style={{ minWidth: "50px" }}>Actions</div>,
-    cell: ({ row, table }) => (
+    cell: ({ row, table }) => {
+       const navigate = useNavigate();
+      return(
       <div className="flex space-x-8 ">
         <Button
           size="sm"
           variant="link"
-          onClick={() => handleModify(row.original.requestId)}
+            onClick={() => {
+              sessionStorage.setItem('berthRequestOriginal', JSON.stringify(row.original))
+              navigate({ to: '/berth-request-modify' });
+
+            }
+          }
         >
           Modify
         </Button>
@@ -123,7 +129,8 @@ export const columns: ColumnDef<BerthRequestDomain>[] = [
           Delete
         </Button>
       </div>
-    ),
+    )
+  },
 
   },
 ]

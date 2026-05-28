@@ -22,6 +22,7 @@ export const Route = createFileRoute('/berth-request-modify-confirmation')({
 })
 
 function BerthRequestConfirmationComponent() {
+  const userContext = useContext(UserContext);
   const navigate = useNavigate();
   const raw = sessionStorage.getItem('berthRequestOriginal');
   const formData: BerthRequestFormData | null = raw ? JSON.parse(raw) : null;
@@ -29,15 +30,19 @@ function BerthRequestConfirmationComponent() {
   const [cancelOpen, setCancelOpen] = useState(false);
   const [successOpen, setSuccessOpen] = useState(false);
 
+  const requestListPage = (userContext['custom:role']==='Terminal Operator')?'/berth-manager':'/berth-vessel';
+
   const handleConfirmCancel = () => {
     setCancelOpen(false);
-    navigate({ to: '/berth-requests' });
+    navigate({ to: requestListPage });
   };
+
+  
 
   const handleConfirmSubmit = () => {
     save();
     setSuccessOpen(false);
-    navigate({ to: '/berth-requests' });
+    navigate({ to:  requestListPage});
   };
 
   const formatDate = (date: Date | string | undefined) => {
@@ -64,7 +69,7 @@ function BerthRequestConfirmationComponent() {
           status:"",
       };
   
-    const userContext = useContext(UserContext);
+    
     const save = () => {
       if (formData) {
         berthRequest.requestId = formData.requestId

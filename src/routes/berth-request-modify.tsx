@@ -1,22 +1,24 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
-import { useRef } from 'react';
+import { useContext, useRef } from 'react';
 
 import { Button } from "../components/ui/button";
 import { ModifyBerthRequest } from "../components/berth-requests/modify-berth-request";
 import { BerthRequestFormData } from '../components/berth-requests/add-berth-request';
+import { UserContext } from '../AppContext';
 
 export const Route = createFileRoute('/berth-request-modify')({
   component: ModifyBerthRequestComponent,
 })
 
 function ModifyBerthRequestComponent() {
-
+  const userContext = useContext(UserContext);
+  const requestListPage = (userContext['custom:role']==='Terminal Operator')?'/berth-manager':'/berth-vessel';
   const navigate = useNavigate();
   const formDataRef = useRef<BerthRequestFormData | null>(null);
   
   
   const navigateToBerthRequests = () => {
-    navigate({ to: "/berth-requests" });
+    navigate({ to: requestListPage });
   }
  
  

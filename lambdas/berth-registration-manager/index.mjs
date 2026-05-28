@@ -617,6 +617,8 @@ async function updateRequest(event) {
     manifestCsvContent: body.manifestCsvContent ?? existing.Item.manifestCsvContent,
     manifestCsvBase64: body.manifestCsvBase64 ?? existing.Item.manifestCsvBase64,
     updatedAt: nowIso,
+    status:(existing.Item.status === 'REQUESTED')?'MODIFIED':existing.Item.status,
+    terminalId:body.terminalId,
   };
 
   await dynamo.send(
@@ -624,12 +626,15 @@ async function updateRequest(event) {
       TableName: BERTH_REQUESTS_TABLE,
       Key: { requestId },
       UpdateExpression:
-        "SET #s = :newStatus, etaAt = :etaAt, etdAt = :etdAt, ataAt = :ataAt, atdAt = :atdAt, berthAssignment = :berthAssignment, services = :services, manifestFileName = :manifestFileName, manifestPath = :manifestPath, manifestCsvContent = :manifestCsvContent, manifestCsvBase64 = :manifestCsvBase64, updatedAt = :updatedAt",
+        "SET #s = :newStatus, etaAt = :etaAt, etdAt = :etdAt, ataAt = :ataAt, atdAt = :atdAt, berthAssignment = :berthAssignment,  \
+        services = :services, manifestFileName = :manifestFileName, manifestPath = :manifestPath, manifestCsvContent = :manifestCsvContent, manifestCsvBase64 = :manifestCsvBase64, updatedAt = :updatedAt, \
+        terminalId = :terminalId ",
+
       ExpressionAttributeNames: {
           "#s": "status" // Map the placeholder to the actual keyword
       },
       ExpressionAttributeValues: {
-        ":newStatus": 'MODIFIED',
+        ":newStatus": updates.status,
         ":etaAt": updates.etaAt,
         ":etdAt": updates.etdAt,
         ":ataAt": updates.ataAt,
@@ -641,6 +646,7 @@ async function updateRequest(event) {
         ":manifestCsvContent": updates.manifestCsvContent,
         ":manifestCsvBase64": updates.manifestCsvBase64,
         ":updatedAt": updates.updatedAt,
+        ":terminalId": updates.terminalId,
       },
     })
   );
@@ -681,13 +687,13 @@ async function decideRequest(event) {
   const nowIso = new Date().toISOString();
   const user = getUserIdentity(event);
   const denialComment = decision === "DENIED" ? (body.denialComment || "").toString() : null;
-
+  const berthAssignmentDesignation = body.berthAssignment || "";
   await dynamo.send(
     new UpdateCommand({
       TableName: BERTH_REQUESTS_TABLE,
       Key: { requestId },
       UpdateExpression:
-        "SET #status = :status, denialComment = :denialComment, decisionAt = :decisionAt, decidedBy = :decidedBy, updatedAt = :updatedAt",
+        "SET #status = :status, berthAssignment.designation = :berthAssignmentDesignation, denialComment = :denialComment, decisionAt = :decisionAt, decidedBy = :decidedBy, updatedAt = :updatedAt",
       ExpressionAttributeNames: { "#status": "status" },
       ExpressionAttributeValues: {
         ":status": decision,
@@ -695,7 +701,7 @@ async function decideRequest(event) {
         ":decisionAt": nowIso,
         ":decidedBy": user,
         ":updatedAt": nowIso,
-      },
+        ":berthAssignmentDesignation":berthAssignmentDesignation,      },
     })
   );
 
