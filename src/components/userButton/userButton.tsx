@@ -30,8 +30,8 @@ const UserButton: React.FC<UserButtonProps> = ({ fullName, role }) => {
                 <span className="user-role">{role}</span>
             </div>
             <div className="user-avatar"></div>
-            <Avatar color="gray">
-                <AvatarFallback>J</AvatarFallback>
+            <Avatar>
+                <AvatarFallback className="bg-gray-500 text-white text-lg font-bold">J</AvatarFallback>
             </Avatar>
         </div>
     </>
