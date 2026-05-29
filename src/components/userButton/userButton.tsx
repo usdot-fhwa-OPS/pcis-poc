@@ -16,6 +16,9 @@ interface UserButtonProps {
 // w-9 and w-11 in terenary statements to adjust button width when displaying a badge
 
 const UserButton: React.FC<UserButtonProps> = ({ fullName, role }) => {
+    
+    const initial = fullName.charAt(0).toUpperCase()
+    
     return (
     <>
         <Selfhelp />
@@ -41,7 +44,7 @@ const UserButton: React.FC<UserButtonProps> = ({ fullName, role }) => {
             </div>
             <div className="user-avatar"></div>
             <Avatar className="h-9 w-9">
-                <AvatarFallback className="bg-gray-500 text-white text-lg font-bold">J</AvatarFallback>
+                <AvatarFallback className="bg-gray-500 text-white text-lg font-bold">{initial}</AvatarFallback>
             </Avatar>
         </div>
     </>
