@@ -71,3 +71,31 @@ export const getHazardousCargo = async (vesselId:string, cargoUnitID:string): Pr
     const result = (await response.json()) as HazardousCargoDomain;
     return result;
 }
+
+export const requestAdditionalDocument = async (vesselId:string, cargoUnitID:string): Promise<HazardousCargoDomain> => {
+    const session = await fetchAuthSession();
+    const response = await fetch(`https://bubcodjacl.execute-api.us-east-1.amazonaws.com/dev/requestAdditionalDocument?vesselId=${vesselId}&cargoUnitID=${cargoUnitID}`, {
+        method: 'PUT',
+        headers: {
+            "Authorization": `Bearer ${session.tokens?.accessToken?.toString()}`,
+            "Content-Type": "application/json",
+            "Accept": "*/*"
+        }
+    });
+    const result = (await response.json()) as HazardousCargoDomain;
+    return result;
+}
+
+export const flagHazardousCargo = async (vesselId:string, cargoUnitID:string): Promise<HazardousCargoDomain> => {
+    const session = await fetchAuthSession();
+    const response = await fetch(`https://bubcodjacl.execute-api.us-east-1.amazonaws.com/dev/flag?vesselId=${vesselId}&cargoUnitID=${cargoUnitID}`, {
+        method: 'PUT',
+        headers: {
+            "Authorization": `Bearer ${session.tokens?.accessToken?.toString()}`,
+            "Content-Type": "application/json",
+            "Accept": "*/*"
+        }
+    });
+    const result = (await response.json()) as HazardousCargoDomain;
+    return result;
+}
