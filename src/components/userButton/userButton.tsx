@@ -17,7 +17,19 @@ interface UserButtonProps {
 
 const UserButton: React.FC<UserButtonProps> = ({ fullName, role }) => {
     
-    const initial = fullName.charAt(0).toUpperCase()
+    const initial = fullName.charAt(0).toUpperCase();
+
+    const getAvatarColor = (fullName: string) => {
+        let hash = 0;
+        for (let i = 0; i < fullName.length; i++) {
+            hash = fullName.charCodeAt(i) + ((hash << 5) - hash);
+        }
+        // Use HSL for consistent "vibrancy" across different names
+        const hue = Math.abs(hash % 360);
+        return 'hsl(${hue}, 70%, 50%)'; 
+    };
+
+    const bgColor = getAvatarColor(fullName);
     
     return (
     <>
@@ -44,7 +56,7 @@ const UserButton: React.FC<UserButtonProps> = ({ fullName, role }) => {
             </div>
             <div className="user-avatar"></div>
             <Avatar className="h-9 w-9">
-                <AvatarFallback className="bg-gray-500 text-white text-lg font-semibold">{initial}</AvatarFallback>
+                <AvatarFallback className="bg-[{bgColor}] text-white text-lg font-semibold">{initial}</AvatarFallback>
             </Avatar>
         </div>
     </>
