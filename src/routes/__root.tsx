@@ -9,6 +9,7 @@ import UserButton from '../components/userButton/userButton';
 import '../index.css';
 import { Toaster } from 'sonner';
 import { UserContext } from '../AppContext';
+import { Selfhelp } from '../components/self-help/self-help';
 
 export interface UserAttributes {
   given_name?: string;
@@ -65,16 +66,15 @@ function RootComponent() {
     <div className="flex min-h-screen bg-background">
       <SidebarProvider>
         <AppSidebar />
-        {userSecurityAttrubutes.given_name && <UserContext.Provider value={userSecurityAttrubutes} >  
+        {userSecurityAttrubutes.given_name && <UserContext.Provider value={userSecurityAttrubutes} >
         <div className="flex-1">
           <Toaster position="top-center" richColors={true} expand={true} />
           <div className="flex items-center justify-end p-4">
             <UserButton fullName={userAttributes.fullName} role={userAttributes.role} />
           </div>
-         
-            <Outlet /> 
-            
+            <Outlet />
         </div>
+        <Selfhelp />
         </UserContext.Provider>}
       </SidebarProvider>
     </div>
