@@ -1,5 +1,6 @@
 
 import { Avatar, AvatarFallback } from "../ui/avatar";
+import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { Selfhelp } from '../self-help/self-help';
 import SettingsButton from '../settings/settingsButton';
@@ -18,10 +19,16 @@ const UserButton: React.FC<UserButtonProps> = ({ fullName, role }) => {
         <Button variant="ghost" size="icon" className="[&_svg]:size-5">
             <Mail />
             <span className="sr-only">Open Messages</span>
+            <Badge variant="destructive" className="absolute -top-2 -right-2 h-2 w-2 rounded-full p-0 flex items-center justify-center text-[10px]">
+                <span className="sr-only">New Message</span>
+            </Badge>
         </Button>
         <Button variant="ghost" size="icon" className="[&_svg]:size-5">
             <Bell />
             <span className="sr-only">Open Notifications</span>
+            <Badge variant="destructive" className="absolute -top-2 -right-2 h-2 w-2 rounded-full p-0 flex items-center justify-center text-[10px]">
+                <span className="sr-only">New Notification</span>
+            </Badge>
         </Button>
         <SettingsButton role={role} />
         <div className="user-button">
