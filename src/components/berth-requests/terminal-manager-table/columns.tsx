@@ -88,7 +88,7 @@ function ApproveDialog({ row, table }: { row: Row<BerthRequestDomain>; table: Ta
         </div>
         <DialogFooter>
           <DialogClose render={<Button variant="outline">Cancel</Button>} />
-          <Button onClick={handleApprove}>Approve Request</Button>
+          <Button onClick={handleApprove} className="bg-green-600 hover:bg-green-700 text-white">Approve Request</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
