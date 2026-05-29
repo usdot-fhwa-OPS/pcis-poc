@@ -4,7 +4,6 @@ import { Calendar } from "../ui/calendar";
 import { CalendarIcon, Info } from "lucide-react";
 import { Checkbox } from "../ui/checkbox";
 import { FileUploader } from '@aws-amplify/ui-react-storage';
-import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
@@ -16,7 +15,6 @@ import { populate } from '../../components/berth-requests/berth-config-state';
 import { BerthConfigDomain } from "./berth-config-domain";
 
 export interface BerthRequestFormData {
-    vesselId: string;
     terminalId: string;
     terminalName: string;
     terminalPhone: string;
@@ -40,7 +38,6 @@ interface AddBerthRequestProps {
 
 export const AddBerthRequest = ({ onDataChange }: AddBerthRequestProps) => {
 
-    const [vesselId, setVesselId] = useState<string>("")
     const [selectedTerminalId, setSelectedTerminalId] = useState<string>("")
     const [startDate, setStartDate] = useState<Date>(new Date())
     const [endDate, setEndDate] = useState<Date>(new Date())
@@ -92,7 +89,6 @@ const [TERMINALS, setTerminals] = useState<Record<string, { name: string; phone:
         
         const terminal = TERMINALS[selectedTerminalId];
         onDataChange({
-            vesselId,
             terminalId: selectedTerminalId,
             terminalName: terminal?.name ?? "",
             terminalPhone: terminal?.phone ?? "",
@@ -104,7 +100,7 @@ const [TERMINALS, setTerminals] = useState<Record<string, { name: string; phone:
             services: selectedServices,
             cargoManifestPath: selectedCargoManifestPath,
         });
-    }, [vesselId, selectedTerminalId, startDate, startTime, endDate, endTime, selectedServices, selectedCargoManifestPath]);
+    }, [selectedTerminalId, startDate, startTime, endDate, endTime, selectedServices, selectedCargoManifestPath]);
 
     const getFileInfo = ($event: any) =>{
         setSelectedCargoManifestPath($event.key);
@@ -146,19 +142,6 @@ const [TERMINALS, setTerminals] = useState<Record<string, { name: string; phone:
     <>
         <div className="md:max-w-2xl">
             <div className="grid grid-cols-1 md:grid-cols-[max-content_1fr] gap-2 md:items-center">
-                <div className="pr-8">
-                    <Label htmlFor="berthRequestVesselId">
-                        Vessel ID
-                    </Label>
-                </div>
-                <div className="pb-4 md:py-2">
-                    <Input
-                        id="berthRequestVesselId"
-                        value={vesselId}
-                        onChange={(e) => setVesselId(e.target.value)}
-                        placeholder="Enter Vessel ID"
-                    />
-                </div>
                 <div className="pr-8">
                     <Label htmlFor="berthRequestTerminal">
                         Terminal
