@@ -1,33 +1,50 @@
 "use client"
 
-import { ColumnDef } from "@tanstack/react-table"
+import { ColumnDef, Row, Table } from "@tanstack/react-table"
+import { useState } from "react"
 import { Button } from "../../ui/button"
 import { BerthRequestDomain } from "../berth-request-domain"
 import { BerthConfigDomain } from "../berth-config-domain"
 import { VesselAgentBerthRequestsTableMeta } from "./data-table"
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "../../../components/ui/dialog"
 
-const showTerminal = (
-  id: string
-) => {id}
+function DeleteDialog({ row, table }: { row: Row<BerthRequestDomain>; table: Table<BerthRequestDomain> }) {
+  const [open, setOpen] = useState(false)
+  const meta = table.options.meta as VesselAgentBerthRequestsTableMeta
 
-const showContact = (
-  contact: string
-) => {contact}
-
-const handleModify = (id: string) => {
-  alert(`Modify request ${id}`)
-}
-const handleDelete = (id: string, table: any) => {
-  const confirmed = window.confirm(
-    'Are you sure you want to delete this berth request?'+id
-  )
-
-  if (confirmed) {
-     {(table.options.meta )
-                      .deleteBerthRequest(id)}
-               
-              }
+  const handleDelete = () => {
+    meta.deleteBerthRequest(row.original.requestId)
+    setOpen(false)
   }
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger render={<Button size="sm" variant="link" className="text-red-600 p-0 h-auto">Delete</Button>} />
+      <DialogContent className="sm:max-w-sm" showCloseButton={false}>
+        <DialogHeader>
+          <DialogTitle className="uppercase tracking-wide text-center">Confirmation Required</DialogTitle>
+        </DialogHeader>
+        <p className="text-sm text-center py-2">
+          Deleting a Berth Request can't be undone.<br />Do you want to continue?
+        </p>
+        <DialogFooter className="sm:justify-center">
+          <Button onClick={handleDelete}>Yes</Button>
+          <DialogClose render={<Button>No</Button>} />
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  )
+}
+
+const showTerminal = (id: string) => { id }
 
 const berthAssignmentColumn: ColumnDef<BerthRequestDomain> = {
   id: "berthAssignment",
@@ -66,27 +83,10 @@ export const columns: ColumnDef<BerthRequestDomain>[] = [
       const terminal: BerthConfigDomain | undefined = (table.options.meta as VesselAgentBerthRequestsTableMeta)
                                               .brConfigList.find((value) =>(value.terminalId === row.original.terminalId)) 
       return (
-      <div className="flex space-x-8 ">
-        <Button
-          size="sm"
-          variant="link"
-          onClick={() =>
-            showTerminal(row.original.vesselID)
-          }
-        >
+        <Button size="sm" variant="link" onClick={() => showTerminal(row.original.vesselID)}>
           {terminal?.terminalName}
         </Button>
-        <Button
-          size="sm"
-          variant="link"
-          onClick={() =>
-            showContact(row.original.vesselID)
-          }
-        >
-          Contact
-        </Button>
-      </div>
-    )
+      )
     },
 
   },  
@@ -106,22 +106,11 @@ export const columns: ColumnDef<BerthRequestDomain>[] = [
     accessorKey: "actions",
     header: () => <div style={{ minWidth: "50px" }}>Actions</div>,
     cell: ({ row, table }) => (
-      <div className="flex space-x-8 ">
-        <Button
-          size="sm"
-          variant="link"
-          onClick={() => handleModify(row.original.requestId)}
-        >
+      <div className="flex space-x-4">
+        <Button size="sm" variant="link" className="text-blue-600 p-0 h-auto" onClick={() => {}}>
           Modify
         </Button>
-
-        <Button
-          size="sm"
-          variant="link"
-          onClick={() => handleDelete(row.original.requestId, table)}
-        >
-          Delete
-        </Button>
+        <DeleteDialog row={row} table={table as Table<BerthRequestDomain>} />
       </div>
     ),
 
@@ -155,11 +144,9 @@ const contactColumn: ColumnDef<BerthRequestDomain> = {
     const terminal = (table.options.meta as VesselAgentBerthRequestsTableMeta)
       .brConfigList.find((t) => t.terminalId === row.original.terminalId)
     return (
-      <div>
-        <a href={`mailto:${terminal?.terminalEmail}`}>
-          <Button size="sm" variant="outline">Contact</Button>
-        </a>
-      </div>
+      <a href={`mailto:${terminal?.terminalEmail}`}>
+        <Button size="sm" variant="link" className="text-blue-600 p-0 h-auto">Contact</Button>
+      </a>
     )
   },
 }

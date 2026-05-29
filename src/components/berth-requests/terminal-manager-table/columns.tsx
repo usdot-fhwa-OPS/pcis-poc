@@ -3,7 +3,7 @@
 import { ColumnDef, Row, Table } from "@tanstack/react-table"
 import { useState } from "react"
 import { format } from "date-fns"
-import { CalendarIcon } from "lucide-react"
+import { CalendarIcon, CheckIcon, XIcon } from "lucide-react"
 import { Button } from "../../ui/button"
 import { Calendar } from "../../ui/calendar"
 import { Popover, PopoverContent, PopoverTrigger } from "../../ui/popover"
@@ -22,6 +22,8 @@ import {
   DialogTrigger,
 } from "../../../components/ui/dialog"
 import { Textarea } from "../../../components/ui/textarea"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../../../components/ui/tooltip"
+import { Badge } from "../../../components/ui/badge"
 
 function RequestDetails({ row, table }: { row: Row<BerthRequestDomain>; table: Table<BerthRequestDomain> }) {
   const meta = table.options.meta as TerminalOperatorBerthRequestsTableMeta
@@ -64,7 +66,7 @@ function ApproveDialog({ row, table }: { row: Row<BerthRequestDomain>; table: Ta
 
   return (
     <Dialog open={open} onOpenChange={handleOpen}>
-      <DialogTrigger render={<Button size="sm" variant="outline">Approve</Button>} />
+      <DialogTrigger render={<Button size="sm" className="bg-green-600 hover:bg-green-700 text-white gap-1"><CheckIcon className="h-4 w-4" />Approve</Button>} />
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Approve Berth Request</DialogTitle>
@@ -87,7 +89,7 @@ function ApproveDialog({ row, table }: { row: Row<BerthRequestDomain>; table: Ta
         </div>
         <DialogFooter>
           <DialogClose render={<Button variant="outline">Cancel</Button>} />
-          <Button onClick={handleApprove}>Approve Request</Button>
+          <Button onClick={handleApprove} className="bg-green-600 hover:bg-green-700 text-white">Approve Request</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
@@ -111,7 +113,7 @@ function DenyDialog({ row, table }: { row: Row<BerthRequestDomain>; table: Table
 
   return (
     <Dialog open={open} onOpenChange={handleOpen}>
-      <DialogTrigger render={<Button size="sm" variant="destructive">Deny</Button>} />
+      <DialogTrigger render={<Button size="sm" variant="destructive" className="gap-1"><XIcon className="h-4 w-4" />Deny</Button>} />
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Deny Berth Request</DialogTitle>
@@ -131,6 +133,34 @@ function DenyDialog({ row, table }: { row: Row<BerthRequestDomain>; table: Table
         <DialogFooter>
           <DialogClose render={<Button variant="outline">Cancel</Button>} />
           <Button variant="destructive" onClick={handleDeny}>Deny Request</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  )
+}
+
+function DeleteDialog({ row, table }: { row: Row<BerthRequestDomain>; table: Table<BerthRequestDomain> }) {
+  const [open, setOpen] = useState(false)
+  const meta = table.options.meta as TerminalOperatorBerthRequestsTableMeta
+
+  const handleDelete = () => {
+    meta.deleteBerthRequest(row.original.requestId)
+    setOpen(false)
+  }
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger render={<Button size="sm" variant="link" className="text-red-600 p-0 h-auto">Delete</Button>} />
+      <DialogContent className="sm:max-w-sm" showCloseButton={false}>
+        <DialogHeader>
+          <DialogTitle className="uppercase tracking-wide text-center">Confirmation Required</DialogTitle>
+        </DialogHeader>
+        <p className="text-sm text-center py-2">
+          Deleting a Berth Request can't be undone.<br />Do you want to continue?
+        </p>
+        <DialogFooter className="sm:justify-center">
+          <Button onClick={handleDelete}>Yes</Button>
+          <DialogClose render={<Button>No</Button>} />
         </DialogFooter>
       </DialogContent>
     </Dialog>
@@ -166,9 +196,8 @@ function DateTimePicker({
   const [time, setTime] = useState<string>(parsedTime)
   const [open, setOpen] = useState(false)
 
-  const displayLabel = date
-    ? `${format(date, "MM/dd/yyyy")} ${time}`
-    : undefined
+  const label = field === "ataAt" ? "Enter ATA" : "Enter ATD"
+  const displayLabel = date ? `${format(date, "MM/dd/yyyy")} ${time}` : undefined
 
   const handleSave = () => {
     if (!date) return
@@ -178,19 +207,40 @@ function DateTimePicker({
     console.log("TODO updateBerthRequest", requestId, field, combined)
   }
 
+  if (disabled) {
+    return (
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <span className="inline-block cursor-not-allowed">
+              <Button
+                variant="outline"
+                disabled
+                className="w-48 justify-start text-left font-normal text-muted-foreground pointer-events-none"
+              >
+                <CalendarIcon className="mr-2 h-4 w-4" />
+                {label}
+              </Button>
+            </span>
+          </TooltipTrigger>
+          <TooltipContent>Enter ATA first</TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+    )
+  }
+
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
           variant="outline"
-          disabled={disabled}
           className={cn(
             "w-48 justify-start text-left font-normal",
             !displayLabel && "text-muted-foreground"
           )}
         >
           <CalendarIcon className="mr-2 h-4 w-4" />
-          {displayLabel ?? "Pick date & time"}
+          {displayLabel ?? label}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-4" align="start">
@@ -218,6 +268,22 @@ function DateTimePicker({
       </PopoverContent>
     </Popover>
   )
+}
+
+function formatDateTime(value: string | undefined): string {
+  if (!value) return "—"
+  try {
+    return format(new Date(value), "MM/dd/yyyy hh:mm aa").toUpperCase()
+  } catch {
+    return value
+  }
+}
+
+const statusBadgeClass: Record<string, string> = {
+  APPROVED: "bg-green-100 text-green-700 hover:bg-green-100",
+  DENIED:   "bg-red-100 text-red-700 hover:bg-red-100",
+  REQUESTED:"bg-blue-50 text-blue-700 hover:bg-blue-50",
+  MODIFIED: "bg-amber-100 text-amber-700 hover:bg-amber-100",
 }
 
 export const columns: ColumnDef<BerthRequestDomain>[] = [
@@ -276,29 +342,16 @@ export const columns: ColumnDef<BerthRequestDomain>[] = [
     accessorKey: "actions",
     header: () => <div style={{ minWidth: "50px" }}>Actions</div>,
     cell: ({ row, table }) => (
-      <div className="flex space-x-8 ">
+      <div className="flex space-x-4">
         <Button
           size="sm"
-          variant="ghost"
-          onClick={() => 
-          {row.original.requestId}
-            //handleModify(row.original.vesselID)
-            }
+          variant="link"
+          className="text-blue-600 p-0 h-auto"
+          onClick={() => {}}
         >
           Modify
         </Button>
-
-        <Button
-          size="sm"
-          variant="ghost"
-          onClick={() => 
-          {(table.options.meta  as TerminalOperatorBerthRequestsTableMeta)
-                  .deleteBerthRequest(row.original.requestId)}
-           
-          }
-        >
-          Delete
-        </Button>
+        <DeleteDialog row={row} table={table as Table<BerthRequestDomain>} />
       </div>
     ),
 
@@ -318,11 +371,9 @@ const contactColumn: ColumnDef<BerthRequestDomain> = {
   id: "contact",
   header: "Contact",
   cell: ({ row }) => (
-    <div>
-      <a href={`mailto:${row.original.vesselAgentEmail}`}>
-        <Button size="sm" variant="outline">Contact</Button>
-      </a>
-    </div>
+    <a href={`mailto:${row.original.vesselAgentEmail}`}>
+      <Button size="sm" variant="link" className="text-blue-600 p-0 h-auto">Contact</Button>
+    </a>
   ),
 }
 
@@ -336,7 +387,15 @@ export const requestedColumns: ColumnDef<BerthRequestDomain>[] = [
   columns[5],
 ]
 
-export const modificationRequestedColumns: ColumnDef<BerthRequestDomain>[] = [...columns]
+export const modificationRequestedColumns: ColumnDef<BerthRequestDomain>[] = [
+  vesselIdOnlyColumn,
+  contactColumn,
+  columns[1],
+  columns[2],
+  columns[3],
+  columns[4],
+  columns[5],
+]
 
 export const ongoingColumns: ColumnDef<BerthRequestDomain>[] = [
   vesselIdOnlyColumn,
@@ -374,10 +433,12 @@ export const ongoingColumns: ColumnDef<BerthRequestDomain>[] = [
   columns[2],
   columns[3],
   columns[4],
+  columns[5],
 ]
 
 export const completedColumns: ColumnDef<BerthRequestDomain>[] = [
-  columns[0],
+  vesselIdOnlyColumn,
+  contactColumn,
   {
     id: "berthAssignment",
     header: "Berth Assignment",
@@ -388,12 +449,12 @@ export const completedColumns: ColumnDef<BerthRequestDomain>[] = [
   {
     id: "ataAt",
     header: "Actual Arrival (ATA)",
-    cell: ({ row }) => <div>{row.original.ataAt ?? "—"}</div>,
+    cell: ({ row }) => <div>{formatDateTime(row.original.ataAt)}</div>,
   },
   {
     id: "atdAt",
     header: "Actual Departure (ATD)",
-    cell: ({ row }) => <div>{row.original.atdAt ?? "—"}</div>,
+    cell: ({ row }) => <div>{formatDateTime(row.original.atdAt)}</div>,
   },
   columns[2],
   columns[3],
@@ -401,8 +462,13 @@ export const completedColumns: ColumnDef<BerthRequestDomain>[] = [
   {
     accessorKey: "status",
     header: "Status",
-    cell: ({ row }) => (
-      <div className="font-medium">{row.original.status}</div>
-    ),
+    cell: ({ row }) => {
+      const s = row.original.status
+      return (
+        <Badge className={`border-transparent rounded-full ${statusBadgeClass[s] ?? "bg-gray-100 text-gray-700 hover:bg-gray-100"}`}>
+          {s}
+        </Badge>
+      )
+    },
   },
 ]
