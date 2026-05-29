@@ -23,6 +23,7 @@ import {
 } from "../../../components/ui/dialog"
 import { Textarea } from "../../../components/ui/textarea"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../../../components/ui/tooltip"
+import { Badge } from "../../../components/ui/badge"
 
 function RequestDetails({ row, table }: { row: Row<BerthRequestDomain>; table: Table<BerthRequestDomain> }) {
   const meta = table.options.meta as TerminalOperatorBerthRequestsTableMeta
@@ -269,6 +270,22 @@ function DateTimePicker({
   )
 }
 
+function formatDateTime(value: string | undefined): string {
+  if (!value) return "—"
+  try {
+    return format(new Date(value), "MM/dd/yyyy hh:mm aa").toUpperCase()
+  } catch {
+    return value
+  }
+}
+
+const statusBadgeClass: Record<string, string> = {
+  APPROVED: "bg-green-100 text-green-700 hover:bg-green-100",
+  DENIED:   "bg-red-100 text-red-700 hover:bg-red-100",
+  REQUESTED:"bg-blue-50 text-blue-700 hover:bg-blue-50",
+  MODIFIED: "bg-amber-100 text-amber-700 hover:bg-amber-100",
+}
+
 export const columns: ColumnDef<BerthRequestDomain>[] = [
   // Define the columns for the table based on the database items (refer to resources.ts for schema names)
   {
@@ -420,7 +437,8 @@ export const ongoingColumns: ColumnDef<BerthRequestDomain>[] = [
 ]
 
 export const completedColumns: ColumnDef<BerthRequestDomain>[] = [
-  columns[0],
+  vesselIdOnlyColumn,
+  contactColumn,
   {
     id: "berthAssignment",
     header: "Berth Assignment",
@@ -431,12 +449,12 @@ export const completedColumns: ColumnDef<BerthRequestDomain>[] = [
   {
     id: "ataAt",
     header: "Actual Arrival (ATA)",
-    cell: ({ row }) => <div>{row.original.ataAt ?? "—"}</div>,
+    cell: ({ row }) => <div>{formatDateTime(row.original.ataAt)}</div>,
   },
   {
     id: "atdAt",
     header: "Actual Departure (ATD)",
-    cell: ({ row }) => <div>{row.original.atdAt ?? "—"}</div>,
+    cell: ({ row }) => <div>{formatDateTime(row.original.atdAt)}</div>,
   },
   columns[2],
   columns[3],
@@ -444,8 +462,13 @@ export const completedColumns: ColumnDef<BerthRequestDomain>[] = [
   {
     accessorKey: "status",
     header: "Status",
-    cell: ({ row }) => (
-      <div className="font-medium">{row.original.status}</div>
-    ),
+    cell: ({ row }) => {
+      const s = row.original.status
+      return (
+        <Badge className={`border-transparent rounded-full ${statusBadgeClass[s] ?? "bg-gray-100 text-gray-700 hover:bg-gray-100"}`}>
+          {s}
+        </Badge>
+      )
+    },
   },
 ]
