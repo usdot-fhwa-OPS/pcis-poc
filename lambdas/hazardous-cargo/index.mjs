@@ -214,6 +214,48 @@ async function updateHazardousCargo(event) {
   return response(200, result);
 }
 
+async function requestAdditionalDocunent(event) {
+  const vesselId = event.queryStringParameters?.vesselId;
+  const cargoUnitID = event.queryStringParameters?.cargoUnitID;
+  if (!vesselId || !cargoUnitID) return response(400, { message: "vesselId and cargoUnitID are required" });
+  try {
+    const resp = await setStatus(vesselId, cargoUnitID, "Pending Documentation");
+    return response(200, { message: resp.Attributes });
+  } catch (error) {
+    return response(500, { message: error });
+  }
+}
+
+async function flag(event) {
+  const vesselId = event.queryStringParameters?.vesselId;
+  const cargoUnitID = event.queryStringParameters?.cargoUnitID;
+  if (!vesselId || !cargoUnitID) return response(400, { message: "vesselId and cargoUnitID are required" });
+  try {
+    const resp = await setStatus(vesselId, cargoUnitID, "Flagged");
+    return response(200, { message: resp.Attributes });
+  } catch (error) {
+    return response(500, { message: error });
+  }
+}
+
+async function setStatus(vesselId, cargoUnitID, status) {
+  const nowIso = new Date().toISOString();
+  return await dynamo.send(
+    new UpdateCommand({
+      TableName: HAZARDOUS_CARGO_TABLE,
+      Key: { vesselId: vesselId, cargoUnitID: cargoUnitID },
+      UpdateExpression:
+        "SET reviewStatus = :status, updatedAt = :updatedAt",
+      ExpressionAttributeValues: {
+        ":status": status,
+        ":updatedAt": nowIso,
+      },
+      ReturnValues: "ALL_NEW",
+    })
+  );
+
+}
+
 async function decideHazardousCargo(event) {
   if (!ensureTerminalOperator(event)) {
     return response(403, { message: "Only Terminal Operator can approve/deny berth requests" });
@@ -389,6 +431,10 @@ export const handler = async (event) => {
         return await getHazardousCargo(event);
       case "PUT /hazardousCargos/{vesselId}":
         return await updateHazardousCargo(event);
+      case "PUT /requestAdditionalDocument":
+        return await requestAdditionalDocunent(event);
+      case "PUT /flag":
+        return await flag(event);
       default:
         return response(404, { message: `Unsupported route: ${routeKey}` });
     }
