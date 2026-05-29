@@ -8,23 +8,7 @@ import {
   UpdateCommand,
 } from "@aws-sdk/lib-dynamodb";
 
-import { CognitoJwtVerifier } from "aws-jwt-verify";
 
-// Verifier that expects valid access tokens:
-const verifier = CognitoJwtVerifier.create({
-  userPoolId: "us-east-1_ODcx7VXFP",
-  tokenUse: "access",
-  clientId: "3i3rr3m2vs2hn4ovq1b7rl8oa6",
-});
-
-try {
-  const payload = await verifier.verify(
-    "eyJraWQiOiIxNTBGdDFDdzh1ZFlxUU9LcVZxSWhiZGRBNXkreWtXK3ZCdG55OGtOdXhjPSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiIxNGM4MjQ2OC1jMDIxLTcwMWEtZWIwZi0yNTc1OTU2NDQ5YjMiLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAudXMtZWFzdC0xLmFtYXpvbmF3cy5jb21cL3VzLWVhc3QtMV9PRGN4N1ZYRlAiLCJjbGllbnRfaWQiOiIzaTNycjNtMnZzMmhuNG92cTFiN3JsOG9hNiIsIm9yaWdpbl9qdGkiOiI3MjA3ZjZlNi1lYWY5LTQ5OTAtOGY2OS1kYzA3NDU2NzFmNWQiLCJldmVudF9pZCI6IjgyYTdlODBmLTUyMjYtNGRiMC05ODY0LWIzZWFkOTQzOWVkOCIsInRva2VuX3VzZSI6ImFjY2VzcyIsInNjb3BlIjoiYXdzLmNvZ25pdG8uc2lnbmluLnVzZXIuYWRtaW4iLCJhdXRoX3RpbWUiOjE3NzY4MTU5NDIsImV4cCI6MTc3OTAzMjY3OCwiaWF0IjoxNzc5MDI5MDc4LCJqdGkiOiI1YWJlZjg4Ni0xMWY4LTQxNjctYTZkOS0zMTA0NjdhYjQ0ZDEiLCJ1c2VybmFtZSI6IjE0YzgyNDY4LWMwMjEtNzAxYS1lYjBmLTI1NzU5NTY0NDliMyJ9.nCduZ8aWm2xWQdsZqOWwyos6acxCnLKDptWqDD2_NXHTgjiJoNaof0kZYmn-x24yalHGUKTFOTFqjDCoCVN9JRQDFCmXOD41dPg0vHsuNEc_pmlqEgE2faPatNh1vSh6FlEiH2L-XNzUpsISyM9tz5C8YPo_8dFmtw6iS8JXQvpC4FLWMFOzH9a2DakL0EVBoqo38lipHYLoNiStppm1y4822XoHlWtLweW1LptwHmeAGNxQ1dtxJJYAiyjFo8ABG3qFjeEI6EjC8xlGE4qj-zR7xbKpTDG_Y0uo9zViEzjnD1X0klBsaPTGFwBr35jiI4diAfbYmhMFBIi4Wcu2ZQ" // the JWT as string
-  );
-  console.log("Token is valid. Payload:", payload);
-} catch {
-  console.log("Token not valid!");
-}
 const HAZARDOUS_CARGO_TABLE = process.env.HAZARDOUS_CARGO_TABLE || "HazardousCargo";
 
 const dynamo = DynamoDBDocumentClient.from(new DynamoDBClient({}), {
