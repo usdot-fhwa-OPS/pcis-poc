@@ -228,7 +228,7 @@ function decodeNextToken(token) {
   }
 }
 
-function validateRequestPayload(body) {
+async function validateRequestPayload(body) {
   const etaAt = toIsoOrNull(body.etaAt);
   const etdAt = toIsoOrNull(body.etdAt);
 
@@ -244,7 +244,10 @@ function validateRequestPayload(body) {
     return "etdAt must be greater than etaAt";
   }
 
-  return null;
+  await  validateVesselIdInManifest(body)
+
+    return null;
+ 
 }
 
 async function getBerthConfig(terminalId) {
@@ -320,6 +323,34 @@ function validateBerthAssignment(assignment, config) {
     return `berthAssignment cannot exceed berthCapacity (${config.berthCapacity})`;
   }
 
+  return null;
+}
+
+async function validateVesselIdInManifest(requestItem) {
+  //const csvText = decodeManifestCsv(requestItem.manifestCsvContent, requestItem.manifestCsvBase64);
+  const csvText = await readFile(requestItem.manifestPath);
+  if (!csvText.trim()) {
+    throw new Error("Manifest content missing: provide manifestCsvContent or manifestCsvBase64 in request");
+  }
+
+  const rows = parseCsv(csvText);
+  if (rows.length === 0) {
+     throw new Error("Manifest content missing: cargo information");
+  }
+  const nowIso = new Date().toISOString(); 
+  for (let i = 0; i < rows.length; i += 1) {
+    const row = rows[i];
+    const mapped = mapManifestRow(row, nowIso);
+
+    if (!mapped) {
+      skippedCount += 1;
+      continue;
+    }
+    if (row.vesselid !== requestItem.vesselID) {
+      console.log(`Manifest content Vessel IDs ${row.vesselid} do not match Berth Request Vessel Id ${requestItem.vesselID}`);
+      throw new Error(`Manifest content Vessel IDs ${row.vesselid} do not match Berth Request Vessel Id ${requestItem.vesselID}`);
+    }
+  }
   return null;
 }
 
@@ -443,7 +474,7 @@ async function listBerthConfig(event) {
 
 async function createRequest(event) {
   const body = parseBody(event);
-  const validation = validateRequestPayload(body);
+  const validation = await validateRequestPayload(body);
   if (validation) {
     return response(400, { message: validation });
   }
@@ -590,7 +621,7 @@ async function updateRequest(event) {
     vesselAgentEmail: body.vesselAgentEmail ?? existing.Item.vesselAgentEmail,
   };
 
-  const validation = validateRequestPayload(mergedForValidation);
+  const validation = await validateRequestPayload(mergedForValidation);
   if (validation) {
     return response(400, { message: validation });
   }

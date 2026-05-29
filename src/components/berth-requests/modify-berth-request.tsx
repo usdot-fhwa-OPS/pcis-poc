@@ -26,6 +26,7 @@ export interface BerthRequestFormData {
     services: string[];
     cargoManifestName?: string;
     cargoManifestPath: string;
+    vesselId: string;
 }
 
 
@@ -125,6 +126,7 @@ const [TERMINALS, setTerminals] = useState<Record<string, { name: string; phone:
                 endTime,
                 services: selectedServices,
                 cargoManifestPath: selectedCargoManifestPath,
+                
             });
         });
  
