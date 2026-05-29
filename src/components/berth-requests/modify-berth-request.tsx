@@ -51,7 +51,8 @@ export const ModifyBerthRequest = ({ onDataChange}: ModifyBerthRequestProps ) =>
     const rawBr = sessionStorage.getItem('berthRequestOriginal');
      const berthRequest = (rawBr?JSON.parse(rawBr):{}) as BerthRequestDomain
     
-      
+      const [vesselId, setVesselId] = useState<string>("")
+
     const timeOptions = [
             "12:00 AM",
             "01:00 AM",
@@ -126,6 +127,7 @@ const [TERMINALS, setTerminals] = useState<Record<string, { name: string; phone:
                 endTime,
                 services: selectedServices,
                 cargoManifestPath: selectedCargoManifestPath,
+                vesselId: vesselId,
                 
             });
         });
@@ -171,6 +173,16 @@ const [TERMINALS, setTerminals] = useState<Record<string, { name: string; phone:
     <>
         <div className="md:max-w-2xl">
             <div className="grid grid-cols-1 md:grid-cols-[max-content_1fr] gap-2 md:items-center">
+                <div className="pr-8">
+                                <Label className="">Vessel ID:</Label>                            
+                                        <input id="vesselID" type="string" 
+                                            onChange={(e) =>
+                                                setVesselId(e.target.value)
+                                            }
+                                            
+                                            className="w-15 h-10"/>
+                
+                                </div>
                 <div className="pr-8">
                     <Label htmlFor="berthRequestTerminal">
                         Terminal
