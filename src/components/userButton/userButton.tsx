@@ -13,7 +13,7 @@ interface UserButtonProps {
 }
 
 // Notifications and Messages buttons: when adding logic for red badges use width classes 
-// w-9 and w-11 in terenary statements to adjust button width when displaying a badge
+// below in terenary statements with w-9 to adjust button width when displaying a badge
 
 const UserButton: React.FC<UserButtonProps> = ({ fullName, role }) => {
     
@@ -22,7 +22,7 @@ const UserButton: React.FC<UserButtonProps> = ({ fullName, role }) => {
     return (
     <>
         <Selfhelp />
-        <Button variant="ghost" size="icon" className="gap-0 w-11 [&_svg]:size-5">
+        <Button variant="ghost" size="icon" className="gap-[0.125rem] w-[2.875rem] [&_svg]:size-5">
             <Mail />
             <span className="sr-only">Open Messages</span>
             <Badge variant="destructive" className="self-start h-2 w-2 rounded-full mt-1 p-0 shadow-none">
