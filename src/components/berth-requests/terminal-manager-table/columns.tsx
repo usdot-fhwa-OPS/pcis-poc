@@ -22,6 +22,7 @@ import {
   DialogTrigger,
 } from "../../../components/ui/dialog"
 import { Textarea } from "../../../components/ui/textarea"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../../../components/ui/tooltip"
 
 function RequestDetails({ row, table }: { row: Row<BerthRequestDomain>; table: Table<BerthRequestDomain> }) {
   const meta = table.options.meta as TerminalOperatorBerthRequestsTableMeta
@@ -194,9 +195,8 @@ function DateTimePicker({
   const [time, setTime] = useState<string>(parsedTime)
   const [open, setOpen] = useState(false)
 
-  const displayLabel = date
-    ? `${format(date, "MM/dd/yyyy")} ${time}`
-    : undefined
+  const label = field === "ataAt" ? "Enter ATA" : "Enter ATD"
+  const displayLabel = date ? `${format(date, "MM/dd/yyyy")} ${time}` : undefined
 
   const handleSave = () => {
     if (!date) return
@@ -206,19 +206,40 @@ function DateTimePicker({
     console.log("TODO updateBerthRequest", requestId, field, combined)
   }
 
+  if (disabled) {
+    return (
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <span className="inline-block cursor-not-allowed">
+              <Button
+                variant="outline"
+                disabled
+                className="w-48 justify-start text-left font-normal text-muted-foreground pointer-events-none"
+              >
+                <CalendarIcon className="mr-2 h-4 w-4" />
+                {label}
+              </Button>
+            </span>
+          </TooltipTrigger>
+          <TooltipContent>Enter ATA first</TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+    )
+  }
+
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
           variant="outline"
-          disabled={disabled}
           className={cn(
             "w-48 justify-start text-left font-normal",
             !displayLabel && "text-muted-foreground"
           )}
         >
           <CalendarIcon className="mr-2 h-4 w-4" />
-          {displayLabel ?? "Pick date & time"}
+          {displayLabel ?? label}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-4" align="start">
@@ -333,11 +354,9 @@ const contactColumn: ColumnDef<BerthRequestDomain> = {
   id: "contact",
   header: "Contact",
   cell: ({ row }) => (
-    <div>
-      <a href={`mailto:${row.original.vesselAgentEmail}`}>
-        <Button size="sm" variant="outline">Contact</Button>
-      </a>
-    </div>
+    <a href={`mailto:${row.original.vesselAgentEmail}`}>
+      <Button size="sm" variant="link" className="text-blue-600 p-0 h-auto">Contact</Button>
+    </a>
   ),
 }
 
@@ -351,7 +370,15 @@ export const requestedColumns: ColumnDef<BerthRequestDomain>[] = [
   columns[5],
 ]
 
-export const modificationRequestedColumns: ColumnDef<BerthRequestDomain>[] = [...columns]
+export const modificationRequestedColumns: ColumnDef<BerthRequestDomain>[] = [
+  vesselIdOnlyColumn,
+  contactColumn,
+  columns[1],
+  columns[2],
+  columns[3],
+  columns[4],
+  columns[5],
+]
 
 export const ongoingColumns: ColumnDef<BerthRequestDomain>[] = [
   vesselIdOnlyColumn,
@@ -389,6 +416,7 @@ export const ongoingColumns: ColumnDef<BerthRequestDomain>[] = [
   columns[2],
   columns[3],
   columns[4],
+  columns[5],
 ]
 
 export const completedColumns: ColumnDef<BerthRequestDomain>[] = [
