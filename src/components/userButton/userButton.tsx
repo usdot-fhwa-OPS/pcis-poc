@@ -16,14 +16,14 @@ const UserButton: React.FC<UserButtonProps> = ({ fullName, role }) => {
     return (
     <>
         <Selfhelp />
-        <Button variant="ghost" size="icon" className="gap-0 [&_svg]:size-5">
+        <Button variant="ghost" size="icon" className="h-8 w-11 gap-0 [&_svg]:size-5">
             <Mail />
             <span className="sr-only">Open Messages</span>
             <Badge variant="destructive" className="self-start h-2 w-2 rounded-full p-0 flex items-center justify-center text-[10px]">
                 <span className="sr-only">New Message</span>
             </Badge>
         </Button>
-        <Button variant="ghost" size="icon" className="gap-0 [&_svg]:size-5">
+        <Button variant="ghost" size="icon" className="h-8 w-11 gap-0 [&_svg]:size-5">
             <Bell />
             <span className="sr-only">Open Notifications</span>
             <Badge variant="destructive" className="self-start h-2 w-2 rounded-full p-0 flex items-center justify-center text-[10px]">
