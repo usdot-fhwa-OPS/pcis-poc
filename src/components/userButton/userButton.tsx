@@ -44,7 +44,7 @@ const UserButton: React.FC<UserButtonProps> = ({ fullName, role }) => {
             </div>
             <div className="user-avatar"></div>
             <Avatar className="h-9 w-9">
-                <AvatarFallback className="bg-gray-500 text-white text-lg font-bold">{initial}</AvatarFallback>
+                <AvatarFallback className="bg-gray-500 text-white text-lg font-semibold">{initial}</AvatarFallback>
             </Avatar>
         </div>
     </>
