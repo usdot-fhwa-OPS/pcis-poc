@@ -13,6 +13,7 @@ import { useAppDispatch } from "../../hooks";
 import { berthConfigList } from "./berth-request-client";
 import { populate } from '../../components/berth-requests/berth-config-state';
 import { BerthConfigDomain } from "./berth-config-domain";
+import { Input } from "../ui/input";
 
 export interface BerthRequestFormData {
     terminalId: string;
@@ -145,13 +146,15 @@ const [TERMINALS, setTerminals] = useState<Record<string, { name: string; phone:
         <div className="md:max-w-2xl">
             <div className="grid grid-cols-1 md:grid-cols-[max-content_1fr] gap-2 md:items-center">
                 <div className="pr-8">
-                <Label className="">Vessel ID:</Label>                            
-                        <input id="vesselID" type="string" 
-                            onChange={(e) =>
-                                setVesselId(e.target.value)
-                            }
-                            
-                            className="w-15 h-10"/>
+                    <Label className="">Vessel ID:</Label>
+                </div>
+                <div className="pb-4 md:py-2">
+                    <Input id="vesselID" type="string"
+                        onChange={(e) =>
+                            setVesselId(e.target.value)
+                        }
+
+                        className="w-15 h-10" />
 
                 </div>
                         
