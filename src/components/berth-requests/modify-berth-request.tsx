@@ -12,6 +12,7 @@ import { format } from "date-fns";
 import { berthConfigList } from "./berth-request-client";
 import { BerthConfigDomain } from "./berth-config-domain";
 import { BerthRequestDomain } from "./berth-request-domain";
+import { Input } from "../ui/input";
 
 export interface BerthRequestFormData {
     requestId: string;
@@ -172,17 +173,19 @@ const [TERMINALS, setTerminals] = useState<Record<string, { name: string; phone:
     return (
     <>
         <div className="md:max-w-2xl">
-            <div className="grid grid-cols-1 md:grid-cols-[max-content_1fr] gap-2 md:items-center">
-                <div className="pr-8">
-                                <Label className="">Vessel ID:</Label>                            
-                                        <input id="vesselID" type="string" 
-                                            onChange={(e) =>
-                                                setVesselId(e.target.value)
-                                            }
-                                            
-                                            className="w-15 h-10"/>
-                
-                                </div>
+                <div className="grid grid-cols-1 md:grid-cols-[max-content_1fr] gap-2 md:items-center">
+                    <div className="pr-8">
+                        <Label className="">Vessel ID:</Label>
+                    </div>
+                    <div className="pb-4 md:py-2">
+                        <Input id="vesselID" type="string"
+                            onChange={(e) =>
+                                setVesselId(e.target.value)
+                            }
+
+                            className="w-15 h-10" />
+
+                    </div>
                 <div className="pr-8">
                     <Label htmlFor="berthRequestTerminal">
                         Terminal

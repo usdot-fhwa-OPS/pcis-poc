@@ -31,13 +31,13 @@ function BerthRequestConfirmationComponent() {
 
   const handleConfirmCancel = () => {
     setCancelOpen(false);
-    navigate({ to: '/berth-requests' });
+    navigate({ to: '/berth-vessel' });
   };
 
   const handleConfirmSubmit = () => {
     save();
     setSuccessOpen(false);
-    navigate({ to: '/berth-requests' });
+    navigate({ to: '/berth-vessel' });
   };
 
   const formatDate = (date: Date | string | undefined) => {
