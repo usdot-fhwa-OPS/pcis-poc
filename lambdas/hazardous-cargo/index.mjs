@@ -6,6 +6,7 @@ import {
   GetCommand,
   ScanCommand,
   UpdateCommand,
+  TransactWriteCommand,
 } from "@aws-sdk/lib-dynamodb";
 
 
@@ -238,6 +239,77 @@ async function flag(event) {
   }
 }
 
+async function approve(event) {
+  const vesselId = event.queryStringParameters?.vesselId;
+  const cargoUnitID = event.queryStringParameters?.cargoUnitID;
+  if (!vesselId || !cargoUnitID) return response(400, { message: "vesselId and cargoUnitID are required" });
+  const existingHazardousCargoRecord = await dynamo.send(
+    new GetCommand({
+      TableName: HAZARDOUS_CARGO_TABLE,
+      Key: { vesselId: vesselId, cargoUnitID: cargoUnitID},
+    })
+  );
+  if (existingHazardousCargoRecord) {
+    const existingHazardousCargo = existingHazardousCargoRecord.Item;
+     const nowIso = new Date().toISOString();
+    const status = 'APPROVED'
+    const command = new TransactWriteCommand({
+      TransactItems: [
+        {
+          Update: {
+            TableName: HAZARDOUS_CARGO_TABLE,
+            Key: { vesselId: vesselId, cargoUnitID: cargoUnitID },
+            UpdateExpression:
+              "SET reviewStatus = :status, updatedAt = :updatedAt",
+            ExpressionAttributeValues: {
+              ":status": status,
+              ":updatedAt": nowIso,
+            },
+            ReturnValues: "ALL_NEW",
+          },
+        },
+        {
+          Put: {
+            TableName: "Container-sfyg4lmhl5axxnl6js6gbcn7fu-NONE",
+            Item: {
+              "cargoUnitID": existingHazardousCargo.cargoUnitID,
+              "arrivalDate": existingHazardousCargo.arrivalDate,
+              "bcoEmail": existingHazardousCargo.bcoEmail,
+              "bcoName": existingHazardousCargo.bcoName,
+              //"bookingStatus":  row.cargounitstatus,
+              //"containerStatus": row.containerstatus,
+              "createdAt": nowIso,
+              "destination": existingHazardousCargo.destination,
+              "flag": "FALSE",
+              "isBCONotify": "FALSE",
+              "isHazardous": "FALSE",
+              "isTerminalNotify": "FALSE",
+              "isTransportationNotify": "FALSE",
+              "origin": existingHazardousCargo.origin,
+              //"reservationStatus": row.reservationstatus?row.reservationstatus:'UNRESERVED',
+              "updatedAt": nowIso,
+              "vesselID": existingHazardousCargo.vesselId,
+            },
+          },
+        }
+      ]
+    });
+
+    try {
+    const resp = await  dynamo.send(command);
+    return response(200, { message: resp.Attributes });
+  } catch (error) {
+    return response(500, { message: error });
+  }
+
+  } else {
+    return response(403, { message: `Not able to find Hazardous Cargo for vessel ID ${vesselId} and cargo ID ${cargoUnitID}` });
+  }
+  
+  
+}
+
+
 async function setStatus(vesselId, cargoUnitID, status) {
   const nowIso = new Date().toISOString();
   return await dynamo.send(
@@ -435,6 +507,8 @@ export const handler = async (event) => {
         return await requestAdditionalDocunent(event);
       case "PUT /flag":
         return await flag(event);
+      case "PUT /approve":
+        return await approve(event);
       default:
         return response(404, { message: `Unsupported route: ${routeKey}` });
     }
