@@ -79,6 +79,7 @@ function BerthRequestConfirmationComponent() {
         berthRequest.etdAt = format(formData.endDate, "MM/dd/yyyy")+' '+formData.endTime;
         berthRequest.manifestPath = formData.cargoManifestPath;
         berthRequest.services = formData.services;
+        berthRequest.vesselID = formData.vesselId;
         
       }
 

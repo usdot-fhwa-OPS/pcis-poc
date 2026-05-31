@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { useContext, useEffect, useState } from 'react'
+import { useContext, useState } from 'react'
 
 
 import { useAppDispatch, useAppSelector } from '../hooks';
@@ -28,7 +28,6 @@ function RouteComponent() {
 
   const fetchBerthRequests = async (): Promise<BerthRequestDomain[]> => {
     const brList = userContext.email?await berthRequestListForVesselAgent(userContext.email):[];
-    dispatch(populate(brList));
     
     return brList;
   }
@@ -37,6 +36,8 @@ function RouteComponent() {
       dispatch(populateBerthConfig(await berthConfigList()))
       const result = await fetchBerthRequests()
       setData(result)
+      dispatch(populate(result));
+
       setLoading(false)
 
     }
@@ -48,9 +49,10 @@ function RouteComponent() {
     fetchData();
   }
   
-  useEffect(() => {
+  useState(() => {
     fetchData()
-  }, [])
+  })
+   
 
   
 
