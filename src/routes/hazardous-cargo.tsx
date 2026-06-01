@@ -65,7 +65,7 @@ function HazardousCargoPage() {
   const documentationMissing = data.filter((item) => !item.isCompliant).length
 
   return (
-    <div className="p-8 flex flex-col gap-6 max-w-7xl">
+    <div className="w-full px-6 py-6 md:px-10 md:py-8 flex flex-col gap-6">
       {/* Page header */}
       <div className="flex flex-col gap-1">
         <div className="flex items-center gap-2">

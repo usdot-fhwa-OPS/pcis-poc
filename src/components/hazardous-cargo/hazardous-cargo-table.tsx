@@ -117,7 +117,7 @@ export function HazardousCargoTable({ data }: HazardousCargoTableProps) {
   })
 
   return (
-    <div className="border rounded-lg overflow-hidden">
+    <div className="w-full border rounded-lg overflow-hidden">
       <div className="px-4 pt-4 pb-2">
         <Input
           placeholder="Filter by Container ID..."
