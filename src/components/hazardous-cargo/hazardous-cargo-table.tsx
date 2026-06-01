@@ -25,10 +25,10 @@ import { HazardousCargoItem } from "./hazardous-cargo-types"
 
 // TODO: Wire up the View action to navigate to a detail page or modal once the
 // backend detail endpoint is available. The cargoUnitID can be used as the key.
-function ViewButton({ cargoUnitID }: { cargoUnitID: string }) {
+function ViewButton({ cargoUnitID, nonCompliant }: { cargoUnitID: string; nonCompliant: boolean }) {
   return (
     <Button
-      variant="outline"
+      variant={nonCompliant ? "destructive" : "outline"}
       size="sm"
       onClick={() => {
         // TODO: Navigate to detail view, e.g. navigate({ to: `/hazardous-cargo/${cargoUnitID}` })
@@ -93,7 +93,7 @@ export const hazardousCargoColumns: ColumnDef<HazardousCargoItem>[] = [
   {
     id: "actions",
     header: "Actions",
-    cell: ({ row }) => <ViewButton cargoUnitID={row.original.cargoUnitID} />,
+    cell: ({ row }) => <ViewButton cargoUnitID={row.original.cargoUnitID} nonCompliant={!row.original.isCompliant} />,
   },
 ]
 
