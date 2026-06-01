@@ -36,7 +36,7 @@ const UserHeader: React.FC<UserHeaderProps> = ({ fullName, role }) => {
     
     return (
     <>
-        <div className="flex items-center justify-end gap-5 p-3 pr-6 bg-white border-b mb-4">
+        <div className="flex items-center justify-end gap-4 sm:gap-5 p-3 sm:pr-6 bg-white border-b mb-4">
             <Selfhelp />
             <Button variant="ghost" size="icon" className="gap-[0.125rem] w-[2.875rem] [&_svg]:size-5">
                 <Mail />
