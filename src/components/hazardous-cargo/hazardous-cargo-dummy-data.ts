@@ -1,0 +1,81 @@
+import { HazardousCargoItem } from "./hazardous-cargo-types"
+
+// TODO: Replace this dummy data with a live DynamoDB query via Amplify.
+// Query pattern (when backend is ready):
+//   const { data } = await client.models.HazardousCargoItem.list({ authMode: 'apiKey' })
+//   Filter to isHazardous === true before rendering.
+//
+// Current DynamoDB fields available: vesselId, cargoUnitID, additionalDocumentPath,
+// arrivalDate, bcoEmail, bcoName, destination, documentsChecked, isCompliant,
+// isHazardous, origin, reviewStatus, updatedAt, vesselAgentEmail.
+// Fields NOT yet in DB (coming soon): hazmatClass, unNumber.
+export const dummyHazardousCargoData: HazardousCargoItem[] = [
+  {
+    vesselId: "6",
+    cargoUnitID: "AL-821",
+    hazmatClass: "Class 3 – Flammable Liquid",
+    unNumber: "UN 1203",
+    isCompliant: true,
+    isHazardous: true,
+    arrivalDate: "8/14/2025",
+    bcoName: "Jane Doe",
+    bcoEmail: "yfd1k@indigobook.com",
+    destination: "Baltimore",
+    origin: "New York City",
+    documentsChecked: false,
+    reviewStatus: "APPROVED",
+    updatedAt: "2026-05-31T02:22:13.401Z",
+    vesselAgentEmail: "l9scihrptc@bwmyga.com",
+  },
+  {
+    vesselId: "6",
+    cargoUnitID: "CC-703",
+    hazmatClass: "Class 8 – Corrosive Material",
+    unNumber: "UN 1789",
+    isCompliant: false,
+    isHazardous: true,
+    arrivalDate: "3/14/2025",
+    bcoName: "Harry Williams",
+    bcoEmail: "99lqt@indigobook.com",
+    destination: "Baltimore",
+    origin: "New York City",
+    documentsChecked: false,
+    reviewStatus: "",
+    updatedAt: "",
+    vesselAgentEmail: "l9scihrptc@bwmyga.com",
+  },
+  {
+    vesselId: "6",
+    cargoUnitID: "EC-899",
+    hazmatClass: "Class 2.1 – Flammable Gas",
+    unNumber: "UN 1978",
+    isCompliant: true,
+    isHazardous: true,
+    arrivalDate: "3/14/2025",
+    bcoName: "Jane Doe",
+    bcoEmail: "yfd1k@indigobook.com",
+    destination: "Baltimore",
+    origin: "New York City",
+    documentsChecked: false,
+    reviewStatus: "",
+    updatedAt: "",
+    vesselAgentEmail: "l9scihrptc@bwmyga.com",
+  },
+  {
+    vesselId: "6",
+    cargoUnitID: "GC-886",
+    hazmatClass: "Class 6.1 – Poisonous",
+    unNumber: "UN 2810",
+    isCompliant: true,
+    isHazardous: true,
+    arrivalDate: "3/14/2025",
+    bcoName: "Jane Doe",
+    bcoEmail: "yfd1k@indigobook.com",
+    destination: "Baltimore",
+    origin: "New York City",
+    documentsChecked: false,
+    reviewStatus: "",
+    updatedAt: "",
+    vesselAgentEmail: "l9scihrptc@bwmyga.com",
+  },
+]
