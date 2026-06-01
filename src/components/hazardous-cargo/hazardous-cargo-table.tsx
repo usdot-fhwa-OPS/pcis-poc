@@ -22,18 +22,15 @@ import {
 import { Input } from "../ui/input"
 import { Button } from "../ui/button"
 import { HazardousCargoItem } from "./hazardous-cargo-types"
+import { useNavigate } from "@tanstack/react-router"
 
-// TODO: Wire up the View action to navigate to a detail page or modal once the
-// backend detail endpoint is available. The cargoUnitID can be used as the key.
 function ViewButton({ cargoUnitID, nonCompliant }: { cargoUnitID: string; nonCompliant: boolean }) {
+  const navigate = useNavigate()
   return (
     <Button
       variant={nonCompliant ? "destructive" : "outline"}
       size="sm"
-      onClick={() => {
-        // TODO: Navigate to detail view, e.g. navigate({ to: `/hazardous-cargo/${cargoUnitID}` })
-        console.log("View:", cargoUnitID)
-      }}
+      onClick={() => navigate({ to: '/hazardous-cargo/$cargoUnitID', params: { cargoUnitID } })}
     >
       View
     </Button>
