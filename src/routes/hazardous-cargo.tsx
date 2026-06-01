@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, Outlet, useMatchRoute } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
 import { TriangleAlert } from 'lucide-react'
 import { HazardousCargoTable } from '../components/hazardous-cargo/hazardous-cargo-table'
@@ -58,6 +58,11 @@ function StatCard({
 
 function HazardousCargoPage() {
   const data = useHazardousCargoData()
+  const matchRoute = useMatchRoute()
+  const isDetailView = matchRoute({ to: '/hazardous-cargo/$cargoUnitID' })
+
+  // Render child route (detail page) when a cargoUnitID is matched.
+  if (isDetailView) return <Outlet />
 
   // TODO: These counts will be derived from the live DynamoDB query once backend is wired.
   const totalHazmat = data.length
