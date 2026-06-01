@@ -39,8 +39,8 @@ function BerthRequestConfirmationComponent() {
 
   
 
-  const handleConfirmSubmit = () => {
-    save();
+  const handleConfirmSubmit = async () => {
+    await save();
     setSuccessOpen(false);
     navigate({ to:  requestListPage});
   };
@@ -70,7 +70,7 @@ function BerthRequestConfirmationComponent() {
       };
   
     
-    const save = () => {
+    const save = async () => {
       if (formData) {
         berthRequest.requestId = formData.requestId
         berthRequest.vesselAgentEmail = userContext.email ? userContext.email : "";
@@ -83,7 +83,7 @@ function BerthRequestConfirmationComponent() {
         
       }
 
-      updateBerthRequest(berthRequest)
+      await updateBerthRequest(berthRequest)
     }
  
   return (

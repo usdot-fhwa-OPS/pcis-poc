@@ -33,19 +33,19 @@ function RouteComponent() {
   }
 
       const fetchData = async () => {
-      dispatch(populateBerthConfig(await berthConfigList()))
       const result = await fetchBerthRequests()
       setData(result)
       dispatch(populate(result));
-
+     dispatch(populateBerthConfig(await berthConfigList()))
+ 
       setLoading(false)
 
     }
     
 
-    const delBerthRequest = (requestId: string) =>{
+    const delBerthRequest = async (requestId: string) =>{
     
-    deleteBerthRequest(requestId);
+    await deleteBerthRequest(requestId);
     fetchData();
   }
   

@@ -6,9 +6,6 @@ import { useEffect, useState } from "react";
 
 import { Button } from "../components/ui/button";
 import { Plus } from "lucide-react";
-import { berthRequestList } from '../components/berth-requests/berth-request-client';
-import { populate } from '../components/berth-requests/berth-request-state';
-import { useAppDispatch } from '../hooks';
 
 export const Route = createFileRoute('/berth-requests')({
   component: BerthRequestComponent,
@@ -43,15 +40,9 @@ function AddNewBerthRequestButton() {
   const navigateToBerthRequestAdd = () => {
     navigate({ to: "/berth-request-add" });
   }
-const dispatch = useAppDispatch()
    
 
 
-const fetchBerthRequestList = async () => {
-  
-      dispatch(populate(await berthRequestList()));
-      //setLoading(false);
-}
 
   useEffect(() => {
     async function getUserAttributes() {
@@ -70,8 +61,6 @@ const fetchBerthRequestList = async () => {
     }
 
     getUserAttributes();
-    
-    fetchBerthRequestList();
   }, [user]);
   
   if (userAttributes.role === "Vessel Agent") {
