@@ -6,16 +6,24 @@
     align-items: center;
     gap: 1rem;
     height: auto;
-    white-space: nowrap;
 }
-  
+
+@media (width >= 48rem) {
+
+    .user-info {
+        white-space: nowrap;
+    }
+
+}
+
 .user-info-name {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     font-size: 14px;
+    line-height: 1.15;
 }
-  
+
 .user-info-role {
     font-size: 12px;
     line-height: 1.25;
