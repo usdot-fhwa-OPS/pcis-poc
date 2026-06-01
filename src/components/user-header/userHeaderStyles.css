@@ -1,43 +1,23 @@
-/* userButtonStyles.css */
-.user-button {
-/*
-    margin-left: auto;
-    border-radius: 16px;
-    padding: 10px;
-    background-color: white;
-    border: 1px solid #E2E2E2;
-*/
+/* userHeaderStyles.css */
+.user-info {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    /*font-size: 14px;
-    font-weight: bold;*/
     gap: 1rem;
-    /*min-width: 166px;*/
     height: auto;
     white-space: nowrap;
 }
   
-.user-button-content {
+.user-info-name {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     font-size: 14px;
 }
   
-.user-role {
+.user-info-role {
     font-size: 12px;
-    /*font-weight: normal;*/
     line-height: 1.25;
     color: #6A7282;
-}
-  
-.user-avatar {
-    display: none;
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    background-color: #D1D5DC;
-    flex-shrink: 0;
 }

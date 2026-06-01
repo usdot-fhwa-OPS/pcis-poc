@@ -29,38 +29,39 @@ const UserHeader: React.FC<UserHeaderProps> = ({ fullName, role }) => {
         }
 
         const hue = Math.abs(hash % 360);
-        return `hsl(${hue}, 70%, 50%)`
+        return `hsl(${hue}, 60%, 55%)`
     };
 
     const bgColor = getAvatarColor(fullName);
     
     return (
     <>
-        <Selfhelp />
-        <Button variant="ghost" size="icon" className="gap-[0.125rem] w-[2.875rem] [&_svg]:size-5">
-            <Mail />
-            <span className="sr-only">Open Messages</span>
-            <Badge variant="destructive" className="self-start h-2 w-2 rounded-full mt-1 p-0 shadow-none">
-                <span className="sr-only">New Message</span>
-            </Badge>
-        </Button>
-        <Button variant="ghost" size="icon" className="gap-0 w-11 [&_svg]:size-5">
-            <Bell />
-            <span className="sr-only">Open Notifications</span>
-            <Badge variant="destructive" className="self-start h-2 w-2 rounded-full mt-1 p-0 shadow-none">
-                <span className="sr-only">New Notification</span>
-            </Badge>
-        </Button>
-        <SettingsButton role={role} />
-        <div className="user-button">
-            <div className="user-button-content">
-                <span>{fullName}</span>
-                <span className="user-role">{role}</span>
+        <div className="flex items-center justify-end gap-5 p-3 pr-6 bg-white border-b mb-4">
+            <Selfhelp />
+            <Button variant="ghost" size="icon" className="gap-[0.125rem] w-[2.875rem] [&_svg]:size-5">
+                <Mail />
+                <span className="sr-only">Open Messages</span>
+                <Badge variant="destructive" className="self-start h-2 w-2 rounded-full mt-1 p-0 shadow-none">
+                    <span className="sr-only">New Message</span>
+                </Badge>
+            </Button>
+            <Button variant="ghost" size="icon" className="gap-0 w-11 [&_svg]:size-5">
+                <Bell />
+                <span className="sr-only">Open Notifications</span>
+                <Badge variant="destructive" className="self-start h-2 w-2 rounded-full mt-1 p-0 shadow-none">
+                    <span className="sr-only">New Notification</span>
+                </Badge>
+            </Button>
+            <SettingsButton role={role} />
+            <div className="user-info">
+                <div className="user-info-name">
+                    <span>{fullName}</span>
+                    <span className="user-info-role">{role}</span>
+                </div>
+                <Avatar className="h-9 w-9">
+                    <AvatarFallback style={{ backgroundColor: bgColor }} className="text-white text-lg font-semibold">{initial}</AvatarFallback>
+                </Avatar>
             </div>
-            <div className="user-avatar"></div>
-            <Avatar className="h-9 w-9">
-                <AvatarFallback style={{ backgroundColor: bgColor }} className="text-white text-lg font-semibold">{initial}</AvatarFallback>
-            </Avatar>
         </div>
     </>
     );
