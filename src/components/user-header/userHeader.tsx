@@ -5,9 +5,9 @@ import { Button } from "../ui/button";
 import { Selfhelp } from '../self-help/self-help';
 import SettingsButton from '../settings/settingsButton';
 import { Bell, Mail } from "lucide-react"
-import './userButtonStyles.css';
+import './userHeaderStyles.css';
 
-interface UserButtonProps {
+interface UserHeaderProps {
   fullName: string;
   role: string;
 }
@@ -15,10 +15,12 @@ interface UserButtonProps {
 // Notifications and Messages buttons: when adding logic for red badges use width classes 
 // below in terenary statements with w-9 to adjust button width when displaying a badge
 
-const UserButton: React.FC<UserButtonProps> = ({ fullName, role }) => {
+const UserHeader: React.FC<UserHeaderProps> = ({ fullName, role }) => {
     
     const initial = fullName.charAt(0).toUpperCase();
 
+    // Generate background color based on length of fullName
+    // Use HSL to maintain consistent vibrance and contrast  
     const getAvatarColor = (fullName: string) => {
 
         let hash = 0;
@@ -26,9 +28,7 @@ const UserButton: React.FC<UserButtonProps> = ({ fullName, role }) => {
             hash = fullName.charCodeAt(i) + ((hash << 5) - hash);
         }
 
-        // Use HSL for consistent "vibrancy" across different names
         const hue = Math.abs(hash % 360);
-        
         return `hsl(${hue}, 70%, 50%)`
     };
 
@@ -66,4 +66,4 @@ const UserButton: React.FC<UserButtonProps> = ({ fullName, role }) => {
     );
 };
 
-export default UserButton;
+export default UserHeader;
