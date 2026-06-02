@@ -28,7 +28,7 @@ const UserHeader: React.FC<UserHeaderProps> = ({ fullName, role }) => {
             hash = fullName.charCodeAt(i) + ((hash << 5) - hash);
         }
 
-        const hue = Math.abs(hash % 360);
+        const hue = Math.abs((hash % 340) + 20);
         return `hsl(${hue}, 60%, 55%)`
     };
 
