@@ -269,6 +269,55 @@ async function submitAdditionalDocument(event) {
   }
 }
 
+async function completeDocumentCheck(event) {
+  const vesselId = event.queryStringParameters?.vesselId;
+  const cargoUnitID = event.queryStringParameters?.cargoUnitID;
+  if (!vesselId || !cargoUnitID) return response(400, { message: "vesselId and cargoUnitID are required" });
+  try {
+    const nowIso = new Date().toISOString();
+    const resp = await dynamo.send(
+      new UpdateCommand({
+        TableName: HAZARDOUS_CARGO_TABLE,
+        Key: { vesselId: vesselId, cargoUnitID: cargoUnitID },
+        UpdateExpression:
+          "SET  isDocumentationComplete = :isDocumentationComplete, \
+                updatedAt = :updatedAt",
+        ExpressionAttributeValues: {
+          ":isDocumentationComplete": true,
+          ":updatedAt": nowIso,
+        },
+        ReturnValues: "ALL_NEW",
+      }))
+    return response(200, { message: resp.Attributes });
+  } catch (error) {
+    return response(500, { message: error });
+  }
+}
+
+async function setDocumentCompliant(event) {
+  const vesselId = event.queryStringParameters?.vesselId;
+  const cargoUnitID = event.queryStringParameters?.cargoUnitID;
+  if (!vesselId || !cargoUnitID) return response(400, { message: "vesselId and cargoUnitID are required" });
+  try {
+    const nowIso = new Date().toISOString();
+    const resp = await dynamo.send(
+      new UpdateCommand({
+        TableName: HAZARDOUS_CARGO_TABLE,
+        Key: { vesselId: vesselId, cargoUnitID: cargoUnitID },
+        UpdateExpression:
+          "SET  isCompliant = :isCompliant, \
+                updatedAt = :updatedAt",
+        ExpressionAttributeValues: {
+          ":isCompliant": true,
+          ":updatedAt": nowIso,
+        },
+        ReturnValues: "ALL_NEW",
+      }))
+    return response(200, { message: resp.Attributes });
+  } catch (error) {
+    return response(500, { message: error });
+  }
+}
 
 async function approve(event) {
   const vesselId = event.queryStringParameters?.vesselId;
@@ -539,8 +588,14 @@ export const handler = async (event) => {
       case "PUT /flag":
         return await flag(event);
       case "PUT /approve":
+      case "PUT /flag":
+        return await flag(event);
+      case "PUT /approve":
         return await approve(event);
-      default:
+      case "PUT /setDocumentCompliant":
+        return await setDocumentCompliant(event);
+      case "PUT /completeDocumentCheck":
+        return await completeDocumentCheck(event);      default:
         return response(404, { message: `Unsupported route: ${routeKey}` });
     }
   } catch (err) {
