@@ -29,7 +29,7 @@ const UserHeader: React.FC<UserHeaderProps> = ({ fullName, role }) => {
         }
 
         const hue = Math.abs((hash % 340) + 20);
-        return `hsl(${hue}, 60%, 55%)`
+        return `hsl(${hue}, 60%, 30%)`
     };
 
     const bgColor = getAvatarColor(fullName);
