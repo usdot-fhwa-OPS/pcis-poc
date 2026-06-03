@@ -123,37 +123,34 @@ export function AppSidebar() {
   }, [user]);
 
   // Define which menu items are allowed for Terminal Operator role.
-  const allowedForTerminalOperatorRole = ["Home", "Berth Reservation Management", "Available Operators", "Import Stow Plan", "Upcoming Cargo", "Reservation Status", "Analytics", "Notifications", "Hazardous Cargo Management"];
+  const allowedForTerminalOperatorRole = ["Home", "Berth Reservation Management", "Available Operators", "Import Stow Plan", "Upcoming Cargo", "Reservation Status", "Analytics", "Notifications", "Hazardous Cargo Management", "Hazardous Cargo"];
 
-  // Define which menu items are allowed for limited roles.
+  // Define which menu items are allowed for transport-only roles (no hazardous cargo access).
   const allowedForLimitedRoles = ["Home", "Reservation Status", "Analytics", "Notifications"];
 
-   // Define which menu items are allowed for Vessel Agent Role.
+  // Define which menu items are allowed for Beneficiary Cargo Owner role.
+  const allowedForBCORole = ["Home", "Reservation Status", "Analytics", "Notifications", "Hazardous Cargo"];
+
+  // Define which menu items are allowed for Vessel Agent Role.
   const allowedForVesselAgentRole = ["Home", "Notifications", "Berth Requests", "Berth Reservations", "Hazardous Cargo"];
 
   // Filter menu items based on the custom role.
   const filteredItems = items.filter((item) => {
     if (userAttributes.role === "Terminal Operator") {
-      // Terminal Operators have access to all items except Berth Request.
       return allowedForTerminalOperatorRole.includes(item.title)
     }
     if (userAttributes.role === "Vessel Agent") {
-      return item.title ==="Berth Reservations";
-    }
-
-    if (
-      (userAttributes.role === 'Trucking Operator') 
-          || (userAttributes.role === 'Rail Operator')
-          || (userAttributes.role === 'Third Party Logistics Provider') ||
-      userAttributes.role === "Beneficiary Cargo Owner"
-    ) {
-      // These roles only have access to the allowed items.
-      return allowedForLimitedRoles.includes(item.title);
-    }
-
-    if (userAttributes.role === "Vessel Agent") {
-      // Vessel Agent only has access to allowed items.
       return allowedForVesselAgentRole.includes(item.title)
+    }
+    if (userAttributes.role === "Beneficiary Cargo Owner") {
+      return allowedForBCORole.includes(item.title)
+    }
+    if (
+      userAttributes.role === 'Trucking Operator'
+        || userAttributes.role === 'Rail Operator'
+        || userAttributes.role === 'Third Party Logistics Provider'
+    ) {
+      return allowedForLimitedRoles.includes(item.title);
     }
 
     // If role is undefined or unrecognized, do not show any items.
