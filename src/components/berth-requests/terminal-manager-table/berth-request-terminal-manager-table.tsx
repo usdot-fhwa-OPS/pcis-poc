@@ -7,31 +7,28 @@ import {
   ongoingColumns,
   completedColumns,
 } from "./columns.tsx";
-import { berthRequestDecision, updateBerthRequest } from "../berth-request-client.tsx";
 import { BerthConfigDomain } from "../berth-config-domain.tsx";
 import { Button } from "../../ui/button.tsx";
 import { BerthAvailability } from "../../berth/berth-availability.tsx";
-import { BerthRequestDomain } from "../berth-request-domain.tsx";
 
 interface TerminalOperatorBerthRequestsTableProps {
   data: any[];
   deleteBerthRequest: any;
   berthConfigs: BerthConfigDomain[];
+  modifyBerthRequest: any;
+  decideBerthRequest: any;
 }
 
 export function TerminalOperatorBerthRequestsTable({
   data,
   deleteBerthRequest,
   berthConfigs,
+  modifyBerthRequest,
+  decideBerthRequest,
 }: TerminalOperatorBerthRequestsTableProps) {
-  const decideBerthRequest = (requestId: string, decision: string, options?: { denialComment?: string; berthAssignment?: string }) => {
-    berthRequestDecision(requestId, decision, options);
-  }
+  
 
-  const modifyBerthRequest = (berthRequest: BerthRequestDomain) => {
-    updateBerthRequest(berthRequest);
-  }
-
+  
 
   const requested             = data.filter((r) => r.status === "REQUESTED")
   const modificationRequested = data.filter((r) => r.status === "MODIFIED")

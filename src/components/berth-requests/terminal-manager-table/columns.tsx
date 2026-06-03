@@ -11,7 +11,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 import { cn } from "../../../lib/utils"
 import { BerthRequestDomain } from "../berth-request-domain"
 import { TerminalOperatorBerthRequestsTableMeta } from "./data-table"
-import { updateBerthRequest } from "../berth-request-client"
 import {
   Dialog,
   DialogClose,
@@ -182,11 +181,13 @@ function DateTimePicker({
   requestId,
   field,
   disabled = false,
+  table,
 }: {
   initialValue: string | undefined
   requestId: string
   field: "ataAt" | "atdAt"
   disabled?: boolean
+  table: Table<BerthRequestDomain> 
 }) {
   const parsedDate = initialValue ? new Date(initialValue) : undefined
   const parsedTime = (() => {
@@ -202,6 +203,7 @@ function DateTimePicker({
   const label = field === "ataAt" ? "Enter ATA" : "Enter ATD"
   const displayLabel = date ? `${format(date, "MM/dd/yyyy")} ${time}` : undefined
 
+  const meta = table.options.meta as TerminalOperatorBerthRequestsTableMeta
   const handleSave = async () => {
     if (!date) return
     const combined = `${format(date, "MM/dd/yyyy")} ${time}`
@@ -210,7 +212,7 @@ function DateTimePicker({
     let bReq:BerthRequestDomain = {} as BerthRequestDomain;
     bReq[field] = combined;
     bReq.requestId = requestId;
-    await updateBerthRequest(bReq)
+    await  meta.modifyBerthRequest(bReq)
     console.log("TODO updateBerthRequest", requestId, field, combined)
   }
 
@@ -423,23 +425,25 @@ export const ongoingColumns: ColumnDef<BerthRequestDomain>[] = [
   {
     id: "ataAt",
     header: "Actual Arrival (ATA)",
-    cell: ({ row }) => (
+    cell: ({ row , table}) => (
       <DateTimePicker
         initialValue={row.original.ataAt}
         requestId={row.original.requestId}
         field="ataAt"
+        table={table}
       />
     ),
   },
   {
     id: "atdAt",
     header: "Actual Departure (ATD)",
-    cell: ({ row }) => (
+    cell: ({ row , table}) => (
       <DateTimePicker
         initialValue={row.original.atdAt}
         requestId={row.original.requestId}
         field="atdAt"
         disabled={!row.original.ataAt}
+        table={table}
       />
     ),
   },

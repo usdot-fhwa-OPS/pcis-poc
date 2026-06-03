@@ -649,7 +649,7 @@ async function updateRequest(event) {
     manifestCsvBase64: body.manifestCsvBase64 ?? existing.Item.manifestCsvBase64,
     updatedAt: nowIso,
     status:(existing.Item.status === 'REQUESTED')?'MODIFIED':existing.Item.status,
-    terminalId:body.terminalId,
+    terminalId:terminalId,
   };
 
   await dynamo.send(
