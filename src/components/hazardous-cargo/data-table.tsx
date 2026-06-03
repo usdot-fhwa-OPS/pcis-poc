@@ -40,13 +40,15 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
   })
 
   return (
-    <div className="mb-4 w-full px-3 py-2 border rounded-md">
-      <Input
-        placeholder="Filter by Container ID..."
-        value={(table.getColumn("cargoUnitID")?.getFilterValue() as string) ?? ""}
-        onChange={(e) => table.getColumn("cargoUnitID")?.setFilterValue(e.target.value)}
-        className="max-w-sm"
-      />
+    <div className="mb-4 w-full border rounded-md">
+      <div className="px-3 py-2">
+        <Input
+          placeholder="Filter by Container ID..."
+          value={(table.getColumn("cargoUnitID")?.getFilterValue() as string) ?? ""}
+          onChange={(e) => table.getColumn("cargoUnitID")?.setFilterValue(e.target.value)}
+          className="max-w-sm"
+        />
+      </div>
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
@@ -89,7 +91,7 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
         </TableBody>
       </Table>
 
-      <div className="flex items-center justify-between mt-4">
+      <div className="flex items-center justify-between mt-4 px-3 pb-2">
         <div className="flex items-center gap-2">
           <button
             onClick={() => table.previousPage()}
