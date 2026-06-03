@@ -190,7 +190,6 @@ a {
   display: flex;
   justify-content: center;
   align-items: center;
-  display: none; /* Temporary change for PCIS2-112 */
 }
 
 .self-help-right {
