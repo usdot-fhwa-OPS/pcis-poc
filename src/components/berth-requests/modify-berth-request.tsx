@@ -104,6 +104,7 @@ export const ModifyBerthRequest = ({ onDataChange}: ModifyBerthRequestProps ) =>
             setSelectedServices(berthRequest.services)
             setSelectedCargoManifestPath(berthRequest.manifestPath)
             setRequestId(berthRequest.requestId)
+            setVesselId(berthRequest.vesselID)
         }
 
     })
@@ -178,7 +179,7 @@ const [TERMINALS, setTerminals] = useState<Record<string, { name: string; phone:
                         <Label className="">Vessel ID:</Label>
                     </div>
                     <div className="pb-4 md:py-2">
-                        <Input id="vesselID" type="string"
+                        <Input id="vesselID" type="string" value={vesselId}
                             onChange={(e) =>
                                 setVesselId(e.target.value)
                             }

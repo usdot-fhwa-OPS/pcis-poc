@@ -4,7 +4,7 @@ import { useContext, useEffect, useState } from 'react'
 
 import { useAppDispatch } from '../hooks';
 import { populate } from '../components/berth-requests/berth-request-state';
-import { berthRequestList, deleteBerthRequest, berthConfigList } from '../components/berth-requests/berth-request-client';
+import { berthRequestList, deleteBerthRequest, berthConfigList, updateBerthRequest, berthRequestDecision } from '../components/berth-requests/berth-request-client';
 import { TerminalOperatorBerthRequestsTable } from '../components/berth-requests/terminal-manager-table/berth-request-terminal-manager-table';
 import { UserContext } from '../AppContext';
 import { BerthRequestDomain } from '../components/berth-requests/berth-request-domain';
@@ -43,7 +43,17 @@ function RouteComponent() {
       await deleteBerthRequest(requestId);
       fetchData();
     }
-  
+
+    const modifyBerthRequest = async (berthRequest: BerthRequestDomain) => {
+    await updateBerthRequest(berthRequest);
+    fetchData();
+  }
+
+  const decideBerthRequest = async (requestId: string, decision: string, options?: { denialComment?: string; berthAssignment?: string }) => {
+    await berthRequestDecision(requestId, decision, options);
+    fetchData();
+  }
+
   if (loading) {
     return <div>Loading...</div>
   }
@@ -51,6 +61,8 @@ function RouteComponent() {
     return (
  
     userContext['custom:role']==='Terminal Operator'?<TerminalOperatorBerthRequestsTable data={data}
-    deleteBerthRequest={delBerthRequest} berthConfigs={configs} />:undefined
+    deleteBerthRequest={delBerthRequest} berthConfigs={configs} 
+    modifyBerthRequest={modifyBerthRequest}
+    decideBerthRequest={decideBerthRequest} />:undefined
     )
 }

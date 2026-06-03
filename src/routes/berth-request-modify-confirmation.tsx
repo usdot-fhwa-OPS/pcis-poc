@@ -39,8 +39,8 @@ function BerthRequestConfirmationComponent() {
 
   
 
-  const handleConfirmSubmit = () => {
-    save();
+  const handleConfirmSubmit = async () => {
+    await save();
     setSuccessOpen(false);
     navigate({ to:  requestListPage});
   };
@@ -70,7 +70,7 @@ function BerthRequestConfirmationComponent() {
       };
   
     
-    const save = () => {
+    const save = async () => {
       if (formData) {
         berthRequest.requestId = formData.requestId
         berthRequest.vesselAgentEmail = userContext.email ? userContext.email : "";
@@ -79,10 +79,11 @@ function BerthRequestConfirmationComponent() {
         berthRequest.etdAt = format(formData.endDate, "MM/dd/yyyy")+' '+formData.endTime;
         berthRequest.manifestPath = formData.cargoManifestPath;
         berthRequest.services = formData.services;
+        berthRequest.vesselID = formData.vesselId;
         
       }
 
-      updateBerthRequest(berthRequest)
+      await updateBerthRequest(berthRequest)
     }
  
   return (

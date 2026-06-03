@@ -34,8 +34,8 @@ function BerthRequestConfirmationComponent() {
     navigate({ to: '/berth-vessel' });
   };
 
-  const handleConfirmSubmit = () => {
-    save();
+  const handleConfirmSubmit = async () => {
+    await save();
     setSuccessOpen(false);
     navigate({ to: '/berth-vessel' });
   };
@@ -65,7 +65,7 @@ function BerthRequestConfirmationComponent() {
       };
   
     const userContext = useContext(UserContext);
-    const save = () => {
+    const save = async () => {
       if (formData) {
         berthRequest.vesselAgentEmail = userContext.email ? userContext.email : "";
         berthRequest.terminalId = formData.terminalId;
@@ -76,7 +76,7 @@ function BerthRequestConfirmationComponent() {
         berthRequest.vesselID = formData.vesselId;
       }
 
-      saveBerthRequest(berthRequest)
+      await saveBerthRequest(berthRequest)
     }
  
   return (
