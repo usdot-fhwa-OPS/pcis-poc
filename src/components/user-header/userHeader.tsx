@@ -28,7 +28,9 @@ const UserHeader: React.FC<UserHeaderProps> = ({ fullName, role }) => {
             hash = fullName.charCodeAt(i) + ((hash << 5) - hash);
         }
 
-        const hue = Math.abs((hash % 340) + 20);
+        // Generates numbers between 21 and 360 for the hue
+        // No red backgrounds (hues: 0 - 20) will be generated
+        const hue = 21 + (Math.abs(hash % 339));
         return `hsl(${hue}, 60%, 30%)`
     };
 
