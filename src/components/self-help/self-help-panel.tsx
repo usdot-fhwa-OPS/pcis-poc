@@ -1,7 +1,6 @@
 import { useState } from "react"
 import { X, LucideIcon } from "lucide-react"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "../ui/accordion"
-import { Button } from "../ui/button"
 
 export interface SelfHelpItem {
     icon: LucideIcon
@@ -29,15 +28,14 @@ export const SelfHelpPanel = ({ items }: SelfHelpPanelProps) => {
                 <div className="fixed right-10 top-1/2 -translate-y-1/2 w-80 bg-white rounded-lg shadow-2xl z-50 overflow-hidden max-h-[70vh] flex flex-col border border-gray-200">
                     <div className="bg-gray-900 text-white px-4 py-3 flex items-center justify-between flex-shrink-0 rounded-t-lg">
                         <span className="font-semibold text-sm">Self Help</span>
-                        <Button
-                            variant="ghost"
-                            size="icon"
+                        <button
+                            type="button"
                             onClick={() => setOpen(false)}
-                            className="h-6 w-6 text-white hover:bg-transparent hover:text-gray-300"
+                            className="appearance-none bg-transparent border-0 p-0 m-0 text-white hover:text-gray-300 transition-colors cursor-pointer flex items-center justify-center"
                             aria-label="Close"
                         >
                             <X className="h-4 w-4" />
-                        </Button>
+                        </button>
                     </div>
                     <div className="overflow-y-auto">
                         <Accordion type="single" collapsible className="w-full">
