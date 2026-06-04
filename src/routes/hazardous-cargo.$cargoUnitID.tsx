@@ -50,7 +50,7 @@ function HazardousCargoDetailPage() {
       <div className="flex flex-col gap-1">
         <h1 className="text-2xl font-bold text-gray-900">Hazardous Cargo Details</h1>
         <p className="text-sm text-gray-500">
-          Container {item.cargoUnitID} · Vessel {item.vesselId} · Arrival {item.arrivalDate}
+          Cargo Unit {item.cargoUnitID} · Vessel {item.vesselId} · Arrival {item.arrivalDate}
         </p>
       </div>
 
@@ -76,7 +76,7 @@ function HazardousCargoDetailPage() {
         <div className="border border-gray-200 rounded-lg p-6 bg-white flex flex-col gap-5">
           <h2 className="text-base font-semibold text-gray-900">Cargo Classification</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-            <LabeledField label="Container Number" value={item.cargoUnitID} />
+            <LabeledField label="Cargo Unit" value={item.cargoUnitID} />
             <LabeledField label="Vessel" value={item.vesselId} />
             <LabeledField label="BCO" value={item.bcoName} />
             {/* TODO: hazmatClass and unNumber are not yet in DynamoDB — populate when schema is extended. */}

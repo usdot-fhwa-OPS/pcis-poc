@@ -74,11 +74,6 @@ const items = [
     icon: TriangleAlert,
   },
   {
-    title: "Hazardous Cargo Management",
-    url: "/hazardous-cargo-manager",
-    icon: TriangleAlert,
-  },
-  {
     title: "Analytics",
     url: "/analytics",
     icon: BarChart,
@@ -123,7 +118,7 @@ export function AppSidebar() {
   }, [user]);
 
   // Define which menu items are allowed for Terminal Operator role.
-  const allowedForTerminalOperatorRole = ["Home", "Berth Reservation Management", "Available Operators", "Import Stow Plan", "Upcoming Cargo", "Reservation Status", "Analytics", "Notifications", "Hazardous Cargo Management", "Hazardous Cargo"];
+  const allowedForTerminalOperatorRole = ["Home", "Berth Reservation Management", "Available Operators", "Import Stow Plan", "Upcoming Cargo", "Reservation Status", "Analytics", "Notifications", "Hazardous Cargo"];
 
   // Define which menu items are allowed for transport-only roles (no hazardous cargo access).
   const allowedForLimitedRoles = ["Home", "Reservation Status", "Analytics", "Notifications"];
