@@ -1,0 +1,131 @@
+"use client"
+import * as React from "react"
+import { Input } from "../ui/input"
+import {
+  ColumnDef,
+  ColumnFiltersState,
+  flexRender,
+  getCoreRowModel,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  useReactTable,
+} from "@tanstack/react-table"
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "../ui/table"
+
+interface DataTableProps<TData, TValue> {
+  columns: ColumnDef<TData, TValue>[]
+  data: TData[]
+}
+
+export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData, TValue>) {
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
+  const [pagination, setPagination] = React.useState({ pageIndex: 0, pageSize: 10 })
+
+  const table = useReactTable({
+    data,
+    columns,
+    state: { columnFilters, pagination },
+    getCoreRowModel: getCoreRowModel(),
+    onPaginationChange: setPagination,
+    getFilteredRowModel: getFilteredRowModel(),
+    onColumnFiltersChange: setColumnFilters,
+    getPaginationRowModel: getPaginationRowModel(),
+  })
+
+  return (
+    <div className="mb-4 w-full border rounded-md">
+      <div className="px-3 py-2">
+        <Input
+          placeholder="Filter by Container ID..."
+          value={(table.getColumn("cargoUnitID")?.getFilterValue() as string) ?? ""}
+          onChange={(e) => table.getColumn("cargoUnitID")?.setFilterValue(e.target.value)}
+          className="max-w-sm"
+        />
+      </div>
+      <Table>
+        <TableHeader>
+          {table.getHeaderGroups().map((headerGroup) => (
+            <TableRow key={headerGroup.id} className="bg-gray-50">
+              {headerGroup.headers.map((header) => (
+                <TableHead key={header.id}>
+                  {header.isPlaceholder
+                    ? null
+                    : flexRender(header.column.columnDef.header, header.getContext())}
+                </TableHead>
+              ))}
+            </TableRow>
+          ))}
+        </TableHeader>
+        <TableBody>
+          {table.getRowModel().rows.length ? (
+            table.getRowModel().rows.map((row) => (
+              <TableRow
+                key={row.id}
+                className={
+                  (row.original as Record<string, unknown>).isCompliant === false
+                    ? "bg-red-50 border-l-2 border-l-red-400"
+                    : ""
+                }
+              >
+                {row.getVisibleCells().map((cell) => (
+                  <TableCell key={cell.id}>
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))
+          ) : (
+            <TableRow>
+              <TableCell colSpan={columns.length} className="h-24 text-center text-gray-500">
+                No hazardous cargo records found.
+              </TableCell>
+            </TableRow>
+          )}
+        </TableBody>
+      </Table>
+
+      <div className="flex items-center justify-between mt-4 px-3 pb-2">
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => table.previousPage()}
+            disabled={!table.getCanPreviousPage()}
+            className="px-3 py-1 border rounded disabled:opacity-50"
+          >
+            Previous
+          </button>
+          <button
+            onClick={() => table.nextPage()}
+            disabled={!table.getCanNextPage()}
+            className="px-3 py-1 border rounded disabled:opacity-50"
+          >
+            Next
+          </button>
+        </div>
+        <span className="text-sm">
+          Page{" "}
+          <strong>
+            {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
+          </strong>
+        </span>
+        <select
+          value={table.getState().pagination.pageSize}
+          onChange={(e) => table.setPageSize(Number(e.target.value))}
+          className="border p-1 rounded"
+        >
+          {[5, 10, 20, 50].map((size) => (
+            <option key={size} value={size}>
+              Show {size}
+            </option>
+          ))}
+        </select>
+      </div>
+    </div>
+  )
+}
