@@ -5,7 +5,7 @@ import { fetchUserAttributes } from 'aws-amplify/auth';
 import  { useEffect, useState } from 'react';
 import { SidebarProvider } from "../components/ui/sidebar";
 import { AppSidebar } from "../components/app-sidebar/app-sidebar"
-import UserButton from '../components/userButton/userButton';
+import UserHeader from '../components/user-header/userHeader';
 import '../index.css';
 import { Toaster } from 'sonner';
 import { UserContext } from '../AppContext';
@@ -66,11 +66,9 @@ function RootComponent() {
       <SidebarProvider>
         <AppSidebar />
         {userSecurityAttrubutes.given_name && <UserContext.Provider value={userSecurityAttrubutes} >  
-        <div className="flex-1">
+        <div className="flex-1 bg-gray-50">
           <Toaster position="top-center" richColors={true} expand={true} />
-          <div className="flex items-center justify-end p-4">
-            <UserButton fullName={userAttributes.fullName} role={userAttributes.role} />
-          </div>
+          <UserHeader fullName={userAttributes.fullName} role={userAttributes.role} />
          
             <Outlet /> 
             
