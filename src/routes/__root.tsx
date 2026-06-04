@@ -9,6 +9,7 @@ import UserHeader from '../components/user-header/userHeader';
 import '../index.css';
 import { Toaster } from 'sonner';
 import { UserContext } from '../AppContext';
+import { Selfhelp } from '../components/self-help/self-help';
 
 export interface UserAttributes {
   given_name?: string;
@@ -73,6 +74,7 @@ function RootComponent() {
             <Outlet /> 
             
         </div>
+        <Selfhelp />
         </UserContext.Provider>}
       </SidebarProvider>
     </div>
