@@ -25,6 +25,9 @@ export const SelfHelpPanel = ({ items }: SelfHelpPanelProps) => {
             </button>
 
             {open && (
+                <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} aria-hidden="true" />
+            )}
+            {open && (
                 <div className="fixed right-10 top-1/2 -translate-y-1/2 w-80 bg-white rounded-lg shadow-2xl z-50 overflow-hidden max-h-[70vh] flex flex-col border border-gray-200">
                     <div className="bg-gray-900 text-white px-4 py-3 flex items-center justify-between flex-shrink-0 rounded-t-lg">
                         <span className="font-semibold text-sm">Self Help</span>
