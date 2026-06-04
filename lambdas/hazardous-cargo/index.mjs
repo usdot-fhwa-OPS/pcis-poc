@@ -254,35 +254,6 @@ async function flag(event) {
   }
 }
 
-async function submitAdditionalDocument(event) {
-  const vesselId = event.queryStringParameters?.vesselId;
-  const cargoUnitID = event.queryStringParameters?.cargoUnitID;
-  const addtionalDocumentPath = event.queryStringParameters?.addtionalDocumentPath;
-  if (!vesselId || !cargoUnitID) return response(400, { message: "vesselId and cargoUnitID are required" });
-  try {
-    const status = "Pending Review";
-    const nowIso = new Date().toISOString();
-    const resp = await dynamo.send(
-      new UpdateCommand({
-        TableName: HAZARDOUS_CARGO_TABLE,
-        Key: { vesselId: vesselId, cargoUnitID: cargoUnitID },
-        UpdateExpression:
-          "SET  addtionalDocumentPath = :addtionalDocumentPath, \
-                isDocumentationComplete = :isDocumentationComplete, \
-                reviewStatus = :status, updatedAt = :updatedAt",
-        ExpressionAttributeValues: {
-          ":isDocumentationComplete": true,
-          ":addtionalDocumentPath": addtionalDocumentPath,
-          ":status": status,
-          ":updatedAt": nowIso,
-        },
-        ReturnValues: "ALL_NEW",
-      }))
-    return response(200, { message: resp.Attributes });
-  } catch (error) {
-    return response(500, { message: error });
-  }
-}
 
 async function completeDocumentCheck(event) {
   const vesselId = event.queryStringParameters?.vesselId;
