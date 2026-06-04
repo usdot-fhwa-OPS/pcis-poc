@@ -41,7 +41,7 @@ export const SelfHelpPanel = ({ items }: SelfHelpPanelProps) => {
                         <Accordion type="single" collapsible className="w-full">
                             {items.map((item, i) => (
                                 <AccordionItem key={i} value={`item-${i}`} className="px-4">
-                                    <AccordionTrigger className="py-4 text-left text-sm font-normal hover:no-underline">
+                                    <AccordionTrigger className="py-4 text-left text-sm font-normal hover:no-underline appearance-none bg-transparent">
                                         <div className="flex items-center gap-3 text-left pr-2">
                                             <item.icon className="h-4 w-4 flex-shrink-0 text-gray-500" />
                                             <span>{item.question}</span>
