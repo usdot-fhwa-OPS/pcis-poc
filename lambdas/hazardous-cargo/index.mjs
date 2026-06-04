@@ -322,15 +322,9 @@ async function approve(event) {
     const command = new TransactWriteCommand({
       TransactItems: [
         {
-          Update: {
+          Delete: {
             TableName: HAZARDOUS_CARGO_TABLE,
             Key: { vesselId: vesselId, cargoUnitID: cargoUnitID },
-            UpdateExpression:
-              "SET reviewStatus = :status, updatedAt = :updatedAt",
-            ExpressionAttributeValues: {
-              ":status": status,
-              ":updatedAt": nowIso,
-            },
             ReturnValues: "ALL_NEW",
           },
         },
@@ -411,9 +405,6 @@ export const handler = async (event) => {
         return await saveHazardousCargo(event);
       case "PUT /requestAdditionalDocument":
         return await requestAdditionalDocunent(event);
-      case "PUT /flag":
-        return await flag(event);
-      case "PUT /approve":
       case "PUT /flag":
         return await flag(event);
       case "PUT /approve":
