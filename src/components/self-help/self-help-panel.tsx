@@ -19,7 +19,7 @@ export const SelfHelpPanel = ({ items }: SelfHelpPanelProps) => {
         <>
             <button
                 onClick={() => setOpen(o => !o)}
-                className="fixed right-0 top-1/2 -translate-y-1/2 z-50 bg-gray-900 text-white px-2 py-5 rounded-l-lg [writing-mode:vertical-lr] text-sm font-medium hover:bg-gray-800 transition-colors cursor-pointer"
+                className="fixed right-0 top-1/2 -translate-y-1/2 z-50 bg-gray-900 text-white border-0 px-2 py-5 rounded-l-lg [writing-mode:vertical-lr] text-sm font-medium hover:bg-gray-800 transition-colors cursor-pointer"
             >
                 Self Help
             </button>
@@ -30,7 +30,7 @@ export const SelfHelpPanel = ({ items }: SelfHelpPanelProps) => {
                         <span className="font-semibold text-sm">Self Help</span>
                         <button
                             onClick={() => setOpen(false)}
-                            className="hover:text-gray-300 transition-colors cursor-pointer"
+                            className="bg-transparent border-0 p-1 rounded text-white hover:text-gray-300 transition-colors cursor-pointer leading-none"
                             aria-label="Close"
                         >
                             <X className="h-4 w-4" />
