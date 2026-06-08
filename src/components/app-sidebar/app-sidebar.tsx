@@ -1,4 +1,4 @@
-import { FileUp, Home, Ship, User , CalendarClock, BarChart, Anchor, Container, TriangleAlert } from "lucide-react"
+import { FileUp, Home, Ship, User , CalendarClock, BarChart, Anchor, Container, TriangleAlert, Gauge } from "lucide-react"
 
 import {
   Sidebar,
@@ -79,6 +79,11 @@ const items = [
     icon: BarChart,
   },
   {
+    title: "Capacity Planning",
+    url: "/capacity",
+    icon: Gauge,
+  },
+  {
     title: "Berth Reservations",
     url: "/berth-vessel",
     icon: Anchor,
@@ -118,7 +123,7 @@ export function AppSidebar() {
   }, [user]);
 
   // Define which menu items are allowed for Terminal Operator role.
-  const allowedForTerminalOperatorRole = ["Home", "Berth Reservation Management", "Available Operators", "Import Stow Plan", "Upcoming Cargo", "Reservation Status", "Analytics", "Notifications", "Hazardous Cargo"];
+  const allowedForTerminalOperatorRole = ["Home", "Berth Reservation Management", "Available Operators", "Import Stow Plan", "Upcoming Cargo", "Reservation Status", "Analytics", "Capacity Planning", "Notifications", "Hazardous Cargo"];
 
   // Define which menu items are allowed for transport-only roles (no hazardous cargo access).
   const allowedForLimitedRoles = ["Home", "Reservation Status", "Analytics", "Notifications"];

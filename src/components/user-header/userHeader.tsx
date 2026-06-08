@@ -3,7 +3,6 @@ import { Avatar, AvatarFallback } from "../ui/avatar";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { Selfhelp } from '../self-help/self-help';
-import SettingsButton from '../settings/settingsButton';
 import { Bell, Mail } from "lucide-react"
 import './userHeaderStyles.css';
 
@@ -54,7 +53,6 @@ const UserHeader: React.FC<UserHeaderProps> = ({ fullName, role }) => {
                     <span className="sr-only">New Notification</span>
                 </Badge>
             </Button>
-            <SettingsButton role={role} />
             <div className="user-info">
                 <div className="user-info-name">
                     <span>{fullName}</span>
