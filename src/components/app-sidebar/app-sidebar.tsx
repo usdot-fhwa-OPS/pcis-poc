@@ -39,6 +39,11 @@ const items = [
     icon: Home,
   },
   {
+    title: "Capacity Planning",
+    url: "/capacity",
+    icon: Gauge,
+  },
+  {
     title: "Berth Requests",
     url: "/berth-requests",
     icon: Ship,
@@ -77,11 +82,6 @@ const items = [
     title: "Analytics",
     url: "/analytics",
     icon: BarChart,
-  },
-  {
-    title: "Capacity Planning",
-    url: "/capacity",
-    icon: Gauge,
   },
   {
     title: "Berth Reservations",
