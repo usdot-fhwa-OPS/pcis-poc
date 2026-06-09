@@ -11,6 +11,7 @@ import {
   DialogTrigger,
 } from "../ui/dialog"
 import "./terminal-capacity.css"
+import { Trash2 } from "lucide-react"
 import { deleteTerminalCapacity, terminalCapacityList } from "./terminal-capacity-client"
 import { useAppDispatch } from "../../hooks"
 import { populate } from "./terminal-capacity-state"
@@ -30,9 +31,10 @@ export function DeleteTerminalCapacityButton(terminalCapacityUid:string) {
     
     return (
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogTrigger>
-            <Button variant="destructive">
-              Delete
+        <DialogTrigger asChild>
+            <Button variant="ghost" size="icon" className="text-red-600 hover:text-red-700 hover:bg-red-50">
+              <Trash2 className="h-4 w-4" />
+              <span className="sr-only">Delete</span>
             </Button>
         </DialogTrigger>
         <DialogContent>

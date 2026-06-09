@@ -5,7 +5,7 @@ import { Button } from "../ui/button";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { Calendar } from "../ui/calendar";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, Pencil } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import { cn } from "../../lib/utils";
 import { format } from "date-fns"
@@ -274,18 +274,11 @@ const [endTime, setEndTime] = useState<string | undefined>(timeOptions[0])
     
                 }}
             >
-                <DialogTrigger>
-                    <TooltipProvider>
-                        <Tooltip delayDuration={300}>
-                            <TooltipTrigger>
-                                <div>
-                                    <Button onClick={handleOpen}>Edit</Button>
-    
-                                </div>
-                            </TooltipTrigger>
-    
-                        </Tooltip>
-                    </TooltipProvider>
+                <DialogTrigger asChild>
+                    <Button variant="ghost" size="icon" onClick={handleOpen} className="text-blue-600 hover:text-blue-700 hover:bg-blue-50">
+                        <Pencil className="h-4 w-4" />
+                        <span className="sr-only">Edit</span>
+                    </Button>
                 </DialogTrigger>
                 <DialogContent className="DialogContent">
                     <div className="grid grid-cols-5 gap-2">
