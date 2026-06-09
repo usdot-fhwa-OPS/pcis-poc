@@ -8,6 +8,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
+  DialogTrigger,
 } from "../ui/dialog"
 import "./terminal-capacity.css"
 import { Trash2 } from "lucide-react"
@@ -29,12 +30,13 @@ export function DeleteTerminalCapacityButton(terminalCapacityUid:string) {
         }
     
     return (
-      <>
-        <Button variant="ghost" size="icon" onClick={() => setOpen(true)} className="text-red-600 hover:text-red-700 hover:bg-red-50">
-          <Trash2 className="h-4 w-4" />
-          <span className="sr-only">Delete</span>
-        </Button>
       <Dialog open={open} onOpenChange={setOpen}>
+        <DialogTrigger render={
+          <Button variant="ghost" size="icon" className="text-red-600 hover:text-red-700 hover:bg-red-50">
+            <Trash2 className="h-4 w-4" />
+            <span className="sr-only">Delete</span>
+          </Button>
+        } />
         <DialogContent>
             <DialogHeader className="p-4 border-b">
               <DialogTitle>CONFIRMATION REQUIRED</DialogTitle>
@@ -52,6 +54,5 @@ export function DeleteTerminalCapacityButton(terminalCapacityUid:string) {
             </DialogFooter>
         </DialogContent>
       </Dialog>
-      </>
     )
-  }  
+  }

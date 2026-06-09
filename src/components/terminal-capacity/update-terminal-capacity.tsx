@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "../ui/dialog";
+import React, { useState } from "react";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
 import { Button } from "../ui/button";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
@@ -266,16 +266,18 @@ const [endTime, setEndTime] = useState<string | undefined>(timeOptions[0])
   
     return (
             <>
-                <Button variant="ghost" size="icon" onClick={handleOpen} className="text-blue-600 hover:text-blue-700 hover:bg-blue-50">
-                    <Pencil className="h-4 w-4" />
-                    <span className="sr-only">Edit</span>
-                </Button>
              <Dialog
                 open={isDialogOpen}
                 onOpenChange={(open) => {
                     setIsDialogOpen(open)
                 }}
             >
+                <DialogTrigger render={
+                    <Button variant="ghost" size="icon" onClick={handleOpen} className="text-blue-600 hover:text-blue-700 hover:bg-blue-50">
+                        <Pencil className="h-4 w-4" />
+                        <span className="sr-only">Edit</span>
+                    </Button>
+                } />
                 <DialogContent className="DialogContent">
                     <div className="grid grid-cols-5 gap-2">
                         <div className="h-10 col-span-3 col-start-1 ...">
