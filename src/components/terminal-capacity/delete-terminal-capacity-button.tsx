@@ -11,7 +11,6 @@ import {
   DialogTrigger,
 } from "../ui/dialog"
 import "./terminal-capacity.css"
-import { Trash2 } from "lucide-react"
 import { deleteTerminalCapacity, terminalCapacityList } from "./terminal-capacity-client"
 import { useAppDispatch } from "../../hooks"
 import { populate } from "./terminal-capacity-state"
