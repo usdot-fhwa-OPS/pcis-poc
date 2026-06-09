@@ -32,7 +32,7 @@ export const columns: ColumnDef<TerminalCapacityDomain>[] = [
     id: "actions",
     header: "Actions",
     cell: ({ row }) => (
-      <div className="flex items-center gap-1">
+      <div className="flex items-center gap-4">
         {UpdateTerminalCapacity(row.original.capacityId)}
         {DeleteTerminalCapacityButton(row.original.capacityId)}
       </div>
