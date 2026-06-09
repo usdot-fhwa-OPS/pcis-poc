@@ -273,9 +273,13 @@ const [endTime, setEndTime] = useState<string | undefined>(timeOptions[0])
                 }}
             >
                 <DialogTrigger render={
-                    <Button variant="ghost" size="icon" onClick={handleOpen} className="text-blue-600 hover:text-blue-700 hover:bg-blue-50">
-                        <Pencil className="h-4 w-4" />
-                        <span className="sr-only">Edit</span>
+                    <Button
+                              size="sm"
+                              variant="link"
+                              className="text-blue-600 p-0 h-auto"
+                              onClick={handleOpen}
+                            >
+                              Modify
                     </Button>
                 } />
                 <DialogContent className="DialogContent">
