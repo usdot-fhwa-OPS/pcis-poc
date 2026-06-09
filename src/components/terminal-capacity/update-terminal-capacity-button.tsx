@@ -8,7 +8,6 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "../ui/dialog"
 import { Label } from "../ui/label"
 import "./terminal-capacity.css"
@@ -52,12 +51,11 @@ export function UpdateTerminalCapacityButton({maxTerminalCapacity}: {maxTerminal
   }
 
     return (
-      <Dialog open={open} onOpenChange={setOpen}>
-        <DialogTrigger asChild>
-            <button className="text-blue-600 hover:text-blue-800 text-sm font-medium underline-offset-2 hover:underline bg-transparent border-none cursor-pointer p-0">
-              Update
-            </button>
-        </DialogTrigger>
+      <>
+        <button onClick={() => setOpen(true)} className="text-blue-600 hover:text-blue-800 text-sm font-medium underline-offset-2 hover:underline bg-transparent border-none cursor-pointer p-0">
+          Update
+        </button>
+        <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent>
             <form onSubmit={handleSubmit}>
               <DialogHeader>
@@ -89,5 +87,6 @@ export function UpdateTerminalCapacityButton({maxTerminalCapacity}: {maxTerminal
             </form>
         </DialogContent>
       </Dialog>
+      </>
     )
-  }  
+  }
