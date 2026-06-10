@@ -1,5 +1,8 @@
 .four-chars {
-    width: 4ch;
+    width: 6ch;
+    padding: 0.25rem 0.5rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.375rem;
 }
 .center-text {
     text-align: center;
