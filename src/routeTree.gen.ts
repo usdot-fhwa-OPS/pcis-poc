@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as VesselActivityRouteImport } from './routes/vessel-activity'
 import { Route as ReservationRouteImport } from './routes/reservation'
 import { Route as OperatorsRouteImport } from './routes/operators'
 import { Route as NotificationsRouteImport } from './routes/notifications'
@@ -26,6 +27,11 @@ import { Route as AnalyticsRouteImport } from './routes/analytics'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as HazardousCargoCargoUnitIDRouteImport } from './routes/hazardous-cargo.$cargoUnitID'
 
+const VesselActivityRoute = VesselActivityRouteImport.update({
+  id: '/vessel-activity',
+  path: '/vessel-activity',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ReservationRoute = ReservationRouteImport.update({
   id: '/reservation',
   path: '/reservation',
@@ -125,6 +131,7 @@ export interface FileRoutesByFullPath {
   '/notifications': typeof NotificationsRoute
   '/operators': typeof OperatorsRoute
   '/reservation': typeof ReservationRoute
+  '/vessel-activity': typeof VesselActivityRoute
   '/hazardous-cargo/$cargoUnitID': typeof HazardousCargoCargoUnitIDRoute
 }
 export interface FileRoutesByTo {
@@ -143,6 +150,7 @@ export interface FileRoutesByTo {
   '/notifications': typeof NotificationsRoute
   '/operators': typeof OperatorsRoute
   '/reservation': typeof ReservationRoute
+  '/vessel-activity': typeof VesselActivityRoute
   '/hazardous-cargo/$cargoUnitID': typeof HazardousCargoCargoUnitIDRoute
 }
 export interface FileRoutesById {
@@ -162,6 +170,7 @@ export interface FileRoutesById {
   '/notifications': typeof NotificationsRoute
   '/operators': typeof OperatorsRoute
   '/reservation': typeof ReservationRoute
+  '/vessel-activity': typeof VesselActivityRoute
   '/hazardous-cargo/$cargoUnitID': typeof HazardousCargoCargoUnitIDRoute
 }
 export interface FileRouteTypes {
@@ -182,6 +191,7 @@ export interface FileRouteTypes {
     | '/notifications'
     | '/operators'
     | '/reservation'
+    | '/vessel-activity'
     | '/hazardous-cargo/$cargoUnitID'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -197,6 +207,7 @@ export interface FileRouteTypes {
     | '/hazardous-cargo'
     | '/hazardous-cargo-manager'
     | '/import'
+    | '/vessel-activity'
     | '/notifications'
     | '/operators'
     | '/reservation'
@@ -218,6 +229,7 @@ export interface FileRouteTypes {
     | '/notifications'
     | '/operators'
     | '/reservation'
+    | '/vessel-activity'
     | '/hazardous-cargo/$cargoUnitID'
   fileRoutesById: FileRoutesById
 }
@@ -237,10 +249,18 @@ export interface RootRouteChildren {
   NotificationsRoute: typeof NotificationsRoute
   OperatorsRoute: typeof OperatorsRoute
   ReservationRoute: typeof ReservationRoute
+  VesselActivityRoute: typeof VesselActivityRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/vessel-activity': {
+      id: '/vessel-activity'
+      path: '/vessel-activity'
+      fullPath: '/vessel-activity'
+      preLoaderRoute: typeof VesselActivityRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/reservation': {
       id: '/reservation'
       path: '/reservation'
@@ -384,6 +404,7 @@ const rootRouteChildren: RootRouteChildren = {
   NotificationsRoute: NotificationsRoute,
   OperatorsRoute: OperatorsRoute,
   ReservationRoute: ReservationRoute,
+  VesselActivityRoute: VesselActivityRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

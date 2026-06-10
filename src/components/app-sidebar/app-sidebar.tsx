@@ -1,4 +1,4 @@
-import { FileUp, Home, Ship, User , CalendarClock, BarChart, Anchor, Container, TriangleAlert, Gauge } from "lucide-react"
+import { FileUp, Home, Ship, User , CalendarClock, BarChart, Anchor, Container, TriangleAlert, Gauge, Activity } from "lucide-react"
 
 import {
   Sidebar,
@@ -42,6 +42,11 @@ const items = [
     title: "Capacity Planning",
     url: "/capacity",
     icon: Gauge,
+  },
+  {
+    title: "Vessel Activity",
+    url: "/vessel-activity",
+    icon: Activity,
   },
   {
     title: "Berth Requests",
@@ -123,7 +128,7 @@ export function AppSidebar() {
   }, [user]);
 
   // Define which menu items are allowed for Terminal Operator role.
-  const allowedForTerminalOperatorRole = ["Home", "Berth Reservation Management", "Available Operators", "Import Stow Plan", "Upcoming Cargo", "Reservation Status", "Analytics", "Capacity Planning", "Notifications", "Hazardous Cargo"];
+  const allowedForTerminalOperatorRole = ["Home", "Berth Reservation Management", "Available Operators", "Import Stow Plan", "Upcoming Cargo", "Reservation Status", "Analytics", "Capacity Planning", "Notifications", "Hazardous Cargo", "Vessel Activity"];
 
   // Define which menu items are allowed for transport-only roles (no hazardous cargo access).
   const allowedForLimitedRoles = ["Home", "Reservation Status", "Analytics", "Notifications"];
@@ -132,7 +137,7 @@ export function AppSidebar() {
   const allowedForBCORole = ["Home", "Reservation Status", "Analytics", "Notifications", "Hazardous Cargo"];
 
   // Define which menu items are allowed for Vessel Agent Role.
-  const allowedForVesselAgentRole = ["Home", "Notifications", "Berth Requests", "Berth Reservations", "Hazardous Cargo"];
+  const allowedForVesselAgentRole = ["Home", "Notifications", "Berth Requests", "Berth Reservations", "Hazardous Cargo", "Vessel Activity"];
 
   // Filter menu items based on the custom role.
   const filteredItems = items.filter((item) => {
