@@ -5,34 +5,22 @@ import { UpdateTerminalCapacity } from "../terminal-capacity/update-terminal-cap
 import { DeleteTerminalCapacityButton } from "../terminal-capacity/delete-terminal-capacity-button"
 import { TerminalCapacityDomain } from "../terminal-capacity/terminal-capacity-domain"
 
-//Four Imports needed for Amplify Data Queries and CRUD methods
-
-//const client = generateClient<Schema>();
-
-//Define the selection of data that will be used for the table (type exported from cargo.tsx in this case)
 export const columns: ColumnDef<TerminalCapacityDomain>[] = [
-  // Define the columns for the table based on the database items (refer to resources.ts for schema names)
   {
-    accessorKey: "capacity", 
+    accessorKey: "capacity",
     header: "Capacity",
   },
   {
-    accessorKey: "startDate",
-    header: "Start Date",
-  },
-   {
-    accessorKey: "startTime",
-    header: "Start Time",
+    id: "startDateTime",
+    header: "Start Date/Time",
+    cell: ({ row }) => `${row.original.startDate ?? ""} ${row.original.startTime ?? ""}`.trim(),
   },
   {
-    accessorKey: "endDate",
-    header: "End Date",
+    id: "endDateTime",
+    header: "End Date/Time",
+    cell: ({ row }) => `${row.original.endDate ?? ""} ${row.original.endTime ?? ""}`.trim(),
   },
-   {
-    accessorKey: "endTime",
-    header: "End Time",
-  },
- {
+  {
     accessorKey: "repeat",
     header: "Repeat",
   },
@@ -41,14 +29,13 @@ export const columns: ColumnDef<TerminalCapacityDomain>[] = [
     header: "Reason",
   },
   {
-          accessorKey: "actions",
-          header: () => <div style={{ minWidth: "50px"}}>Actions</div>,
-          cell: ({ row }) => (
-            <div className="flex space-x-8 ">
-              {UpdateTerminalCapacity(row.original.capacityId)}
-              {DeleteTerminalCapacityButton(row.original.capacityId)}
-            </div>
-          ),
-          
-        },
+    id: "actions",
+    header: "Actions",
+    cell: ({ row }) => (
+      <div className="flex items-center gap-4">
+        {UpdateTerminalCapacity(row.original.capacityId)}
+        {DeleteTerminalCapacityButton(row.original.capacityId)}
+      </div>
+    ),
+  },
 ]

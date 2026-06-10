@@ -1,6 +1,5 @@
-import React, {useState } from "react";
+import React, { useState } from "react";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
-import { Tooltip, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
 import { Button } from "../ui/button";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
@@ -271,22 +270,18 @@ const [endTime, setEndTime] = useState<string | undefined>(timeOptions[0])
                 open={isDialogOpen}
                 onOpenChange={(open) => {
                     setIsDialogOpen(open)
-    
                 }}
             >
-                <DialogTrigger>
-                    <TooltipProvider>
-                        <Tooltip delayDuration={300}>
-                            <TooltipTrigger>
-                                <div>
-                                    <Button onClick={handleOpen}>Edit</Button>
-    
-                                </div>
-                            </TooltipTrigger>
-    
-                        </Tooltip>
-                    </TooltipProvider>
-                </DialogTrigger>
+                <DialogTrigger render={
+                    <Button
+                              size="sm"
+                              variant="link"
+                              className="text-blue-600 p-0 h-auto"
+                              onClick={handleOpen}
+                            >
+                              Modify
+                    </Button>
+                } />
                 <DialogContent className="DialogContent">
                     <div className="grid grid-cols-5 gap-2">
                         <div className="h-10 col-span-3 col-start-1 ...">
