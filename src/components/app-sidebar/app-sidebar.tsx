@@ -1,4 +1,4 @@
-import { FileUp, Home, Ship, User , CalendarClock, BarChart, Anchor, Container, TriangleAlert, Gauge, Activity } from "lucide-react"
+import { FileUp, Home, Ship, User , CalendarClock, BarChart, Anchor, Container, TriangleAlert, Gauge } from "lucide-react"
 
 import {
   Sidebar,
@@ -46,7 +46,7 @@ const items = [
   {
     title: "Vessel Activity",
     url: "/vessel-activity",
-    icon: Activity,
+    icon: Ship,
   },
   {
     title: "Berth Requests",

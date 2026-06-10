@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router"
 import { useContext, useEffect, useState } from "react"
-import { Activity } from "lucide-react"
+import { Ship } from "lucide-react"
 import { BerthRequestDomain } from "../components/berth-requests/berth-request-domain"
 import {
   berthRequestList,
@@ -55,7 +55,7 @@ function VesselActivityPage() {
       {/* Page header */}
       <div className="flex flex-col gap-1">
         <div className="flex items-center gap-2">
-          <Activity className="h-6 w-6 text-gray-700" />
+          <Ship className="h-6 w-6 text-gray-700" />
           <h1 className="text-2xl font-bold text-gray-900">Vessel Activity</h1>
         </div>
         <p className="text-sm text-gray-500">

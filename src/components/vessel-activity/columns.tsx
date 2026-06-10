@@ -130,9 +130,8 @@ export const columns: ColumnDef<BerthRequestDomain>[] = [
     id: "vessel",
     header: "VESSEL / VA",
     cell: ({ row }) => (
-      <div className="min-w-[160px]">
-        <div className="font-semibold text-gray-900 text-sm">{row.original.vesselID}</div>
-        <div className="text-xs text-gray-500 mt-0.5">VA: {row.original.vesselAgentEmail}</div>
+      <div className="font-semibold text-gray-900 text-sm whitespace-nowrap">
+        {row.original.vesselID}
       </div>
     ),
   },
