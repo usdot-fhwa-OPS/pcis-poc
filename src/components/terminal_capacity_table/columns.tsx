@@ -9,9 +9,6 @@ export const columns: ColumnDef<TerminalCapacityDomain>[] = [
   {
     accessorKey: "capacity",
     header: "Capacity",
-    cell: ({ row }) => (
-      <div className="text-center">{row.original.capacity}</div>
-    ),
   },
   {
     id: "startDateTime",
