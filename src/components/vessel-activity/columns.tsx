@@ -180,7 +180,7 @@ export const columns: ColumnDef<BerthRequestDomain>[] = [
       const designation = row.original.berthAssignment?.designation
       if (!designation) {
         return (
-          <span className="inline-flex px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-700">
+          <span className="inline-flex whitespace-nowrap px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-700">
             Berth Pending
           </span>
         )

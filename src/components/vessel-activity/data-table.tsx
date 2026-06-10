@@ -42,7 +42,8 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
   const pageCount = table.getPageCount()
 
   return (
-    <div className="w-full border rounded-md">
+    <div className="w-full border rounded-md overflow-hidden">
+      <div className="overflow-x-auto">
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
@@ -77,6 +78,7 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
           )}
         </TableBody>
       </Table>
+      </div>
 
       <div className="flex items-center justify-between px-4 py-3 border-t text-sm text-gray-600">
         <span>{firstRow} - {lastRow} of {totalRows} items</span>
