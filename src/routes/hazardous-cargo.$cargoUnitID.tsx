@@ -1,6 +1,5 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { ArrowLeft, CheckCircle, XCircle } from 'lucide-react'
-import { dummyHazardousCargoData } from '../components/hazardous-cargo/hazardous-cargo-dummy-data'
 import { HazardousCargoItem } from '../components/hazardous-cargo/hazardous-cargo-types'
 import { useAppSelector } from '../hooks'
 import { getHazardousCargoList } from '../components/hazardous-cargo/hazardous-cargo-state'
