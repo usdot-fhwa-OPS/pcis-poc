@@ -2,6 +2,13 @@ import { createFileRoute, Link } from '@tanstack/react-router'
 import { ArrowLeft, CheckCircle, XCircle } from 'lucide-react'
 import { dummyHazardousCargoData } from '../components/hazardous-cargo/hazardous-cargo-dummy-data'
 import { HazardousCargoItem } from '../components/hazardous-cargo/hazardous-cargo-types'
+import { useAppSelector } from '../hooks'
+import { getHazardousCargoList } from '../components/hazardous-cargo/hazardous-cargo-state'
+import { UserContext } from '../AppContext'
+import React, { useContext } from 'react'
+import { Checkbox } from '../components/ui/checkbox'
+import { CheckedState } from '@radix-ui/react-checkbox'
+import { completeDocumentCheck } from '../components/hazardous-cargo/hazardous-cargos-client'
 
 export const Route = createFileRoute('/hazardous-cargo/$cargoUnitID')({
   component: HazardousCargoDetailPage,
@@ -19,10 +26,17 @@ function LabeledField({ label, value }: { label: string; value: string }) {
 function HazardousCargoDetailPage() {
   const { cargoUnitID } = Route.useParams()
 
+    const userContext = useContext(UserContext);
+    const userRole = userContext["custom:role"];
+  
+
+  const hazCargoList = useAppSelector(getHazardousCargoList)
+  
+
   // TODO: Replace dummy data lookup with a DynamoDB query via Amplify once the
   // HazardousCargo model is available. Example:
   //   const { data: item } = await client.models.HazardousCargo.get({ cargoUnitID }, { authMode: 'apiKey' })
-  const item: HazardousCargoItem | undefined = dummyHazardousCargoData.find(
+  const item: HazardousCargoItem | undefined = hazCargoList.find(
     (d) => d.cargoUnitID === cargoUnitID
   )
 
@@ -38,6 +52,15 @@ function HazardousCargoDetailPage() {
   }
 
   const isNonCompliant = !item.isCompliant
+  const [documentsChecked, setDocumentsChecked] = React.useState<CheckedState>(item.documentsChecked)
+
+  async function onDocumentChecked(state: CheckedState) {
+    if (item && state) {
+      await completeDocumentCheck(item?.vesselId, item?.cargoUnitID);
+      setDocumentsChecked(state);
+
+    }
+  }
 
   return (
     <div className="w-full px-6 py-6 md:px-10 md:py-8 flex flex-col gap-5">
@@ -107,7 +130,9 @@ function HazardousCargoDetailPage() {
                 {item.documentsChecked ? (
                   <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0" />
                 ) : (
-                  <div className="h-5 w-5 rounded border-2 border-gray-300 flex-shrink-0" />
+                  ((userRole === 'Vessel Agent')  || (userRole === 'Beneficiary Cargo Owner'))?
+                  (<Checkbox checked={documentsChecked} onCheckedChange={(state: CheckedState)=>onDocumentChecked(state)} />):
+                  (<div className="h-5 w-5 rounded border-2 border-gray-300 flex-shrink-0" />)
                 )}
               </div>
               <div className="flex flex-col gap-0.5">
