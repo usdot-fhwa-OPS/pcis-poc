@@ -1,3 +1,4 @@
+import { useNavigate } from '@tanstack/react-router'
 
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import { Badge } from "../ui/badge";
@@ -34,6 +35,11 @@ const UserHeader: React.FC<UserHeaderProps> = ({ fullName, role }) => {
     };
 
     const bgColor = getAvatarColor(fullName);
+
+    const navigate = useNavigate();
+    const navigateToNotifications = () => {
+        navigate({ to: "/notifications" });
+    }
     
     return (
     <>
@@ -46,7 +52,7 @@ const UserHeader: React.FC<UserHeaderProps> = ({ fullName, role }) => {
                     <span className="sr-only">New Message</span>
                 </Badge>
             </Button>
-            <Button variant="ghost" size="icon" className="gap-0 w-11 [&_svg]:size-5">
+            <Button onClick={navigateToNotifications} variant="ghost" size="icon" className="gap-0 w-11 [&_svg]:size-5">
                 <Bell />
                 <span className="sr-only">Open Notifications</span>
                 <Badge variant="destructive" className="self-start h-2 w-2 rounded-full mt-1 p-0 shadow-none">
