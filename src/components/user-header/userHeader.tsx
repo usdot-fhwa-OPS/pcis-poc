@@ -48,7 +48,7 @@ const UserHeader: React.FC<UserHeaderProps> = ({ fullName, role }) => {
 
     const navigate = useNavigate();
     const navigateToNotifications = () => {
-        navigate({ to: "/notifications", role: role, notifications: userNotifications });
+        navigate({ to: "/notifications", state: { userNotifications, role } });
     }
     
     return (
