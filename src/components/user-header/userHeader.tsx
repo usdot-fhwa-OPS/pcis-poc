@@ -1,7 +1,5 @@
 import { useNavigate } from '@tanstack/react-router'
 
-import { useState } from "react";
-
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
@@ -9,16 +7,10 @@ import { Selfhelp } from '../self-help/self-help';
 import { Bell, Mail } from "lucide-react"
 import './userHeaderStyles.css';
 
-import { SelectionSet } from 'aws-amplify/data';
-import type { Schema } from '../../../amplify/data/resource';
-
 interface UserHeaderProps {
   fullName: string;
   role: string;
 }
-
-const selectionSet = ['cargoUnitID', 'reservationStatus', "updatedAt", "isBCONotify", "isTransportationNotify"] as const; 
-export type Notifications = SelectionSet<Schema['Container']['type'], typeof selectionSet> 
 
 // Notifications and Messages buttons: when adding logic for red badges use width classes 
 // below in terenary statements with w-9 to adjust button width when displaying a badge
@@ -44,11 +36,9 @@ const UserHeader: React.FC<UserHeaderProps> = ({ fullName, role }) => {
 
     const bgColor = getAvatarColor(fullName);
 
-    const [userNotifications] = useState<Notifications[]>([]);
-
     const navigate = useNavigate();
     const navigateToNotifications = () => {
-        navigate({ to: "/notifications", state: { userNotifications, role } });
+        navigate({ to: "/notifications" });
     }
     
     return (
