@@ -1,21 +1,19 @@
 import { BerthRequestDomain } from "../berth-requests/berth-request-domain"
 
-export type ManifestDisplayStatus = "Submitted" | "Pending" | "Rejected" | "Cleared"
-export type VesselDisplayStatus = "Awaiting" | "Processing" | "On Hold" | "Returned" | "Cleared"
-
-export function getManifestStatus(req: BerthRequestDomain): ManifestDisplayStatus {
+// Returns "Cleared" | "X Hazmat" | "Submitted" | "" for the MANIFEST column.
+// hazmatCount must be passed in from the caller once the backend provides it.
+// TODO: Derive hazmatCount from BerthRequestDomain when that field is available.
+export function getManifestDisplay(req: BerthRequestDomain, hazmatCount = 0): string {
   if (req.ataAt && req.atdAt) return "Cleared"
-  if (req.status === "DENIED") return "Rejected"
+  if (hazmatCount > 0) return `${hazmatCount} Hazmat`
   if (req.manifestFileName) return "Submitted"
-  return "Pending"
+  return ""
 }
 
-export function getVesselDisplayStatus(req: BerthRequestDomain): VesselDisplayStatus {
+// Returns null (= Berth Pending), "Cleared", or the berth designation for the BERTH column.
+export function getBerthDisplay(req: BerthRequestDomain): string | null {
   if (req.ataAt && req.atdAt) return "Cleared"
-  if (req.status === "DENIED") return "Returned"
-  if (req.status === "MODIFIED") return "On Hold"
-  if (req.status === "APPROVED") return "Processing"
-  return "Awaiting"
+  return req.berthAssignment?.designation || null
 }
 
 export function isVesselArchived(req: BerthRequestDomain): boolean {
@@ -23,9 +21,11 @@ export function isVesselArchived(req: BerthRequestDomain): boolean {
 }
 
 export function isBerthPending(req: BerthRequestDomain): boolean {
-  return !req.berthAssignment?.designation
+  return !req.berthAssignment?.designation && !isVesselArchived(req)
 }
 
-export function needsAttention(req: BerthRequestDomain): boolean {
-  return req.status === "DENIED" || req.status === "MODIFIED"
+// Needs attention = has hazmat items in the manifest.
+// TODO: Pass actual hazmatCount when available from the backend.
+export function needsAttention(req: BerthRequestDomain, hazmatCount = 0): boolean {
+  return hazmatCount > 0
 }

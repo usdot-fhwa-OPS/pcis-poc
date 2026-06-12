@@ -2,7 +2,7 @@ import { useMemo, useState } from "react"
 import { Search } from "lucide-react"
 import { BerthRequestDomain } from "../berth-requests/berth-request-domain"
 import { isVesselArchived, isBerthPending, needsAttention } from "./vessel-activity-types"
-import { columns } from "./columns"
+import { allColumns, inboundColumns, outboundColumns } from "./columns"
 import { DataTable } from "./data-table"
 import { Checkbox } from "../ui/checkbox"
 
@@ -25,27 +25,27 @@ export function VesselActivityTable({ data }: VesselActivityTableProps) {
   const [includeArchived, setIncludeArchived] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
 
-  // Base data: apply archived filter.
-  // TODO: Apply direction (inbound/outbound) filter once the backend provides a direction field.
+  // Base data: archived filter applied.
   const baseData = useMemo(() => {
     if (includeArchived) return data
     return data.filter((r) => !isVesselArchived(r))
   }, [data, includeArchived])
 
-  // Chip counts computed from base data (before chip filter, after archived filter).
+  // Chip counts from base data (before chip filter).
+  // TODO: Pass real hazmatCount per item once the backend provides it.
   const counts = useMemo(() => ({
     all: baseData.length,
-    needsAttention: baseData.filter(needsAttention).length,
+    needsAttention: baseData.filter((r) => needsAttention(r, 0)).length,
     berthPending: baseData.filter(isBerthPending).length,
     cleared: baseData.filter(isVesselArchived).length,
   }), [baseData])
 
-  // Final displayed data: base + chip filter + search.
+  // Final data: base + chip filter + vessel search.
   const filteredData = useMemo(() => {
     let d = baseData
 
     if (activeFilter === "needs-attention") {
-      d = d.filter(needsAttention)
+      d = d.filter((r) => needsAttention(r, 0))
     } else if (activeFilter === "berth-pending") {
       d = d.filter(isBerthPending)
     } else if (activeFilter === "cleared") {
@@ -54,11 +54,7 @@ export function VesselActivityTable({ data }: VesselActivityTableProps) {
 
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase()
-      d = d.filter(
-        (r) =>
-          r.vesselID?.toLowerCase().includes(q) ||
-          r.vesselAgentEmail?.toLowerCase().includes(q)
-      )
+      d = d.filter((r) => r.vesselID?.toLowerCase().includes(q))
     }
 
     return d
@@ -70,6 +66,11 @@ export function VesselActivityTable({ data }: VesselActivityTableProps) {
     { key: "berth-pending", label: "Berth Pending", count: counts.berthPending },
     { key: "cleared", label: "Cleared", count: counts.cleared },
   ]
+
+  const activeColumns =
+    activeTab === "inbound" ? inboundColumns
+    : activeTab === "outbound" ? outboundColumns
+    : allColumns
 
   return (
     <div className="flex flex-col gap-4">
@@ -126,17 +127,17 @@ export function VesselActivityTable({ data }: VesselActivityTableProps) {
             <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
             <input
               type="text"
-              placeholder="Search vessels or VAs..."
+              placeholder="Search vessels..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-8 pr-3 py-1.5 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent w-56"
+              className="pl-8 pr-3 py-1.5 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent w-48"
             />
           </div>
         </div>
       </div>
 
-      {/* Table */}
-      <DataTable columns={columns} data={filteredData} />
+      {/* Table — columns change per tab */}
+      <DataTable columns={activeColumns} data={filteredData} />
     </div>
   )
 }

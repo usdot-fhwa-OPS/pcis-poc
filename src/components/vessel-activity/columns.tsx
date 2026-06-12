@@ -1,15 +1,16 @@
 import { ColumnDef } from "@tanstack/react-table"
 import { useState } from "react"
 import { format } from "date-fns"
-import { CalendarIcon } from "lucide-react"
+import { CalendarIcon, TriangleAlert } from "lucide-react"
 import { Button } from "../ui/button"
+import { Badge } from "../ui/badge"
 import { Calendar } from "../ui/calendar"
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip"
 import { cn } from "../../lib/utils"
 import { BerthRequestDomain } from "../berth-requests/berth-request-domain"
-import { getManifestStatus, getVesselDisplayStatus } from "./vessel-activity-types"
+import { getManifestDisplay, getBerthDisplay } from "./vessel-activity-types"
 
 const TIME_OPTIONS = [
   "12:00 AM", "01:00 AM", "02:00 AM", "03:00 AM", "04:00 AM", "05:00 AM",
@@ -18,7 +19,7 @@ const TIME_OPTIONS = [
   "06:00 PM", "07:00 PM", "08:00 PM", "09:00 PM", "10:00 PM", "11:00 PM",
 ]
 
-// TODO: Extract to a shared component once a second use site outside berth-requests is confirmed.
+// TODO: Extract to a shared component once a second confirmed use site exists outside berth-requests.
 function DateTimePicker({
   initialValue,
   requestId,
@@ -42,7 +43,7 @@ function DateTimePicker({
   const [open, setOpen] = useState(false)
 
   const label = field === "ataAt" ? "Enter ATA" : "Enter ATD"
-  const displayLabel = date ? `${format(date, "MM/dd/yyyy")} ${time}` : undefined
+  const displayLabel = date ? `${format(date, "MM/dd/yy")} ${time}` : undefined
 
   const handleSave = () => {
     if (!date) return
@@ -61,9 +62,10 @@ function DateTimePicker({
               <Button
                 variant="outline"
                 disabled
-                className="w-44 justify-start text-left font-normal text-muted-foreground pointer-events-none"
+                size="sm"
+                className="justify-start text-left font-normal text-muted-foreground pointer-events-none"
               >
-                <CalendarIcon className="mr-2 h-4 w-4" />
+                <CalendarIcon className="mr-1.5 h-3.5 w-3.5" />
                 {label}
               </Button>
             </span>
@@ -79,12 +81,13 @@ function DateTimePicker({
       <PopoverTrigger asChild>
         <Button
           variant="outline"
+          size="sm"
           className={cn(
-            "w-44 justify-start text-left font-normal",
+            "justify-start text-left font-normal",
             !displayLabel && "text-muted-foreground"
           )}
         >
-          <CalendarIcon className="mr-2 h-4 w-4" />
+          <CalendarIcon className="mr-1.5 h-3.5 w-3.5" />
           {displayLabel ?? label}
         </Button>
       </PopoverTrigger>
@@ -110,112 +113,118 @@ function DateTimePicker({
   )
 }
 
-const manifestBadgeClass: Record<string, string> = {
-  Submitted: "bg-green-100 text-green-700 border-green-200",
-  Pending:   "bg-gray-100 text-gray-600 border-gray-200",
-  Rejected:  "bg-red-100 text-red-700 border-red-200",
-  Cleared:   "bg-gray-100 text-gray-500 border-gray-200",
+// ── Shared column definitions ────────────────────────────────────────────────
+
+const vesselColumn: ColumnDef<BerthRequestDomain> = {
+  id: "vessel",
+  header: "VESSEL",
+  cell: ({ row }) => (
+    <span className="font-semibold text-gray-900 text-sm whitespace-nowrap">
+      {row.original.vesselID}
+    </span>
+  ),
 }
 
-const statusBadgeClass: Record<string, string> = {
-  Awaiting:   "bg-gray-50 text-gray-500 border-gray-200",
-  Processing: "bg-blue-100 text-blue-700 border-blue-200",
-  "On Hold":  "bg-gray-200 text-gray-700 border-gray-300",
-  Returned:   "bg-orange-100 text-orange-700 border-orange-200",
-  Cleared:    "bg-gray-100 text-gray-500 border-gray-200",
+const etaColumn: ColumnDef<BerthRequestDomain> = {
+  accessorKey: "etaAt",
+  header: "ETA",
+  cell: ({ row }) => (
+    <span className="text-sm text-gray-700 whitespace-nowrap">{row.original.etaAt}</span>
+  ),
 }
 
-export const columns: ColumnDef<BerthRequestDomain>[] = [
-  {
-    id: "vessel",
-    header: "VESSEL / VA",
-    cell: ({ row }) => (
-      <div className="font-semibold text-gray-900 text-sm whitespace-nowrap">
-        {row.original.vesselID}
-      </div>
-    ),
-  },
-  {
-    accessorKey: "etaAt",
-    header: "ETA",
-    cell: ({ row }) => (
-      <span className="text-sm text-gray-700 whitespace-nowrap">{row.original.etaAt}</span>
-    ),
-  },
-  {
-    id: "ataAt",
-    header: "ATA",
-    cell: ({ row }) => (
-      <DateTimePicker
-        initialValue={row.original.ataAt}
-        requestId={row.original.requestId}
-        field="ataAt"
-      />
-    ),
-  },
-  {
-    accessorKey: "etdAt",
-    header: "ETD",
-    cell: ({ row }) => (
-      <span className="text-sm text-gray-700 whitespace-nowrap">{row.original.etdAt}</span>
-    ),
-  },
-  {
-    id: "atdAt",
-    header: "ATD",
-    cell: ({ row }) => (
-      <DateTimePicker
-        initialValue={row.original.atdAt}
-        requestId={row.original.requestId}
-        field="atdAt"
-        disabled={!row.original.ataAt}
-      />
-    ),
-  },
-  {
-    id: "berth",
-    header: "BERTH",
-    cell: ({ row }) => {
-      const designation = row.original.berthAssignment?.designation
-      if (!designation) {
-        return (
-          <span className="inline-flex whitespace-nowrap px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-700">
-            Berth Pending
-          </span>
-        )
-      }
-      return <span className="text-sm text-gray-700">{designation}</span>
-    },
-  },
-  {
-    id: "manifest",
-    header: "MANIFEST",
-    cell: ({ row }) => {
-      const status = getManifestStatus(row.original)
+const ataColumn: ColumnDef<BerthRequestDomain> = {
+  id: "ataAt",
+  header: "ATA",
+  cell: ({ row }) => (
+    <DateTimePicker
+      initialValue={row.original.ataAt}
+      requestId={row.original.requestId}
+      field="ataAt"
+    />
+  ),
+}
+
+const etdColumn: ColumnDef<BerthRequestDomain> = {
+  accessorKey: "etdAt",
+  header: "ETD",
+  cell: ({ row }) => (
+    <span className="text-sm text-gray-700 whitespace-nowrap">{row.original.etdAt}</span>
+  ),
+}
+
+const atdColumn: ColumnDef<BerthRequestDomain> = {
+  id: "atdAt",
+  header: "ATD",
+  cell: ({ row }) => (
+    <DateTimePicker
+      initialValue={row.original.atdAt}
+      requestId={row.original.requestId}
+      field="atdAt"
+      disabled={!row.original.ataAt}
+    />
+  ),
+}
+
+const berthColumn: ColumnDef<BerthRequestDomain> = {
+  id: "berth",
+  header: "BERTH",
+  cell: ({ row }) => {
+    const display = getBerthDisplay(row.original)
+    if (display === null) {
       return (
-        <span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-medium border ${manifestBadgeClass[status]}`}>
-          {status}
-        </span>
+        <Badge className="border-transparent rounded-full bg-amber-100 hover:bg-amber-100/80 text-amber-700 whitespace-nowrap">
+          Berth Pending
+        </Badge>
       )
-    },
-  },
-  {
-    id: "vesselStatus",
-    header: "STATUS",
-    cell: ({ row }) => {
-      const status = getVesselDisplayStatus(row.original)
+    }
+    if (display === "Cleared") {
       return (
-        <span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-medium border ${statusBadgeClass[status]}`}>
-          {status}
-        </span>
+        <Badge className="border-transparent rounded-full bg-gray-100 hover:bg-gray-100/80 text-gray-600">
+          Cleared
+        </Badge>
       )
-    },
+    }
+    return <span className="text-sm text-gray-700">{display}</span>
   },
-  {
-    id: "flags",
-    header: "FLAGS",
-    // TODO: Derive flags (Hazmat count, Doc Missing, etc.) from manifest analysis once the
-    // backend provides structured flag data on the BerthRequestDomain.
-    cell: () => <span className="text-gray-400 text-sm">—</span>,
+}
+
+const manifestColumn: ColumnDef<BerthRequestDomain> = {
+  id: "manifest",
+  header: "MANIFEST",
+  cell: ({ row }) => {
+    // TODO: Pass actual hazmatCount from backend when available.
+    const display = getManifestDisplay(row.original, 0)
+    if (!display) return <span className="text-gray-400 text-sm">—</span>
+
+    const isHazmat = display.includes("Hazmat")
+    const isCleared = display === "Cleared"
+
+    return (
+      <Badge className={`border-transparent rounded-full gap-1 ${
+        isHazmat
+          ? "bg-amber-100 hover:bg-amber-100/80 text-amber-700"
+          : isCleared
+          ? "bg-gray-100 hover:bg-gray-100/80 text-gray-600"
+          : "bg-green-100 hover:bg-green-100/80 text-green-700"
+      }`}>
+        {isHazmat && <TriangleAlert className="h-3 w-3" />}
+        {display}
+      </Badge>
+    )
   },
+}
+
+// ── Per-tab column sets ──────────────────────────────────────────────────────
+
+export const allColumns: ColumnDef<BerthRequestDomain>[] = [
+  vesselColumn, etaColumn, ataColumn, etdColumn, atdColumn, berthColumn, manifestColumn,
+]
+
+export const inboundColumns: ColumnDef<BerthRequestDomain>[] = [
+  vesselColumn, etaColumn, ataColumn, berthColumn, manifestColumn,
+]
+
+export const outboundColumns: ColumnDef<BerthRequestDomain>[] = [
+  vesselColumn, etdColumn, atdColumn, berthColumn, manifestColumn,
 ]
