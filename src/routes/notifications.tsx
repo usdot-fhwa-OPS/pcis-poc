@@ -8,8 +8,8 @@ export const Route = createFileRoute('/notifications')({
 
 function RouteComponent() {
   return (
-    <div className="pt-2 px-16 pb-16">
-      <h1 className="flex items-center gap-2 text-2xl font-semibold text-gray-900">
+    <div className="pt-6 px-16 pb-16">
+      <h1 className="flex items-center gap-2 text-2xl leading-4 font-semibold text-gray-900">
         <Bell className="w-6 h-6 text-gray-700" />
         Notifications
       </h1>
