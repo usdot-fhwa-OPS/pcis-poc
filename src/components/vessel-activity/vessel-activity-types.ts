@@ -26,6 +26,6 @@ export function isBerthPending(req: BerthRequestDomain): boolean {
 
 // Needs attention = has hazmat items in the manifest.
 // TODO: Pass actual hazmatCount when available from the backend.
-export function needsAttention(req: BerthRequestDomain, hazmatCount = 0): boolean {
+export function needsAttention(_req: BerthRequestDomain, hazmatCount = 0): boolean {
   return hazmatCount > 0
 }
