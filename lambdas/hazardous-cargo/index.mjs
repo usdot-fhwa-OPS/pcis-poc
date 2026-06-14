@@ -422,8 +422,6 @@ export const handler = async (event) => {
       case "PUT /setDocumentCompliant":
         return await setDocumentCompliant(event);
       case "PUT /completeDocumentCheck":
-        await completeDocumentCheck(event);    
-        await setDocumentCompliant(event)  
         return await approve(event);
       default:
         return response(404, { message: `Unsupported route: ${routeKey}` });
