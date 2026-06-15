@@ -80,13 +80,12 @@ function DateTimePicker({
       <PopoverTrigger asChild>
         <Button
           variant="outline"
-          size="sm"
           className={cn(
-            "justify-start text-left font-normal",
+            "w-48 justify-start text-left font-normal",
             !displayLabel && "text-muted-foreground"
           )}
         >
-          <CalendarIcon className="mr-1.5 h-3.5 w-3.5" />
+          <CalendarIcon className="mr-2 h-4 w-4" />
           {displayLabel ?? label}
         </Button>
       </PopoverTrigger>
