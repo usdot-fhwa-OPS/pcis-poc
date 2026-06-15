@@ -43,7 +43,7 @@ function DateTimePicker({
   const [open, setOpen] = useState(false)
 
   const label = field === "ataAt" ? "Enter ATA" : "Enter ATD"
-  const displayLabel = date ? `${format(date, "MM/dd/yy")} ${time}` : undefined
+  const displayLabel = date ? `${format(date, "MM/dd/yyyy")} ${time}` : undefined
 
   const handleSave = () => {
     if (!date) return
@@ -62,10 +62,9 @@ function DateTimePicker({
               <Button
                 variant="outline"
                 disabled
-                size="sm"
-                className="justify-start text-left font-normal text-muted-foreground pointer-events-none"
+                className="w-48 justify-start text-left font-normal text-muted-foreground pointer-events-none"
               >
-                <CalendarIcon className="mr-1.5 h-3.5 w-3.5" />
+                <CalendarIcon className="mr-2 h-4 w-4" />
                 {label}
               </Button>
             </span>
