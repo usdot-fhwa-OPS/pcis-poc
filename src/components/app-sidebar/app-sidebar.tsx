@@ -1,4 +1,5 @@
-import { FileUp, Home, Ship, User , CalendarClock, BarChart, Anchor, Container, TriangleAlert, Gauge } from "lucide-react"
+import React from "react"
+import { FileUp, Home, Ship, User, CalendarClock, BarChart, Anchor, Container, TriangleAlert, Gauge } from "lucide-react"
 
 import {
   Sidebar,
@@ -31,69 +32,46 @@ const selectionSet = ['cargoUnitID', 'reservationStatus', "updatedAt", "isBCONot
 export type Notifications = SelectionSet<Schema['Container']['type'], typeof selectionSet> 
 
 
-// Menu items.
-const items = [
-  {
-    title: "Home",
-    url: "/",
-    icon: Home,
-  },
-  {
-    title: "Capacity Planning",
-    url: "/capacity",
-    icon: Gauge,
-  },
-  {
-    title: "Vessel Activity",
-    url: "/vessel-activity",
-    icon: Ship,
-  },
-  {
-    title: "Berth Requests",
-    url: "/berth-requests",
-    icon: Ship,
-  },
-  {
-    title: "Berth Reservation Management",
-    url: "/berth-manager",
-    icon: Anchor,
-  },
-  {
-    title: "Available Operators",
-    url: "/operators",
-    icon: User,
-  },
-  {
-    title: "Import Stow Plan",
-    url: "/import",
-    icon: FileUp,
-  },
-  {
-    title: "Upcoming Cargo",
-    url: "/cargo",
-    icon: Container,
-  },
-  {
-    title: "Reservation Status",
-    url: "/reservation",
-    icon: CalendarClock,
-  },
-  {
-    title: "Hazardous Cargo",
-    url: "/hazardous-cargo",
-    icon: TriangleAlert,
-  },
-  {
-    title: "Analytics",
-    url: "/analytics",
-    icon: BarChart,
-  },
-  {
-    title: "Berth Reservations",
-    url: "/berth-vessel",
-    icon: Anchor,
-  },
-]
+type NavItem = { title: string; url: string; icon: React.ElementType }
+
+const itemsByRole: Record<string, NavItem[]> = {
+  "Terminal Operator": [
+    { title: "Home", url: "/", icon: Home },
+    { title: "Capacity Planning", url: "/capacity", icon: Gauge },
+    { title: "Vessel Activity", url: "/vessel-activity", icon: Ship },
+    { title: "Available Users", url: "/operators", icon: User },
+    { title: "Upload Manifest", url: "/import", icon: FileUp },
+    { title: "Upcoming Cargo", url: "/cargo", icon: Container },
+    { title: "Cargo Reservations", url: "/reservation", icon: CalendarClock },
+    { title: "Hazardous Cargo", url: "/hazardous-cargo", icon: TriangleAlert },
+    { title: "Berth Reservations", url: "/berth-vessel", icon: Anchor },
+    { title: "Analytics", url: "/analytics", icon: BarChart },
+  ],
+  "Beneficiary Cargo Owner": [
+    { title: "Home", url: "/", icon: Home },
+    { title: "Cargo Reservations", url: "/reservation", icon: CalendarClock },
+    { title: "Analytics", url: "/analytics", icon: BarChart },
+  ],
+  "Vessel Agent": [
+    { title: "Request Berth", url: "/berth-requests", icon: Ship },
+    { title: "Vessel Activity", url: "/vessel-activity", icon: Ship },
+    { title: "Berth Reservations", url: "/berth-vessel", icon: Anchor },
+    { title: "Hazardous Cargo", url: "/hazardous-cargo", icon: TriangleAlert },
+    { title: "Analytics", url: "/analytics", icon: BarChart },
+  ],
+  "Trucking Operator": [
+    { title: "Home", url: "/", icon: Home },
+    { title: "Cargo Reservations", url: "/reservation", icon: CalendarClock },
+  ],
+  "Rail Operator": [
+    { title: "Home", url: "/", icon: Home },
+    { title: "Cargo Reservations", url: "/reservation", icon: CalendarClock },
+  ],
+  "Third Party Logistics Provider": [
+    { title: "Home", url: "/", icon: Home },
+    { title: "Cargo Reservations", url: "/reservation", icon: CalendarClock },
+  ],
+}
 
 export function AppSidebar() {
   const { user, signOut } = useAuthenticator();
@@ -127,40 +105,7 @@ export function AppSidebar() {
     getUserAttributes();
   }, [user]);
 
-  // Define which menu items are allowed for Terminal Operator role.
-  const allowedForTerminalOperatorRole = ["Home", "Berth Reservation Management", "Available Operators", "Import Stow Plan", "Upcoming Cargo", "Reservation Status", "Analytics", "Capacity Planning", "Notifications", "Hazardous Cargo", "Vessel Activity"];
-
-  // Define which menu items are allowed for transport-only roles (no hazardous cargo access).
-  const allowedForLimitedRoles = ["Home", "Reservation Status", "Analytics", "Notifications"];
-
-  // Define which menu items are allowed for Beneficiary Cargo Owner role.
-  const allowedForBCORole = ["Home", "Reservation Status", "Analytics", "Notifications", "Hazardous Cargo"];
-
-  // Define which menu items are allowed for Vessel Agent Role.
-  const allowedForVesselAgentRole = ["Home", "Notifications", "Berth Requests", "Berth Reservations", "Hazardous Cargo", "Vessel Activity"];
-
-  // Filter menu items based on the custom role.
-  const filteredItems = items.filter((item) => {
-    if (userAttributes.role === "Terminal Operator") {
-      return allowedForTerminalOperatorRole.includes(item.title)
-    }
-    if (userAttributes.role === "Vessel Agent") {
-      return allowedForVesselAgentRole.includes(item.title)
-    }
-    if (userAttributes.role === "Beneficiary Cargo Owner") {
-      return allowedForBCORole.includes(item.title)
-    }
-    if (
-      userAttributes.role === 'Trucking Operator'
-        || userAttributes.role === 'Rail Operator'
-        || userAttributes.role === 'Third Party Logistics Provider'
-    ) {
-      return allowedForLimitedRoles.includes(item.title);
-    }
-
-    // If role is undefined or unrecognized, do not show any items.
-    return false;
-  });
+  const filteredItems = itemsByRole[userAttributes.role] ?? []
 
   const [refresh, setRefresh] = useState(0);
 
