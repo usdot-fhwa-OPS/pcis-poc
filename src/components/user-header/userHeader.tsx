@@ -3,6 +3,7 @@ import { Avatar, AvatarFallback } from "../ui/avatar";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { Selfhelp } from '../self-help/self-help';
+import { SidebarTrigger } from "../ui/sidebar";
 import { Bell, Mail } from "lucide-react"
 import './userHeaderStyles.css';
 
@@ -37,7 +38,9 @@ const UserHeader: React.FC<UserHeaderProps> = ({ fullName, role }) => {
     
     return (
     <>
-        <div className="flex items-center justify-end gap-4 sm:gap-5 p-3 sm:pr-6 bg-white border-b mb-4">
+        <div className="flex items-center gap-4 sm:gap-5 p-3 sm:pr-6 bg-white border-b mb-4">
+            <SidebarTrigger className="shrink-0" />
+            <div className="flex items-center gap-4 sm:gap-5 ml-auto">
             <Selfhelp />
             <Button variant="ghost" size="icon" className="hidden gap-[0.125rem] w-[2.875rem] [&_svg]:size-5">
                 <Mail />
@@ -61,6 +64,7 @@ const UserHeader: React.FC<UserHeaderProps> = ({ fullName, role }) => {
                 <Avatar className="h-9 w-9">
                     <AvatarFallback style={{ backgroundColor: bgColor }} className="text-white text-lg font-semibold">{initial}</AvatarFallback>
                 </Avatar>
+            </div>
             </div>
         </div>
     </>
