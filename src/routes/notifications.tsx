@@ -1,5 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 
+import { Badge } from "../components/ui/badge";
 import { Bell } from "lucide-react"
 
 // Start new
@@ -120,6 +121,8 @@ function RouteComponent() {
     };
   }, [userAttributes, refresh]);
 
+  const unreadCount = userNotifications.length
+
   const getNotificationMessage = (role: string, notification: Notifications) => {
     if (role === "Beneficiary Cargo Owner") {
       switch (notification.reservationStatus) {
@@ -169,6 +172,11 @@ function RouteComponent() {
       <h1 className="flex items-center gap-2 text-2xl leading-4 font-semibold text-gray-900">
         <Bell className="w-6 h-6 text-gray-700" />
         Notifications
+
+        {unreadCount > 0 && (
+          <Badge variant="destructive">{unreadCount} New</Badge>
+        )}
+
       </h1>
       <div className="mt-[3.75rem]">
         <p>Notifications will display here.</p>
