@@ -176,7 +176,7 @@ function RouteComponent() {
 
         <div>
 
-            {notifications.map((notification) => {
+            {userNotifications.map((notification) => {
               const dateObj = new Date(notification.updatedAt);
               const formattedDate = format(dateObj, 'MM/dd/yyyy');
               const formattedTime = format(dateObj, 'hh:mm a'); 
@@ -186,12 +186,12 @@ function RouteComponent() {
                   className="flex items-start justify-between gap-4 p-4 border-b last:border-b-0"
                 >
                   <div className="space-y-1">
-                    <p className="text-sm">{getNotificationMessage(role, notification)}</p>
+                    <p className="text-sm">{getNotificationMessage(userAttributes.role, notification)}</p>
                     <p className="text-xs text-muted-foreground">
                       {formattedDate} • {formattedTime}
                     </p>
                   </div>
-                  <Link to="/reservation" onClick={() => setOpen(false)} className="text-blue-500 hover:underline">
+                  <Link to="/reservation" className="text-blue-500 hover:underline">
                     View
                   </Link>
                 </div>
