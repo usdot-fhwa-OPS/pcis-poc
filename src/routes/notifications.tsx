@@ -196,7 +196,7 @@ function RouteComponent() {
               <Link to="/reservation" className="ml-2 text-blue-600 hover:underline">View</Link>
             </p>
           </div>
-          <div className="self-start flex items-center gap-1 text-xs text-muted-foreground">
+          <div className="self-start flex items-center gap-1 text-xs text-muted-foreground leading-none">
             <Clock className="w-3 h-3" />
             <span>{formattedDate} • {formattedTime}</span>
           </div>
