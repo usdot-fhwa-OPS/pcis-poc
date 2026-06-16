@@ -6,7 +6,6 @@ import { Bell } from "lucide-react"
 // Start new
 
 import { fetchUserAttributes } from 'aws-amplify/auth';
-import { NotificationsButton } from "../components/notifications-button/notifications-button";
 import { useAuthenticator } from "@aws-amplify/ui-react";
 import { useEffect, useState } from "react";
 
@@ -172,42 +171,28 @@ function RouteComponent() {
       <h1 className="flex items-center gap-2 text-2xl leading-4 font-semibold text-gray-900">
         <Bell className="w-6 h-6 text-gray-700" />
         Notifications
-
         {unreadCount > 0 && (
-          <Badge variant="destructive">{unreadCount} New</Badge>
+          <Badge className="rounded-full" variant="destructive">{unreadCount} new</Badge>
         )}
-
       </h1>
-      <div className="mt-[3.75rem]">
-        <p>Notifications will display here.</p>
-        <NotificationsButton notifications={userNotifications} role={userAttributes.role} />
-
-        <div>
-
-            {userNotifications.map((notification) => {
-              const dateObj = new Date(notification.updatedAt);
-              const formattedDate = format(dateObj, 'MM/dd/yyyy');
-              const formattedTime = format(dateObj, 'hh:mm a'); 
-              return (
-                <div
-                  key={notification.cargoUnitID}
-                  className="flex items-start justify-between gap-4 p-4 border-b last:border-b-0"
-                >
-                  <div className="space-y-1">
-                    <p className="text-sm">{getNotificationMessage(userAttributes.role, notification)}</p>
-                    <p className="text-xs text-muted-foreground">
-                      {formattedDate} • {formattedTime}
-                    </p>
-                  </div>
-                  <Link to="/reservation" className="text-blue-500 hover:underline">
-                    View
-                  </Link>
-                </div>
-              )
-            })}
-
+      <div className="max-w-4xl mt-[3.75rem]">
+      {userNotifications.map((notification) => {
+        const dateObj = new Date(notification.updatedAt);
+        const formattedDate = format(dateObj, 'MM/dd/yyyy');
+        const formattedTime = format(dateObj, 'hh:mm a');
+        return (
+        <div
+          key={notification.cargoUnitID}
+          className="flex items-center justify-between gap-4 p-4 border-b mb-2 last:mb-0 rounded-xl shadow"
+        >
+          <div className="space-y-1">
+            <p className="text-sm">{getNotificationMessage(userAttributes.role, notification)}</p>
+            <p className="text-xs text-muted-foreground">{formattedDate} • {formattedTime}</p>
+          </div>
+          <Link to="/reservation" className="text-blue-500 hover:underline">View</Link>
         </div>
-
+        )
+      })}
       </div>
     </div>
   )
