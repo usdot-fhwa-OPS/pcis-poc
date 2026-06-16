@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 
 import { Badge } from "../components/ui/badge";
-import { Bell } from "lucide-react"
+import { Bell, Clock } from "lucide-react"
 
 // Start new
 
@@ -176,7 +176,10 @@ function RouteComponent() {
         )}
       </h1>
         {notificationCount > 0 && (
-          <p className="mt-3 leading-4 text-xs text-muted-foreground">{notificationCount} notifications</p>
+          <p className="flex items-center gap-1 mt-3 leading-4 text-sm text-muted-foreground">
+            <Clock />
+            {notificationCount} notifications
+          </p>
         )}
       <div className="max-w-4xl mt-[3.75rem]">
       {userNotifications.map((notification) => {
@@ -191,7 +194,7 @@ function RouteComponent() {
             <p className="font-semibold">Notification Title</p>
             <p className="text-sm">
               <span>{getNotificationMessage(userAttributes.role, notification)}</span>
-              <Link to="/reservation" className="ml-2 text-blue-500 hover:underline">View</Link>
+              <Link to="/reservation" className="ml-2 text-blue-600 hover:underline">View</Link>
             </p>
           </div>
           <div className="self-start text-xs text-muted-foreground">{formattedDate} • {formattedTime}</div>
