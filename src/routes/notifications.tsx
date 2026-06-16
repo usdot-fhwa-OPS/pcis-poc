@@ -172,11 +172,11 @@ function RouteComponent() {
         <Bell className="w-6 h-6 text-gray-700" />
         Notifications
         {notificationCount > 0 && (
-          <Badge className="ml-4 rounded-full" variant="destructive">{notificationCount} new</Badge>
+          <Badge className="px-0.75 py-0.375 ml-4 rounded-full" variant="destructive">{notificationCount} new</Badge>
         )}
       </h1>
         {notificationCount > 0 && (
-          <p className="mt-3 leading-4 text-sm text-muted-foreground">
+          <p className="mt-3 leading-none text-sm text-muted-foreground">
             {notificationCount} notifications
           </p>
         )}
