@@ -172,7 +172,7 @@ function RouteComponent() {
         <Bell className="w-6 h-6 text-gray-700" />
         Notifications
         {unreadCount > 0 && (
-          <Badge className="rounded-full" variant="destructive">{unreadCount} new</Badge>
+          <Badge className="ml-4 rounded-full" variant="destructive">{unreadCount} new</Badge>
         )}
       </h1>
       <div className="max-w-4xl mt-[3.75rem]">
@@ -185,11 +185,11 @@ function RouteComponent() {
           key={notification.cargoUnitID}
           className="flex items-center justify-between gap-4 bg-white p-4 border mb-2 last:mb-0 rounded-xl shadow"
         >
-          <div className="space-y-1">
-            <p className="text-sm">{getNotificationMessage(userAttributes.role, notification)}</p>
-            <p className="text-xs text-muted-foreground">{formattedDate} • {formattedTime}</p>
+          <div className="text-sm">
+            <span>{getNotificationMessage(userAttributes.role, notification)}</span>
+            <Link to="/reservation" className="text-blue-500 hover:underline">View</Link>
           </div>
-          <Link to="/reservation" className="text-blue-500 hover:underline">View</Link>
+          <div className="text-xs text-muted-foreground">{formattedDate} • {formattedTime}</div>
         </div>
         )
       })}
