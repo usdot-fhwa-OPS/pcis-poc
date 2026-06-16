@@ -183,7 +183,7 @@ function RouteComponent() {
         return (
         <div
           key={notification.cargoUnitID}
-          className="flex items-center justify-between gap-4 p-4 border-b mb-2 last:mb-0 rounded-xl shadow"
+          className="flex items-center justify-between gap-4 bg-white p-4 border mb-2 last:mb-0 rounded-xl shadow"
         >
           <div className="space-y-1">
             <p className="text-sm">{getNotificationMessage(userAttributes.role, notification)}</p>
