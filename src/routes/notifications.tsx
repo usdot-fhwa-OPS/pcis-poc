@@ -120,7 +120,7 @@ function RouteComponent() {
     };
   }, [userAttributes, refresh]);
 
-  const unreadCount = userNotifications.length
+  const notificationCount = userNotifications.length
 
   const getNotificationMessage = (role: string, notification: Notifications) => {
     if (role === "Beneficiary Cargo Owner") {
@@ -171,10 +171,13 @@ function RouteComponent() {
       <h1 className="flex items-center gap-2 text-2xl leading-4 font-semibold text-gray-900">
         <Bell className="w-6 h-6 text-gray-700" />
         Notifications
-        {unreadCount > 0 && (
-          <Badge className="ml-4 rounded-full" variant="destructive">{unreadCount} new</Badge>
+        {notificationCount > 0 && (
+          <Badge className="ml-4 rounded-full" variant="destructive">{notificationCount} new</Badge>
         )}
       </h1>
+        {notificationCount > 0 && (
+          <p className="mt-3 leading-4 text-xs text-muted-foreground">{notificationCount} notifications</p>
+        )}
       <div className="max-w-4xl mt-[3.75rem]">
       {userNotifications.map((notification) => {
         const dateObj = new Date(notification.updatedAt);
