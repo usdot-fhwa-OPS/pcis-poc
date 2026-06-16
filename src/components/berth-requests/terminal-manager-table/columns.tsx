@@ -22,12 +22,14 @@ import {
   DialogTrigger,
 } from "../../../components/ui/dialog"
 import { Textarea } from "../../../components/ui/textarea"
+import { useNavigate } from "@tanstack/react-router"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../../../components/ui/tooltip"
 import { Badge } from "../../../components/ui/badge"
 
 function RequestDetails({ row, table }: { row: Row<BerthRequestDomain>; table: Table<BerthRequestDomain> }) {
   const meta = table.options.meta as TerminalOperatorBerthRequestsTableMeta
   const berthConfig = meta.berthConfigs?.find(c => c.terminalId === row.original.terminalId)
+  
 
   return (
     <div className="space-y-2 text-sm">
@@ -179,11 +181,13 @@ function DateTimePicker({
   requestId,
   field,
   disabled = false,
+  table,
 }: {
   initialValue: string | undefined
   requestId: string
   field: "ataAt" | "atdAt"
   disabled?: boolean
+  table: Table<BerthRequestDomain> 
 }) {
   const parsedDate = initialValue ? new Date(initialValue) : undefined
   const parsedTime = (() => {
@@ -199,11 +203,16 @@ function DateTimePicker({
   const label = field === "ataAt" ? "Enter ATA" : "Enter ATD"
   const displayLabel = date ? `${format(date, "MM/dd/yyyy")} ${time}` : undefined
 
-  const handleSave = () => {
+  const meta = table.options.meta as TerminalOperatorBerthRequestsTableMeta
+  const handleSave = async () => {
     if (!date) return
     const combined = `${format(date, "MM/dd/yyyy")} ${time}`
     setOpen(false)
     // TODO: call updateBerthRequest(requestId, { [field]: combined }) once wired up
+    let bReq:BerthRequestDomain = {} as BerthRequestDomain;
+    bReq[field] = combined;
+    bReq.requestId = requestId;
+    await  meta.modifyBerthRequest(bReq)
     console.log("TODO updateBerthRequest", requestId, field, combined)
   }
 
@@ -341,19 +350,25 @@ export const columns: ColumnDef<BerthRequestDomain>[] = [
   {
     accessorKey: "actions",
     header: () => <div style={{ minWidth: "50px" }}>Actions</div>,
-    cell: ({ row, table }) => (
+    cell: ({ row, table }) => { 
+      const navigate = useNavigate();
+      return(
       <div className="flex space-x-4">
         <Button
           size="sm"
           variant="link"
           className="text-blue-600 p-0 h-auto"
-          onClick={() => {}}
+          onClick={() => {
+             sessionStorage.setItem('berthRequestOriginal', JSON.stringify(row.original))
+            navigate({to:'/berth-request-modify'});
+
+          }}
         >
           Modify
         </Button>
         <DeleteDialog row={row} table={table as Table<BerthRequestDomain>} />
       </div>
-    ),
+    )},
 
   },
 ]
@@ -410,23 +425,25 @@ export const ongoingColumns: ColumnDef<BerthRequestDomain>[] = [
   {
     id: "ataAt",
     header: "Actual Arrival (ATA)",
-    cell: ({ row }) => (
+    cell: ({ row , table}) => (
       <DateTimePicker
         initialValue={row.original.ataAt}
         requestId={row.original.requestId}
         field="ataAt"
+        table={table}
       />
     ),
   },
   {
     id: "atdAt",
     header: "Actual Departure (ATD)",
-    cell: ({ row }) => (
+    cell: ({ row , table}) => (
       <DateTimePicker
         initialValue={row.original.atdAt}
         requestId={row.original.requestId}
         field="atdAt"
         disabled={!row.original.ataAt}
+        table={table}
       />
     ),
   },

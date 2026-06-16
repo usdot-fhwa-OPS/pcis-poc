@@ -20,6 +20,8 @@ import { Route as CargoRouteImport } from './routes/cargo'
 import { Route as CapacityRouteImport } from './routes/capacity'
 import { Route as BerthVesselRouteImport } from './routes/berth-vessel'
 import { Route as BerthRequestsRouteImport } from './routes/berth-requests'
+import { Route as BerthRequestModifyConfirmationRouteImport } from './routes/berth-request-modify-confirmation'
+import { Route as BerthRequestModifyRouteImport } from './routes/b./routes/berth-request-modify-confirmation'
 import { Route as BerthRequestConfirmationRouteImport } from './routes/berth-request-confirmation'
 import { Route as BerthRequestAddRouteImport } from './routes/berth-request-add'
 import { Route as BerthManagerRouteImport } from './routes/berth-manager'
@@ -82,6 +84,17 @@ const BerthRequestsRoute = BerthRequestsRouteImport.update({
   path: '/berth-requests',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BerthRequestModifyConfirmationRoute =
+  BerthRequestModifyConfirmationRouteImport.update({
+    id: '/berth-request-modify-confirmation',
+    path: '/berth-request-modify-confirmation',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const BerthRequestModifyRoute = BerthRequestModifyRouteImport.update({
+  id: '/berth-request-modify',
+  path: '/berth-request-modify',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BerthRequestConfirmationRoute =
   BerthRequestConfirmationRouteImport.update({
     id: '/berth-request-confirmation',
@@ -121,6 +134,8 @@ export interface FileRoutesByFullPath {
   '/berth-manager': typeof BerthManagerRoute
   '/berth-request-add': typeof BerthRequestAddRoute
   '/berth-request-confirmation': typeof BerthRequestConfirmationRoute
+  '/berth-request-modify': typeof BerthRequestModifyRoute
+  '/berth-request-modify-confirmation': typeof BerthRequestModifyConfirmationRoute
   '/berth-requests': typeof BerthRequestsRoute
   '/berth-vessel': typeof BerthVesselRoute
   '/capacity': typeof CapacityRoute
@@ -140,6 +155,8 @@ export interface FileRoutesByTo {
   '/berth-manager': typeof BerthManagerRoute
   '/berth-request-add': typeof BerthRequestAddRoute
   '/berth-request-confirmation': typeof BerthRequestConfirmationRoute
+  '/berth-request-modify': typeof BerthRequestModifyRoute
+  '/berth-request-modify-confirmation': typeof BerthRequestModifyConfirmationRoute
   '/berth-requests': typeof BerthRequestsRoute
   '/berth-vessel': typeof BerthVesselRoute
   '/capacity': typeof CapacityRoute
@@ -160,6 +177,8 @@ export interface FileRoutesById {
   '/berth-manager': typeof BerthManagerRoute
   '/berth-request-add': typeof BerthRequestAddRoute
   '/berth-request-confirmation': typeof BerthRequestConfirmationRoute
+  '/berth-request-modify': typeof BerthRequestModifyRoute
+  '/berth-request-modify-confirmation': typeof BerthRequestModifyConfirmationRoute
   '/berth-requests': typeof BerthRequestsRoute
   '/berth-vessel': typeof BerthVesselRoute
   '/capacity': typeof CapacityRoute
@@ -181,6 +200,8 @@ export interface FileRouteTypes {
     | '/berth-manager'
     | '/berth-request-add'
     | '/berth-request-confirmation'
+    | '/berth-request-modify'
+    | '/berth-request-modify-confirmation'
     | '/berth-requests'
     | '/berth-vessel'
     | '/capacity'
@@ -200,6 +221,8 @@ export interface FileRouteTypes {
     | '/berth-manager'
     | '/berth-request-add'
     | '/berth-request-confirmation'
+    | '/berth-request-modify'
+    | '/berth-request-modify-confirmation'
     | '/berth-requests'
     | '/berth-vessel'
     | '/capacity'
@@ -219,6 +242,8 @@ export interface FileRouteTypes {
     | '/berth-manager'
     | '/berth-request-add'
     | '/berth-request-confirmation'
+    | '/berth-request-modify'
+    | '/berth-request-modify-confirmation'
     | '/berth-requests'
     | '/berth-vessel'
     | '/capacity'
@@ -239,6 +264,8 @@ export interface RootRouteChildren {
   BerthManagerRoute: typeof BerthManagerRoute
   BerthRequestAddRoute: typeof BerthRequestAddRoute
   BerthRequestConfirmationRoute: typeof BerthRequestConfirmationRoute
+  BerthRequestModifyRoute: typeof BerthRequestModifyRoute
+  BerthRequestModifyConfirmationRoute: typeof BerthRequestModifyConfirmationRoute
   BerthRequestsRoute: typeof BerthRequestsRoute
   BerthVesselRoute: typeof BerthVesselRoute
   CapacityRoute: typeof CapacityRoute
@@ -331,6 +358,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BerthRequestsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/berth-request-modify-confirmation': {
+      id: '/berth-request-modify-confirmation'
+      path: '/berth-request-modify-confirmation'
+      fullPath: '/berth-request-modify-confirmation'
+      preLoaderRoute: typeof BerthRequestModifyConfirmationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/berth-request-modify': {
+      id: '/berth-request-modify'
+      path: '/berth-request-modify'
+      fullPath: '/berth-request-modify'
+      preLoaderRoute: typeof BerthRequestModifyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/berth-request-confirmation': {
       id: '/berth-request-confirmation'
       path: '/berth-request-confirmation'
@@ -394,6 +435,8 @@ const rootRouteChildren: RootRouteChildren = {
   BerthManagerRoute: BerthManagerRoute,
   BerthRequestAddRoute: BerthRequestAddRoute,
   BerthRequestConfirmationRoute: BerthRequestConfirmationRoute,
+  BerthRequestModifyRoute: BerthRequestModifyRoute,
+  BerthRequestModifyConfirmationRoute: BerthRequestModifyConfirmationRoute,
   BerthRequestsRoute: BerthRequestsRoute,
   BerthVesselRoute: BerthVesselRoute,
   CapacityRoute: CapacityRoute,
