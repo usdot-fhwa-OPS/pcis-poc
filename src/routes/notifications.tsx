@@ -176,8 +176,7 @@ function RouteComponent() {
         )}
       </h1>
         {notificationCount > 0 && (
-          <p className="flex items-center gap-1 mt-3 leading-4 text-sm text-muted-foreground">
-            <Clock />
+          <p className="mt-3 leading-4 text-sm text-muted-foreground">
             {notificationCount} notifications
           </p>
         )}
@@ -197,7 +196,10 @@ function RouteComponent() {
               <Link to="/reservation" className="ml-2 text-blue-600 hover:underline">View</Link>
             </p>
           </div>
-          <div className="self-start text-xs text-muted-foreground">{formattedDate} • {formattedTime}</div>
+          <div className="self-start flex items-center gap-1 text-xs text-muted-foreground">
+            <Clock className="w-3 h-3" />
+            <span>{formattedDate} • {formattedTime}</span>
+          </div>
         </div>
         )
       })}
