@@ -184,14 +184,14 @@ function RouteComponent() {
         <div
           key={notification.cargoUnitID}
           className="flex items-center justify-between gap-4 bg-white p-4 border mb-2 last:mb-0 rounded-xl shadow"
-        ><div className="flex flex-col gap-2">
+        ><div className="flex flex-col gap-1">
             <p className="font-semibold">Notification Title</p>
             <p className="text-sm">
               <span>{getNotificationMessage(userAttributes.role, notification)}</span>
               <Link to="/reservation" className="ml-2 text-blue-500 hover:underline">View</Link>
             </p>
           </div>
-          <div className="text-xs text-muted-foreground">{formattedDate} • {formattedTime}</div>
+          <div className="self-start text-xs text-muted-foreground">{formattedDate} • {formattedTime}</div>
         </div>
         )
       })}
