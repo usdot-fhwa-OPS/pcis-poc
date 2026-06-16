@@ -14,7 +14,7 @@ function AddBerthRequestComponent() {
   const formDataRef = useRef<BerthRequestFormData | null>(null);
 
   const navigateToBerthRequests = () => {
-    navigate({ to: "/berth-requests" });
+    navigate({ to: "/berth-vessel" });
   }
  
   

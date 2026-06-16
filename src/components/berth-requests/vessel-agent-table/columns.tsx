@@ -6,6 +6,7 @@ import { Button } from "../../ui/button"
 import { BerthRequestDomain } from "../berth-request-domain"
 import { BerthConfigDomain } from "../berth-config-domain"
 import { VesselAgentBerthRequestsTableMeta } from "./data-table"
+import { useNavigate } from "@tanstack/react-router"
 import {
   Dialog,
   DialogClose,
@@ -105,14 +106,21 @@ export const columns: ColumnDef<BerthRequestDomain>[] = [
   {
     accessorKey: "actions",
     header: () => <div style={{ minWidth: "50px" }}>Actions</div>,
-    cell: ({ row, table }) => (
+    cell: ({ row, table }) => {
+       const navigate = useNavigate();
+      return(
       <div className="flex space-x-4">
-        <Button size="sm" variant="link" className="text-blue-600 p-0 h-auto" onClick={() => {}}>
+        <Button size="sm" variant="link" className="text-blue-600 p-0 h-auto" onClick={() => {
+              sessionStorage.setItem('berthRequestOriginal', JSON.stringify(row.original))
+              navigate({ to: '/berth-request-modify' });
+
+        }}>
           Modify
         </Button>
         <DeleteDialog row={row} table={table as Table<BerthRequestDomain>} />
       </div>
-    ),
+    )
+  },
 
   },
 ]

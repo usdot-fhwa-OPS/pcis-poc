@@ -21,12 +21,14 @@ import {
   TableRow,
 } from "../../ui/table"
 import { BerthConfigDomain } from "../berth-config-domain"
+import { BerthRequestDomain } from "../berth-request-domain"
 
 
 export interface TerminalOperatorBerthRequestsTableMeta {
   decideBerthRequest: (requestId: string, decision: string, options?: { denialComment?: string; berthAssignment?: string }) => void
   deleteBerthRequest: any
   berthConfigs: BerthConfigDomain[]
+  modifyBerthRequest:(berthRequrst: BerthRequestDomain)=>void;
 }
 
 interface DataTableProps<TData, TValue> {
