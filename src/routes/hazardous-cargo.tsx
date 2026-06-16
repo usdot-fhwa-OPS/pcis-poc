@@ -1,9 +1,12 @@
 import { createFileRoute, Outlet, useMatchRoute } from '@tanstack/react-router'
-import { useEffect, useState } from 'react'
+import { useContext, useState } from 'react'
 import { TriangleAlert } from 'lucide-react'
 import { HazardousCargoTable } from '../components/hazardous-cargo/hazardous-cargo-table'
 import { HazardousCargoItem } from '../components/hazardous-cargo/hazardous-cargo-types'
-import { dummyHazardousCargoData } from '../components/hazardous-cargo/hazardous-cargo-dummy-data'
+import { hazardousCargoList } from '../components/hazardous-cargo/hazardous-cargos-client'
+import { useAppDispatch } from '../hooks'
+import { populate } from '../components/hazardous-cargo/hazardous-cargo-state'
+import { UserContext } from '../AppContext'
 
 export const Route = createFileRoute('/hazardous-cargo')({
   component: HazardousCargoPage,
@@ -16,12 +19,40 @@ export const Route = createFileRoute('/hazardous-cargo')({
 //     authMode: 'apiKey',
 //   })
 function useHazardousCargoData() {
+  const userContext = useContext(UserContext);
+  const userRole = userContext["custom:role"];
   const [data, setData] = useState<HazardousCargoItem[]>([])
 
-  useEffect(() => {
-    // TODO: Swap this line for the Amplify query above.
-    setData(dummyHazardousCargoData)
-  }, [])
+  const dispatch = useAppDispatch()
+  
+
+  async function fetchHazardousCargoList() {
+
+    let hazardousCargoItemList = [] as HazardousCargoItem[];
+    if (userRole === 'Vessel Agent') {
+      if (userContext.email) {
+        hazardousCargoItemList = await hazardousCargoList('', userContext.email, '')
+      }
+
+    } else if (userRole === 'Beneficiary Cargo Owner') {
+
+      if (userContext.email) {
+        hazardousCargoItemList = await hazardousCargoList('', '', userContext.email)
+      }
+
+    } else if (userRole === 'Terminal Operator') {
+
+      hazardousCargoItemList = await hazardousCargoList('', '', '')
+
+    }
+
+    dispatch(populate(hazardousCargoItemList));
+    return hazardousCargoItemList;
+  }
+
+  useState(() => {
+    fetchHazardousCargoList().then(list => setData(list))
+  })
 
   return data
 }
