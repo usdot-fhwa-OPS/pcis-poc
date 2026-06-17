@@ -195,7 +195,7 @@ function RouteComponent() {
           key={notification.cargoUnitID}
           className="flex items-center justify-between gap-4 bg-white p-4 border mb-2 last:mb-0 rounded-xl shadow"
         ><div className="flex flex-col gap-1">
-            <p className="font-semibold">Notification Title</p>
+            <p className="font-semibold">{notification.reservationStatus}</p>
             <p className="text-sm">
               <span className="mr-2">{getNotificationMessage(userAttributes.role, notification)}</span>
               <Link to="/reservation" className="text-blue-600 hover:underline">View</Link>
