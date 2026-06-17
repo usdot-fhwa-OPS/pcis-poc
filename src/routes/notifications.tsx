@@ -184,18 +184,23 @@ function RouteComponent() {
         )}
       <div className="max-w-4xl mt-[3.75rem]">
       {userNotifications.map((notification) => {
+        
         const dateObj = new Date(notification.updatedAt);
         const isRecent = isAfter(dateObj, twentyFourHoursAgo);
         const displayTime = isRecent
           ? formatDistanceToNow(dateObj, { addSuffix: true })
           : `${format(dateObj, 'MM/dd/yyyy')} • ${format(dateObj, 'hh:mm a')}`;
 
+        const notificationTitle = notification.reservationStatus === 'unassigned'
+          ? 'Reservation Denied' // Changes title to 'Reservation Denied' if reservation status is unassigned
+          : notification.reservationStatus;
+
         return (
         <div
           key={notification.cargoUnitID}
           className="flex items-center justify-between gap-4 bg-white p-4 border mb-2 last:mb-0 rounded-xl shadow"
         ><div className="flex flex-col gap-1">
-            <p className="font-semibold">{notification.reservationStatus}</p>
+            <p className="font-semibold">{notificationTitle}</p>
             <p className="text-sm">
               <span className="mr-2">{getNotificationMessage(userAttributes.role, notification)}</span>
               <Link to="/reservation" className="text-blue-600 hover:underline">View</Link>
