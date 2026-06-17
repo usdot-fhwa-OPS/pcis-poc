@@ -192,11 +192,11 @@ function RouteComponent() {
         ><div className="flex flex-col gap-1">
             <p className="font-semibold">Notification Title</p>
             <p className="text-sm">
-              <span>{getNotificationMessage(userAttributes.role, notification)}</span>
-              <Link to="/reservation" className="ml-2 text-blue-600 hover:underline">View</Link>
+              <span className="mr-2">{getNotificationMessage(userAttributes.role, notification)}</span>
+              <Link to="/reservation" className="text-blue-600 hover:underline">View</Link>
             </p>
           </div>
-          <div className="self-start flex items-center gap-1 text-xs text-muted-foreground leading-none">
+          <div className="self-start flex items-center gap-1 text-xs text-muted-foreground text-nowrap leading-none">
             <Clock className="w-3 h-3" />
             <span>{formattedDate} • {formattedTime}</span>
           </div>
