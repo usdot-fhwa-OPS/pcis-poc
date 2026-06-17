@@ -14,7 +14,7 @@ import type { Schema } from '../../amplify/data/resource';
 import { Subscription } from "rxjs";
 
 import { Link } from "@tanstack/react-router"
-import { format } from "date-fns"
+import { format, formatDistanceToNow, isAfter, subHours } from "date-fns"
 
 const client = generateClient<Schema>();
 const selectionSet = ['cargoUnitID', 'reservationStatus', "updatedAt", "isBCONotify", "isTransportationNotify"] as const; 
@@ -163,6 +163,8 @@ function RouteComponent() {
     } 
   };
 
+  const twentyFourHoursAgo = subHours(new Date(), 24);
+
   // End new
 
 
@@ -183,8 +185,11 @@ function RouteComponent() {
       <div className="max-w-4xl mt-[3.75rem]">
       {userNotifications.map((notification) => {
         const dateObj = new Date(notification.updatedAt);
-        const formattedDate = format(dateObj, 'MM/dd/yyyy');
-        const formattedTime = format(dateObj, 'hh:mm a');
+        const isRecent = isAfter(dateObj, twentyFourHoursAgo);
+        const displayTime = isRecent
+          ? formatDistanceToNow(dateObj, { addSuffix: true })
+          : `${format(dateObj, 'MM/dd/yyyy')} • ${format(dateObj, 'hh:mm a')}`;
+
         return (
         <div
           key={notification.cargoUnitID}
@@ -198,7 +203,7 @@ function RouteComponent() {
           </div>
           <div className="self-start flex items-center gap-1 text-xs text-muted-foreground text-nowrap leading-none">
             <Clock className="w-3 h-3" />
-            <span>{formattedDate} • {formattedTime}</span>
+            <span key={notification.id}>{displayTime}</span>
           </div>
         </div>
         )
