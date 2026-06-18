@@ -167,7 +167,6 @@ function RouteComponent() {
 
   // End new
 
-
   return (
     <div className="pt-6 px-16 pb-16">
       <h1 className="flex items-center gap-2 text-2xl leading-4 font-semibold text-gray-900">
@@ -184,26 +183,43 @@ function RouteComponent() {
         )}
       <div className="max-w-4xl mt-[3.75rem]">
       {userNotifications.map((notification) => {
-        
+
+        const notificationTitle = () => { 
+          if ((notification.reservationStatus === 'Pending Transportation Coordinator Approval') 
+            || (notification.reservationStatus === 'Pending Reservation Approval') 
+            || (notification.reservationStatus === 'Pickup Modification Requested')) {
+              return `Reservation Approval Required`;
+          } else if ((notification.reservationStatus === 'unassigned')) {
+            return `Reservation Denied`;
+          } else {
+            return `${notification.reservationStatus}`;
+          }
+        };
+
+        const notificationBadge = () => {
+          if ((notificationTitle === 'Late for Pick Up') 
+            || (notificationTitle === 'Reservation Approval Required')) {
+            return(
+              <Badge className="rounded-full" variant="destructive">High</Badge>
+            )
+          }
+        };
+
         const dateObj = new Date(notification.updatedAt);
         const isRecent = isAfter(dateObj, twentyFourHoursAgo);
         const displayTime = isRecent
           ? formatDistanceToNow(dateObj, { addSuffix: true })
           : `${format(dateObj, 'MM/dd/yyyy')} • ${format(dateObj, 'hh:mm a')}`;
 
-        const notificationTitle = notification.reservationStatus === 'unassigned'
-          ? 'Reservation Denied' // Changes title to 'Reservation Denied' if reservation status is unassigned
-          : notification.reservationStatus;
-
         return (
         <div
           key={notification.cargoUnitID}
           className="flex items-center justify-between gap-4 bg-white p-4 border mb-2 last:mb-0 rounded-xl shadow"
         ><div className="flex flex-col gap-1">
-            <p className="font-semibold">{notificationTitle}</p>
+            <h2 className="flex items-center gap-2 text-base font-semibold">{notificationTitle} {notificationBadge}</h2>
             <p className="text-sm">
-              <span className="mr-2">{getNotificationMessage(userAttributes.role, notification)}</span>
-              <Link to="/reservation" className="text-blue-600 hover:underline">View</Link>
+              {getNotificationMessage(userAttributes.role, notification)}
+              <Link to="/reservation" className="ml-2 text-blue-600 hover:underline">View</Link>
             </p>
           </div>
           <div className="self-start flex items-center gap-1 text-xs text-muted-foreground text-nowrap leading-none">
