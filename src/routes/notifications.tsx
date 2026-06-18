@@ -197,8 +197,8 @@ function RouteComponent() {
         };
 
         const notificationBadge = () => {
-          if ((notificationTitle === 'Late for Pick Up') 
-            || (notificationTitle === 'Reservation Approval Required')) {
+          if ((notificationTitle() === 'Late for Pick Up') 
+            || (notificationTitle() === 'Reservation Approval Required')) {
             return(
               <Badge className="rounded-full" variant="destructive">High</Badge>
             )
