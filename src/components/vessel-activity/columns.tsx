@@ -183,7 +183,11 @@ const berthColumn: ColumnDef<BerthRequestDomain> = {
         </Badge>
       )
     }
-    return <span className="text-sm text-gray-700">{display}</span>
+    return (
+      <Badge className="border-transparent rounded-full bg-green-100 hover:bg-green-100/80 text-green-700 whitespace-nowrap">
+        {display}
+      </Badge>
+    )
   },
 }
 

@@ -11,9 +11,13 @@ export function getManifestDisplay(req: BerthRequestDomain, hazmatCount = 0): st
 }
 
 // Returns null (= Berth Pending), "Cleared", or the berth designation for the BERTH column.
+// null     → amber "Berth Pending": ATA not yet entered
+// string   → green designation badge: ATA entered, vessel at berth
+// "Cleared"→ gray badge: both ATA and ATD entered
 export function getBerthDisplay(req: BerthRequestDomain): string | null {
   if (req.ataAt && req.atdAt) return "Cleared"
-  return req.berthAssignment?.designation || null
+  if (!req.ataAt) return null
+  return req.berthAssignment?.designation ?? null
 }
 
 export function isVesselArchived(req: BerthRequestDomain): boolean {
@@ -21,7 +25,7 @@ export function isVesselArchived(req: BerthRequestDomain): boolean {
 }
 
 export function isBerthPending(req: BerthRequestDomain): boolean {
-  return !req.berthAssignment?.designation && !isVesselArchived(req)
+  return !req.ataAt
 }
 
 // Needs attention = has hazmat items in the manifest.

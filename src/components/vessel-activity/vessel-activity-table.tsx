@@ -31,18 +31,25 @@ export function VesselActivityTable({ data }: VesselActivityTableProps) {
     return data.filter((r) => !isVesselArchived(r))
   }, [data, includeArchived])
 
-  // Chip counts from base data (before chip filter).
+  // Tab-filtered data: inbound = no ATA yet, outbound = ATA set but no ATD yet.
+  const tabData = useMemo(() => {
+    if (activeTab === "inbound") return baseData.filter((r) => !r.ataAt)
+    if (activeTab === "outbound") return baseData.filter((r) => !!r.ataAt && !r.atdAt)
+    return baseData
+  }, [baseData, activeTab])
+
+  // Chip counts from tab-filtered data (before chip filter).
   // TODO: Pass real hazmatCount per item once the backend provides it.
   const counts = useMemo(() => ({
-    all: baseData.length,
-    needsAttention: baseData.filter((r) => needsAttention(r, 0)).length,
-    berthPending: baseData.filter(isBerthPending).length,
-    cleared: baseData.filter(isVesselArchived).length,
-  }), [baseData])
+    all: tabData.length,
+    needsAttention: tabData.filter((r) => needsAttention(r, 0)).length,
+    berthPending: tabData.filter(isBerthPending).length,
+    cleared: tabData.filter(isVesselArchived).length,
+  }), [tabData])
 
-  // Final data: base + chip filter + vessel search.
+  // Final data: tab + chip filter + vessel search.
   const filteredData = useMemo(() => {
-    let d = baseData
+    let d = tabData
 
     if (activeFilter === "needs-attention") {
       d = d.filter((r) => needsAttention(r, 0))
@@ -58,7 +65,7 @@ export function VesselActivityTable({ data }: VesselActivityTableProps) {
     }
 
     return d
-  }, [baseData, activeFilter, searchQuery])
+  }, [tabData, activeFilter, searchQuery])
 
   const FILTERS: { key: FilterKey; label: string; count: number }[] = [
     { key: "all", label: "All", count: counts.all },
