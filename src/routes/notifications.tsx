@@ -200,7 +200,7 @@ function RouteComponent() {
           if ((notificationTitle() === 'Late for Pick Up') 
             || (notificationTitle() === 'Reservation Approval Required')) {
             return(
-              <Badge className="rounded-full" variant="destructive">High</Badge>
+              <Badge className="bg-red-100 hover:bg-red-100/80 border-red-300 text-red-700 rounded-full">High</Badge>
             )
           }
         };
