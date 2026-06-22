@@ -100,34 +100,31 @@ export function VesselActivityTable({ data }: VesselActivityTableProps) {
         </div>
       </div>
 
-      {/* Filter chips + archived toggle + search */}
-      <div className="flex flex-wrap items-center gap-3">
-        <div className="p-2 bg-white border rounded-xl flex flex-wrap items-center gap-2">
-          {FILTERS.map(({ key, label, count }) => (
-            <button
-              key={key}
-              onClick={() => setActiveFilter(key)}
-              className={`px-3 py-1 rounded-full text-sm font-medium transition-colors ${
-                activeFilter === key
-                  ? "bg-gray-900 text-white"
-                  : "border border-gray-300 text-gray-700 hover:bg-gray-50"
-              }`}
-            >
-              {label} {count}
-            </button>
-          ))}
-          <label className="flex items-center gap-2 cursor-pointer select-none ml-1">
-            <Checkbox
-              checked={includeArchived}
-              onCheckedChange={(checked) => {
-                setIncludeArchived(!!checked)
-                if (!checked && activeFilter === "cleared") setActiveFilter("all")
-              }}
-            />
-            <span className="text-sm text-gray-700">Include Archived Items</span>
-          </label>
-        </div>
-
+      {/* Filter chips + archived toggle + search — all in one row */}
+      <div className="flex items-center gap-2 p-2 bg-white border rounded-xl">
+        {FILTERS.map(({ key, label, count }) => (
+          <button
+            key={key}
+            onClick={() => setActiveFilter(key)}
+            className={`px-3 py-1 rounded-full text-sm font-medium transition-colors whitespace-nowrap ${
+              activeFilter === key
+                ? "bg-gray-900 text-white"
+                : "border border-gray-300 text-gray-700 hover:bg-gray-50"
+            }`}
+          >
+            {label} {count}
+          </button>
+        ))}
+        <label className="flex items-center gap-2 cursor-pointer select-none ml-1 whitespace-nowrap">
+          <Checkbox
+            checked={includeArchived}
+            onCheckedChange={(checked) => {
+              setIncludeArchived(!!checked)
+              if (!checked && activeFilter === "cleared") setActiveFilter("all")
+            }}
+          />
+          <span className="text-sm text-gray-700">Include Archived Items</span>
+        </label>
         <div className="relative ml-auto">
           <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
           <input
