@@ -338,7 +338,7 @@ async function approve(event) {
         },
         {
           Put: {
-            TableName: "Container-sfyg4lmhl5axxnl6js6gbcn7fu-NONE",
+            TableName: "CargoUnits",
             Item: {
               "cargoUnitID": existingHazardousCargo.cargoUnitID,
               "arrivalDate": existingHazardousCargo.arrivalDate,

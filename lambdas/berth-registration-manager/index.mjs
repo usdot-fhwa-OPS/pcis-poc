@@ -402,6 +402,9 @@ async function ingestManifest(requestItem) {
             "vesselAgentEmail": requestItem.vesselAgentEmail,
             "vesselAgentName": requestItem.vesselAgentName,
             "weight": row.weight,
+            "documentsChecked": row.documentschecked,
+            "hazmatClass": row.hazmatclass,
+            "unNumber": row.unnumber
           }
         })
       );
@@ -409,7 +412,7 @@ async function ingestManifest(requestItem) {
     } else {
       await dynamo.send(
         new PutCommand({
-          TableName: "Container-sfyg4lmhl5axxnl6js6gbcn7fu-NONE",
+          TableName: "CargoUnits",
           Item: {
             "cargoUnitID": row.cargounitid,
             "arrivalDate": row.arrivaldate,
