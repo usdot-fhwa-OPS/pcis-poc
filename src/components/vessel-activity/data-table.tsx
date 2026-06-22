@@ -42,7 +42,7 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
   const pageCount = table.getPageCount()
 
   return (
-    <div className="w-full border rounded-md overflow-hidden">
+    <div className="w-full bg-white border rounded-xl overflow-hidden">
       <div className="overflow-x-auto">
       <Table>
         <TableHeader>

@@ -102,7 +102,7 @@ export function VesselActivityTable({ data }: VesselActivityTableProps) {
 
       {/* Filter chips + archived toggle + search */}
       <div className="flex flex-wrap items-center gap-3">
-        <div className="flex items-center gap-2 flex-wrap">
+        <div className="p-2 bg-white border rounded-xl flex flex-wrap items-center gap-2">
           {FILTERS.map(({ key, label, count }) => (
             <button
               key={key}
@@ -116,10 +116,7 @@ export function VesselActivityTable({ data }: VesselActivityTableProps) {
               {label} {count}
             </button>
           ))}
-        </div>
-
-        <div className="flex items-center gap-4 ml-auto">
-          <label className="flex items-center gap-2 cursor-pointer select-none">
+          <label className="flex items-center gap-2 cursor-pointer select-none ml-1">
             <Checkbox
               checked={includeArchived}
               onCheckedChange={(checked) => {
@@ -129,17 +126,17 @@ export function VesselActivityTable({ data }: VesselActivityTableProps) {
             />
             <span className="text-sm text-gray-700">Include Archived Items</span>
           </label>
+        </div>
 
-          <div className="relative">
-            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
-            <input
-              type="text"
-              placeholder="Search vessels..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-8 pr-3 py-1.5 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent w-48"
-            />
-          </div>
+        <div className="relative ml-auto">
+          <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
+          <input
+            type="text"
+            placeholder="Search vessels..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-8 pr-3 py-1.5 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent w-48"
+          />
         </div>
       </div>
 

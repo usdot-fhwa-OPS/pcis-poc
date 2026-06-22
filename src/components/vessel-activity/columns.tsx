@@ -166,53 +166,53 @@ const atdColumn: ColumnDef<BerthRequestDomain> = {
 
 const berthColumn: ColumnDef<BerthRequestDomain> = {
   id: "berth",
-  header: "BERTH",
+  header: () => <div className="text-center">BERTH</div>,
   cell: ({ row }) => {
     const display = getBerthDisplay(row.original)
-    if (display === null) {
-      return (
-        <Badge className="border-transparent rounded-full bg-amber-100 hover:bg-amber-100/80 text-amber-700 whitespace-nowrap">
-          Berth Pending
-        </Badge>
-      )
-    }
-    if (display === "Cleared") {
-      return (
-        <Badge className="border-transparent rounded-full bg-gray-100 hover:bg-gray-100/80 text-gray-600">
-          Cleared
-        </Badge>
-      )
-    }
     return (
-      <Badge className="border-transparent rounded-full bg-green-100 hover:bg-green-100/80 text-green-700 whitespace-nowrap">
-        {display}
-      </Badge>
+      <div className="flex justify-center">
+        {display === null ? (
+          <Badge className="border-amber-300 rounded-full bg-amber-100 hover:bg-amber-100/80 text-amber-700 whitespace-nowrap">
+            Berth Pending
+          </Badge>
+        ) : display === "Cleared" ? (
+          <Badge className="border-gray-300 rounded-full bg-gray-100 hover:bg-gray-100/80 text-gray-600">
+            Cleared
+          </Badge>
+        ) : (
+          <Badge className="border-green-300 rounded-full bg-green-100 hover:bg-green-100/80 text-green-700 whitespace-nowrap">
+            {display}
+          </Badge>
+        )}
+      </div>
     )
   },
 }
 
 const manifestColumn: ColumnDef<BerthRequestDomain> = {
   id: "manifest",
-  header: "MANIFEST",
+  header: () => <div className="text-center">MANIFEST</div>,
   cell: ({ row }) => {
     // TODO: Pass actual hazmatCount from backend when available.
     const display = getManifestDisplay(row.original, 0)
-    if (!display) return <span className="text-gray-400 text-sm">—</span>
+    if (!display) return <div className="flex justify-center"><span className="text-gray-400 text-sm">—</span></div>
 
     const isHazmat = display.includes("Hazmat")
     const isCleared = display === "Cleared"
 
     return (
-      <Badge className={`border-transparent rounded-full gap-1 ${
-        isHazmat
-          ? "bg-amber-100 hover:bg-amber-100/80 text-amber-700"
-          : isCleared
-          ? "bg-gray-100 hover:bg-gray-100/80 text-gray-600"
-          : "bg-green-100 hover:bg-green-100/80 text-green-700"
-      }`}>
-        {isHazmat && <TriangleAlert className="h-3 w-3" />}
-        {display}
-      </Badge>
+      <div className="flex justify-center">
+        <Badge className={`rounded-full gap-1 ${
+          isHazmat
+            ? "border-amber-300 bg-amber-100 hover:bg-amber-100/80 text-amber-700"
+            : isCleared
+            ? "border-gray-300 bg-gray-100 hover:bg-gray-100/80 text-gray-600"
+            : "border-green-300 bg-green-100 hover:bg-green-100/80 text-green-700"
+        }`}>
+          {isHazmat && <TriangleAlert className="h-3 w-3" />}
+          {display}
+        </Badge>
+      </div>
     )
   },
 }
