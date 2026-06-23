@@ -194,10 +194,10 @@ function RouteComponent() {
         <div className="flex items-center gap-6 mt-3 leading-none text-sm text-muted-foreground">
           <span className="">{notificationCount} notifications</span>
           {unreadNotificationCount > 0 && (
-            <span className="border-l pl-6">{unreadNotificationCount} unread</span>
+            <span className="border-l border-gray-400 pl-6">{unreadNotificationCount} unread</span>
           )}
           {highPriorityBadgesCount > 0 && (
-            <span className="border-l pl-6">{highPriorityBadgesCount} high priority</span>
+            <span className="border-l border-gray-400 pl-6">{highPriorityBadgesCount} high priority</span>
           )}
         </div>
       )}
