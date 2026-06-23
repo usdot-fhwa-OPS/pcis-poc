@@ -1,5 +1,5 @@
 import React from "react"
-import { FileUp, Home, Ship, User, CalendarClock, BarChart, Anchor, Container, TriangleAlert, Gauge, LogOut } from "lucide-react"
+import { FileUp, Home, Ship, User, CalendarClock, BarChart, Anchor, Container, TriangleAlert, Gauge, LogOut, ShipWheel } from "lucide-react"
 
 import {
   Sidebar,
@@ -49,11 +49,10 @@ const itemsByRole: Record<string, NavItem[]> = {
     { title: "Analytics", url: "/analytics", icon: BarChart },
   ],
   "Vessel Agent": [
-    { title: "Request Berth", url: "/berth-requests", icon: Ship },
-    { title: "Vessel Activity", url: "/vessel-activity", icon: Ship },
+    { title: "Request Berth", url: "/berth-requests", icon: ShipWheel },
     { title: "Berth Reservations", url: "/berth-vessel", icon: Anchor },
+    { title: "Vessel Activity", url: "/vessel-activity", icon: Ship },
     { title: "Hazardous Cargo", url: "/hazardous-cargo", icon: TriangleAlert },
-    { title: "Analytics", url: "/analytics", icon: BarChart },
   ],
   "Trucking Operator": [
     { title: "Home", url: "/", icon: Home },
