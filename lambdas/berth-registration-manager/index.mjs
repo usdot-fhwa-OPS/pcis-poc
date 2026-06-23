@@ -6,7 +6,13 @@ import {
   GetCommand,
   ScanCommand,
   UpdateCommand,
+  DeleteCommand,
 } from "@aws-sdk/lib-dynamodb";
+
+import { GetObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import { fromIni } from "@aws-sdk/credential-providers";
+
+
 
 const BERTH_REQUESTS_TABLE = process.env.BERTH_REQUESTS_TABLE || "BerthRequests";
 const BERTH_MANIFEST_TABLE = process.env.BERTH_MANIFEST_TABLE || "BerthManifestItems";
@@ -202,6 +208,8 @@ function mapManifestRow(row, nowIso) {
     isTerminalNotify: false,
     createdAt: nowIso,
     updatedAt: nowIso,
+    isHazardous: (row.isHazardous),
+    isCompliant:(row.isCompliant),
   };
 }
 
@@ -220,7 +228,7 @@ function decodeNextToken(token) {
   }
 }
 
-function validateRequestPayload(body) {
+async function validateRequestPayload(body) {
   const etaAt = toIsoOrNull(body.etaAt);
   const etdAt = toIsoOrNull(body.etdAt);
 
@@ -236,7 +244,10 @@ function validateRequestPayload(body) {
     return "etdAt must be greater than etaAt";
   }
 
-  return null;
+  await  validateVesselIdInManifest(body)
+
+    return null;
+ 
 }
 
 async function getBerthConfig(terminalId) {
@@ -247,6 +258,15 @@ async function getBerthConfig(terminalId) {
     })
   );
   return result.Item || null;
+}
+
+async function getAllBerthConfig() {
+  const result = await dynamo.send(
+    new ScanCommand({
+      TableName: BERTH_CONFIG_TABLE,
+    })
+  );
+  return result.Items || null;
 }
 
 function normalizeBerthConfig(body, user) {
@@ -306,8 +326,37 @@ function validateBerthAssignment(assignment, config) {
   return null;
 }
 
+async function validateVesselIdInManifest(requestItem) {
+  //const csvText = decodeManifestCsv(requestItem.manifestCsvContent, requestItem.manifestCsvBase64);
+  const csvText = await readFile(requestItem.manifestPath);
+  if (!csvText.trim()) {
+    throw new Error("Manifest content missing: provide manifestCsvContent or manifestCsvBase64 in request");
+  }
+
+  const rows = parseCsv(csvText);
+  if (rows.length === 0) {
+     throw new Error("Manifest content missing: cargo information");
+  }
+  const nowIso = new Date().toISOString(); 
+  for (let i = 0; i < rows.length; i += 1) {
+    const row = rows[i];
+    const mapped = mapManifestRow(row, nowIso);
+
+    if (!mapped) {
+      skippedCount += 1;
+      continue;
+    }
+    if (row.vesselid !== requestItem.vesselID) {
+      console.log(`Manifest content Vessel IDs ${row.vesselid} do not match Berth Request Vessel Id ${requestItem.vesselID}`);
+      throw new Error(`Manifest content Vessel IDs ${row.vesselid} do not match Berth Request Vessel Id ${requestItem.vesselID}`);
+    }
+  }
+  return null;
+}
+
 async function ingestManifest(requestItem) {
-  const csvText = decodeManifestCsv(requestItem.manifestCsvContent, requestItem.manifestCsvBase64);
+  //const csvText = decodeManifestCsv(requestItem.manifestCsvContent, requestItem.manifestCsvBase64);
+  const csvText = await readFile(requestItem.manifestPath);
   if (!csvText.trim()) {
     throw new Error("Manifest content missing: provide manifestCsvContent or manifestCsvBase64 in request");
   }
@@ -328,44 +377,62 @@ async function ingestManifest(requestItem) {
 
     if (!mapped) {
       skippedCount += 1;
+      continue;
+    }
+    if (row.ishazardous === 'TRUE') {
       await dynamo.send(
         new PutCommand({
-          TableName: BERTH_MANIFEST_TABLE,
+          TableName: "HazardousCargo",
           Item: {
-            berthRequestId: requestItem.requestId,
-            rowKey: `ROW#${rowNumber}`,
-            ingestionStatus: "FAILED",
-            ingestionError: "Missing cargoUnitID",
-            rowNumber,
-            rawRow: row,
-            manifestFileName: requestItem.manifestFileName,
-            createdAt: nowIso,
-            updatedAt: nowIso,
+            "vesselId": row.vesselid,
+            "cargoUnitID": row.cargounitid,
+            "arrivalDate": row.arrivaldate,
+            "bcoEmail": row.bcoemail,
+            "bcoName": row.bconame,
+            "cargoType": row.cargotype,
+            "cargoUnitStatus": row.cargounitstatus,
+            "destination": row.destination,
+            "documentsChecked": false,
+            "flaggedDateTime": row.flaggeddatetime,
+            "isCompliant": (row.iscompliant.toLowerCase() === 'true')?true:false,
+            "isHazardous": true,
+            "origin": row.origin,
+            "priority": row.priority,
+            "reviewStatus": row.reviewstatus,
+            "vesselAgentEmail": requestItem.vesselAgentEmail,
+            "vesselAgentName": requestItem.vesselAgentName,
+            "weight": row.weight,
+          }
+        })
+      );
+
+    } else {
+      await dynamo.send(
+        new PutCommand({
+          TableName: "Container-sfyg4lmhl5axxnl6js6gbcn7fu-NONE",
+          Item: {
+            "cargoUnitID": row.cargounitid,
+            "arrivalDate": row.arrivaldate,
+            "bcoEmail": row.bcoemail,
+            "bcoName": row.bconame,
+            "bookingStatus":  row.cargounitstatus,
+            "containerStatus": row.containerstatus,
+            "createdAt": nowIso,
+            "destination": row.destination,
+            "flag": "FALSE",
+            "isBCONotify": "FALSE",
+            "isHazardous": "FALSE",
+            "isTerminalNotify": "FALSE",
+            "isTransportationNotify": "FALSE",
+            "origin": row.origin,
+            "reservationStatus": row.reservationstatus?row.reservationstatus:'UNRESERVED',
+            "updatedAt": nowIso,
+            "vesselID": row.vesselid,
           },
         })
       );
-      continue;
-    }
 
-    await dynamo.send(
-      new PutCommand({
-        TableName: BERTH_MANIFEST_TABLE,
-        Item: {
-          berthRequestId: requestItem.requestId,
-          rowKey: `ROW#${rowNumber}`,
-          rowNumber,
-          ingestionStatus: "COMPLETED",
-          ingestionError: null,
-          manifestFileName: requestItem.manifestFileName,
-          manifestPath: requestItem.manifestPath,
-          cargoUnitID: mapped.cargoUnitID,
-          parsedData: mapped,
-          sourceData: row,
-          createdAt: nowIso,
-          updatedAt: nowIso,
-        },
-      })
-    );
+    }
 
     ingestedCount += 1;
   }
@@ -399,20 +466,27 @@ async function readBerthConfig(event) {
   return response(200, cfg);
 }
 
+async function listBerthConfig(event) {
+  const list = await getAllBerthConfig();
+  if (!list) return response(404, { message: "Unable to list Berth configs" });
+  return response(200, list);
+}
+
 async function createRequest(event) {
   const body = parseBody(event);
-  const validation = validateRequestPayload(body);
+  const validation = await validateRequestPayload(body);
   if (validation) {
     return response(400, { message: validation });
   }
 
   const terminalId = (body.terminalId || "DEFAULT_TERMINAL").toString();
   const config = await getBerthConfig(terminalId);
+  /*
   const assignmentError = validateBerthAssignment(body.berthAssignment, config);
   if (assignmentError) {
     return response(400, { message: assignmentError });
   }
-
+*/
   const nowIso = new Date().toISOString();
   const requestId = randomUUID();
   const services = normalizeServices(body.services);
@@ -433,7 +507,7 @@ async function createRequest(event) {
     manifestPath: (body.manifestPath || "").toString().trim() || null,
     manifestCsvContent: (body.manifestCsvContent || "").toString() || null,
     manifestCsvBase64: (body.manifestCsvBase64 || "").toString() || null,
-    status: "PENDING",
+    status: "REQUESTED",
     denialComment: null,
     decisionAt: null,
     decidedBy: null,
@@ -525,6 +599,7 @@ async function getRequest(event) {
 }
 
 async function updateRequest(event) {
+  console.log(event)
   const requestId = event.pathParameters?.requestId;
   const body = parseBody(event);
   if (!requestId) return response(400, { message: "requestId is required" });
@@ -546,7 +621,7 @@ async function updateRequest(event) {
     vesselAgentEmail: body.vesselAgentEmail ?? existing.Item.vesselAgentEmail,
   };
 
-  const validation = validateRequestPayload(mergedForValidation);
+  const validation = await validateRequestPayload(mergedForValidation);
   if (validation) {
     return response(400, { message: validation });
   }
@@ -554,15 +629,18 @@ async function updateRequest(event) {
   const terminalId = (existing.Item.terminalId || body.terminalId || "DEFAULT_TERMINAL").toString();
   const config = await getBerthConfig(terminalId);
   const assignment = body.berthAssignment ?? existing.Item.berthAssignment;
-  const assignmentError = validateBerthAssignment(assignment, config);
-  if (assignmentError) {
-    return response(400, { message: assignmentError });
-  }
+  // const assignmentError = validateBerthAssignment(assignment, config);
+  // if (assignmentError) {
+  //   return response(400, { message: assignmentError });
+  // }
 
   const nowIso = new Date().toISOString();
   const updates = {
     etaAt: toIsoOrNull(body.etaAt ?? existing.Item.etaAt),
     etdAt: toIsoOrNull(body.etdAt ?? existing.Item.etdAt),
+    ataAt: toIsoOrNull(body.ataAt ?? existing.Item.ataAt),
+    atdAt: toIsoOrNull(body.atdAt ?? existing.Item.atdAt),
+
     berthAssignment: assignment,
     services: body.services ? normalizeServices(body.services) : existing.Item.services,
     manifestFileName: body.manifestFileName ?? existing.Item.manifestFileName,
@@ -570,6 +648,8 @@ async function updateRequest(event) {
     manifestCsvContent: body.manifestCsvContent ?? existing.Item.manifestCsvContent,
     manifestCsvBase64: body.manifestCsvBase64 ?? existing.Item.manifestCsvBase64,
     updatedAt: nowIso,
+    status:(existing.Item.status === 'REQUESTED')?'MODIFIED':existing.Item.status,
+    terminalId:terminalId,
   };
 
   await dynamo.send(
@@ -577,10 +657,19 @@ async function updateRequest(event) {
       TableName: BERTH_REQUESTS_TABLE,
       Key: { requestId },
       UpdateExpression:
-        "SET etaAt = :etaAt, etdAt = :etdAt, berthAssignment = :berthAssignment, services = :services, manifestFileName = :manifestFileName, manifestPath = :manifestPath, manifestCsvContent = :manifestCsvContent, manifestCsvBase64 = :manifestCsvBase64, updatedAt = :updatedAt",
+        "SET #s = :newStatus, etaAt = :etaAt, etdAt = :etdAt, ataAt = :ataAt, atdAt = :atdAt, berthAssignment = :berthAssignment,  \
+        services = :services, manifestFileName = :manifestFileName, manifestPath = :manifestPath, manifestCsvContent = :manifestCsvContent, manifestCsvBase64 = :manifestCsvBase64, updatedAt = :updatedAt, \
+        terminalId = :terminalId ",
+
+      ExpressionAttributeNames: {
+          "#s": "status" // Map the placeholder to the actual keyword
+      },
       ExpressionAttributeValues: {
+        ":newStatus": updates.status,
         ":etaAt": updates.etaAt,
         ":etdAt": updates.etdAt,
+        ":ataAt": updates.ataAt,
+        ":atdAt": updates.atdAt,
         ":berthAssignment": updates.berthAssignment,
         ":services": updates.services,
         ":manifestFileName": updates.manifestFileName,
@@ -588,6 +677,7 @@ async function updateRequest(event) {
         ":manifestCsvContent": updates.manifestCsvContent,
         ":manifestCsvBase64": updates.manifestCsvBase64,
         ":updatedAt": updates.updatedAt,
+        ":terminalId": updates.terminalId,
       },
     })
   );
@@ -619,20 +709,22 @@ async function decideRequest(event) {
   if (!existing) return response(404, { message: "Request not found" });
 
   // Idempotent approve: if already approved and ingestion completed, return current item.
-  if (decision === "APPROVED" && existing.status === "APPROVED" && existing.ingestionStatus === "COMPLETED") {
+ // if (decision === "APPROVED" && existing.status === "APPROVED" && existing.ingestionStatus === "COMPLETED") {
+ if (decision === "APPROVED" && existing.status === "APPROVED") {
+
     return response(200, existing);
   }
 
   const nowIso = new Date().toISOString();
   const user = getUserIdentity(event);
   const denialComment = decision === "DENIED" ? (body.denialComment || "").toString() : null;
-
+  const berthAssignmentDesignation = body.berthAssignment || "";
   await dynamo.send(
     new UpdateCommand({
       TableName: BERTH_REQUESTS_TABLE,
       Key: { requestId },
       UpdateExpression:
-        "SET #status = :status, denialComment = :denialComment, decisionAt = :decisionAt, decidedBy = :decidedBy, updatedAt = :updatedAt",
+        "SET #status = :status, berthAssignment.designation = :berthAssignmentDesignation, denialComment = :denialComment, decisionAt = :decisionAt, decidedBy = :decidedBy, updatedAt = :updatedAt",
       ExpressionAttributeNames: { "#status": "status" },
       ExpressionAttributeValues: {
         ":status": decision,
@@ -640,7 +732,7 @@ async function decideRequest(event) {
         ":decisionAt": nowIso,
         ":decidedBy": user,
         ":updatedAt": nowIso,
-      },
+        ":berthAssignmentDesignation":berthAssignmentDesignation,      },
     })
   );
 
@@ -728,6 +820,20 @@ async function recordArrival(event) {
   return getRequest(event);
 }
 
+async function recordDelete(event) {
+  const requestId = event.pathParameters?.requestId;
+  if (!requestId) return response(400, { message: "requestId is required" });
+  const deleteResp = await dynamo.send(
+    new DeleteCommand({
+      TableName: BERTH_REQUESTS_TABLE,
+      Key: {
+        requestId: requestId,
+      },
+    })
+    
+  );
+  return response(200, `Deleted berth requrest ${requestId}`);
+}
 async function recordDeparture(event) {
   if (!ensureTerminalOperator(event)) {
     return response(403, { message: "Only Terminal Operator can record ATD" });
@@ -756,6 +862,7 @@ async function recordDeparture(event) {
 }
 
 export const handler = async (event) => {
+  console.log(event)
   try {
     if (event.httpMethod === "OPTIONS") {
       return response(200, { ok: true });
@@ -766,6 +873,8 @@ export const handler = async (event) => {
     switch (routeKey) {
       case "GET /berthConfig":
         return await readBerthConfig(event);
+      case "GET /berthConfig/list":
+          return await listBerthConfig(event);                
       case "PUT /berthConfig":
         return await createBerthConfig(event);
       case "POST /berthRequests":
@@ -782,6 +891,9 @@ export const handler = async (event) => {
         return await recordArrival(event);
       case "POST /berthRequests/{requestId}/departure":
         return await recordDeparture(event);
+      case "DELETE /berthRequest/{requestId}":
+        return await recordDelete(event);
+  
       default:
         return response(404, { message: `Unsupported route: ${routeKey}` });
     }
@@ -793,4 +905,18 @@ export const handler = async (event) => {
     console.error("berth-registration-manager error:", err);
     return response(500, { message: err?.message || "Internal server error" });
   }
+};
+
+const s3Client = new S3Client({});
+
+
+const readFile = async (filePath) => {
+  const command = new GetObjectCommand({
+    Bucket: "amplify-d19yhr3c3if28a-de-pcisstoragebucketd380729-t6idvpun4aup",
+    Key: filePath,
+  });
+
+  const { Body } = await s3Client.send(command);
+  const content = await Body.transformToString();
+  return content;
 };

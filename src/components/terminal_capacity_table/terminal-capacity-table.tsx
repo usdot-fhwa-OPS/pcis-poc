@@ -7,7 +7,7 @@ interface TerminalCapacityTableProps {
 
 export function TerminalCapacityTable({ data}: TerminalCapacityTableProps) {
   return (
-    <div className="container mx-auto p-10 overflow-x-auto">
+    <div className="w-full overflow-x-auto">
       <DataTable columns={columns} data={data} />
     </div>
   );

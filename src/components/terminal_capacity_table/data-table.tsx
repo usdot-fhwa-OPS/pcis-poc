@@ -4,16 +4,14 @@ import * as React from "react"
 
 import {
   ColumnDef,
-  ColumnFiltersState,
   flexRender,
   getCoreRowModel,
-  getFilteredRowModel,
-  useReactTable,
   getPaginationRowModel,
+  useReactTable,
 } from "@tanstack/react-table"
 
 import {
-  Table, 
+  Table,
   TableBody,
   TableCell,
   TableHead,
@@ -21,7 +19,7 @@ import {
   TableRow,
 } from "../ui/table"
 
-import { Input } from "../ui/input"
+import { ChevronLeft, ChevronRight } from "lucide-react"
 
 export interface TerminalCapacityTableMeta {
   fetchTerminalCapacityList: any
@@ -38,72 +36,49 @@ export function DataTable<TData, TValue>({
   data,
   meta,
 }: DataTableProps<TData, TValue>) {
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
-
-   const [pagination, setPagination] = React.useState({
-        pageIndex: 0,
-        pageSize: 10,
-    })
-
-  const [rowSelection, setRowSelection] = React.useState({})
+  const [pagination, setPagination] = React.useState({
+    pageIndex: 0,
+    pageSize: 10,
+  })
 
   const table = useReactTable({
     data,
     columns,
     meta: meta as TerminalCapacityTableMeta,
     getCoreRowModel: getCoreRowModel(),
-     onPaginationChange: setPagination,
-    onColumnFiltersChange: setColumnFilters,
-    getFilteredRowModel: getFilteredRowModel(),
-    onRowSelectionChange: setRowSelection,
+    onPaginationChange: setPagination,
     getPaginationRowModel: getPaginationRowModel(),
-    state: {
-        columnFilters,
-        rowSelection,
-        pagination,
-    },
+    state: { pagination },
   })
 
-  return (
-    <div className="mb-4 w-full px-3 py-2 border rounded-md">
-        <Input
-          placeholder="Filter by Terminal Capacity ..." 
-          value={(table.getColumn("capacity")?.getFilterValue() as string) ?? ""} 
-          onChange={(event) =>
-            table.getColumn("capacity")?.setFilterValue(event.target.value) 
-          }
-          className="max-w-sm"
-        />
-      
+  const { pageIndex, pageSize } = table.getState().pagination
+  const totalRows = table.getFilteredRowModel().rows.length
+  const firstRow = totalRows === 0 ? 0 : pageIndex * pageSize + 1
+  const lastRow = Math.min((pageIndex + 1) * pageSize, totalRows)
+  const pageCount = table.getPageCount()
 
+  return (
+    <div className="w-full border rounded-md">
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
-              {headerGroup.headers.map((header) => {
-                return (
-                  <TableHead key={header.id}>
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
-                  </TableHead>
-                )
-              })}
+              {headerGroup.headers.map((header) => (
+                <TableHead key={header.id} className="px-4">
+                  {header.isPlaceholder
+                    ? null
+                    : flexRender(header.column.columnDef.header, header.getContext())}
+                </TableHead>
+              ))}
             </TableRow>
           ))}
         </TableHeader>
         <TableBody>
           {table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => (
-              <TableRow
-                key={row.id}
-                data-state={row.getIsSelected() && "selected"}
-              >
+              <TableRow key={row.id}>
                 {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>
+                  <TableCell key={cell.id} className="py-4 px-4">
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 ))}
@@ -118,46 +93,40 @@ export function DataTable<TData, TValue>({
           )}
         </TableBody>
       </Table>
-      <div className="flex items-center justify-between mt-4">
-        <div className="flex items-center gap-2">
+
+      <div className="flex items-center justify-between px-4 py-3 border-t text-sm text-gray-600">
+        <span>{firstRow} - {lastRow} of {totalRows} items</span>
+        <div className="flex items-center gap-1">
           <button
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
-            className="px-3 py-1 border rounded disabled:opacity-50"
+            className="flex items-center gap-1 px-2 py-1 rounded hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed"
           >
+            <ChevronLeft className="h-4 w-4" />
             Previous
           </button>
-
+          {Array.from({ length: pageCount }, (_, i) => (
+            <button
+              key={i}
+              onClick={() => table.setPageIndex(i)}
+              className={`w-8 h-8 rounded text-sm font-medium ${
+                pageIndex === i
+                  ? "bg-gray-900 text-white"
+                  : "hover:bg-gray-100 text-gray-700"
+              }`}
+            >
+              {i + 1}
+            </button>
+          ))}
           <button
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
-            className="px-3 py-1 border rounded disabled:opacity-50"
+            className="flex items-center gap-1 px-2 py-1 rounded hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed"
           >
             Next
+            <ChevronRight className="h-4 w-4" />
           </button>
         </div>
-
-        <span className="text-sm">
-          Page{" "}
-          <strong>
-            {table.getState().pagination.pageIndex + 1} of{" "}
-            {table.getPageCount()}
-          </strong>
-        </span>
-
-        <select
-          value={table.getState().pagination.pageSize}
-          onChange={(e) =>
-            table.setPageSize(Number(e.target.value))
-          }
-          className="border p-1 rounded"
-        >
-          {[5, 10, 20, 50].map((size) => (
-            <option key={size} value={size}>
-              Show {size}
-            </option>
-          ))}
-        </select>
       </div>
     </div>
   )

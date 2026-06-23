@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as VesselActivityRouteImport } from './routes/vessel-activity'
 import { Route as ReservationRouteImport } from './routes/reservation'
 import { Route as OperatorsRouteImport } from './routes/operators'
 import { Route as NotificationsRouteImport } from './routes/notifications'
@@ -19,12 +20,20 @@ import { Route as CargoRouteImport } from './routes/cargo'
 import { Route as CapacityRouteImport } from './routes/capacity'
 import { Route as BerthVesselRouteImport } from './routes/berth-vessel'
 import { Route as BerthRequestsRouteImport } from './routes/berth-requests'
+import { Route as BerthRequestModifyConfirmationRouteImport } from './routes/berth-request-modify-confirmation'
+import { Route as BerthRequestModifyRouteImport } from './routes/b./routes/berth-request-modify-confirmation'
 import { Route as BerthRequestConfirmationRouteImport } from './routes/berth-request-confirmation'
 import { Route as BerthRequestAddRouteImport } from './routes/berth-request-add'
 import { Route as BerthManagerRouteImport } from './routes/berth-manager'
 import { Route as AnalyticsRouteImport } from './routes/analytics'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as HazardousCargoCargoUnitIDRouteImport } from './routes/hazardous-cargo.$cargoUnitID'
 
+const VesselActivityRoute = VesselActivityRouteImport.update({
+  id: '/vessel-activity',
+  path: '/vessel-activity',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ReservationRoute = ReservationRouteImport.update({
   id: '/reservation',
   path: '/reservation',
@@ -48,7 +57,7 @@ const ImportRoute = ImportRouteImport.update({
 const HazardousCargoManagerRoute = HazardousCargoManagerRouteImport.update({
   id: '/hazardous-cargo-manager',
   path: '/hazardous-cargo-manager',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
 const HazardousCargoRoute = HazardousCargoRouteImport.update({
   id: '/hazardous-cargo',
@@ -75,11 +84,23 @@ const BerthRequestsRoute = BerthRequestsRouteImport.update({
   path: '/berth-requests',
   getParentRoute: () => rootRouteImport,
 } as any)
-const BerthRequestConfirmationRoute = BerthRequestConfirmationRouteImport.update({
-  id: '/berth-request-confirmation',
-  path: '/berth-request-confirmation',
+const BerthRequestModifyConfirmationRoute =
+  BerthRequestModifyConfirmationRouteImport.update({
+    id: '/berth-request-modify-confirmation',
+    path: '/berth-request-modify-confirmation',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const BerthRequestModifyRoute = BerthRequestModifyRouteImport.update({
+  id: '/berth-request-modify',
+  path: '/berth-request-modify',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BerthRequestConfirmationRoute =
+  BerthRequestConfirmationRouteImport.update({
+    id: '/berth-request-confirmation',
+    path: '/berth-request-confirmation',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const BerthRequestAddRoute = BerthRequestAddRouteImport.update({
   id: '/berth-request-add',
   path: '/berth-request-add',
@@ -100,240 +121,173 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-
-// Populate the FileRoutesByPath interface
-
-declare module '@tanstack/react-router' {
-  interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexImport
-      parentRoute: typeof rootRoute
-    }
-    '/analytics': {
-      id: '/analytics'
-      path: '/analytics'
-      fullPath: '/analytics'
-      preLoaderRoute: typeof AnalyticsImport
-      parentRoute: typeof rootRoute
-    }
-    '/hazardous-cargo-manager': {
-      id: '/hazardous-cargo-manager'
-      path: '/hazardous-cargo-manager'
-      fullPath: '/hazardous-cargo-manager'
-      preLoaderRoute: typeof HazardousCargoManagerImport
-      parentRoute: typeof rootRoute
-    }
-    '/hazardous-cargo': {
-      id: '/hazardous-cargo'
-      path: '/hazardous-cargo'
-      fullPath: '/hazardous-cargo'
-      preLoaderRoute: typeof HazardousCargoImport
-      parentRoute: typeof rootRoute
-    }
-    '/berth-manager': {
-      id: '/berth-manager'
-      path: '/berth-manager'
-      fullPath: '/berth-manager'
-      preLoaderRoute: typeof BerthManagerImport
-      parentRoute: typeof rootRoute
-    }
-    '/berth-requests': {
-      id: '/berth-requests'
-      path: '/berth-requests'
-      fullPath: '/berth-requests'
-      preLoaderRoute: typeof BerthRequestsImport
-      parentRoute: typeof rootRoute
-    }
-    '/capacity': {
-      id: '/capacity'
-      path: '/capacity'
-      fullPath: '/capacity'
-      preLoaderRoute: typeof CapacityImport
-      parentRoute: typeof rootRoute
-    }
-    '/cargo': {
-      id: '/cargo'
-      path: '/cargo'
-      fullPath: '/cargo'
-      preLoaderRoute: typeof CargoImport
-      parentRoute: typeof rootRoute
-    }
-    '/import': {
-      id: '/import'
-      path: '/import'
-      fullPath: '/import'
-      preLoaderRoute: typeof ImportImport
-      parentRoute: typeof rootRoute
-    }
-    '/notifications': {
-      id: '/notifications'
-      path: '/notifications'
-      fullPath: '/notifications'
-      preLoaderRoute: typeof NotificationsImport
-      parentRoute: typeof rootRoute
-    }
-    '/operators': {
-      id: '/operators'
-      path: '/operators'
-      fullPath: '/operators'
-      preLoaderRoute: typeof OperatorsImport
-      parentRoute: typeof rootRoute
-    }
-    '/reservation': {
-      id: '/reservation'
-      path: '/reservation'
-      fullPath: '/reservation'
-      preLoaderRoute: typeof ReservationImport
-      parentRoute: typeof rootRoute
-    }
-    '/terminal-capacity': {
-      id: '/terminal-capacity'
-      path: '/terminal-capacity'
-      fullPath: '/terminal-capacity'
-      preLoaderRoute: typeof TerminalCapacityImport
-      parentRoute: typeof rootRoute
-    }
-  }
-}
-
-// Create and export the route tree
+const HazardousCargoCargoUnitIDRoute =
+  HazardousCargoCargoUnitIDRouteImport.update({
+    id: '/$cargoUnitID',
+    path: '/$cargoUnitID',
+    getParentRoute: () => HazardousCargoRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/analytics': typeof AnalyticsRoute
-  '/hazardous-cargo-manager': typeof HazardousCargoManagerRoute
-  '/hazardous-cargo': typeof HazardousCargoRoute
   '/berth-manager': typeof BerthManagerRoute
-  '/berth-request-confirmation': typeof BerthRequestConfirmationRoute
   '/berth-request-add': typeof BerthRequestAddRoute
+  '/berth-request-confirmation': typeof BerthRequestConfirmationRoute
+  '/berth-request-modify': typeof BerthRequestModifyRoute
+  '/berth-request-modify-confirmation': typeof BerthRequestModifyConfirmationRoute
   '/berth-requests': typeof BerthRequestsRoute
   '/berth-vessel': typeof BerthVesselRoute
   '/capacity': typeof CapacityRoute
   '/cargo': typeof CargoRoute
-  '/hazardous-cargo': typeof HazardousCargoRoute
+  '/hazardous-cargo': typeof HazardousCargoRouteWithChildren
+  '/hazardous-cargo-manager': typeof HazardousCargoManagerRoute
   '/import': typeof ImportRoute
   '/notifications': typeof NotificationsRoute
   '/operators': typeof OperatorsRoute
   '/reservation': typeof ReservationRoute
+  '/vessel-activity': typeof VesselActivityRoute
+  '/hazardous-cargo/$cargoUnitID': typeof HazardousCargoCargoUnitIDRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/analytics': typeof AnalyticsRoute
-  '/hazardous-cargo-manager': typeof HazardousCargoManagerRoute
-  '/hazardous-cargo': typeof HazardousCargoRoute
   '/berth-manager': typeof BerthManagerRoute
-  '/berth-request-confirmation': typeof BerthRequestConfirmationRoute
   '/berth-request-add': typeof BerthRequestAddRoute
+  '/berth-request-confirmation': typeof BerthRequestConfirmationRoute
+  '/berth-request-modify': typeof BerthRequestModifyRoute
+  '/berth-request-modify-confirmation': typeof BerthRequestModifyConfirmationRoute
   '/berth-requests': typeof BerthRequestsRoute
   '/berth-vessel': typeof BerthVesselRoute
   '/capacity': typeof CapacityRoute
   '/cargo': typeof CargoRoute
-  '/hazardous-cargo': typeof HazardousCargoRoute
+  '/hazardous-cargo': typeof HazardousCargoRouteWithChildren
+  '/hazardous-cargo-manager': typeof HazardousCargoManagerRoute
   '/import': typeof ImportRoute
   '/notifications': typeof NotificationsRoute
   '/operators': typeof OperatorsRoute
   '/reservation': typeof ReservationRoute
+  '/vessel-activity': typeof VesselActivityRoute
+  '/hazardous-cargo/$cargoUnitID': typeof HazardousCargoCargoUnitIDRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/analytics': typeof AnalyticsRoute
-  '/hazardous-cargo-manager': typeof HazardousCargoManagerRoute
-  '/hazardous-cargo': typeof HazardousCargoRoute
   '/berth-manager': typeof BerthManagerRoute
-  '/berth-request-confirmation': typeof BerthRequestConfirmationRoute
   '/berth-request-add': typeof BerthRequestAddRoute
+  '/berth-request-confirmation': typeof BerthRequestConfirmationRoute
+  '/berth-request-modify': typeof BerthRequestModifyRoute
+  '/berth-request-modify-confirmation': typeof BerthRequestModifyConfirmationRoute
   '/berth-requests': typeof BerthRequestsRoute
   '/berth-vessel': typeof BerthVesselRoute
   '/capacity': typeof CapacityRoute
   '/cargo': typeof CargoRoute
-  '/hazardous-cargo': typeof HazardousCargoRoute
+  '/hazardous-cargo': typeof HazardousCargoRouteWithChildren
+  '/hazardous-cargo-manager': typeof HazardousCargoManagerRoute
   '/import': typeof ImportRoute
   '/notifications': typeof NotificationsRoute
   '/operators': typeof OperatorsRoute
   '/reservation': typeof ReservationRoute
+  '/vessel-activity': typeof VesselActivityRoute
+  '/hazardous-cargo/$cargoUnitID': typeof HazardousCargoCargoUnitIDRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/analytics'
-    | '/hazardous-cargo-manager'
-    | '/hazardous-cargo'
     | '/berth-manager'
-    | '/berth-request-confirmation'
     | '/berth-request-add'
+    | '/berth-request-confirmation'
+    | '/berth-request-modify'
+    | '/berth-request-modify-confirmation'
     | '/berth-requests'
     | '/berth-vessel'
     | '/capacity'
     | '/cargo'
     | '/hazardous-cargo'
+    | '/hazardous-cargo-manager'
     | '/import'
     | '/notifications'
     | '/operators'
     | '/reservation'
+    | '/vessel-activity'
+    | '/hazardous-cargo/$cargoUnitID'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/analytics'
-    | '/hazardous-cargo-manager'
-    | '/hazardous-cargo'
     | '/berth-manager'
-    | '/berth-request-confirmation'
     | '/berth-request-add'
+    | '/berth-request-confirmation'
+    | '/berth-request-modify'
+    | '/berth-request-modify-confirmation'
     | '/berth-requests'
     | '/berth-vessel'
     | '/capacity'
     | '/cargo'
     | '/hazardous-cargo'
+    | '/hazardous-cargo-manager'
     | '/import'
+    | '/vessel-activity'
     | '/notifications'
     | '/operators'
     | '/reservation'
+    | '/hazardous-cargo/$cargoUnitID'
   id:
     | '__root__'
     | '/'
     | '/analytics'
-    | '/hazardous-cargo-manager'
-    | '/hazardous-cargo'
     | '/berth-manager'
-    | '/berth-request-confirmation'
     | '/berth-request-add'
+    | '/berth-request-confirmation'
+    | '/berth-request-modify'
+    | '/berth-request-modify-confirmation'
     | '/berth-requests'
     | '/berth-vessel'
     | '/capacity'
     | '/cargo'
     | '/hazardous-cargo'
+    | '/hazardous-cargo-manager'
     | '/import'
     | '/notifications'
     | '/operators'
     | '/reservation'
+    | '/vessel-activity'
+    | '/hazardous-cargo/$cargoUnitID'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AnalyticsRoute: typeof AnalyticsRoute
-  HazardousCargoManagerRoute: typeof HazardousCargoManagerRoute
-  HazardousCargoRoute: typeof HazardousCargoRoute
   BerthManagerRoute: typeof BerthManagerRoute
-  BerthRequestConfirmationRoute: typeof BerthRequestConfirmationRoute
   BerthRequestAddRoute: typeof BerthRequestAddRoute
+  BerthRequestConfirmationRoute: typeof BerthRequestConfirmationRoute
+  BerthRequestModifyRoute: typeof BerthRequestModifyRoute
+  BerthRequestModifyConfirmationRoute: typeof BerthRequestModifyConfirmationRoute
   BerthRequestsRoute: typeof BerthRequestsRoute
   BerthVesselRoute: typeof BerthVesselRoute
   CapacityRoute: typeof CapacityRoute
   CargoRoute: typeof CargoRoute
-  HazardousCargoRoute: typeof HazardousCargoRoute
+  HazardousCargoRoute: typeof HazardousCargoRouteWithChildren
+  HazardousCargoManagerRoute: typeof HazardousCargoManagerRoute
   ImportRoute: typeof ImportRoute
   NotificationsRoute: typeof NotificationsRoute
   OperatorsRoute: typeof OperatorsRoute
   ReservationRoute: typeof ReservationRoute
+  VesselActivityRoute: typeof VesselActivityRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/vessel-activity': {
+      id: '/vessel-activity'
+      path: '/vessel-activity'
+      fullPath: '/vessel-activity'
+      preLoaderRoute: typeof VesselActivityRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/reservation': {
       id: '/reservation'
       path: '/reservation'
@@ -360,6 +314,13 @@ declare module '@tanstack/react-router' {
       path: '/import'
       fullPath: '/import'
       preLoaderRoute: typeof ImportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/hazardous-cargo-manager': {
+      id: '/hazardous-cargo-manager'
+      path: '/hazardous-cargo-manager'
+      fullPath: '/hazardous-cargo-manager'
+      preLoaderRoute: typeof HazardousCargoManagerRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/hazardous-cargo': {
@@ -397,6 +358,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BerthRequestsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/berth-request-modify-confirmation': {
+      id: '/berth-request-modify-confirmation'
+      path: '/berth-request-modify-confirmation'
+      fullPath: '/berth-request-modify-confirmation'
+      preLoaderRoute: typeof BerthRequestModifyConfirmationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/berth-request-modify': {
+      id: '/berth-request-modify'
+      path: '/berth-request-modify'
+      fullPath: '/berth-request-modify'
+      preLoaderRoute: typeof BerthRequestModifyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/berth-request-confirmation': {
       id: '/berth-request-confirmation'
       path: '/berth-request-confirmation'
@@ -432,91 +407,48 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/hazardous-cargo/$cargoUnitID': {
+      id: '/hazardous-cargo/$cargoUnitID'
+      path: '/$cargoUnitID'
+      fullPath: '/hazardous-cargo/$cargoUnitID'
+      preLoaderRoute: typeof HazardousCargoCargoUnitIDRouteImport
+      parentRoute: typeof HazardousCargoRoute
+    }
   }
 }
+
+interface HazardousCargoRouteChildren {
+  HazardousCargoCargoUnitIDRoute: typeof HazardousCargoCargoUnitIDRoute
+}
+
+const HazardousCargoRouteChildren: HazardousCargoRouteChildren = {
+  HazardousCargoCargoUnitIDRoute: HazardousCargoCargoUnitIDRoute,
+}
+
+const HazardousCargoRouteWithChildren = HazardousCargoRoute._addFileChildren(
+  HazardousCargoRouteChildren,
+)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AnalyticsRoute: AnalyticsRoute,
-  HazardousCargoManagerRoute: HazardousCargoManagerRoute,
-  HazardousCargoRoute: HazardousCargoRoute,
   BerthManagerRoute: BerthManagerRoute,
-  BerthRequestConfirmationRoute: BerthRequestConfirmationRoute,
   BerthRequestAddRoute: BerthRequestAddRoute,
+  BerthRequestConfirmationRoute: BerthRequestConfirmationRoute,
+  BerthRequestModifyRoute: BerthRequestModifyRoute,
+  BerthRequestModifyConfirmationRoute: BerthRequestModifyConfirmationRoute,
   BerthRequestsRoute: BerthRequestsRoute,
   BerthVesselRoute: BerthVesselRoute,
   CapacityRoute: CapacityRoute,
   CargoRoute: CargoRoute,
-  HazardousCargoRoute: HazardousCargoRoute,
+  HazardousCargoRoute: HazardousCargoRouteWithChildren,
+  HazardousCargoManagerRoute: HazardousCargoManagerRoute,
   ImportRoute: ImportRoute,
   NotificationsRoute: NotificationsRoute,
   OperatorsRoute: OperatorsRoute,
   ReservationRoute: ReservationRoute,
+  VesselActivityRoute: VesselActivityRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-/* ROUTE_MANIFEST_START
-{
-  "routes": {
-    "__root__": {
-      "filePath": "__root.tsx",
-      "children": [
-        "/",
-        "/analytics",
-        "/hazardous-cargo-manager",
-        "/hazardous-cargo",
-        "/berth-manager",
-        "/berth-requests",
-        "/capacity",
-        "/cargo",
-        "/import",
-        "/notifications",
-        "/operators",
-        "/reservation",
-        "/terminal-capacity"
-      ]
-    },
-    "/": {
-      "filePath": "index.tsx"
-    },
-    "/analytics": {
-      "filePath": "analytics.tsx"
-    },
-    "/hazardous-cargo-manager": {
-      "filePath": "hazardous-cargo-manager.tsx"
-    },
-    "/hazardous-cargo": {
-      "filePath": "hazardous-cargo.tsx"
-    },
-    "/berth-manager": {
-      "filePath": "berth-manager.tsx"
-    },
-    "/berth-requests": {
-      "filePath": "berth-requests.tsx"
-    },
-    "/capacity": {
-      "filePath": "capacity.tsx"
-    },
-    "/cargo": {
-      "filePath": "cargo.tsx"
-    },
-    "/import": {
-      "filePath": "import.tsx"
-    },
-    "/notifications": {
-      "filePath": "notifications.tsx"
-    },
-    "/operators": {
-      "filePath": "operators.tsx"
-    },
-    "/reservation": {
-      "filePath": "reservation.tsx"
-    },
-    "/terminal-capacity": {
-      "filePath": "terminal-capacity.tsx"
-    }
-  }
-}
-ROUTE_MANIFEST_END */

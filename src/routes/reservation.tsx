@@ -24,7 +24,7 @@ const selectionSetTransOpUpcomingBookings = ['vesselID', 'cargoUnitID', 'origin'
 //Create a type based on your selectionSet that will be later used for the columns.tsx file of the able
 export type TransOpUpcomingBookings = SelectionSet<Schema['Container']['type'], typeof selectionSetTransOpUpcomingBookings>
 
-const selectionSetTransOpOngoingBookings = ['vesselID', 'cargoUnitID', 'origin', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail', 'reservationDate', 'reservationTime', 'reservationStatus', 'flag', 'containerStatus'] as const; 
+const selectionSetTransOpOngoingBookings = ['vesselID', 'cargoUnitID', 'origin', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail', 'reservationDate', 'reservationTime', 'reservationStatus', 'twicEscortRequired', 'flag', 'containerStatus'] as const; 
 export type TransOpOngoingBookings = SelectionSet<Schema['Container']['type'], typeof selectionSetTransOpOngoingBookings>
 
 const selectionSetTerminalOPUpcoming = ['vesselID', 'cargoUnitID', 'origin', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail','reservationDate','reservationTime','reservationStatus', 'flag'] as const; 
@@ -36,7 +36,7 @@ export type TerminalOpModifiedBookings = SelectionSet<Schema['Container']['type'
 const selectionSetBCOUpcomingBookings = ['vesselID', 'cargoUnitID', 'origin', 'destination', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail', 'containerStatus','arrivalDate', 'flag'] as const; 
 //Create a type based on your selectionSet that will be later used for the columns.tsx file of the able
 
-const selectionSetTerminalOPOngoing = ['vesselID', 'cargoUnitID', 'origin', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail','reservationDate','reservationTime','reservationStatus', 'flag'] as const; 
+const selectionSetTerminalOPOngoing = ['vesselID', 'cargoUnitID', 'origin', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail','reservationDate','reservationTime','reservationStatus', 'twicEscortRequired', 'flag'] as const; 
 export type BCOUpcomingBookings = SelectionSet<Schema['Container']['type'], typeof selectionSetBCOUpcomingBookings>
 
 //Create a type based on your selectionSet that will be later used for the columns.tsx file of the able
@@ -66,6 +66,7 @@ const selectionSetTransportation_CompletedData = [
   'reservationStatus',
   'resPickupDate',
   'reservationTime',
+  'twicEscortRequired'
 ] as const;
 
 //Define the selection of data that will be used for the table
@@ -82,6 +83,7 @@ const selectionSetTerminal_CompletedData = [
   'reservationStatus',
   'resPickupDate',
   'reservationTime',
+  'twicEscortRequired'
 ] as const;
 
 //Create a type based on your selectionSet that will be later used for the columns.tsx file of the able
@@ -590,7 +592,7 @@ function RouteComponent() {
 
 //Update Terminal Operator Booking
 
-async function updateBooking(id: string, status: string, reservationDate?: string, reservationTime?: string): Promise<boolean> {
+async function updateBooking(id: string, status: string, reservationDate?: string, reservationTime?: string, twicEscortRequired?: boolean): Promise<boolean> {
   if (!navigator.onLine) {
     console.error("No internet connection. Update not submitted. Please check your connection and try again.");
     toast.error("No internet connection. Update not submitted. Please check your connection and try again.");
@@ -598,7 +600,7 @@ async function updateBooking(id: string, status: string, reservationDate?: strin
   }
 
   try {
-    let updatePayload: any = { cargoUnitID: id, reservationStatus: status };
+    let updatePayload: any = { cargoUnitID: id, reservationStatus: status, twicEscortRequired: twicEscortRequired };
 
     if (status === "unassigned") {
       Object.assign(updatePayload, {
@@ -630,6 +632,7 @@ async function updateBooking(id: string, status: string, reservationDate?: strin
       //Approving a Booking -> Pending Pick Up
       Object.assign(updatePayload, {
         resApprovalDate: new Date().toLocaleDateString("en-US"),
+        twicEscortRequired,
         isTerminalNotify: false,
         isBCONotify: true,
         isTransportationNotify: true,
@@ -652,7 +655,7 @@ async function updateBooking(id: string, status: string, reservationDate?: strin
     return false; // Explicitly return false when the update fails
   }
 }
-       
+
 
 const [BCOOngoingData, setBCOOngoingBookings] = useState<BCOOngoingBooking[]>([]);
 

@@ -11,7 +11,7 @@ export const Route = createFileRoute('/berth-requests')({
   component: BerthRequestComponent,
 })
 
-function BerthRequestComponent() {
+export function BerthRequestComponent() {
   
   return (
   <>
@@ -28,17 +28,22 @@ function BerthRequestComponent() {
 function AddNewBerthRequestButton() {
 
   const { user } = useAuthenticator();
-
+  //const [loading, setLoading] = useState(true)
   const [userAttributes, setUserAttributes] = useState<{ role: string; email: string }>({
     role: '',
     email: '',
   });
 
+   //const brReqList = useAppSelector(getBerthRequestList);
+
   const navigate = useNavigate();
   const navigateToBerthRequestAdd = () => {
     navigate({ to: "/berth-request-add" });
   }
-  
+   
+
+
+
   useEffect(() => {
     async function getUserAttributes() {
       if (user) {

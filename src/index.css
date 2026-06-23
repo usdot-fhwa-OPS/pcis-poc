@@ -51,6 +51,32 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 } */
 
+/* BEGIN - Testing Global Styling - SCD PCIS2-112 */
+
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-size: 1rem;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light;
+  color: #101828;
+  background-color: #fff;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  font-weight: 500;
+  text-decoration: inherit;
+}
+
+/* END - Testing Global Styling */
+
+/*
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
@@ -60,7 +86,7 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
-
+*/
 
 @layer base {
   :root {
@@ -152,26 +178,6 @@ button:focus-visible {
   body {
     @apply bg-background text-foreground;
   }
-}
-.self-help {
-  background-color: #007AFF;
-  border-top-right-radius: 20px;
-  border-top-left-radius: 20px;
-  border-bottom-left-radius: 20px;
-  border-bottom-right-radius: 20px;
-  width: 75px;
-  height: 55px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.self-help-right {
-  display: flex;
-  justify-content: flex-end;
-  align-items: flex-end;
-  padding-right: 1%;
-  height: fit-content;
 }
 
 .clickable-item {

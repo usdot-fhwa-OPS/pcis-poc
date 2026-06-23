@@ -21,10 +21,9 @@ export default function SettingsButton({ role}: SettingsDialogProps) {
     }
     
     return (
-      <Button onClick={navigateToCapacity} variant="ghost" size="icon" className="h-8 w-8 mr-0">
-             <Settings className="h-4 w-4" />
-             <span className="sr-only">Open settings</span>
+      <Button onClick={navigateToCapacity} variant="ghost" size="icon" className="[&_svg]:size-5">
+        <Settings />
+        <span className="sr-only">Open Settings</span>
       </Button>
      )
   }  
-

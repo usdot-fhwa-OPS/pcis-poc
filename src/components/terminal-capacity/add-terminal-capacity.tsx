@@ -212,14 +212,14 @@ const [endTime, setEndTime] = useState<string | undefined>(timeOptions[0])
                 onOpenChange={(open) => {
                     setIsDialogOpen(open)
 
-                }}
-            >
-                <DialogTrigger>
-                    <TooltipProvider>
-                        <Tooltip delayDuration={300}>
-                            <TooltipTrigger>
-                                <div>
-                                    <Button onClick={handleOpen} >Add Terminal Capacity</Button>
+            }}
+        >
+            <DialogTrigger>
+                <TooltipProvider>
+                    <Tooltip delayDuration={300}>
+                        <TooltipTrigger>
+                            <div>
+                              <Button onClick={handleOpen} >Add Temporary Capacity</Button>
 
                                 </div>
                             </TooltipTrigger>

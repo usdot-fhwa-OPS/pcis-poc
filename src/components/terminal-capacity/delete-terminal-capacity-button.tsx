@@ -30,11 +30,9 @@ export function DeleteTerminalCapacityButton(terminalCapacityUid:string) {
     
     return (
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogTrigger>
-            <Button variant="destructive">
-              Delete
-            </Button>
-        </DialogTrigger>
+        <DialogTrigger render={
+            <Button size="sm" variant="link" className="text-red-600 p-0 h-auto">Delete</Button>
+        } />
         <DialogContent>
             <DialogHeader className="p-4 border-b">
               <DialogTitle>CONFIRMATION REQUIRED</DialogTitle>
@@ -53,4 +51,4 @@ export function DeleteTerminalCapacityButton(terminalCapacityUid:string) {
         </DialogContent>
       </Dialog>
     )
-  }  
+  }

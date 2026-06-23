@@ -44,20 +44,18 @@ if (loading) {
     return <div>Loading...</div>
   }
  return (
-
-   <div className="p-2">
-      <h1 className="text-2xl font-bold text-center">Terminal Capacity</h1>
-       <p className="text-left">Maximum Terminal Capacity: {maxTerminalCapacity[0].capacity} Reservations per day&nbsp;&nbsp;
-        <UpdateTerminalCapacityButton maxTerminalCapacity={maxTerminalCapacity[0]}/>      
-       </p>
-      <div className="container mx-auto p-10">
-        <div className="parent-container">
-          <AddTerminalCapacity/>
-        </div>
-              <TerminalCapacityTable data={data.filter((item)=>(item.capacityType==='TEMPORARY'))}/>
-            </div>
-    </div>    
-    
+   <div className="p-6">
+      <div className="flex items-center justify-between mb-4">
+        <p className="text-sm text-gray-700">
+          Maximum Terminal Capacity:&nbsp;
+          <span className="font-semibold">{maxTerminalCapacity[0].capacity} Reservations per day</span>
+          &nbsp;&nbsp;
+          <UpdateTerminalCapacityButton maxTerminalCapacity={maxTerminalCapacity[0]}/>
+        </p>
+        <AddTerminalCapacity/>
+      </div>
+      <TerminalCapacityTable data={data.filter((item)=>(item.capacityType==='TEMPORARY'))}/>
+    </div>
   )
 
 }

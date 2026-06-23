@@ -1,6 +1,5 @@
-import React, {useState } from "react";
+import React, { useState } from "react";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
-import { Tooltip, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
 import { Button } from "../ui/button";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
@@ -272,22 +271,18 @@ const [endTime, setEndTime] = useState<string | undefined>(timeOptions[0])
                 open={isDialogOpen}
                 onOpenChange={(open) => {
                     setIsDialogOpen(open)
-    
                 }}
             >
-                <DialogTrigger>
-                    <TooltipProvider>
-                        <Tooltip delayDuration={300}>
-                            <TooltipTrigger>
-                                <div>
-                                    <Button onClick={handleOpen}>Edit</Button>
-    
-                                </div>
-                            </TooltipTrigger>
-    
-                        </Tooltip>
-                    </TooltipProvider>
-                </DialogTrigger>
+                <DialogTrigger render={
+                    <Button
+                              size="sm"
+                              variant="link"
+                              className="text-blue-600 p-0 h-auto"
+                              onClick={handleOpen}
+                            >
+                              Modify
+                    </Button>
+                } />
                 <DialogContent className="DialogContent">
                     <div className="-mx-4 no-scrollbar max-h-[100vh] overflow-y-auto px-4">
                         <ScrollArea className="h-[800px] w-full rounded-md border p-4">

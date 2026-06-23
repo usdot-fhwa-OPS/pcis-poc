@@ -5,14 +5,16 @@ import { fetchUserAttributes } from 'aws-amplify/auth';
 import  { useEffect, useState } from 'react';
 import { SidebarProvider } from "../components/ui/sidebar";
 import { AppSidebar } from "../components/app-sidebar/app-sidebar"
-import UserButton from '../components/userButton/userButton';
+import UserHeader from '../components/user-header/userHeader';
 import '../index.css';
 import { Toaster } from 'sonner';
 import { UserContext } from '../AppContext';
+import { Selfhelp } from '../components/self-help/self-help';
 
 export interface UserAttributes {
   given_name?: string;
   family_name?: string;
+  email?:string;
   'custom:role'?: string;
 }
 
@@ -30,7 +32,7 @@ export const Route = createRootRoute({
 
 function RootComponent() {
   const { user } = useAuthenticator()
-  const [userAttributes, setUserAttributes] = useState<{ fullName: string; role: string }>({ fullName: "", role: "" })
+  const [userAttributes, setUserAttributes] = useState<{ fullName: string; role: string, email:string|undefined }>({ fullName: "", role: "" , email:""})
 
   const [userSecurityAttrubutes, setUserSecurityAttrubutes] = useState<UserAttributes>({});
   
@@ -47,6 +49,7 @@ function RootComponent() {
         setUserAttributes({
           fullName,
           role: attributes["custom:role"] ?? "No role assigned",
+          email: attributes.email,
         })
         setUserSecurityAttrubutes({...attributes});
       } catch (error) {
@@ -64,15 +67,14 @@ function RootComponent() {
       <SidebarProvider>
         <AppSidebar />
         {userSecurityAttrubutes.given_name && <UserContext.Provider value={userSecurityAttrubutes} >  
-        <div className="flex-1">
+        <div className="flex-1 min-w-0 bg-gray-50">
           <Toaster position="top-center" richColors={true} expand={true} />
-          <div className="flex items-center justify-end p-4">
-            <UserButton fullName={userAttributes.fullName} role={userAttributes.role} />
-          </div>
+          <UserHeader fullName={userAttributes.fullName} role={userAttributes.role} />
          
             <Outlet /> 
             
         </div>
+        <Selfhelp />
         </UserContext.Provider>}
       </SidebarProvider>
     </div>
