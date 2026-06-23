@@ -44,33 +44,33 @@ const UserHeader: React.FC<UserHeaderProps> = ({ fullName, role }) => {
     
     return (
     <>
-        <div className="flex items-center gap-4 sm:gap-5 p-3 sm:pr-6 bg-white border-b mb-4">
-            <SidebarTrigger className="shrink-0" />
+        <div className="flex items-center gap-4 sm:gap-5 p-3 sm:pr-6 bg-white border-b">
+            <SidebarTrigger className="shrink-0 w-9 h-9 [&_svg]:size-5" />
             <div className="flex items-center gap-4 sm:gap-5 ml-auto">
-            <Selfhelp />
-            <Button variant="ghost" size="icon" className="hidden gap-[0.125rem] w-[2.875rem] [&_svg]:size-5">
-                <Mail />
-                <span className="sr-only">Open Messages</span>
-                <Badge variant="destructive" className="self-start h-2 w-2 rounded-full mt-1 p-0 shadow-none">
-                    <span className="sr-only">New Message</span>
-                </Badge>
-            </Button>
-            <Button onClick={navigateToNotifications} variant="ghost" size="icon" className="gap-0 w-11 [&_svg]:size-5">
-                <Bell />
-                <span className="sr-only">Open Notifications</span>
-                <Badge variant="destructive" className="self-start h-2 w-2 rounded-full mt-1 p-0 shadow-none">
-                    <span className="sr-only">New Notification</span>
-                </Badge>
-            </Button>
-            <div className="user-info">
-                <div className="user-info-name">
-                    <span>{fullName}</span>
-                    <span className="user-info-role">{role}</span>
+                <Selfhelp />
+                <Button variant="ghost" size="icon" className="hidden gap-[0.125rem] w-[2.875rem] [&_svg]:size-5">
+                    <Mail />
+                    <span className="sr-only">Open Messages</span>
+                    <Badge variant="destructive" className="self-start h-2 w-2 rounded-full mt-1 p-0 shadow-none">
+                        <span className="sr-only">New Message</span>
+                    </Badge>
+                </Button>
+                <Button onClick={navigateToNotifications} variant="ghost" size="icon" className="gap-0 w-11 [&_svg]:size-5">
+                    <Bell />
+                    <span className="sr-only">Open Notifications</span>
+                    <Badge variant="destructive" className="self-start h-2 w-2 rounded-full mt-1 p-0 shadow-none">
+                        <span className="sr-only">New Notification</span>
+                    </Badge>
+                </Button>
+                <div className="user-info">
+                    <div className="user-info-name">
+                        <span>{fullName}</span>
+                        <span className="user-info-role">{role}</span>
+                    </div>
+                    <Avatar className="h-9 w-9">
+                        <AvatarFallback style={{ backgroundColor: bgColor }} className="text-white text-lg font-semibold">{initial}</AvatarFallback>
+                    </Avatar>
                 </div>
-                <Avatar className="h-9 w-9">
-                    <AvatarFallback style={{ backgroundColor: bgColor }} className="text-white text-lg font-semibold">{initial}</AvatarFallback>
-                </Avatar>
-            </div>
             </div>
         </div>
     </>
