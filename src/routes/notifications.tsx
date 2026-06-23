@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 
 import { Badge } from "../components/ui/badge";
-import { Bell, Clock } from "lucide-react"
+import { Bell, CalendarCheck, Clock } from "lucide-react"
 
 // Start new
 
@@ -216,6 +216,17 @@ function RouteComponent() {
           }
         };
 
+        const notificationIcon = () => {
+          if ((notificationTitle() === 'Late for Pick Up') 
+            || (notificationTitle() === 'Reservation Approval Required')) {
+            return(
+              <span className="inline-flex shrink-0 rounded-full p-3 bg-blue-100">
+                <CalendarCheck className="size-4 stroke-blue-600" />
+              </span>
+            )
+          }
+        };
+
         const notificationBadge = () => {
           if ((notificationTitle() === 'Late for Pick Up') 
             || (notificationTitle() === 'Reservation Approval Required')) {
@@ -235,7 +246,9 @@ function RouteComponent() {
         <div
           key={notification.cargoUnitID}
           className="flex items-center justify-between gap-4 bg-white p-4 border mb-2 last:mb-0 rounded-xl shadow"
-        ><div className="flex flex-col gap-1">
+        >
+          {notificationIcon()}
+          <div className="flex flex-col gap-1">
             <h2 className="flex items-center gap-2 text-base font-semibold">{notificationTitle()} {notificationBadge()}</h2>
             <p className="text-sm">
               {getNotificationMessage(userAttributes.role, notification)}
