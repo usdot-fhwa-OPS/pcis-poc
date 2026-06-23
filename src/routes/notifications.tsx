@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 
 import { Badge } from "../components/ui/badge";
-import { Bell, CalendarCheck, Clock, Info } from "lucide-react"
+import { Bell, CalendarCheck, Clock, Info, Settings, TriangleAlert } from "lucide-react"
 
 // Start new
 
@@ -223,11 +223,17 @@ function RouteComponent() {
               <span className="inline-flex shrink-0 rounded-full p-3 bg-blue-100">
                 <CalendarCheck className="size-4 stroke-blue-700" />
               </span>
+              <span className="inline-flex shrink-0 rounded-full p-3 bg-amber-50">
+                <Settings className="size-4 stroke-amber-600" />
+              </span>
             )
           } else {
             return(
               <span className="inline-flex shrink-0 rounded-full p-3 bg-gray-100">
                 <Info className="size-4 stroke-gray-700" />
+              </span>
+              <span className="inline-flex shrink-0 rounded-full p-3 bg-red-50">
+                <TriangleAlert className="size-4 stroke-red-600" />
               </span>
             )
           }
