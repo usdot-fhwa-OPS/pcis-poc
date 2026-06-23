@@ -123,11 +123,15 @@ function RouteComponent() {
   const notificationCount = userNotifications.length;
   const unreadNotificationCount = 1;
 
-  const highPriorityBadgesCount = () => {
-  return [...document.querySelectorAll('div.bg-red-100')]
-    .filter(el => el.textContent.trim() === 'High')
-    .length;
-  };
+  window.addEventListener('load', () => {
+    const highPriorityBadgesCount = () => {
+      return [...document.querySelectorAll('div.bg-red-100.border-red-300.text-red-700')]
+        .filter(el => el.textContent.trim() === 'High')
+        .length;
+    };
+
+    console.log('High priority badge count:', highPriorityBadgesCount());
+  });
 
   const getNotificationMessage = (role: string, notification: Notifications) => {
     if (role === "Beneficiary Cargo Owner") {
