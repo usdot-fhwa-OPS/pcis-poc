@@ -26,10 +26,7 @@ export default function Operators() {
           }
         });
         const result = await response.json();
-        const filteredData = result.filter((user: User) => (( user["custom:role"] === 'Trucking Operator') 
-          || ( user["custom:role"] === 'Rail Operator')
-          || ( user["custom:role"] === 'Third Party Logistics Provider')));
-        setData(filteredData);
+        setData(result);
       } catch (error) {
         throw new Error(`Failed to fetch data: ${error}`);
       } finally {
@@ -44,11 +41,9 @@ export default function Operators() {
   }
 
   return (
-    <div>
-      <h1 className="text-2xl font-bold text-center">Available Users</h1>
-      <div className="container mx-auto p-10">
-        <DataTable columns={columns} data={data} />
-      </div>
+    <div className="w-full px-6 py-6 md:px-10 md:py-8 flex flex-col gap-6">
+      <h1 className="text-2xl font-bold text-gray-900">Available Users</h1>
+      <DataTable columns={columns} data={data} />
     </div>
   )
 }

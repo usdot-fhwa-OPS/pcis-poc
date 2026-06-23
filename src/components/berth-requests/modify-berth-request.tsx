@@ -9,13 +9,13 @@ import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import { cn } from "../../lib/utils";
 import { format } from "date-fns";
-import { useAppDispatch } from "../../hooks";
 import { berthConfigList } from "./berth-request-client";
-import { populate } from '../../components/berth-requests/berth-config-state';
 import { BerthConfigDomain } from "./berth-config-domain";
+import { BerthRequestDomain } from "./berth-request-domain";
 import { Input } from "../ui/input";
 
 export interface BerthRequestFormData {
+    requestId: string;
     terminalId: string;
     terminalName: string;
     terminalPhone: string;
@@ -34,13 +34,14 @@ export interface BerthRequestFormData {
 
 const ALL_SERVICES = ["Fuel", "Food", "Water", "Crew Services", "Waste Disposal"];
 
-interface AddBerthRequestProps {
+interface ModifyBerthRequestProps {
     onDataChange?: (data: BerthRequestFormData) => void;
 }
 
-export const AddBerthRequest = ({ onDataChange }: AddBerthRequestProps) => {
+export const ModifyBerthRequest = ({ onDataChange}: ModifyBerthRequestProps ) => {
 
-    const [selectedTerminalId, setSelectedTerminalId] = useState<string>("")
+    const [requestId, setRequestId] = useState<string>('')
+    const [selectedTerminalId, setSelectedTerminalId] = useState<string>('')
     const [startDate, setStartDate] = useState<Date>(new Date())
     const [endDate, setEndDate] = useState<Date>(new Date())
     const [isStartCalendarOpen, setIsStartCalendarOpen] = useState(false)
@@ -48,7 +49,10 @@ export const AddBerthRequest = ({ onDataChange }: AddBerthRequestProps) => {
     const [selectedServices, setSelectedServices] = useState<string[]>([])
     const [selectedCargoManifestPath, setSelectedCargoManifestPath] = useState<string>('')
 
-    const [vesselId, setVesselId] = useState<string>("")
+    const rawBr = sessionStorage.getItem('berthRequestOriginal');
+     const berthRequest = (rawBr?JSON.parse(rawBr):{}) as BerthRequestDomain
+    
+      const [vesselId, setVesselId] = useState<string>("")
 
     const timeOptions = [
             "12:00 AM",
@@ -84,26 +88,54 @@ export const AddBerthRequest = ({ onDataChange }: AddBerthRequestProps) => {
             checked ? [...prev, service] : prev.filter(s => s !== service)
         );
     };
+
+    useState(() => {
+        if (berthRequest) {
+            const arrivalDate = berthRequest.etaAt.match(/\d{2}\/\d{2}\/\d{4}/);
+            const arrivalTime = berthRequest.etaAt.match(/\d{2}:\d{2} [A|P]M/);
+            const departureDate = berthRequest.etdAt.match(/\d{2}\/\d{2}\/\d{4}/);
+            const departureTime = berthRequest.etdAt.match(/\d{2}:\d{2} [A|P]M/);
+            setSelectedTerminalId(berthRequest?.terminalId)
+
+            arrivalDate ? setStartDate(new Date(arrivalDate[0])) : undefined;
+            arrivalTime ? setStartTime(arrivalTime[0]) : undefined
+            departureDate ? setEndDate(new Date(departureDate[0])) : undefined;
+            departureTime ? setEndTime(departureTime[0]) : undefined
+            setSelectedServices(berthRequest.services)
+            setSelectedCargoManifestPath(berthRequest.manifestPath)
+            setRequestId(berthRequest.requestId)
+            setVesselId(berthRequest.vesselID)
+        }
+
+    })
+
 const [TERMINALS, setTerminals] = useState<Record<string, { name: string; phone: string; email: string }>>({});
     useEffect(() => {
+       
+
         if (!onDataChange) return;
-        fetchBerthConfigList();
-        
-        const terminal = TERMINALS[selectedTerminalId];
-        onDataChange({
-            terminalId: selectedTerminalId,
-            terminalName: terminal?.name ?? "",
-            terminalPhone: terminal?.phone ?? "",
-            terminalEmail: terminal?.email ?? "",
-            startDate,
-            startTime,
-            endDate,
-            endTime,
-            services: selectedServices,
-            cargoManifestPath: selectedCargoManifestPath,
-            vesselId: vesselId,
+        fetchBerthConfigList().then(() => {
+            const terminal = TERMINALS[selectedTerminalId];
+
+            onDataChange({
+                requestId: requestId,
+                terminalId: selectedTerminalId,
+                terminalName: terminal?.name ?? "",
+                terminalPhone: terminal?.phone ?? "",
+                terminalEmail: terminal?.email ?? "",
+                startDate,
+                startTime,
+                endDate,
+                endTime,
+                services: selectedServices,
+                cargoManifestPath: selectedCargoManifestPath,
+                vesselId: vesselId,
+                
+            });
         });
-    }, [selectedTerminalId, startDate, startTime, endDate, endTime, selectedServices, selectedCargoManifestPath]);
+ 
+        
+    }, [selectedTerminalId,startDate, startTime, endDate, endTime, selectedServices, selectedCargoManifestPath]);
 
     const getFileInfo = ($event: any) =>{
         setSelectedCargoManifestPath($event.key);
@@ -123,7 +155,6 @@ const [TERMINALS, setTerminals] = useState<Record<string, { name: string; phone:
         setIsEndCalendarOpen(!isEndCalendarOpen)
     };
 
-    const dispatch = useAppDispatch();
     const fetchBerthConfigList = async () => {
 
         const brConfigList = await berthConfigList();
@@ -136,7 +167,6 @@ const [TERMINALS, setTerminals] = useState<Record<string, { name: string; phone:
             
         });
         setTerminals(terminal);
-        dispatch(populate(brConfigList));
     }
     
     
@@ -144,27 +174,26 @@ const [TERMINALS, setTerminals] = useState<Record<string, { name: string; phone:
     return (
     <>
         <div className="md:max-w-2xl">
-            <div className="grid grid-cols-1 md:grid-cols-[max-content_1fr] gap-2 md:items-center">
-                <div className="pr-8">
-                    <Label className="">Vessel ID:</Label>
-                </div>
-                <div className="pb-4 md:py-2">
-                    <Input id="vesselID" type="string"
-                        onChange={(e) =>
-                            setVesselId(e.target.value)
-                        }
+                <div className="grid grid-cols-1 md:grid-cols-[max-content_1fr] gap-2 md:items-center">
+                    <div className="pr-8">
+                        <Label className="">Vessel ID:</Label>
+                    </div>
+                    <div className="pb-4 md:py-2">
+                        <Input id="vesselID" type="string" value={vesselId}
+                            onChange={(e) =>
+                                setVesselId(e.target.value)
+                            }
 
-                        className="w-15 h-10" />
+                            className="w-15 h-10" />
 
-                </div>
-                        
+                    </div>
                 <div className="pr-8">
                     <Label htmlFor="berthRequestTerminal">
                         Terminal
                     </Label>
                 </div>
                 <div className="pb-4 md:py-2">
-                    <Select onValueChange={setSelectedTerminalId}>
+                    <Select onValueChange={setSelectedTerminalId} value={selectedTerminalId}>
                         <SelectTrigger>
                             <SelectValue />
                         </SelectTrigger>
@@ -181,9 +210,9 @@ const [TERMINALS, setTerminals] = useState<Record<string, { name: string; phone:
                             <Info className="inline-block h-4 w-4 mr-1" stroke="#0090FF" /><p>To contact this terminal directly:</p>
                         </div>
                         <div className="px-8 py-2">
-                            <p>{TERMINALS[selectedTerminalId].name}</p>
-                            <p>Phone: <a href={`tel:${TERMINALS[selectedTerminalId].phone}`} className="text-blue-500 hover:underline">{TERMINALS[selectedTerminalId].phone}</a></p>
-                            <p>Email: <a href={`mailto:${TERMINALS[selectedTerminalId].email}`} className="text-blue-500 hover:underline">{TERMINALS[selectedTerminalId].email}</a></p>
+                            <p>{TERMINALS[selectedTerminalId]?.name}</p>
+                            <p>Phone: <a href={`tel:${TERMINALS[selectedTerminalId]?.phone}`} className="text-blue-500 hover:underline">{TERMINALS[selectedTerminalId]?.phone}</a></p>
+                            <p>Email: <a href={`mailto:${TERMINALS[selectedTerminalId]?.email}`} className="text-blue-500 hover:underline">{TERMINALS[selectedTerminalId]?.email}</a></p>
                         </div>
                     </div>
                 )}
@@ -233,6 +262,7 @@ const [TERMINALS, setTerminals] = useState<Record<string, { name: string; phone:
                     </ol>
                 </div>
                 <div className="md:col-span-2 mb-8">
+                    <div>Existing Cargo manifest file is <b>{selectedCargoManifestPath}</b></div>
                     <FileUploader
                         acceptedFileTypes={[
                         '.csv',

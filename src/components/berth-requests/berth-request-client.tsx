@@ -31,9 +31,9 @@ const fetchBerthRequestList = async (url:string):Promise<BerthRequestDomain[]> =
     const result = (await response.json()).items as BerthRequestDomain[];
     result.map((item)=>{
         try{
-            item.etaAt= format(item.etaAt?item.etaAt:'', "MM/dd/yyyy hh mm aa");
-            item.etdAt = format(item.etdAt?item.etdAt:'', "MM/dd/yyyy  hh mm aa");
-            item.requestedAt = format(item.requestedAt?item.requestedAt:'', "MM/dd/yyyy  hh mm aa");
+            item.etaAt= format(item.etaAt?item.etaAt:'', "MM/dd/yyyy hh:mm aa");
+            item.etdAt = format(item.etdAt?item.etdAt:'', "MM/dd/yyyy  hh:mm aa");
+            item.requestedAt = format(item.requestedAt?item.requestedAt:'', "MM/dd/yyyy  hh:mm aa");
         }catch(e){
             console.error(e);
         }
@@ -85,6 +85,21 @@ export const saveBerthRequest = async (berthRequestDomain: BerthRequestDomain): 
     return result;
 }
 
+export const updateBerthRequest = async (berthRequestDomain: BerthRequestDomain): Promise<string> => {
+    const session = await fetchAuthSession();
+    const response = await fetch(`https://ewutyf2fml.execute-api.us-east-1.amazonaws.com/dev/berthRequests/${berthRequestDomain.requestId}`, {
+        method: 'PUT',
+        headers: {
+            "Authorization": `Bearer ${session.tokens?.accessToken?.toString()}`,
+            "Content-Type": "application/json",
+            "Accept": "*/*"
+        },
+        body: JSON.stringify(berthRequestDomain)
+    });
+    const result = (await response.json());
+    return result;
+}
+
 export const deleteBerthRequest = async (berthRequestUid:string): Promise<any> => {
     const session = await fetchAuthSession();
     const response = await fetch(`https://ewutyf2fml.execute-api.us-east-1.amazonaws.com/dev/berthRequest/${berthRequestUid}`, {
@@ -96,18 +111,4 @@ export const deleteBerthRequest = async (berthRequestUid:string): Promise<any> =
         }
     });
     return response;
-}
-
-export const getTerrminalCapacity = async (berthRequestUid:string): Promise<BerthRequestDomain> => {
-    const session = await fetchAuthSession();
-    const response = await fetch(`https://xlj2x9eurh.execute-api.us-east-1.amazonaws.com/dev/berthRequest/${berthRequestUid}`, {
-        method: 'GET',
-        headers: {
-            "Authorization": `Bearer ${session.tokens?.accessToken?.toString()}`,
-            "Content-Type": "application/json",
-            "Accept": "*/*"
-        }
-    });
-    const result = (await response.json()) as BerthRequestDomain;
-    return result;
 }

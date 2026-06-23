@@ -12,32 +12,37 @@ import {
   DialogDescription,
   DialogFooter,
 } from "../components/ui/dialog";
-import { BerthRequestFormData } from '../components/berth-requests/add-berth-request';
+import { BerthRequestFormData } from '../components/berth-requests/modify-berth-request';
 import { BerthRequestDomain } from '../components/berth-requests/berth-request-domain';
 import { UserContext } from '../AppContext';
-import { saveBerthRequest } from '../components/berth-requests/berth-request-client';
+import { updateBerthRequest } from '../components/berth-requests/berth-request-client';
 
-export const Route = createFileRoute('/berth-request-confirmation')({
+export const Route = createFileRoute('/berth-request-modify-confirmation')({
   component: BerthRequestConfirmationComponent,
 })
 
 function BerthRequestConfirmationComponent() {
+  const userContext = useContext(UserContext);
   const navigate = useNavigate();
-  const raw = sessionStorage.getItem('berthRequestDraft');
+  const raw = sessionStorage.getItem('berthRequestOriginal');
   const formData: BerthRequestFormData | null = raw ? JSON.parse(raw) : null;
 
   const [cancelOpen, setCancelOpen] = useState(false);
   const [successOpen, setSuccessOpen] = useState(false);
 
+  const requestListPage = (userContext['custom:role']==='Terminal Operator')?'/berth-manager':'/berth-vessel';
+
   const handleConfirmCancel = () => {
     setCancelOpen(false);
-    navigate({ to: '/berth-vessel' });
+    navigate({ to: requestListPage });
   };
+
+  
 
   const handleConfirmSubmit = async () => {
     await save();
     setSuccessOpen(false);
-    navigate({ to: '/berth-vessel' });
+    navigate({ to:  requestListPage});
   };
 
   const formatDate = (date: Date | string | undefined) => {
@@ -64,9 +69,10 @@ function BerthRequestConfirmationComponent() {
           status:"",
       };
   
-    const userContext = useContext(UserContext);
+    
     const save = async () => {
       if (formData) {
+        berthRequest.requestId = formData.requestId
         berthRequest.vesselAgentEmail = userContext.email ? userContext.email : "";
         berthRequest.terminalId = formData.terminalId;
         berthRequest.etaAt = format(formData.startDate, "MM/dd/yyyy")+' '+formData.startTime;
@@ -74,14 +80,15 @@ function BerthRequestConfirmationComponent() {
         berthRequest.manifestPath = formData.cargoManifestPath;
         berthRequest.services = formData.services;
         berthRequest.vesselID = formData.vesselId;
+        
       }
 
-      await saveBerthRequest(berthRequest)
+      await updateBerthRequest(berthRequest)
     }
  
   return (
     <div className="flex flex-col w-full p-10">
-      <h1 className="text-2xl font-semibold mb-2">Berth Request</h1>
+      <h1 className="text-2xl font-semibold mb-2">Berth Request Modify</h1>
       <p className="text-sm text-muted-foreground mb-8">
         Review the information below. Select <em>Confirm and Submit</em> to complete your request.
       </p>
@@ -131,7 +138,7 @@ function BerthRequestConfirmationComponent() {
         <Button variant="outline" onClick={() => setCancelOpen(true)}>
           Cancel
         </Button>
-        <Button variant="outline" onClick={() => navigate({ to: '/berth-request-add' })}>
+        <Button variant="outline" onClick={() => navigate({ to: '/berth-request-modify' })}>
           Modify Request
         </Button>
         <Button onClick={() => setSuccessOpen(true)}>

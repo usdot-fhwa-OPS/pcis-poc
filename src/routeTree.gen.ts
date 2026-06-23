@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as VesselActivityRouteImport } from './routes/vessel-activity'
 import { Route as ReservationRouteImport } from './routes/reservation'
 import { Route as OperatorsRouteImport } from './routes/operators'
 import { Route as NotificationsRouteImport } from './routes/notifications'
@@ -19,6 +20,8 @@ import { Route as CargoRouteImport } from './routes/cargo'
 import { Route as CapacityRouteImport } from './routes/capacity'
 import { Route as BerthVesselRouteImport } from './routes/berth-vessel'
 import { Route as BerthRequestsRouteImport } from './routes/berth-requests'
+import { Route as BerthRequestModifyConfirmationRouteImport } from './routes/berth-request-modify-confirmation'
+import { Route as BerthRequestModifyRouteImport } from './routes/b./routes/berth-request-modify-confirmation'
 import { Route as BerthRequestConfirmationRouteImport } from './routes/berth-request-confirmation'
 import { Route as BerthRequestAddRouteImport } from './routes/berth-request-add'
 import { Route as BerthManagerRouteImport } from './routes/berth-manager'
@@ -26,6 +29,11 @@ import { Route as AnalyticsRouteImport } from './routes/analytics'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as HazardousCargoCargoUnitIDRouteImport } from './routes/hazardous-cargo.$cargoUnitID'
 
+const VesselActivityRoute = VesselActivityRouteImport.update({
+  id: '/vessel-activity',
+  path: '/vessel-activity',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ReservationRoute = ReservationRouteImport.update({
   id: '/reservation',
   path: '/reservation',
@@ -76,6 +84,17 @@ const BerthRequestsRoute = BerthRequestsRouteImport.update({
   path: '/berth-requests',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BerthRequestModifyConfirmationRoute =
+  BerthRequestModifyConfirmationRouteImport.update({
+    id: '/berth-request-modify-confirmation',
+    path: '/berth-request-modify-confirmation',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const BerthRequestModifyRoute = BerthRequestModifyRouteImport.update({
+  id: '/berth-request-modify',
+  path: '/berth-request-modify',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BerthRequestConfirmationRoute =
   BerthRequestConfirmationRouteImport.update({
     id: '/berth-request-confirmation',
@@ -115,6 +134,8 @@ export interface FileRoutesByFullPath {
   '/berth-manager': typeof BerthManagerRoute
   '/berth-request-add': typeof BerthRequestAddRoute
   '/berth-request-confirmation': typeof BerthRequestConfirmationRoute
+  '/berth-request-modify': typeof BerthRequestModifyRoute
+  '/berth-request-modify-confirmation': typeof BerthRequestModifyConfirmationRoute
   '/berth-requests': typeof BerthRequestsRoute
   '/berth-vessel': typeof BerthVesselRoute
   '/capacity': typeof CapacityRoute
@@ -125,6 +146,7 @@ export interface FileRoutesByFullPath {
   '/notifications': typeof NotificationsRoute
   '/operators': typeof OperatorsRoute
   '/reservation': typeof ReservationRoute
+  '/vessel-activity': typeof VesselActivityRoute
   '/hazardous-cargo/$cargoUnitID': typeof HazardousCargoCargoUnitIDRoute
 }
 export interface FileRoutesByTo {
@@ -133,6 +155,8 @@ export interface FileRoutesByTo {
   '/berth-manager': typeof BerthManagerRoute
   '/berth-request-add': typeof BerthRequestAddRoute
   '/berth-request-confirmation': typeof BerthRequestConfirmationRoute
+  '/berth-request-modify': typeof BerthRequestModifyRoute
+  '/berth-request-modify-confirmation': typeof BerthRequestModifyConfirmationRoute
   '/berth-requests': typeof BerthRequestsRoute
   '/berth-vessel': typeof BerthVesselRoute
   '/capacity': typeof CapacityRoute
@@ -143,6 +167,7 @@ export interface FileRoutesByTo {
   '/notifications': typeof NotificationsRoute
   '/operators': typeof OperatorsRoute
   '/reservation': typeof ReservationRoute
+  '/vessel-activity': typeof VesselActivityRoute
   '/hazardous-cargo/$cargoUnitID': typeof HazardousCargoCargoUnitIDRoute
 }
 export interface FileRoutesById {
@@ -152,6 +177,8 @@ export interface FileRoutesById {
   '/berth-manager': typeof BerthManagerRoute
   '/berth-request-add': typeof BerthRequestAddRoute
   '/berth-request-confirmation': typeof BerthRequestConfirmationRoute
+  '/berth-request-modify': typeof BerthRequestModifyRoute
+  '/berth-request-modify-confirmation': typeof BerthRequestModifyConfirmationRoute
   '/berth-requests': typeof BerthRequestsRoute
   '/berth-vessel': typeof BerthVesselRoute
   '/capacity': typeof CapacityRoute
@@ -162,6 +189,7 @@ export interface FileRoutesById {
   '/notifications': typeof NotificationsRoute
   '/operators': typeof OperatorsRoute
   '/reservation': typeof ReservationRoute
+  '/vessel-activity': typeof VesselActivityRoute
   '/hazardous-cargo/$cargoUnitID': typeof HazardousCargoCargoUnitIDRoute
 }
 export interface FileRouteTypes {
@@ -172,6 +200,8 @@ export interface FileRouteTypes {
     | '/berth-manager'
     | '/berth-request-add'
     | '/berth-request-confirmation'
+    | '/berth-request-modify'
+    | '/berth-request-modify-confirmation'
     | '/berth-requests'
     | '/berth-vessel'
     | '/capacity'
@@ -182,6 +212,7 @@ export interface FileRouteTypes {
     | '/notifications'
     | '/operators'
     | '/reservation'
+    | '/vessel-activity'
     | '/hazardous-cargo/$cargoUnitID'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -190,6 +221,8 @@ export interface FileRouteTypes {
     | '/berth-manager'
     | '/berth-request-add'
     | '/berth-request-confirmation'
+    | '/berth-request-modify'
+    | '/berth-request-modify-confirmation'
     | '/berth-requests'
     | '/berth-vessel'
     | '/capacity'
@@ -197,6 +230,7 @@ export interface FileRouteTypes {
     | '/hazardous-cargo'
     | '/hazardous-cargo-manager'
     | '/import'
+    | '/vessel-activity'
     | '/notifications'
     | '/operators'
     | '/reservation'
@@ -208,6 +242,8 @@ export interface FileRouteTypes {
     | '/berth-manager'
     | '/berth-request-add'
     | '/berth-request-confirmation'
+    | '/berth-request-modify'
+    | '/berth-request-modify-confirmation'
     | '/berth-requests'
     | '/berth-vessel'
     | '/capacity'
@@ -218,6 +254,7 @@ export interface FileRouteTypes {
     | '/notifications'
     | '/operators'
     | '/reservation'
+    | '/vessel-activity'
     | '/hazardous-cargo/$cargoUnitID'
   fileRoutesById: FileRoutesById
 }
@@ -227,6 +264,8 @@ export interface RootRouteChildren {
   BerthManagerRoute: typeof BerthManagerRoute
   BerthRequestAddRoute: typeof BerthRequestAddRoute
   BerthRequestConfirmationRoute: typeof BerthRequestConfirmationRoute
+  BerthRequestModifyRoute: typeof BerthRequestModifyRoute
+  BerthRequestModifyConfirmationRoute: typeof BerthRequestModifyConfirmationRoute
   BerthRequestsRoute: typeof BerthRequestsRoute
   BerthVesselRoute: typeof BerthVesselRoute
   CapacityRoute: typeof CapacityRoute
@@ -237,10 +276,18 @@ export interface RootRouteChildren {
   NotificationsRoute: typeof NotificationsRoute
   OperatorsRoute: typeof OperatorsRoute
   ReservationRoute: typeof ReservationRoute
+  VesselActivityRoute: typeof VesselActivityRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/vessel-activity': {
+      id: '/vessel-activity'
+      path: '/vessel-activity'
+      fullPath: '/vessel-activity'
+      preLoaderRoute: typeof VesselActivityRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/reservation': {
       id: '/reservation'
       path: '/reservation'
@@ -311,6 +358,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BerthRequestsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/berth-request-modify-confirmation': {
+      id: '/berth-request-modify-confirmation'
+      path: '/berth-request-modify-confirmation'
+      fullPath: '/berth-request-modify-confirmation'
+      preLoaderRoute: typeof BerthRequestModifyConfirmationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/berth-request-modify': {
+      id: '/berth-request-modify'
+      path: '/berth-request-modify'
+      fullPath: '/berth-request-modify'
+      preLoaderRoute: typeof BerthRequestModifyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/berth-request-confirmation': {
       id: '/berth-request-confirmation'
       path: '/berth-request-confirmation'
@@ -374,6 +435,8 @@ const rootRouteChildren: RootRouteChildren = {
   BerthManagerRoute: BerthManagerRoute,
   BerthRequestAddRoute: BerthRequestAddRoute,
   BerthRequestConfirmationRoute: BerthRequestConfirmationRoute,
+  BerthRequestModifyRoute: BerthRequestModifyRoute,
+  BerthRequestModifyConfirmationRoute: BerthRequestModifyConfirmationRoute,
   BerthRequestsRoute: BerthRequestsRoute,
   BerthVesselRoute: BerthVesselRoute,
   CapacityRoute: CapacityRoute,
@@ -384,6 +447,7 @@ const rootRouteChildren: RootRouteChildren = {
   NotificationsRoute: NotificationsRoute,
   OperatorsRoute: OperatorsRoute,
   ReservationRoute: ReservationRoute,
+  VesselActivityRoute: VesselActivityRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
