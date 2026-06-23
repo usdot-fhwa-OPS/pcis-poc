@@ -177,11 +177,15 @@ function RouteComponent() {
           <Badge className="px-[0.75rem] py-[0.375rem] ml-4 rounded-full leading-none" variant="destructive">{unreadNotificationCount} new</Badge>
         )}
       </h1>
-        {notificationCount > 0 && (
-          <p className="mt-3 leading-none text-sm text-muted-foreground">
-            {notificationCount} notifications
-          </p>
-        )}
+      {notificationCount > 0 && (
+        <div className="flex items-center gap-6 mt-3 leading-none text-sm text-muted-foreground">
+          <span className="">{notificationCount} notifications</span>
+          {unreadNotificationCount > 0 && (
+            <span className="border-l pl-6">{unreadNotificationCount} unread</span>
+          )}
+          <span className="border-l pl-6">high priority</span>
+        </div>
+      )}
       <div className="max-w-4xl mt-[3.75rem]">
       {userNotifications.map((notification) => {
 
