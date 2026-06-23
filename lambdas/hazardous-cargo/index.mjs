@@ -354,7 +354,7 @@ async function approve(event) {
               "isTerminalNotify": "FALSE",
               "isTransportationNotify": "FALSE",
               "origin": existingHazardousCargo.origin,
-              //"reservationStatus": row.reservationstatus?row.reservationstatus:'UNRESERVED',
+              "reservationStatus": 'unassigned',
               "updatedAt": nowIso,
               "vesselID": existingHazardousCargo.vesselId,
               "documentsChecked": "TRUE",
