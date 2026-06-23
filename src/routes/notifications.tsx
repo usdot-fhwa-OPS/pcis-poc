@@ -124,7 +124,7 @@ function RouteComponent() {
   const unreadNotificationCount = 1;
 
   const highPriorityBadgesCount = () => {
-  return [...document.querySelectorAll('div.bg-red-100.border-red-300.text-red-700')]
+  return [...document.querySelectorAll('div.bg-red-100')]
     .filter(el => el.textContent.trim() === 'High')
     .length;
   };
