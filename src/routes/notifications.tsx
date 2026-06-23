@@ -120,7 +120,8 @@ function RouteComponent() {
     };
   }, [userAttributes, refresh]);
 
-  const notificationCount = userNotifications.length
+  const notificationCount = userNotifications.length;
+  const unreadNotificationCount = 1;
 
   const getNotificationMessage = (role: string, notification: Notifications) => {
     if (role === "Beneficiary Cargo Owner") {
@@ -173,7 +174,7 @@ function RouteComponent() {
         <Bell className="w-6 h-6 text-gray-700" />
         Notifications
         {notificationCount > 0 && (
-          <Badge className="px-[0.75rem] py-[0.375rem] ml-4 rounded-full leading-none" variant="destructive">{notificationCount} new</Badge>
+          <Badge className="px-[0.75rem] py-[0.375rem] ml-4 rounded-full leading-none" variant="destructive">{unreadNotificationCount} new</Badge>
         )}
       </h1>
         {notificationCount > 0 && (
