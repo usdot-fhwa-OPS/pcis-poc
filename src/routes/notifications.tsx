@@ -123,6 +123,12 @@ function RouteComponent() {
   const notificationCount = userNotifications.length;
   const unreadNotificationCount = 1;
 
+  const highPriorityBadgesCount = () => {
+  return [...document.querySelectorAll('div.bg-red-100.border-red-300.text-red-700')]
+    .filter(el => el.textContent.trim() === 'High')
+    .length;
+};
+
   const getNotificationMessage = (role: string, notification: Notifications) => {
     if (role === "Beneficiary Cargo Owner") {
       switch (notification.reservationStatus) {
@@ -183,7 +189,7 @@ function RouteComponent() {
           {unreadNotificationCount > 0 && (
             <span className="border-l pl-6">{unreadNotificationCount} unread</span>
           )}
-          <span className="border-l pl-6">high priority</span>
+          <span className="border-l pl-6">{highPriorityBadgesCount} high priority</span>
         </div>
       )}
       <div className="max-w-4xl mt-[3.75rem]">
