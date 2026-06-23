@@ -245,7 +245,7 @@ function RouteComponent() {
         return (
         <div
           key={notification.cargoUnitID}
-          className="flex items-center justify-between gap-4 bg-white p-4 border mb-2 last:mb-0 rounded-xl shadow"
+          className="flex items-center gap-4 bg-white p-4 border mb-2 last:mb-0 rounded-xl shadow"
         >
           {notificationIcon()}
           <div className="flex flex-col gap-1">
@@ -255,7 +255,7 @@ function RouteComponent() {
               <Link to="/reservation" className="ml-2 text-blue-600 hover:underline">View</Link>
             </p>
           </div>
-          <div className="self-start flex items-center gap-1 text-xs text-muted-foreground text-nowrap leading-none">
+          <div className="ml-auto self-start flex items-center gap-1 text-xs text-muted-foreground text-nowrap leading-none">
             <Clock className="w-3 h-3" />
             <span key={notification.id}>{displayTime}</span>
           </div>
