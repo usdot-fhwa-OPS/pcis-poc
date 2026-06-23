@@ -227,7 +227,7 @@ function RouteComponent() {
           } else {
             return(
               <span className="inline-flex shrink-0 rounded-full p-3 bg-gray-100">
-                <Info className="size-4 stroke-gray-600" />
+                <Info className="size-4 stroke-gray-700" />
               </span>
             )
           }
