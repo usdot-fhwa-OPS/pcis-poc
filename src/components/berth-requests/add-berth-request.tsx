@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { Calendar } from "../ui/calendar";
-import { CalendarIcon, CheckCircle2, Info } from "lucide-react";
+import { CalendarIcon, CheckCircle2, Info, Upload } from "lucide-react";
 import { FileUploader } from '@aws-amplify/ui-react-storage';
 import { Label } from "../ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
@@ -190,27 +190,39 @@ export const AddBerthRequest = ({ onDataChange, onManifestChange }: AddBerthRequ
                         </div>
                     </div>
 
-                    {/* Manifest File — read-only after upload, uploader before */}
-                    {manifestFileName ? (
-                        <div>
-                            <Label className="text-xs font-medium text-gray-500 mb-1.5 block">Manifest File</Label>
-                            <div className="bg-gray-50 border border-gray-200 rounded-md h-11 px-3 flex items-center gap-2 text-sm text-gray-700">
-                                <span>{manifestFileName} — uploaded</span>
-                                <CheckCircle2 className="h-4 w-4 text-green-600" />
+                    {/* Manifest File */}
+                    <div>
+                        <Label className="text-xs font-medium text-gray-500 mb-1.5 block">Manifest File</Label>
+                        {manifestFileName ? (
+                            <div className="space-y-2">
+                                <div className="bg-gray-50 border border-gray-200 rounded-md h-11 px-3 flex items-center gap-2 text-sm text-gray-700">
+                                    <span className="flex-1 truncate">{manifestFileName} — uploaded</span>
+                                    <CheckCircle2 className="h-4 w-4 text-green-600 shrink-0" />
+                                </div>
+                                <button
+                                    type="button"
+                                    onClick={() => { setManifestFileName(''); setSelectedCargoManifestPath(''); onManifestChange?.('', ''); }}
+                                    className="text-xs text-blue-600 hover:text-blue-800 hover:underline"
+                                >
+                                    Change file
+                                </button>
                             </div>
-                        </div>
-                    ) : (
-                        <div>
-                            <Label className="text-xs font-medium text-gray-500 mb-3 block">Attach a Cargo Manifest</Label>
-                            <FileUploader
-                                acceptedFileTypes={['.csv']}
-                                path="stowPlans/"
-                                maxFileCount={1}
-                                isResumable
-                                onUploadSuccess={($event) => getFileInfo($event)}
-                            />
-                        </div>
-                    )}
+                        ) : (
+                            <div className="border border-dashed border-gray-300 rounded-md bg-gray-50 p-4">
+                                <div className="flex items-center gap-2 text-sm text-gray-500 mb-3">
+                                    <Upload className="h-4 w-4" />
+                                    <span>Upload a cargo manifest (.csv)</span>
+                                </div>
+                                <FileUploader
+                                    acceptedFileTypes={['.csv']}
+                                    path="stowPlans/"
+                                    maxFileCount={1}
+                                    isResumable
+                                    onUploadSuccess={($event) => getFileInfo($event)}
+                                />
+                            </div>
+                        )}
+                    </div>
                 </div>
 
                 {/* Right column — Additional Services */}
