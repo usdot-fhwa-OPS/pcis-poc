@@ -202,84 +202,92 @@ function RouteComponent() {
         </div>
       )}
       <div className="max-w-4xl mt-[3.75rem]">
-      {userNotifications.map((notification) => {
 
-        const notificationTitle = () => { 
-          if ((notification.reservationStatus === 'Pending Transportation Coordinator Approval') 
-            || (notification.reservationStatus === 'Pending Reservation Approval') 
-            || (notification.reservationStatus === 'Pickup Modification Requested')) {
-              return `Reservation Approval Required`;
-          } else if ((notification.reservationStatus === 'unassigned')) {
-            return `Reservation Denied`;
-          } else {
-            return `${notification.reservationStatus}`;
-          }
-        };
+        {notificationCount == 0 && (
+          <p>There are no notifications.</p>
+        )}
 
-        const notificationIcon = () => {
-          if ((notificationTitle() === 'Late for Pick Up') 
-            || (notificationTitle() === 'Reservation Approval Required')) {
-            return(
-              <span className="inline-flex shrink-0 rounded-full p-3 bg-blue-50">
-                <CalendarCheck className="size-4 stroke-blue-600" />
-              </span>
-            )
-          } else if (notificationTitle() === 'Terminal Capacity Warning') { // For future implementation
-            return(
-              <span className="inline-flex shrink-0 rounded-full p-3 bg-amber-50">
-                <Settings className="size-4 stroke-amber-600" />
-              </span>
-            )
-          } else if (notificationTitle() === 'Hazardous Cargo Submission') { // For future implementation
-            return(
-              <span className="inline-flex shrink-0 rounded-full p-3 bg-red-50">
-                <TriangleAlert className="size-4 stroke-red-600" />
-              </span>
-            )
-          } else {
-            return(
-              <span className="inline-flex shrink-0 rounded-full p-3 bg-gray-50">
-                <Info className="size-4 stroke-gray-600" />
-              </span>
-            )
-          }
-        };
+        {notificationCount > 0 && (
+          {userNotifications.map((notification) => {
 
-        const notificationBadge = () => {
-          if ((notificationTitle() === 'Late for Pick Up') 
-            || (notificationTitle() === 'Reservation Approval Required')) {
-            return(
-              <Badge className="bg-red-100 hover:bg-red-100/80 border-red-300 text-red-700 rounded-full">High</Badge>
+            const notificationTitle = () => { 
+              if ((notification.reservationStatus === 'Pending Transportation Coordinator Approval') 
+                || (notification.reservationStatus === 'Pending Reservation Approval') 
+                || (notification.reservationStatus === 'Pickup Modification Requested')) {
+                  return `Reservation Approval Required`;
+              } else if ((notification.reservationStatus === 'unassigned')) {
+                return `Reservation Denied`;
+              } else {
+                return `${notification.reservationStatus}`;
+              }
+            };
+
+            const notificationIcon = () => {
+              if ((notificationTitle() === 'Late for Pick Up') 
+                || (notificationTitle() === 'Reservation Approval Required')) {
+                return(
+                  <span className="inline-flex shrink-0 rounded-full p-3 bg-blue-50">
+                    <CalendarCheck className="size-4 stroke-blue-600" />
+                  </span>
+                )
+              } else if (notificationTitle() === 'Terminal Capacity Warning') { // For future implementation
+                return(
+                  <span className="inline-flex shrink-0 rounded-full p-3 bg-amber-50">
+                    <Settings className="size-4 stroke-amber-600" />
+                  </span>
+                )
+              } else if (notificationTitle() === 'Hazardous Cargo Submission') { // For future implementation
+                return(
+                  <span className="inline-flex shrink-0 rounded-full p-3 bg-red-50">
+                    <TriangleAlert className="size-4 stroke-red-600" />
+                  </span>
+                )
+              } else {
+                return(
+                  <span className="inline-flex shrink-0 rounded-full p-3 bg-gray-50">
+                    <Info className="size-4 stroke-gray-600" />
+                  </span>
+                )
+              }
+            };
+
+            const notificationBadge = () => {
+              if ((notificationTitle() === 'Late for Pick Up') 
+                || (notificationTitle() === 'Reservation Approval Required')) {
+                return(
+                  <Badge className="bg-red-100 hover:bg-red-100/80 border-red-300 text-red-700 rounded-full">High</Badge>
+                )
+              }
+            };
+
+            const dateObj = new Date(notification.updatedAt);
+            const isRecent = isAfter(dateObj, twentyFourHoursAgo);
+            const displayTime = isRecent
+              ? formatDistanceToNow(dateObj, { addSuffix: true })
+              : `${format(dateObj, 'MM/dd/yyyy')} • ${format(dateObj, 'hh:mm a')}`;
+
+            return (
+            <div
+              key={notification.cargoUnitID}
+              className="flex items-center gap-4 bg-white p-4 border mb-2 last:mb-0 rounded-xl shadow"
+            >
+              {notificationIcon()}
+              <div className="flex flex-col gap-1">
+                <h2 className="flex items-center gap-2 text-base font-semibold">{notificationTitle()} {notificationBadge()}</h2>
+                <p className="text-sm">
+                  {getNotificationMessage(userAttributes.role, notification)}
+                  <Link to="/reservation" className="ml-2 text-blue-600 hover:underline">View</Link>
+                </p>
+              </div>
+              <div className="ml-auto self-start flex items-center gap-1 text-xs text-muted-foreground text-nowrap leading-none">
+                <Clock className="w-3 h-3" />
+                <span key={notification.id}>{displayTime}</span>
+              </div>
+            </div>
             )
-          }
-        };
+          })};
+        )}
 
-        const dateObj = new Date(notification.updatedAt);
-        const isRecent = isAfter(dateObj, twentyFourHoursAgo);
-        const displayTime = isRecent
-          ? formatDistanceToNow(dateObj, { addSuffix: true })
-          : `${format(dateObj, 'MM/dd/yyyy')} • ${format(dateObj, 'hh:mm a')}`;
-
-        return (
-        <div
-          key={notification.cargoUnitID}
-          className="flex items-center gap-4 bg-white p-4 border mb-2 last:mb-0 rounded-xl shadow"
-        >
-          {notificationIcon()}
-          <div className="flex flex-col gap-1">
-            <h2 className="flex items-center gap-2 text-base font-semibold">{notificationTitle()} {notificationBadge()}</h2>
-            <p className="text-sm">
-              {getNotificationMessage(userAttributes.role, notification)}
-              <Link to="/reservation" className="ml-2 text-blue-600 hover:underline">View</Link>
-            </p>
-          </div>
-          <div className="ml-auto self-start flex items-center gap-1 text-xs text-muted-foreground text-nowrap leading-none">
-            <Clock className="w-3 h-3" />
-            <span key={notification.id}>{displayTime}</span>
-          </div>
-        </div>
-        )
-      })}
       </div>
     </div>
   )
