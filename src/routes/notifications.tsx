@@ -220,14 +220,14 @@ function RouteComponent() {
           if ((notificationTitle() === 'Late for Pick Up') 
             || (notificationTitle() === 'Reservation Approval Required')) {
             return(
-              <span className="inline-flex shrink-0 rounded-full p-3 bg-blue-100">
-                <CalendarCheck className="size-4 stroke-blue-700" />
+              <span className="inline-flex shrink-0 rounded-full p-3 bg-blue-50">
+                <CalendarCheck className="size-4 stroke-blue-600" />
               </span>
             )
           } else {
             return(
-              <span className="inline-flex shrink-0 rounded-full p-3 bg-gray-100">
-                <Info className="size-4 stroke-gray-700" />
+              <span className="inline-flex shrink-0 rounded-full p-3 bg-gray-50">
+                <Info className="size-4 stroke-gray-600" />
               </span>
             )
           }
