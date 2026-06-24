@@ -49,7 +49,7 @@ const itemsByRole: Record<string, NavItem[]> = {
     { title: "Analytics", url: "/analytics", icon: BarChart },
   ],
   "Vessel Agent": [
-    { title: "Request Berth", url: "/berth-requests", icon: ShipWheel },
+    { title: "Request Berth", url: "/berth-request-add", icon: ShipWheel },
     { title: "Berth Reservations", url: "/berth-vessel", icon: Anchor },
     { title: "Vessel Activity", url: "/vessel-activity", icon: Ship },
     { title: "Hazardous Cargo", url: "/hazardous-cargo", icon: TriangleAlert },

@@ -146,7 +146,7 @@ export const AddBerthRequest = ({ onDataChange, onManifestChange }: AddBerthRequ
                     <div>
                         <Label className="text-xs font-medium text-gray-500 mb-1 block">Requested Terminal</Label>
                         <Select onValueChange={setSelectedTerminalId}>
-                            <SelectTrigger className="bg-gray-50 border-gray-200 h-10">
+                            <SelectTrigger className="bg-white border-gray-200 h-10">
                                 <SelectValue placeholder="Select a terminal" />
                             </SelectTrigger>
                             <SelectContent>
@@ -175,14 +175,14 @@ export const AddBerthRequest = ({ onDataChange, onManifestChange }: AddBerthRequ
                     {/* Arrival + Departure side by side */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <div>
-                            <Label className="text-xs font-medium text-gray-500 mb-1 block">Arrival Window</Label>
+                            <Label className="text-xs font-medium text-gray-500 mb-1 block">Estimated Arrival</Label>
                             <div className="flex items-center gap-2">
                                 {showStartDateCalendar()}
                                 {showStartTime()}
                             </div>
                         </div>
                         <div>
-                            <Label className="text-xs font-medium text-gray-500 mb-1 block">Departure</Label>
+                            <Label className="text-xs font-medium text-gray-500 mb-1 block">Estimated Departure</Label>
                             <div className="flex items-center gap-2">
                                 {showEndDateCalendar()}
                                 {showEndTime()}
@@ -252,7 +252,7 @@ export const AddBerthRequest = ({ onDataChange, onManifestChange }: AddBerthRequ
 
     function showStartTime() {
         return <Select onValueChange={setStartTime}>
-            <SelectTrigger className={cn("w-[110px] bg-gray-50 border-gray-200 h-10")}>
+            <SelectTrigger className={cn("w-[110px] bg-white border-gray-200 h-10")}>
                 <SelectValue placeholder={startTime} />
             </SelectTrigger>
             <SelectContent>
@@ -270,7 +270,7 @@ export const AddBerthRequest = ({ onDataChange, onManifestChange }: AddBerthRequ
             <PopoverTrigger asChild>
                 <Button
                     variant={"outline"}
-                    className={cn("w-[160px] justify-start text-left font-normal bg-gray-50 border-gray-200 h-10", !startDate && "text-muted-foreground")}
+                    className={cn("w-[160px] justify-start text-left font-normal bg-white border-gray-200 h-10", !startDate && "text-muted-foreground")}
                     onClick={() => setIsStartCalendarOpen(true)}
                 >
                     <CalendarIcon className="mr-2 h-4 w-4" />
@@ -285,7 +285,7 @@ export const AddBerthRequest = ({ onDataChange, onManifestChange }: AddBerthRequ
 
     function showEndTime() {
         return <Select onValueChange={setEndTime}>
-            <SelectTrigger className={cn("w-[110px] bg-gray-50 border-gray-200 h-10")}>
+            <SelectTrigger className={cn("w-[110px] bg-white border-gray-200 h-10")}>
                 <SelectValue placeholder={endTime} />
             </SelectTrigger>
             <SelectContent>
@@ -303,7 +303,7 @@ export const AddBerthRequest = ({ onDataChange, onManifestChange }: AddBerthRequ
             <PopoverTrigger asChild>
                 <Button
                     variant={"outline"}
-                    className={cn("w-[160px] justify-start text-left font-normal bg-gray-50 border-gray-200 h-10", !endDate && "text-muted-foreground")}
+                    className={cn("w-[160px] justify-start text-left font-normal bg-white border-gray-200 h-10", !endDate && "text-muted-foreground")}
                     onClick={() => setIsEndCalendarOpen(true)}
                 >
                     <CalendarIcon className="mr-2 h-4 w-4" />
