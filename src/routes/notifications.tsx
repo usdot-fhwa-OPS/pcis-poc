@@ -191,7 +191,7 @@ function RouteComponent() {
         )}
       </h1>
       {notificationCount > 0 && (
-        <div className="flex items-start sm:items-center gap-4 sm:gap-6 mt-3 leading-none text-sm text-muted-foreground">
+        <div className="flex items-center gap-4 sm:gap-6 mt-3 leading-none text-sm text-muted-foreground">
           <span className="">{notificationCount} notifications</span>
           {unreadNotificationCount > 0 && (
             <span className="border-l border-gray-400 pl-4 sm:pl-6">{unreadNotificationCount} unread</span>
@@ -266,7 +266,7 @@ function RouteComponent() {
           return (
           <div
             key={notification.cargoUnitID}
-            className="flex items-center gap-4 bg-white p-4 border mb-2 last:mb-0 rounded-xl shadow"
+            className="flex items-start sm:items-center gap-4 bg-white p-4 border mb-2 last:mb-0 rounded-xl shadow"
           >
             {notificationIcon()}
             <div className="flex flex-col gap-1">
