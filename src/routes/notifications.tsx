@@ -103,7 +103,7 @@ function RouteComponent() {
           setUserNotifications(items);
         },
       });
-    } else if (role === 'Terminal Operator') {
+    } else if (userAttributes.role === 'Terminal Operator') {
       notisSub = client.models.Container.observeQuery({
         filter: {
           isTerminalNotify: { eq: true },
