@@ -266,10 +266,10 @@ function RouteComponent() {
           return (
           <div
             key={notification.cargoUnitID}
-            className="flex items-start sm:items-center gap-4 bg-white p-4 border mb-2 last:mb-0 rounded-xl shadow"
+            className="flex flex-wrap sm:flex-nowrap items-start sm:items-center gap-4 bg-white p-4 border mb-2 last:mb-0 rounded-xl shadow"
           >
             {notificationIcon()}
-            <div className="flex flex-col gap-1">
+            <div className="max-w-[calc(100%-3.5rem)] sm:max-w-none flex flex-col gap-1">
               <h2 className="flex items-center gap-2 text-base font-semibold">{notificationTitle()} {notificationBadge()}</h2>
               <p className="text-sm">
                 {getNotificationMessage(userAttributes.role, notification)}
