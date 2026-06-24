@@ -166,7 +166,7 @@ function RouteComponent() {
           return `The Terminal Operator has marked Cargo Unit ${notification.cargoUnitID} as late for pick up.`; 
         
       }
-    } else {
+    } else if ((role === 'Terminal Operator') {
       switch (notification.reservationStatus) {
         case "Pending Reservation Approval":
           return `The reservation for Cargo Unit ${notification.cargoUnitID} requires your approval.`; 
