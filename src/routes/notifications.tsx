@@ -182,7 +182,7 @@ function RouteComponent() {
   // End new
 
   return (
-    <div className="pt-6 px-16 pb-16">
+    <div className="pt-6 px-6 sm:px-16 pb-16">
       <h1 className="flex items-center gap-2 text-2xl leading-4 font-semibold text-gray-900">
         <Bell className="w-6 h-6 text-gray-700" />
         Notifications
@@ -191,13 +191,13 @@ function RouteComponent() {
         )}
       </h1>
       {notificationCount > 0 && (
-        <div className="flex items-center gap-6 mt-3 leading-none text-sm text-muted-foreground">
+        <div className="flex items-start sm:items-center gap-4 sm:gap-6 mt-3 leading-none text-sm text-muted-foreground">
           <span className="">{notificationCount} notifications</span>
           {unreadNotificationCount > 0 && (
-            <span className="border-l border-gray-400 pl-6">{unreadNotificationCount} unread</span>
+            <span className="border-l border-gray-400 pl-4 sm:pl-6">{unreadNotificationCount} unread</span>
           )}
           {highPriorityBadgesCount > 0 && (
-            <span className="border-l border-gray-400 pl-6">{highPriorityBadgesCount} high priority</span>
+            <span className="border-l border-gray-400 pl-4 sm:pl-6">{highPriorityBadgesCount} high priority</span>
           )}
         </div>
       )}
