@@ -203,7 +203,7 @@ function RouteComponent() {
       )}
       <div className="max-w-4xl mt-[3.75rem]">
         {notificationCount == 0 && (
-          <div className="text-base">Notifications will appear here when available.</div>
+          <div className="bg-white p-4 border rounded-xl shadow text-base">Notifications will appear here when available.</div>
         )}
         {userNotifications.map((notification) => {
 
