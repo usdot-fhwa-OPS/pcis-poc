@@ -124,29 +124,29 @@ export const AddBerthRequest = ({ onDataChange, onManifestChange }: AddBerthRequ
     }
 
     return (
-        <div className="border border-gray-200 rounded-lg bg-white p-6 md:p-8">
-            <h2 className="text-lg font-semibold text-gray-900 mb-6">Berth Request Details</h2>
+        <div className="border border-gray-200 rounded-lg bg-white p-5 md:p-6">
+            <h2 className="text-lg font-semibold text-gray-900 mb-4">Berth Request Details</h2>
 
-            <div className="flex flex-col md:flex-row gap-8">
+            <div className="flex flex-col md:flex-row gap-6">
                 {/* Left column — form fields */}
-                <div className="flex-1 space-y-5">
-                    {/* Vessel ID */}
+                <div className="flex-1 space-y-3">
+                    {/* Vessel Name */}
                     <div>
-                        <Label className="text-xs font-medium text-gray-500 mb-1.5 block">Vessel Name</Label>
+                        <Label className="text-xs font-medium text-gray-500 mb-1 block">Vessel Name</Label>
                         <Input
                             id="vesselID"
                             type="text"
                             placeholder="Enter vessel name"
                             onChange={(e) => setVesselId(e.target.value)}
-                            className="bg-gray-50 border-gray-200 h-11"
+                            className="bg-gray-50 border-gray-200 h-10"
                         />
                     </div>
 
                     {/* Requested Terminal */}
                     <div>
-                        <Label className="text-xs font-medium text-gray-500 mb-1.5 block">Requested Terminal</Label>
+                        <Label className="text-xs font-medium text-gray-500 mb-1 block">Requested Terminal</Label>
                         <Select onValueChange={setSelectedTerminalId}>
-                            <SelectTrigger className="bg-gray-50 border-gray-200 h-11">
+                            <SelectTrigger className="bg-gray-50 border-gray-200 h-10">
                                 <SelectValue placeholder="Select a terminal" />
                             </SelectTrigger>
                             <SelectContent>
@@ -164,7 +164,7 @@ export const AddBerthRequest = ({ onDataChange, onManifestChange }: AddBerthRequ
                                 <Info className="inline-block h-4 w-4 mr-1" stroke="#0090FF" />
                                 <p>To contact this terminal directly:</p>
                             </div>
-                            <div className="px-8 py-2">
+                            <div className="px-8 py-1">
                                 <p>{TERMINALS[selectedTerminalId].name}</p>
                                 <p>Phone: <a href={`tel:${TERMINALS[selectedTerminalId].phone}`} className="text-blue-500 hover:underline">{TERMINALS[selectedTerminalId].phone}</a></p>
                                 <p>Email: <a href={`mailto:${TERMINALS[selectedTerminalId].email}`} className="text-blue-500 hover:underline">{TERMINALS[selectedTerminalId].email}</a></p>
@@ -172,30 +172,30 @@ export const AddBerthRequest = ({ onDataChange, onManifestChange }: AddBerthRequ
                         </div>
                     )}
 
-                    {/* Arrival Window */}
-                    <div>
-                        <Label className="text-xs font-medium text-gray-500 mb-1.5 block">Arrival Window</Label>
-                        <div className="flex items-center gap-3">
-                            {showStartDateCalendar()}
-                            {showStartTime()}
+                    {/* Arrival + Departure side by side */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                            <Label className="text-xs font-medium text-gray-500 mb-1 block">Arrival Window</Label>
+                            <div className="flex items-center gap-2">
+                                {showStartDateCalendar()}
+                                {showStartTime()}
+                            </div>
                         </div>
-                    </div>
-
-                    {/* Departure */}
-                    <div>
-                        <Label className="text-xs font-medium text-gray-500 mb-1.5 block">Departure</Label>
-                        <div className="flex items-center gap-3">
-                            {showEndDateCalendar()}
-                            {showEndTime()}
+                        <div>
+                            <Label className="text-xs font-medium text-gray-500 mb-1 block">Departure</Label>
+                            <div className="flex items-center gap-2">
+                                {showEndDateCalendar()}
+                                {showEndTime()}
+                            </div>
                         </div>
                     </div>
 
                     {/* Manifest File */}
                     <div>
-                        <Label className="text-xs font-medium text-gray-500 mb-1.5 block">Manifest File</Label>
+                        <Label className="text-xs font-medium text-gray-500 mb-1 block">Manifest File</Label>
                         {manifestFileName ? (
-                            <div className="space-y-2">
-                                <div className="bg-gray-50 border border-gray-200 rounded-md h-11 px-3 flex items-center gap-2 text-sm text-gray-700">
+                            <div className="space-y-1.5">
+                                <div className="bg-gray-50 border border-gray-200 rounded-md h-10 px-3 flex items-center gap-2 text-sm text-gray-700">
                                     <span className="flex-1 truncate">{manifestFileName} — uploaded</span>
                                     <CheckCircle2 className="h-4 w-4 text-green-600 shrink-0" />
                                 </div>
@@ -208,8 +208,8 @@ export const AddBerthRequest = ({ onDataChange, onManifestChange }: AddBerthRequ
                                 </button>
                             </div>
                         ) : (
-                            <div className="border border-dashed border-gray-300 rounded-md bg-gray-50 p-4">
-                                <div className="flex items-center gap-2 text-sm text-gray-500 mb-3">
+                            <div className="border border-dashed border-gray-300 rounded-md bg-gray-50 p-3">
+                                <div className="flex items-center gap-2 text-sm text-gray-500 mb-2">
                                     <Upload className="h-4 w-4" />
                                     <span>Upload a cargo manifest (.csv)</span>
                                 </div>
@@ -252,7 +252,7 @@ export const AddBerthRequest = ({ onDataChange, onManifestChange }: AddBerthRequ
 
     function showStartTime() {
         return <Select onValueChange={setStartTime}>
-            <SelectTrigger className={cn("w-[110px] bg-gray-50 border-gray-200 h-11")}>
+            <SelectTrigger className={cn("w-[110px] bg-gray-50 border-gray-200 h-10")}>
                 <SelectValue placeholder={startTime} />
             </SelectTrigger>
             <SelectContent>
@@ -270,7 +270,7 @@ export const AddBerthRequest = ({ onDataChange, onManifestChange }: AddBerthRequ
             <PopoverTrigger asChild>
                 <Button
                     variant={"outline"}
-                    className={cn("w-[160px] justify-start text-left font-normal bg-gray-50 border-gray-200 h-11", !startDate && "text-muted-foreground")}
+                    className={cn("w-[160px] justify-start text-left font-normal bg-gray-50 border-gray-200 h-10", !startDate && "text-muted-foreground")}
                     onClick={() => setIsStartCalendarOpen(true)}
                 >
                     <CalendarIcon className="mr-2 h-4 w-4" />
@@ -285,7 +285,7 @@ export const AddBerthRequest = ({ onDataChange, onManifestChange }: AddBerthRequ
 
     function showEndTime() {
         return <Select onValueChange={setEndTime}>
-            <SelectTrigger className={cn("w-[110px] bg-gray-50 border-gray-200 h-11")}>
+            <SelectTrigger className={cn("w-[110px] bg-gray-50 border-gray-200 h-10")}>
                 <SelectValue placeholder={endTime} />
             </SelectTrigger>
             <SelectContent>
@@ -303,7 +303,7 @@ export const AddBerthRequest = ({ onDataChange, onManifestChange }: AddBerthRequ
             <PopoverTrigger asChild>
                 <Button
                     variant={"outline"}
-                    className={cn("w-[160px] justify-start text-left font-normal bg-gray-50 border-gray-200 h-11", !endDate && "text-muted-foreground")}
+                    className={cn("w-[160px] justify-start text-left font-normal bg-gray-50 border-gray-200 h-10", !endDate && "text-muted-foreground")}
                     onClick={() => setIsEndCalendarOpen(true)}
                 >
                     <CalendarIcon className="mr-2 h-4 w-4" />

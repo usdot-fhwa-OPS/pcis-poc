@@ -29,7 +29,7 @@ function AddBerthRequestComponent() {
   }
 
   return (
-    <div className="px-6 py-6 md:px-10 md:py-8 flex flex-col gap-6 bg-gray-50 min-h-full max-w-5xl">
+    <div className="px-6 py-6 md:px-10 md:py-8 flex flex-col gap-4 bg-gray-50 min-h-full">
       <div>
         <h1 className="text-2xl font-bold text-gray-900">Request Berth</h1>
         <p className="text-sm text-gray-500 mt-1">
