@@ -224,6 +224,18 @@ function RouteComponent() {
                 <CalendarCheck className="size-4 stroke-blue-600" />
               </span>
             )
+          } else if (notificationTitle() === 'Terminal Capacity Warning') { // For future implementation
+            return(
+              <span className="inline-flex shrink-0 rounded-full p-3 bg-amber-50">
+                <Settings className="size-4 stroke-amber-600" />
+              </span>
+            )
+          } else if (notificationTitle() === 'Hazardous Cargo Submission') { // For future implementation
+            return(
+              <span className="inline-flex shrink-0 rounded-full p-3 bg-red-50">
+                <TriangleAlert className="size-4 stroke-red-600" />
+              </span>
+            )
           } else {
             return(
               <span className="inline-flex shrink-0 rounded-full p-3 bg-gray-50">
@@ -268,20 +280,6 @@ function RouteComponent() {
         </div>
         )
       })}
-        <div className="flex items-center gap-4 bg-white p-4 border mb-2 last:mb-0 rounded-xl shadow">
-            <span className="inline-flex shrink-0 rounded-full p-3 bg-blue-50">
-              <CalendarCheck className="size-4 stroke-blue-600" />
-            </span>
-            <span className="inline-flex shrink-0 rounded-full p-3 bg-amber-50">
-              <Settings className="size-4 stroke-amber-600" />
-            </span>
-            <span className="inline-flex shrink-0 rounded-full p-3 bg-red-50">
-              <TriangleAlert className="size-4 stroke-red-600" />
-            </span>
-            <span className="inline-flex shrink-0 rounded-full p-3 bg-gray-50">
-              <Info className="size-4 stroke-gray-600" />
-            </span>
-        </div>
       </div>
     </div>
   )
