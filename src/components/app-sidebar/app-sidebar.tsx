@@ -40,11 +40,12 @@ const itemsByRole: Record<string, NavItem[]> = {
     { title: "Upcoming Cargo", url: "/cargo", icon: Container },
     { title: "Cargo Reservations", url: "/reservation", icon: CalendarClock },
     { title: "Hazardous Cargo", url: "/hazardous-cargo", icon: TriangleAlert },
-    { title: "Berth Reservations", url: "/berth-vessel", icon: Anchor },
+    { title: "Berth Reservations", url: "/berth-manager", icon: Anchor },
     { title: "Analytics", url: "/analytics", icon: BarChart },
   ],
   "Beneficiary Cargo Owner": [
     { title: "Home", url: "/", icon: Home },
+    { title: "Hazardous Cargo", url: "/hazardous-cargo", icon: TriangleAlert },
     { title: "Cargo Reservations", url: "/reservation", icon: CalendarClock },
     { title: "Analytics", url: "/analytics", icon: BarChart },
   ],
