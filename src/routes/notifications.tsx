@@ -3,8 +3,6 @@ import { createFileRoute } from '@tanstack/react-router'
 import { Badge } from "../components/ui/badge";
 import { Bell, CalendarCheck, Clock, Info, Settings, TriangleAlert } from "lucide-react"
 
-// Start new
-
 import { fetchUserAttributes } from 'aws-amplify/auth';
 import { useAuthenticator } from "@aws-amplify/ui-react";
 import { useEffect, useState } from "react";
@@ -20,15 +18,11 @@ const client = generateClient<Schema>();
 const selectionSet = ['cargoUnitID', 'reservationStatus', "updatedAt", "isBCONotify", "isTransportationNotify"] as const; 
 export type Notifications = SelectionSet<Schema['Container']['type'], typeof selectionSet> 
 
-// End new
-
 export const Route = createFileRoute('/notifications')({
   component: RouteComponent,
 })
 
 function RouteComponent() {
-
-  // Start New
 
   const { user } = useAuthenticator();
 
@@ -178,8 +172,6 @@ function RouteComponent() {
   };
 
   const twentyFourHoursAgo = subHours(new Date(), 24);
-
-  // End new
 
   return (
     <div className="pt-6 px-6 sm:px-16 pb-16">
