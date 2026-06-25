@@ -136,6 +136,7 @@ export const AddBerthRequest = ({ onDataChange, onManifestChange }: AddBerthRequ
                         <Input
                             id="vesselID"
                             type="text"
+                            disabled={true}
                             placeholder="Enter vessel name"
                             onChange={(e) => setVesselId(e.target.value)}
                             className="bg-gray-50 border-gray-200 h-10"
