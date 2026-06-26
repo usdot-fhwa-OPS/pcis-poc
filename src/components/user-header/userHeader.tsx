@@ -5,6 +5,7 @@ import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { Selfhelp } from '../self-help/self-help';
 import { SidebarTrigger } from "../ui/sidebar";
+import { Notifications } from '../../hooks/useNotifications';
 import { Bell, Mail } from "lucide-react"
 import './userHeaderStyles.css';
 
@@ -17,6 +18,9 @@ interface UserHeaderProps {
 // below in terenary statements with w-9 to adjust button width when displaying a badge
 
 const UserHeader: React.FC<UserHeaderProps> = ({ fullName, role }) => {
+    
+    const { userNotifications } = useNotifications();
+    const hasNotifications = userNotifications.length > 0;
     
     const initial = fullName.charAt(0).toUpperCase();
 
@@ -55,12 +59,14 @@ const UserHeader: React.FC<UserHeaderProps> = ({ fullName, role }) => {
                         <span className="sr-only">New Message</span>
                     </Badge>
                 </Button>
-                <Button onClick={navigateToNotifications} variant="ghost" size="icon" className="gap-0 w-11 [&_svg]:size-5">
+                <Button onClick={navigateToNotifications} variant="ghost" size="icon" className={`gap-0 [&_svg]:size-5 ${hasNotifications ? 'w-[2.875rem]' : 'w-11'}`}>
                     <Bell />
                     <span className="sr-only">Open Notifications</span>
-                    <Badge variant="destructive" className="self-start h-2 w-2 rounded-full mt-1 p-0 shadow-none">
-                        <span className="sr-only">New Notification</span>
-                    </Badge>
+                    {hasNotifications   && (
+                        <Badge variant="destructive" className="self-start h-2 w-2 rounded-full mt-1 p-0 shadow-none">
+                            <span className="sr-only">New Notification</span>
+                        </Badge>
+                    )}
                 </Button>
                 <div className="user-info">
                     <div className="user-info-name">
