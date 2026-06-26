@@ -19,6 +19,8 @@ interface UserHeaderProps {
 
 const UserHeader: React.FC<UserHeaderProps> = ({ fullName, role }) => {
     
+    // Checks if the user has *any* notifications.
+    // Future implementation: check if the user has unread notifications.
     const { userNotifications } = useNotifications();
     const hasNotifications = userNotifications.length > 0;
     

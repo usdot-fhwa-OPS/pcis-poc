@@ -2,10 +2,8 @@ import { createFileRoute } from '@tanstack/react-router'
 
 import { Badge } from "../components/ui/badge";
 import { Bell, CalendarCheck, Clock, Info, Settings, TriangleAlert } from "lucide-react"
-
-import { Link } from "@tanstack/react-router"
 import { format, formatDistanceToNow, isAfter, subHours } from "date-fns"
-
+import { Link } from "@tanstack/react-router"
 import { useNotifications, Notifications } from '../hooks/useNotifications';
 
 export const Route = createFileRoute('/notifications')({
@@ -19,6 +17,7 @@ function RouteComponent() {
   const notificationCount = userNotifications.length;
   const unreadNotificationCount = 1;
 
+  // Provides count of high priority notifications.
   const highPriorityBadgesCount = userNotifications.filter((notification) => {
     const title =
       notification.reservationStatus === "Pending Transportation Coordinator Approval" ||
@@ -32,6 +31,7 @@ function RouteComponent() {
     return title === "Late for Pick Up" || title === "Reservation Approval Required";
   }).length;
 
+  // Get notification message content.
   const getNotificationMessage = (role: string, notification: Notifications) => {
     if (role === "Beneficiary Cargo Owner") {
       switch (notification.reservationStatus) {
@@ -73,6 +73,7 @@ function RouteComponent() {
     } 
   };
 
+  // For relative date/time calculation in timestamp.
   const twentyFourHoursAgo = subHours(new Date(), 24);
 
   return (
@@ -116,25 +117,25 @@ function RouteComponent() {
           const notificationIcon = () => {
             if ((notificationTitle() === 'Late for Pick Up') 
               || (notificationTitle() === 'Reservation Approval Required')
-              || (notificationTitle() === 'Pending Pick Up')) {
+              || (notificationTitle() === 'Pending Pick Up')) { // For reservation and scheduling notifications
               return(
                 <span className="inline-flex rounded-full p-3 bg-blue-50">
                   <CalendarCheck className="size-4 stroke-blue-600" />
                 </span>
               )
-            } else if (notificationTitle() === 'Terminal Capacity Warning') { // For future implementation
+            } else if (notificationTitle() === 'Terminal Capacity Warning') { // For system notifications (future)
               return(
                 <span className="inline-flex rounded-full p-3 bg-amber-50">
                   <Settings className="size-4 stroke-amber-600" />
                 </span>
               )
-            } else if (notificationTitle() === 'Hazardous Cargo Submission') { // For future implementation
+            } else if (notificationTitle() === 'Hazardous Cargo Submission') { // For hazardous cargo notifications (future)
               return(
                 <span className="inline-flex rounded-full p-3 bg-red-50">
                   <TriangleAlert className="size-4 stroke-red-600" />
                 </span>
               )
-            } else {
+            } else { // For all other notifications
               return(
                 <span className="inline-flex rounded-full p-3 bg-gray-50">
                   <Info className="size-4 stroke-gray-600" />

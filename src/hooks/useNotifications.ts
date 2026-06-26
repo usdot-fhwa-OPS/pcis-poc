@@ -1,10 +1,9 @@
-import { fetchUserAttributes } from 'aws-amplify/auth';
-import { useAuthenticator } from "@aws-amplify/ui-react";
-import { useEffect, useState } from "react";
-
 import { generateClient, SelectionSet } from 'aws-amplify/data';
 import type { Schema } from '../../amplify/data/resource';
 import { Subscription } from "rxjs";
+import { fetchUserAttributes } from 'aws-amplify/auth';
+import { useAuthenticator } from "@aws-amplify/ui-react";
+import { useEffect, useState } from "react";
 
 const client = generateClient<Schema>();
 const selectionSet = ['cargoUnitID', 'reservationStatus', "updatedAt", "isBCONotify", "isTransportationNotify"] as const; 
@@ -22,7 +21,7 @@ export function useNotifications() {
     const [userNotifications, setUserNotifications] = useState<Notifications[]>([]);
     const [refresh, setRefresh] = useState(0);
 
-    // Fetch user attributes
+    // Fetch user attributes.
     useEffect(() => {
     async function getUserAttributes() {
       if (user) {
