@@ -5,7 +5,7 @@ import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { Selfhelp } from '../self-help/self-help';
 import { SidebarTrigger } from "../ui/sidebar";
-import { Notifications } from '../../hooks/useNotifications';
+import { useNotifications } from '../../hooks/useNotifications';
 import { Bell, Mail } from "lucide-react"
 import './userHeaderStyles.css';
 
