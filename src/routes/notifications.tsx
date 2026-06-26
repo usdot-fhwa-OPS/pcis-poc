@@ -115,7 +115,8 @@ function RouteComponent() {
 
           const notificationIcon = () => {
             if ((notificationTitle() === 'Late for Pick Up') 
-              || (notificationTitle() === 'Reservation Approval Required')) {
+              || (notificationTitle() === 'Reservation Approval Required')
+              || (notificationTitle() === 'Pending Pick Up')) {
               return(
                 <span className="inline-flex rounded-full p-3 bg-blue-50">
                   <CalendarCheck className="size-4 stroke-blue-600" />
