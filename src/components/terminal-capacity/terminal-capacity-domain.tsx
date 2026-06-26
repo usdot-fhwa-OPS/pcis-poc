@@ -19,7 +19,7 @@ export type TerminalCapacityDomain = {
     
     // Monthly specific
     cycle?: string,             // "each" | "onThe"
-    daysOfMonth?: number[],     // [10, 27] when cycle = "each"
+    daysOfMonth?: string[],     // [10, 27] when cycle = "each"
     weekNumber?: string,        // "first" | "second" | "third" | "fourth" | "last"
     dayOfWeek?: string,         // "monday" through "sunday"
     

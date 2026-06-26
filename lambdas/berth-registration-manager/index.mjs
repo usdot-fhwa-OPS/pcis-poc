@@ -201,7 +201,7 @@ function mapManifestRow(row, nowIso) {
     containerStatus:
       (row.containerstatus || row["container status"] || "On-Ship").toString().trim() || "On-Ship",
     bookingStatus: "unassigned",
-    reservationStatus: "UNRESERVED",
+    reservationStatus: "unassigned",
     flag: false,
     isTransportationNotify: false,
     isBCONotify: false,
@@ -402,6 +402,9 @@ async function ingestManifest(requestItem) {
             "vesselAgentEmail": requestItem.vesselAgentEmail,
             "vesselAgentName": requestItem.vesselAgentName,
             "weight": row.weight,
+            "documentsChecked": row.documentschecked,
+            "hazmatClass": row.hazmatclass,
+            "unNumber": row.unnumber
           }
         })
       );
@@ -409,7 +412,7 @@ async function ingestManifest(requestItem) {
     } else {
       await dynamo.send(
         new PutCommand({
-          TableName: "Container-sfyg4lmhl5axxnl6js6gbcn7fu-NONE",
+          TableName: "CargoUnits",
           Item: {
             "cargoUnitID": row.cargounitid,
             "arrivalDate": row.arrivaldate,
@@ -425,7 +428,7 @@ async function ingestManifest(requestItem) {
             "isTerminalNotify": "FALSE",
             "isTransportationNotify": "FALSE",
             "origin": row.origin,
-            "reservationStatus": row.reservationstatus?row.reservationstatus:'UNRESERVED',
+            "reservationStatus": 'unassigned',
             "updatedAt": nowIso,
             "vesselID": row.vesselid,
           },
