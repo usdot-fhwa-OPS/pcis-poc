@@ -5,7 +5,7 @@ import { useState } from "react"
 import { Dialog, DialogContent, DialogHeader } from "../ui/dialog"
 import { ScrollArea } from "../ui/scroll-area"
 import { SidebarMenuItem, SidebarMenuButton, SidebarMenuBadge } from "../ui/sidebar"
-import { Notifications } from "../../routes/notifications"
+import { Notifications } from '../../hooks/useNotifications';
 import { Link } from "@tanstack/react-router"
 import { format } from "date-fns"
 
