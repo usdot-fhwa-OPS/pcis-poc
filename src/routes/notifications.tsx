@@ -138,9 +138,9 @@ function RouteComponent() {
                   <TriangleAlert className="size-4 stroke-red-600" />
                 </span>
               )
-            } else if (notificationTitle() === 'Picked Up') { // For picked up, compliance or completion notifications (future)
+            } else if (notificationTitle() === 'Picked Up') { // For picked up, compliance or successful notifications (future)
               return(
-                <span className="inline-flex rounded-full p-3 bg-green-100">
+                <span className="inline-flex rounded-full p-3 bg-green-50">
                   <CircleCheckBig className="size-4 stroke-green-600" />
                 </span>
               )
