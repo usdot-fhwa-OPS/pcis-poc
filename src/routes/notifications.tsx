@@ -1,9 +1,8 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
 
 import { Badge } from "../components/ui/badge";
 import { Bell, CalendarCheck, Clock, Info, Settings, TriangleAlert } from "lucide-react"
 import { format, formatDistanceToNow, isAfter, subHours } from "date-fns"
-import { Link } from "@tanstack/react-router"
 import { useNotifications, Notifications } from '../hooks/useNotifications';
 
 export const Route = createFileRoute('/notifications')({
@@ -72,6 +71,8 @@ function RouteComponent() {
       }
     } 
   };
+
+  const navigate = useNavigate();
 
   // For relative date/time calculation in timestamp.
   const twentyFourHoursAgo = subHours(new Date(), 24);
@@ -162,15 +163,13 @@ function RouteComponent() {
           return (
           <div
             key={notification.cargoUnitID}
-            className="flex flex-wrap sm:flex-nowrap items-start sm:items-center gap-4 bg-white p-4 border mb-2 last:mb-0 rounded-xl shadow"
+            onClick={() => navigate({ to: "/reservation" })}
+            className="flex flex-wrap sm:flex-nowrap items-start sm:items-center gap-4 bg-white p-4 border mb-2 last:mb-0 rounded-xl shadow cursor-pointer hover:border-blue-200 transition-colors"
           >
             {notificationIcon()}
             <div className="max-w-[calc(100%-3.5rem)] sm:max-w-none flex flex-col gap-1">
               <h2 className="flex items-center gap-2 text-base font-semibold">{notificationTitle()} {notificationBadge()}</h2>
-              <p className="text-sm">
-                {getNotificationMessage(userAttributes.role, notification)}
-                <Link to="/reservation" className="ml-2 text-blue-600 hover:underline">View</Link>
-              </p>
+              <p className="text-sm">{getNotificationMessage(userAttributes.role, notification)}</p>
             </div>
             <div className="ml-auto self-start flex items-center gap-1 text-xs text-muted-foreground text-nowrap leading-none">
               <Clock className="w-3 h-3" />
