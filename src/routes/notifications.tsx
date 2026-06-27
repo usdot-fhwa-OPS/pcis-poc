@@ -1,7 +1,7 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 
 import { Badge } from "../components/ui/badge";
-import { Bell, CalendarCheck, Clock, Info, Settings, TriangleAlert } from "lucide-react"
+import { Bell, CalendarCheck, CircleCheckBig, Clock, Info, Settings, TriangleAlert } from "lucide-react"
 import { format, formatDistanceToNow, isAfter, subHours } from "date-fns"
 import { useNotifications, Notifications } from '../hooks/useNotifications';
 
@@ -136,6 +136,12 @@ function RouteComponent() {
               return(
                 <span className="inline-flex rounded-full p-3 bg-red-50">
                   <TriangleAlert className="size-4 stroke-red-600" />
+                </span>
+              )
+            } else if (notificationTitle() === 'Picked Up') { // For picked up, compliance or completion notifications (future)
+              return(
+                <span className="inline-flex rounded-full p-3 bg-green-100">
+                  <CircleCheckBig className="size-4 stroke-green-600" />
                 </span>
               )
             } else { // For all other notifications
