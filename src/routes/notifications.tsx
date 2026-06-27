@@ -44,7 +44,9 @@ function RouteComponent() {
           if (notification.isBCONotify && notification.isTransportationNotify) return `The Terminal Operator has denied the reservation for Cargo Unit ${notification.cargoUnitID}.`; 
           else return `The Transportation Coordinator has denied the assignment for Cargo Unit ${notification.cargoUnitID}.`
         case "Late for Pick Up":
-          return `The Terminal Operator has marked Cargo Unit ${notification.cargoUnitID} as late for pick up.`; 
+          return `The Terminal Operator has marked Cargo Unit ${notification.cargoUnitID} as late for pick up.`;
+        case "Picked Up":
+          return `The Transportation Coordinator has marked Cargo Unit ${notification.cargoUnitID} as picked up.`; 
         
       }
     } else if ((role === 'Trucking Operator') 
