@@ -8,12 +8,10 @@ import { SidebarMenuItem, SidebarMenuButton, SidebarMenuBadge } from "../ui/side
 import { Notifications } from '../../hooks/useNotifications';
 import { Link } from "@tanstack/react-router"
 import { format } from "date-fns"
-
 interface NotificationsButtonProps {
     notifications: Notifications[]
     role: string
 }
-
 
 export function NotificationsButton({notifications, role}: NotificationsButtonProps) {
   const [open, setOpen] = useState(false)
@@ -110,4 +108,3 @@ export function NotificationsButton({notifications, role}: NotificationsButtonPr
     </>
   )
 }
-
