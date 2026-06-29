@@ -19,6 +19,7 @@ import {
 import { generateClient } from 'aws-amplify/data';
 import type { Schema } from '../../../amplify/data/resource';
 import { UpcomingCargo } from "../../routes/cargo"
+import { saveCargoUnit } from "./cargo-units-client"
 
 const client = generateClient<Schema>();
 
@@ -77,7 +78,7 @@ export const columns: ColumnDef<UpcomingCargo>[] = [
                 setStatus(val as "On-Ship" | "On-Dock")
                 try {
                   // Call the Amplify update method (must always contain containerID)
-                  const { data: updatedContainerStatus } = await client.models.Container.update({
+                  const updatedContainerStatus  = await saveCargoUnit({
                     cargoUnitID: row.original.cargoUnitID, 
                     containerStatus: val,
                   })
