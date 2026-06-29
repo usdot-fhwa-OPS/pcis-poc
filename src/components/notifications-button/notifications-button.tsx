@@ -65,7 +65,7 @@ export function NotificationsButton({notifications, role}: NotificationsButtonPr
           <Bell className="h-4 w-4" />
           Notifications
         {unreadCount > 0 && (
-          <Badge variant="destructive" className="bg-red-500 text-white hover:bg-red-500 rounded-full">{unreadCount}</Badge>
+          <Badge variant="destructive" className="rounded-full">{unreadCount}</Badge>
         )}
       </Button>
 
@@ -75,7 +75,7 @@ export function NotificationsButton({notifications, role}: NotificationsButtonPr
             <div className="flex items-center gap-2">
               <h2 className="text-lg font-semibold">Notifications</h2>
               {unreadCount > 0 && (
-                <span className="rounded-full bg-red-500 px-2 py-0.5 text-xs text-white">{unreadCount} Notifications</span>
+                <Badge variant="destructive" className="px-2 py-0.5 rounded-full">{unreadCount} Notifications</Badge>
               )}
             </div>
           </DialogHeader>
