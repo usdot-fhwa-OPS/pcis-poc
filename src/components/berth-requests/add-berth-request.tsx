@@ -124,15 +124,15 @@ export const AddBerthRequest = ({ onDataChange, onManifestChange }: AddBerthRequ
     }
 
     return (
-        <div className="border border-gray-200 rounded-lg bg-white p-5 md:p-6">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">Berth Request Details</h2>
+        <div className="border border-gray-200 rounded-xl bg-white p-6 md:p-8">
+            <h2 className="text-lg font-semibold text-gray-900 mb-6">Berth Request Details</h2>
 
-            <div className="flex flex-col md:flex-row gap-6">
+            <div className="flex flex-col md:flex-row gap-8">
                 {/* Left column — form fields */}
-                <div className="flex-1 space-y-3">
+                <div className="flex-1 space-y-5">
                     {/* Vessel Name */}
                     <div>
-                        <Label className="text-xs font-medium text-gray-500 mb-1 block">Vessel Name</Label>
+                        <Label className="text-xs font-medium text-gray-500 mb-2 block">Vessel Name</Label>
                         <Input
                             id="vesselID"
                             type="text"
@@ -145,7 +145,7 @@ export const AddBerthRequest = ({ onDataChange, onManifestChange }: AddBerthRequ
 
                     {/* Requested Terminal */}
                     <div>
-                        <Label className="text-xs font-medium text-gray-500 mb-1 block">Requested Terminal</Label>
+                        <Label className="text-xs font-medium text-gray-500 mb-2 block">Requested Terminal</Label>
                         <Select onValueChange={setSelectedTerminalId}>
                             <SelectTrigger className="bg-white border-gray-200 h-10">
                                 <SelectValue placeholder="Select a terminal" />
@@ -173,27 +173,27 @@ export const AddBerthRequest = ({ onDataChange, onManifestChange }: AddBerthRequ
                         </div>
                     )}
 
-                    {/* Arrival + Departure side by side */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        <div>
-                            <Label className="text-xs font-medium text-gray-500 mb-1 block">Estimated Arrival</Label>
-                            <div className="flex items-center gap-2">
-                                {showStartDateCalendar()}
-                                {showStartTime()}
-                            </div>
+                    {/* Estimated Arrival */}
+                    <div>
+                        <Label className="text-xs font-medium text-gray-500 mb-2 block">Estimated Arrival</Label>
+                        <div className="flex items-center gap-2">
+                            {showStartDateCalendar()}
+                            {showStartTime()}
                         </div>
-                        <div>
-                            <Label className="text-xs font-medium text-gray-500 mb-1 block">Estimated Departure</Label>
-                            <div className="flex items-center gap-2">
-                                {showEndDateCalendar()}
-                                {showEndTime()}
-                            </div>
+                    </div>
+
+                    {/* Estimated Departure */}
+                    <div>
+                        <Label className="text-xs font-medium text-gray-500 mb-2 block">Estimated Departure</Label>
+                        <div className="flex items-center gap-2">
+                            {showEndDateCalendar()}
+                            {showEndTime()}
                         </div>
                     </div>
 
                     {/* Manifest File */}
                     <div>
-                        <Label className="text-xs font-medium text-gray-500 mb-1 block">Manifest File</Label>
+                        <Label className="text-xs font-medium text-gray-500 mb-2 block">Manifest File</Label>
                         {manifestFileName ? (
                             <div className="space-y-1.5">
                                 <div className="bg-gray-50 border border-gray-200 rounded-md h-10 px-3 flex items-center gap-2 text-sm text-gray-700">
