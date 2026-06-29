@@ -35,7 +35,7 @@ export function DailyRepeatOptions({dailyEvery, setDailyEvery}:{dailyEvery:any, 
                             
                         </div> 
     <div className="col-span-5">
-        <span>This temporary capacity will repeat every {dailyEvery} days.</span>
+        <span>This temporary capacity will repeat every {dailyEvery} day(s).</span>
     </div>
                         
     </>

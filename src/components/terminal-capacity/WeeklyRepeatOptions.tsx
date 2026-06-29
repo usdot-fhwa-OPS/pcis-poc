@@ -100,7 +100,7 @@ export function WeeklyRepeatOptions({weeklyEvery, setWeeklyEvery, weeklyOnDays, 
 
       </div>
       <div className="col-span-5">
-        <span>This temporary capacity will repeat every {weeklyEvery} weeks</span>
+        <span>This temporary capacity will repeat every {weeklyEvery} week(s)</span>
         <span><br></br>on {weeklyOnDays?.map((day:any, i:number, array:any) => { return day + ((i < (array.length - 1)) ? ' and ' : '') })}</span>
       </div>
 

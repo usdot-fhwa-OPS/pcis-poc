@@ -1,4 +1,4 @@
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "../../ui/tabs";
+import { useState } from "react";
 import { DataTable } from "./data-table.tsx";
 import {
   requestedColumns,
@@ -13,7 +13,18 @@ interface VesselAgentBerthRequestsTableProps {
   meta: { brConfigList: BerthConfigDomain[], deleteBerthRequest: any };
 }
 
+type TabKey = "requested" | "modification-requested" | "ongoing" | "completed"
+
+const TABS: { key: TabKey; label: string }[] = [
+  { key: "requested", label: "Requested" },
+  { key: "modification-requested", label: "Modification Requested" },
+  { key: "ongoing", label: "Ongoing" },
+  { key: "completed", label: "Completed" },
+]
+
 export function VesselAgentBerthRequestsTable({ data, meta }: VesselAgentBerthRequestsTableProps) {
+  const [activeTab, setActiveTab] = useState<TabKey>("requested")
+
   const requested             = data.filter((r) => r.status === "REQUESTED")
   const modificationRequested = data.filter((r) => r.status === "MODIFIED")
   const ongoing               = data.filter((r) =>
@@ -24,32 +35,37 @@ export function VesselAgentBerthRequestsTable({ data, meta }: VesselAgentBerthRe
     (r.status === "APPROVED" && r.ataAt && r.atdAt)
   )
 
+  const tabConfig: Record<TabKey, { columns: any; data: any[] }> = {
+    "requested":              { columns: requestedColumns, data: requested },
+    "modification-requested": { columns: modificationRequestedColumns, data: modificationRequested },
+    "ongoing":                { columns: ongoingColumns, data: ongoing },
+    "completed":              { columns: completedColumns, data: completed },
+  }
+
+  const current = tabConfig[activeTab]
+
   return (
-    <div className="container mx-auto p-10 overflow-x-auto">
-      <Tabs defaultValue="requested">
-        <div>
-          <TabsList className="mb-4 flex w-full justify-start gap-x-4">
-            <TabsTrigger value="requested">Requested</TabsTrigger>
-            <TabsTrigger value="modification-requested">Modification Requested</TabsTrigger>
-            <TabsTrigger value="ongoing">Ongoing</TabsTrigger>
-            <TabsTrigger value="completed">Completed</TabsTrigger>
-          </TabsList>
+    <div className="flex flex-col gap-3 px-6 md:px-10 pb-6">
+      <div className="border-b border-gray-200">
+        <div className="flex gap-6">
+          {TABS.map(({ key, label }) => (
+            <button
+              key={key}
+              onClick={() => setActiveTab(key)}
+              className={`pb-2 text-sm font-medium transition-colors ${
+                activeTab === key
+                  ? "text-gray-900 border-b-2 border-gray-900 -mb-px"
+                  : "text-gray-500 hover:text-gray-700"
+              }`}
+            >
+              {label}
+            </button>
+          ))}
         </div>
-        <div className="w-xl max-w-9/10">
-          <TabsContent value="requested">
-            <DataTable columns={requestedColumns} data={requested} meta={meta} />
-          </TabsContent>
-          <TabsContent value="modification-requested">
-            <DataTable columns={modificationRequestedColumns} data={modificationRequested} meta={meta} />
-          </TabsContent>
-          <TabsContent value="ongoing">
-            <DataTable columns={ongoingColumns} data={ongoing} meta={meta} />
-          </TabsContent>
-          <TabsContent value="completed">
-            <DataTable columns={completedColumns} data={completed} meta={meta} />
-          </TabsContent>
-        </div>
-      </Tabs>
+      </div>
+      <div className="overflow-x-auto">
+        <DataTable columns={current.columns} data={current.data} meta={meta} />
+      </div>
     </div>
   );
 }
