@@ -9,6 +9,11 @@ import { ScrollArea } from "../ui/scroll-area"
 import { Notifications } from '../../hooks/useNotifications';
 import { Link } from "@tanstack/react-router"
 import { format } from "date-fns"
+
+// This is the original notifications button with dialog, extracted from the left 
+// sidebar menu. The component has been updated to access the useNotifications hook 
+// and can be used anywhere to display a user's notifications in a dialog.
+
 interface NotificationsButtonProps {
     notifications: Notifications[]
     role: string
