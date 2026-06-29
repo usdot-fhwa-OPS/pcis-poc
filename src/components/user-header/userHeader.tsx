@@ -8,7 +8,6 @@ import { SidebarTrigger } from "../ui/sidebar";
 import { useNotifications } from '../../hooks/useNotifications';
 import { Bell, Mail } from "lucide-react"
 import './userHeaderStyles.css';
-import { NotificationsButton } from "../notifications-button/notifications-button"
 
 interface UserHeaderProps {
   fullName: string;
@@ -55,7 +54,6 @@ const UserHeader: React.FC<UserHeaderProps> = ({ fullName, role }) => {
             <SidebarTrigger className="shrink-0 w-9 h-9 [&_svg]:size-5" />
             <div className="flex items-center gap-4 sm:gap-5 ml-auto">
                 <Selfhelp />
-                <NotificationsButton notifications={userNotifications} role={role} />
                 <Button variant="ghost" size="icon" className="hidden gap-[0.125rem] w-[2.875rem] [&_svg]:size-5">
                     <Mail />
                     <span className="sr-only">Open Messages</span>

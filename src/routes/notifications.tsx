@@ -14,7 +14,9 @@ function RouteComponent() {
   const { userNotifications, userAttributes } = useNotifications();
 
   const notificationCount = userNotifications.length;
-  const unreadNotificationCount = 1;
+  
+  // Unread notifications feature will be a future enhancement
+  const unreadNotificationCount = 0;
 
   // Provides count of high priority notifications.
   const highPriorityBadgesCount = userNotifications.filter((notification) => {
