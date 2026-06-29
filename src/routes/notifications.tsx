@@ -86,7 +86,7 @@ function RouteComponent() {
       <h1 className="flex items-center gap-2 text-2xl leading-4 font-semibold text-gray-900">
         <Bell className="w-6 h-6 text-gray-700" />
         Notifications
-        {notificationCount > 0 && (
+        {unreadNotificationCount > 0 && (
           <Badge className="px-[0.75rem] py-[0.375rem] ml-4 rounded-full leading-none" variant="destructive">{unreadNotificationCount} new</Badge>
         )}
       </h1>
