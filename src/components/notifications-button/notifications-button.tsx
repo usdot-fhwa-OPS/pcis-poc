@@ -1,10 +1,11 @@
 "use client"
 
+import { Badge } from "../ui/badge";
 import { Bell } from "lucide-react"
+import { Button } from "../ui/button";
 import { useState } from "react"
 import { Dialog, DialogContent, DialogHeader } from "../ui/dialog"
 import { ScrollArea } from "../ui/scroll-area"
-import { SidebarMenuItem, SidebarMenuButton, SidebarMenuBadge } from "../ui/sidebar"
 import { Notifications } from '../../hooks/useNotifications';
 import { Link } from "@tanstack/react-router"
 import { format } from "date-fns"
@@ -60,15 +61,13 @@ export function NotificationsButton({notifications, role}: NotificationsButtonPr
 
   return (
     <>
-      <SidebarMenuItem>
-        <SidebarMenuButton onClick={() => setOpen(true)}>
+      <Button variant="ghost" className="flex items-center gap-2" onClick={() => setOpen(true)}>
           <Bell className="h-4 w-4" />
-          <span>Notifications</span>
-        </SidebarMenuButton>
+          Notifications
         {unreadCount > 0 && (
-          <SidebarMenuBadge className="bg-red-500 text-white hover:bg-red-500">{unreadCount}</SidebarMenuBadge>
+          <Badge variant="destructive" className="bg-red-500 text-white hover:bg-red-500 rounded-full">{unreadCount}</Badge>
         )}
-      </SidebarMenuItem>
+      </Button>
 
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="max-w-2xl p-0">
