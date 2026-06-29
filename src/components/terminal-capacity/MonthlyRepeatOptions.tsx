@@ -111,7 +111,7 @@ const [date, setDate] = React.useState<Date | undefined>(new Date())
             />
           </div>
           <div className="col-span-5">
-            <span>This temporary capacity will repeat every {monthlyEvery} months</span>
+            <span>This temporary capacity will repeat every {monthlyEvery} month(s)</span>
             <span><br></br>on the {daysOfMonth?.map((day:any, i:number, array:any) => { return day + ((i < (array.length - 1)) ? ' and ' : '') })}</span>
           </div>
 
@@ -158,7 +158,7 @@ const [date, setDate] = React.useState<Date | undefined>(new Date())
             </Select>        
           </div>
           <div className="col-span-5">
-            <span>This temporary capacity will repeat every {monthlyEvery} months</span>
+            <span>This temporary capacity will repeat every {monthlyEvery} month(s)</span>
             <span><br></br>on the {onTheWeek} {onTheWeekDay}</span>
           </div>
 

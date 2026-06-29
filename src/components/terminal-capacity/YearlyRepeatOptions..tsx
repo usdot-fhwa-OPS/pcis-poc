@@ -147,7 +147,7 @@ const anchor = useComboboxAnchor();
 
       }
         <div className="col-span-5">
-            <span>This temporary capacity will repeat every {yearlyEvery} years</span>
+            <span>This temporary capacity will repeat every {yearlyEvery} year(s)</span>
             <span><br></br>on the {onTheWeek} {onTheWeekDay}</span>
             <span> of {monthsOfYear?.map((month:any, i:number, array:any) => { return month + ((i < (array.length - 1)) ? ' and ' : '') })}</span>
           </div>
