@@ -1,9 +1,11 @@
+import { useNavigate } from '@tanstack/react-router'
 
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { Selfhelp } from '../self-help/self-help';
 import { SidebarTrigger } from "../ui/sidebar";
+import { useNotifications } from '../../hooks/useNotifications';
 import { Bell, Mail } from "lucide-react"
 import './userHeaderStyles.css';
 
@@ -16,6 +18,11 @@ interface UserHeaderProps {
 // below in terenary statements with w-9 to adjust button width when displaying a badge
 
 const UserHeader: React.FC<UserHeaderProps> = ({ fullName, role }) => {
+    
+    // Checks if the user has *any* notifications.
+    // Future implementation: check if the user has unread notifications.
+    const { userNotifications } = useNotifications();
+    const hasNotifications = userNotifications.length > 0;
     
     const initial = fullName.charAt(0).toUpperCase();
 
@@ -35,36 +42,43 @@ const UserHeader: React.FC<UserHeaderProps> = ({ fullName, role }) => {
     };
 
     const bgColor = getAvatarColor(fullName);
+
+    const navigate = useNavigate();
+    const navigateToNotifications = () => {
+        navigate({ to: "/notifications" });
+    }
     
     return (
     <>
-        <div className="flex items-center gap-4 sm:gap-5 p-3 sm:pr-6 bg-white border-b mb-4">
-            <SidebarTrigger className="shrink-0" />
+        <div className="flex items-center gap-4 sm:gap-5 p-3 sm:pr-6 bg-white border-b">
+            <SidebarTrigger className="shrink-0 w-9 h-9 [&_svg]:size-5" />
             <div className="flex items-center gap-4 sm:gap-5 ml-auto">
-            <Selfhelp />
-            <Button variant="ghost" size="icon" className="hidden gap-[0.125rem] w-[2.875rem] [&_svg]:size-5">
-                <Mail />
-                <span className="sr-only">Open Messages</span>
-                <Badge variant="destructive" className="self-start h-2 w-2 rounded-full mt-1 p-0 shadow-none">
-                    <span className="sr-only">New Message</span>
-                </Badge>
-            </Button>
-            <Button variant="ghost" size="icon" className="gap-0 w-11 [&_svg]:size-5">
-                <Bell />
-                <span className="sr-only">Open Notifications</span>
-                <Badge variant="destructive" className="self-start h-2 w-2 rounded-full mt-1 p-0 shadow-none">
-                    <span className="sr-only">New Notification</span>
-                </Badge>
-            </Button>
-            <div className="user-info">
-                <div className="user-info-name">
-                    <span>{fullName}</span>
-                    <span className="user-info-role">{role}</span>
+                <Selfhelp />
+                <Button variant="ghost" size="icon" className="hidden gap-[0.125rem] w-[2.875rem] [&_svg]:size-5">
+                    <Mail />
+                    <span className="sr-only">Open Messages</span>
+                    <Badge variant="destructive" className="self-start h-2 w-2 rounded-full mt-1 p-0 shadow-none">
+                        <span className="sr-only">New Message</span>
+                    </Badge>
+                </Button>
+                <Button onClick={navigateToNotifications} variant="ghost" size="icon" className={`gap-0 [&_svg]:size-5 ${hasNotifications ? 'w-[2.875rem]' : 'w-11'}`}>
+                    <Bell />
+                    <span className="sr-only">Open Notifications</span>
+                    {hasNotifications   && (
+                        <Badge variant="destructive" className="self-start h-2 w-2 rounded-full mt-1 p-0 shadow-none">
+                            <span className="sr-only">New Notification</span>
+                        </Badge>
+                    )}
+                </Button>
+                <div className="user-info">
+                    <div className="user-info-name">
+                        <span>{fullName}</span>
+                        <span className="user-info-role">{role}</span>
+                    </div>
+                    <Avatar className="h-9 w-9">
+                        <AvatarFallback style={{ backgroundColor: bgColor }} className="text-white text-lg font-semibold">{initial}</AvatarFallback>
+                    </Avatar>
                 </div>
-                <Avatar className="h-9 w-9">
-                    <AvatarFallback style={{ backgroundColor: bgColor }} className="text-white text-lg font-semibold">{initial}</AvatarFallback>
-                </Avatar>
-            </div>
             </div>
         </div>
     </>

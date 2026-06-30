@@ -17,16 +17,7 @@ import { cn } from "../../lib/utils"
 import { useAuthenticator } from "@aws-amplify/ui-react"
 import { fetchUserAttributes } from 'aws-amplify/auth'
 import { useEffect, useState } from "react"
-import { NotificationsButton } from "../notifications-button/notifications-button"
-import { generateClient, SelectionSet } from 'aws-amplify/data'
-import type { Schema } from '../../../amplify/data/resource'
-import { Subscription } from "rxjs"
 import { useNavigate, useRouterState } from "@tanstack/react-router"
-
-const client = generateClient<Schema>()
-
-const selectionSet = ['cargoUnitID', 'reservationStatus', "updatedAt", "isBCONotify", "isTransportationNotify"] as const
-export type Notifications = SelectionSet<Schema['Container']['type'], typeof selectionSet>
 
 type NavItem = { title: string; url: string; icon: React.ElementType }
 
@@ -81,8 +72,6 @@ export function AppSidebar() {
     email: '',
   })
 
-  const [userNotifications, setUserNotifications] = useState<Notifications[]>([])
-
   useEffect(() => {
     async function getUserAttributes() {
       if (user) {
@@ -102,52 +91,6 @@ export function AppSidebar() {
   }, [user])
 
   const filteredItems = itemsByRole[userAttributes.role] ?? []
-
-  const [refresh, setRefresh] = useState(0)
-
-  useEffect(() => {
-    const updateSubscription = client.models.Container.onUpdate().subscribe({
-      next: () => setRefresh((prev) => prev + 1),
-      error: (error) => console.warn(error),
-    })
-    return () => updateSubscription.unsubscribe()
-  }, [])
-
-  useEffect(() => {
-    if (!userAttributes.role) return
-    let notisSub: Subscription
-
-    if (userAttributes.role === "Beneficiary Cargo Owner") {
-      notisSub = client.models.Container.observeQuery({
-        filter: {
-          and: [
-            { bcoEmail: { eq: userAttributes.email } },
-            { isBCONotify: { eq: true } },
-          ],
-        },
-      }).subscribe({
-        next: ({ items }) => setUserNotifications(items),
-      })
-    } else if (
-      userAttributes.role === 'Trucking Operator' ||
-      userAttributes.role === 'Rail Operator' ||
-      userAttributes.role === 'Third Party Logistics Provider'
-    ) {
-      notisSub = client.models.Container.observeQuery({
-        filter: { isTransportationNotify: { eq: true } },
-      }).subscribe({
-        next: ({ items }) => setUserNotifications(items),
-      })
-    } else {
-      notisSub = client.models.Container.observeQuery({
-        filter: { isTerminalNotify: { eq: true } },
-      }).subscribe({
-        next: ({ items }) => setUserNotifications(items),
-      })
-    }
-
-    return () => notisSub.unsubscribe()
-  }, [userAttributes, refresh])
 
   const handleSignOut = () => {
     signOut()
@@ -186,7 +129,6 @@ export function AppSidebar() {
                   </SidebarMenuItem>
                 )
               })}
-              <NotificationsButton notifications={userNotifications} role={userAttributes.role} />
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
