@@ -1,6 +1,6 @@
 "use client"
 import * as React from "react"
-import { Input } from "../ui/input.tsx"
+
 import {
   ColumnDef,
   flexRender,
@@ -54,18 +54,6 @@ export function DataTable<TData, TValue>({ columns, data ,meta}: DataTableProps<
   })
 
   return (
-    
-    <div>
-      <Input
-        placeholder="Filter by Cargo Unit ID"  
-        value={(table.getColumn("cargoUnitID")?.getFilterValue() as string) ?? ""} 
-        onChange={(event) =>
-          table.getColumn("cargoUnitID")?.setFilterValue(event.target.value) 
-        }
-        className="max-w-sm mb-4 bg-white"
-      />
-    </div>
-
     <div className="mb-8 w-xl max-w-9/10 bg-white border rounded-xl">
       <Table>
         <TableHeader>
@@ -144,6 +132,3 @@ export function DataTable<TData, TValue>({ columns, data ,meta}: DataTableProps<
     </div>
   )
 }
-
-
-
