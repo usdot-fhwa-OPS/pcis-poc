@@ -54,7 +54,7 @@ export function DataTable<TData, TValue>({ columns, data ,meta}: DataTableProps<
   })
 
   return (
-    <div className="mb-8 w-xl max-w-9/10 bg-white border rounded-xl">
+    <div className="mb-8 w-xl max-w-9/10 bg-white border rounded-xl overflow-hidden">
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
