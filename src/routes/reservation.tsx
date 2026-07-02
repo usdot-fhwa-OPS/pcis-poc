@@ -708,10 +708,10 @@ useEffect(() => {
         <h1 className="mb-4 text-2xl leading-4 font-semibold text-gray-900">Cargo Reservations</h1>
         <Tabs defaultValue="requested">
           <TabsList className="h-auto mb-4 p-0 bg-transparent gap-x-4">
-            <TabsTrigger value="requested" className="pt-0 px-0 pb-2 data-[state=active]:border-b-2 border-transparent data-[state=active]:border-gray-900 text-gray-500 hover:text-gray-700 data-[state=active]:text-gray-900">Requested</TabsTrigger>
-            <TabsTrigger value="modification" className="pt-0 px-0 pb-2 data-[state=active]:border-b-2 border-transparent data-[state=active]:border-gray-900 text-gray-500 hover:text-gray-700 data-[state=active]:text-gray-900">Modification Requested</TabsTrigger>
-            <TabsTrigger value="ongoing" className="pt-0 px-0 pb-2 data-[state=active]:border-b-2 border-transparent data-[state=active]:border-gray-900 text-gray-500 hover:text-gray-700 data-[state=active]:text-gray-900">Ongoing</TabsTrigger>
-            <TabsTrigger value="completed" className="pt-0 px-0 pb-2 data-[state=active]:border-b-2 border-transparent data-[state=active]:border-gray-900 text-gray-500 hover:text-gray-700 data-[state=active]:text-gray-900">Completed</TabsTrigger>
+            <TabsTrigger value="requested" className="pt-0 px-0 pb-2 data-[state=active]:border-b-2 border-transparent data-[state=active]:border-gray-900 rounded-none text-gray-500 hover:text-gray-700 data-[state=active]:text-gray-900 shadow-none data-[state=active]:shadow-none">Requested</TabsTrigger>
+            <TabsTrigger value="modification" className="pt-0 px-0 pb-2 data-[state=active]:border-b-2 border-transparent data-[state=active]:border-gray-900 rounded-none text-gray-500 hover:text-gray-700 data-[state=active]:text-gray-900 shadow-none data-[state=active]:shadow-none">Modification Requested</TabsTrigger>
+            <TabsTrigger value="ongoing" className="pt-0 px-0 pb-2 data-[state=active]:border-b-2 border-transparent data-[state=active]:border-gray-900 rounded-none text-gray-500 hover:text-gray-700 data-[state=active]:text-gray-900 shadow-none data-[state=active]:shadow-none">Ongoing</TabsTrigger>
+            <TabsTrigger value="completed" className="pt-0 px-0 pb-2 data-[state=active]:border-b-2 border-transparent data-[state=active]:border-gray-900 rounded-none text-gray-500 hover:text-gray-700 data-[state=active]:text-gray-900 shadow-none data-[state=active]:shadow-none">Completed</TabsTrigger>
           </TabsList>
           <div className="w-xl max-w-9/10">
             <TabsContent value="requested" className="mt-0">
