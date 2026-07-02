@@ -704,10 +704,11 @@ useEffect(() => {
 
   if (userAttributes.role === "Terminal Operator") {
     return (
-      <div className="w-xl max-w-9/10">
+      <div className="w-xl max-w-9/10 px-6 py-6 md:px-10 md:py-8">
+        <h1 className="mb-4 text-2xl leading-4 font-semibold text-gray-900">Reservations</h1>
         <Tabs defaultValue="requested" className="">
           <div>
-            <TabsList className="mb-4 flex w-full justify-start gap-x-4">
+            <TabsList className="inline-block mr-auto mb-4 flex justify-start gap-x-4">
               <TabsTrigger value="requested">Requested</TabsTrigger>
               <TabsTrigger value="modification">Modification Requested</TabsTrigger>
               <TabsTrigger value="ongoing">Ongoing</TabsTrigger>

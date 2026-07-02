@@ -55,18 +55,17 @@ export function DataTable<TData, TValue>({ columns, data ,meta}: DataTableProps<
 
   return (
     
-    <div className="mb-8 w-xl max-w-9/10 p-2 bg-white border rounded-xl">
+    <div className="mb-8 w-xl max-w-9/10">
         <Input
           placeholder="Filter by Cargo Unit ID"  
           value={(table.getColumn("cargoUnitID")?.getFilterValue() as string) ?? ""} 
           onChange={(event) =>
             table.getColumn("cargoUnitID")?.setFilterValue(event.target.value) 
           }
-          className="max-w-sm"
+          className="max-w-sm mb-4 bg-white"
         />
-     
 
-      <Table>
+      <Table className="bg-white border rounded-xl">
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
