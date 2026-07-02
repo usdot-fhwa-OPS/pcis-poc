@@ -705,31 +705,31 @@ useEffect(() => {
   if (userAttributes.role === "Terminal Operator") {
     return (
       <div className="w-xl max-w-9/10">
-      <Tabs defaultValue="requested" className="">
-        <div>
-      <TabsList className="mb-4 flex w-full justify-start gap-x-4">
-          <TabsTrigger value="requested">Requested</TabsTrigger>
-          <TabsTrigger value="modification">Modification Requested</TabsTrigger>
-          <TabsTrigger value="ongoing">Ongoing</TabsTrigger>
-          <TabsTrigger value="completed">Completed</TabsTrigger>
-        </TabsList>
-        </div>
-        <div className="w-xl max-w-9/10">
-        <TabsContent value="requested">
-          <TerminalBookingsTable data={terminalopBookingsupcoming} status="Requested" meta={{updateBooking}} />
-        </TabsContent>
-        <TabsContent value="modification">
-          <TerminalBookingsTable data={terminalOpModifiedBookings} status="Modified" meta={{updateBooking}} />
-        </TabsContent>
-        <TabsContent value="ongoing">
-          <TerminalBookingsTable data={terminalopBookingongoing} status="Ongoing" meta={{updateBooking, markBookingLate}} />
-        </TabsContent>
-        <TabsContent value="completed">
-          < TerminalBookingsCompleted data={Terminal_CompletedData} status="Completed" meta={{updateBooking}}/>
-        </TabsContent>
-        </div>
-      </Tabs>
-    </div>
+        <Tabs defaultValue="requested" className="">
+          <div>
+            <TabsList className="mb-4 flex w-full justify-start gap-x-4">
+              <TabsTrigger value="requested">Requested</TabsTrigger>
+              <TabsTrigger value="modification">Modification Requested</TabsTrigger>
+              <TabsTrigger value="ongoing">Ongoing</TabsTrigger>
+              <TabsTrigger value="completed">Completed</TabsTrigger>
+            </TabsList>
+          </div>
+          <div className="w-xl max-w-9/10">
+            <TabsContent value="requested" className="mt-0">
+              <TerminalBookingsTable data={terminalopBookingsupcoming} status="Requested" meta={{updateBooking}} />
+            </TabsContent>
+            <TabsContent value="modification" className="mt-0">
+              <TerminalBookingsTable data={terminalOpModifiedBookings} status="Modified" meta={{updateBooking}} />
+            </TabsContent>
+            <TabsContent value="ongoing" className="mt-0">
+              <TerminalBookingsTable data={terminalopBookingongoing} status="Ongoing" meta={{updateBooking, markBookingLate}} />
+            </TabsContent>
+            <TabsContent value="completed" className="mt-0">
+              < TerminalBookingsCompleted data={Terminal_CompletedData} status="Completed" meta={{updateBooking}}/>
+            </TabsContent>
+          </div>
+        </Tabs>
+      </div>
     );
   }
 
