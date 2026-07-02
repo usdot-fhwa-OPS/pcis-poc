@@ -55,14 +55,16 @@ export function DataTable<TData, TValue>({ columns, data ,meta}: DataTableProps<
 
   return (
     
-    <Input
-      placeholder="Filter by Cargo Unit ID"  
-      value={(table.getColumn("cargoUnitID")?.getFilterValue() as string) ?? ""} 
-      onChange={(event) =>
-        table.getColumn("cargoUnitID")?.setFilterValue(event.target.value) 
-      }
-      className="max-w-sm mb-4 bg-white"
-    />
+    <div>
+      <Input
+        placeholder="Filter by Cargo Unit ID"  
+        value={(table.getColumn("cargoUnitID")?.getFilterValue() as string) ?? ""} 
+        onChange={(event) =>
+          table.getColumn("cargoUnitID")?.setFilterValue(event.target.value) 
+        }
+        className="max-w-sm mb-4 bg-white"
+      />
+    </div>
 
     <div className="mb-8 w-xl max-w-9/10 bg-white border rounded-xl">
       <Table>
