@@ -55,7 +55,7 @@ export function DataTable<TData, TValue>({ columns, data ,meta}: DataTableProps<
 
   return (
     
-    <div className="mb-4 w-xl max-w-9/10 px-3 py-2 border rounded-md">
+    <div className="mb-8 w-xl max-w-9/10 p-2 bg-white border rounded-xl">
         <Input
           placeholder="Filter by Cargo Unit ID"  
           value={(table.getColumn("cargoUnitID")?.getFilterValue() as string) ?? ""} 

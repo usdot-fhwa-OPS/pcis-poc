@@ -9,7 +9,7 @@ interface TerminalBookingsTableProps {
 
 export function TerminalBookingsTable({ data, status, meta }: TerminalBookingsTableProps) {
   return (
-    <div className="container mx-auto p-10 overflow-x-auto">
+    <div className="container mx-auto p-0 overflow-x-auto">
       <DataTable columns={columns(status)} data={data} meta={meta} />
     </div>
   );
@@ -17,7 +17,7 @@ export function TerminalBookingsTable({ data, status, meta }: TerminalBookingsTa
 
 export function TerminalBookingModification({ data, status, meta }: TerminalBookingsTableProps) {
     return (
-      <div className="container mx-auto p-10 overflow-x-auto">
+      <div className="container mx-auto p-0 overflow-x-auto">
         <DataTable columns={columns(status)} data={data} meta={meta} />
       </div>
     )
@@ -25,7 +25,7 @@ export function TerminalBookingModification({ data, status, meta }: TerminalBook
 
   export function TerminalBookingsCompleted({ data}: TerminalBookingsTableProps) {
     return (
-      <div className="container w-xl max-w-9/10 p-10 overflow-x-auto">
+      <div className="container w-xl max-w-9/10 p-0 overflow-x-auto">
         <DataTable columns={CompletedColumn()} data={data} />
       </div>
     );
