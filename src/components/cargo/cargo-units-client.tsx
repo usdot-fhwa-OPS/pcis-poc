@@ -53,6 +53,8 @@ export const getCargoBookingsAmount = async (reservationDate: string): Promise<n
 //     return result;
 // }
 
+
+const onUpdate = new Subject<number>();
 export const saveCargoUnit = async (cargoUnit:any): Promise<string> => {
     const session = await fetchAuthSession();
     const response = await fetch(`https://dd1jp7oh40.execute-api.us-east-1.amazonaws.com/dev/saveCargoUnit`, {
@@ -229,6 +231,36 @@ export const listBcoCompleted = async (bcoEmail: string): Promise<BCOCompletedBo
     return result;
 }
 
+export const onCargoUpdate = () => {
+    const subscribers: { next: any, error: any }[] = [];
+
+    return {
+        // Add a subscriber to the list
+        subscribe: (item: { next: any, error: any }) => {
+            subscribers.push(item);
+            return { // Remove a subscriber from the list
+                unsubscribe: () => {
+                    const index = subscribers.indexOf(item);
+
+                    if (index > -1) {
+                        subscribers.splice(index, 1); // 1 means remove exactly one item
+                    }
+                }
+            };
+        },
+
+
+
+        // notify next to all subscribers
+        next: () => {
+            subscribers.forEach((item: { next: any, error: (error: any) => {} }) => item.next());
+        },
+        error: (error: any) => {
+            subscribers.forEach((item: { next: any, error: (error: any) => {} }) => item.error(error));
+        },
+
+    }
+}
 export const saveHazardousCargo = async (UpcomingCargo: UpcomingCargo): Promise<string> => {
     const session = await fetchAuthSession();
     const response = await fetch(`https://bubcodjacl.execute-api.us-east-1.amazonaws.com/dev/hazardousCargos/${UpcomingCargo.vesselId}`, {
@@ -241,6 +273,7 @@ export const saveHazardousCargo = async (UpcomingCargo: UpcomingCargo): Promise<
         body: JSON.stringify(UpcomingCargo)
     });
     const result = (await response.json());
+    onCargoUpdate().next();
     return result;
 }
 

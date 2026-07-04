@@ -26,7 +26,8 @@ import { generateClient, SelectionSet } from 'aws-amplify/data';
 import type { Schema } from '../../amplify/data/resource';
 import { useAppDispatch, useAppSelector } from '../hooks.tsx';
 import { getTerminalCapacityList, populate } from '../components/terminal-capacity/terminal-capacity-state.tsx';
-import { terminalCapacityList } from '../components/terminal-capacity/terminal-capacity-client.tsx';
+import { getTerrminalCapacity, terminalCapacityList } from '../components/terminal-capacity/terminal-capacity-client.tsx';
+import { getCargoBookingsAmount, listBcoUpcoming, listTermOpCompleted, listTransOpCompleted, onCargoUpdate } from '../components/cargo/cargo-units-client.tsx';
 
 const client = generateClient<Schema>();
 
@@ -254,15 +255,10 @@ function Index() {
 
     async function getTerminalCapacity() { 
       try {
-        const { data: limit } = await client.models.Limit.get(
-          {id: '0c1aee99-e95e-4c61-920d-52faea4dbbd5'},
-          {
-            authMode: 'apiKey',
-          }
-        );
+        const limit = await getTerrminalCapacity('c5067f68-07dd-45a4-9000-893708bdbd4f')
         
         if (limit) {
-          return limit.terminalCapacity; 
+          return limit.capacity; 
         }
       } catch (error) {
         console.error('Error fetching booking limit', error);
@@ -274,15 +270,8 @@ function Index() {
 
   async function getBookingsAmount(reservationDate: string) {
     try {
-      const { data: bookings } = await client.models.Container.list({
-        authMode: 'apiKey',
-        filter: {
-          reservationDate: {eq: reservationDate}
-        },  
-      });
-      if (bookings) {
-        return bookings.length;
-      }
+      const count  = await getCargoBookingsAmount(reservationDate);
+            return count;
     } catch (error) {
       console.error('Error fetching bookings', error);
     }
@@ -292,12 +281,12 @@ function Index() {
       
     // Subscribe to updates and trigger refresh.
     useEffect(() => {
-      const updateSubscription = client.models.Container.onUpdate().subscribe({
+      const updateSubscription =  onCargoUpdate().subscribe({  //client.models.Container.onUpdate().subscribe({
         next: () => {
           // Increment the refresh counter to trigger re-running the observeQuery.
           setRefresh((prev) => prev + 1);
         },
-        error: (error) => console.warn(error),
+        error: (error: any) => console.warn(error),
       });
       return () => updateSubscription.unsubscribe();
     }, []);
@@ -331,20 +320,7 @@ function Index() {
           || (userAttributes.role === 'Rail Operator')
           || (userAttributes.role === 'Third Party Logistics Provider')) && userAttributes.email) {
           try {
-            const { data: cargo } = await client.models.Container.list({
-              selectionSet:selectionSetTransportation_CompletedData,
-              authMode: 'apiKey',
-              filter: {
-                and: [
-                  {
-                    transopEmail: { eq: userAttributes.email }
-                  },
-                  {
-                    reservationStatus: { eq: 'Picked Up' }
-                  }
-                ]
-              },
-            });
+           const cargo  = await listTransOpCompleted(userAttributes.email);
             setTransportation_CompletedData(cargo);
           } catch (error) {
             console.error('Error fetching completed bookings:', error);
@@ -366,15 +342,7 @@ function Index() {
       async function fetchTermOperatorCBookingsContainers() {
         if (userAttributes.role === 'Terminal Operator') {
           try {
-            const { data: cargo } = await client.models.Container.list({
-              selectionSet:selectionSetTerminal_CompletedData,
-              authMode: 'apiKey',
-              filter: {
-                    reservationStatus: { 
-                      eq: 'Picked Up' 
-                    }
-              },
-            });
+            const cargo  = await listTermOpCompleted()
             setTerminal_CompletedData(cargo);
           } catch (error) {
             console.error('Error fetching completed bookings:', error);
@@ -396,20 +364,7 @@ function Index() {
       async function fetchContainers() {
         if (userAttributes.role === 'Beneficiary Cargo Owner') {
           try {
-            const { data: cargo } = await client.models.Container.list({
-              filter: {
-                and: [
-                  {
-                    bcoEmail: { eq: userAttributes.email }
-                  },
-                  {
-                    reservationStatus: { eq: 'unassigned' }
-                  }
-                ]
-              },
-              selectionSet: selectionSetBCOUpcomingBookings,
-              authMode: 'apiKey',
-            });
+            const cargo  = await listBcoUpcoming(userAttributes.email);
             setBcoUpcomingBookings(cargo);
           } catch (error) {
             console.error('Error fetching containers:', error);

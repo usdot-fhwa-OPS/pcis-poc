@@ -12,7 +12,7 @@ import { useAuthenticator } from "@aws-amplify/ui-react";
 //Three Imports needed for Amplify Data Queries and CRUD methods
 import { generateClient, SelectionSet } from 'aws-amplify/data';
 import type { Schema } from '../../amplify/data/resource';
-import { getCargoBookingsAmount, listBcoCompleted, listBcoOngoing, listBcoUpcoming, listTermOpCompleted, listTermOpModifiedRequestedCargoUnits, listTermOpOngoing, listTermOpOnGoingCargoUnits, listTermOpRequestedCargoUnits, listTransOpCompleted, listTransOpUpcoming } from '../components/cargo/cargo-units-client.tsx'
+import { getCargoBookingsAmount, listBcoCompleted, listBcoOngoing, listBcoUpcoming, listTermOpCompleted, listTermOpModifiedRequestedCargoUnits, listTermOpOngoing, listTermOpOnGoingCargoUnits, listTermOpRequestedCargoUnits, listTransOpCompleted, listTransOpUpcoming, onCargoUpdate, saveCargoUnit } from '../components/cargo/cargo-units-client.tsx'
 import { getTerrminalCapacity } from '../components/terminal-capacity/terminal-capacity-client.tsx'
 
 const client = generateClient<Schema>();
@@ -163,12 +163,12 @@ function RouteComponent() {
   
     // Subscribe to updates and trigger refresh.
     useEffect(() => {
-      const updateSubscription = client.models.Container.onUpdate().subscribe({
+      const updateSubscription =  onCargoUpdate().subscribe({  //client.models.Container.onUpdate().subscribe({
         next: () => {
           // Increment the refresh counter to trigger re-running the observeQuery.
           setRefresh((prev) => prev + 1);
         },
-        error: (error) => console.warn(error),
+        error: (error:any) => console.warn(error),
       });
       return () => updateSubscription.unsubscribe();
     }, []);
@@ -323,7 +323,7 @@ function RouteComponent() {
     }
   
     try {
-      const { data: assignTransportationOp } = await client.models.Container.update({
+      const assignTransportationOp  = await saveCargoUnit({
         cargoUnitID: cargoUnitID,  
         transopName: newName,
         transopEmail: newEmail,
@@ -384,7 +384,7 @@ function RouteComponent() {
     async function  markBookingLate(id: string, status: string){  
       try {
 
-          const { data: updatedContainerStatus } = await client.models.Container.update({
+          const updatedContainerStatus = await saveCargoUnit({
             cargoUnitID: id,   
             reservationStatus: status,
             isTransportationNotify: true,
@@ -451,7 +451,7 @@ function RouteComponent() {
           });
         }
         
-        const { data: updatedContainerStatus } = await client.models.Container.update(updatePayload);
+        const updatedContainerStatus = await saveCargoUnit(updatePayload);
         console.log("Updated container status:", updatedContainerStatus);
         toast.success("Container status updated successfully");
     
@@ -516,7 +516,7 @@ async function updateBooking(id: string, status: string, reservationDate?: strin
       });
     }
 
-    const { data: updatedContainerStatus } = await client.models.Container.update(updatePayload);
+    const updatedContainerStatus  = await saveCargoUnit(updatePayload);
     
     console.log("Updated booking status:", updatedContainerStatus);
     toast.success("Booking status updated successfully");
