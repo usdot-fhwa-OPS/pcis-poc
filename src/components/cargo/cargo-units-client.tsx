@@ -54,7 +54,6 @@ export const getCargoBookingsAmount = async (reservationDate: string): Promise<n
 // }
 
 
-const onUpdate = new Subject<number>();
 export const saveCargoUnit = async (cargoUnit:any): Promise<string> => {
     const session = await fetchAuthSession();
     const response = await fetch(`https://dd1jp7oh40.execute-api.us-east-1.amazonaws.com/dev/saveCargoUnit`, {
