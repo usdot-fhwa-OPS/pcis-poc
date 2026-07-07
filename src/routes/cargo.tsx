@@ -29,10 +29,7 @@ export default function Cargo() {
   const fetchContainers = async () => {
     //Query the data from the database with selection set and auth mode (always apiKey)
      const cargo  =  await listCargoUnits();
-    // await client.models.Container.list({
-    //   selectionSet,
-    //   authMode: 'apiKey'
-    // });
+    
     setData(cargo);
   }
 

@@ -106,7 +106,7 @@ export function AppSidebar() {
   const [refresh, setRefresh] = useState(0)
 
   useEffect(() => {
-    const updateSubscription =  onCargoUpdate().subscribe({
+    const updateSubscription =  onCargoUpdate.subscribe({
       next: () => setRefresh((prev) => prev + 1),
       error: (error: any) => console.warn(error),
     })
@@ -115,7 +115,6 @@ export function AppSidebar() {
 
   useEffect(() => {
     if (!userAttributes.role) return
-    let notisSub: Subscription
 
     if (userAttributes.role === "Beneficiary Cargo Owner") {
       fetchBcoNotifications(userAttributes.email).then(items => {
