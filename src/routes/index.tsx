@@ -27,7 +27,7 @@ import type { Schema } from '../../amplify/data/resource';
 import { useAppDispatch, useAppSelector } from '../hooks.tsx';
 import { getTerminalCapacityList, populate } from '../components/terminal-capacity/terminal-capacity-state.tsx';
 import { getTerrminalCapacity, terminalCapacityList } from '../components/terminal-capacity/terminal-capacity-client.tsx';
-import { getCargoBookingsAmount, listBcoUpcoming, listTermOpCompleted, listTransOpCompleted, onCargoUpdate } from '../components/cargo/cargo-units-client.tsx';
+import { getCargoBookingsAmount, listBcoCompleted, listBcoOngoing, listBcoUpcoming, listTermOpCompleted, listTermOpModifiedRequestedCargoUnits, listTermOpOngoing, listTermOpOnGoingCargoUnits, listTermOpRequestedCargoUnits, listTransOpCompleted, listTransOpUpcoming, onCargoUpdate, saveCargoUnit } from '../components/cargo/cargo-units-client.tsx';
 
 const client = generateClient<Schema>();
 
@@ -381,30 +381,12 @@ function Index() {
       // Move fetchContainers outside of useEffect so it can be reused
       async function fetch_bco_completed() {
        
-          try{
-          const { data: cargo } = await client.models.Container.list({
-            selectionSet:selectionSetBCOCompleted ,
-            authMode: 'apiKey',
-            filter: {
-    
-              and: [
-                {
-                  bcoEmail: { eq: userAttributes.email }
-                },
-                {
-                  reservationStatus: {
-                    eq: 'Picked Up'
-                  }
-                }
-              ]
-         
-            }
-          });
-          setBcoCompletedBookings(cargo);
+        try {
+          const cargo = await listBcoCompleted(userAttributes.email);
         }
-        catch(error )
-        {console.error('Error fetching BCO Completed:', error);
-    
+        catch (error) {
+          console.error('Error fetching BCO Completed:', error);
+
         }
         
       
@@ -427,20 +409,7 @@ function Index() {
           || (userAttributes.role === 'Rail Operator')
           || (userAttributes.role === 'Third Party Logistics Provider')) {
           try {
-            const { data: cargo } = await client.models.Container.list({
-              filter: {
-                and: [
-                  {
-                    transopEmail: { eq: userAttributes.email }
-                  },
-                  {
-                    reservationStatus: { eq: 'Pending Transportation Coordinator Approval' }
-                  }
-                ]
-              },
-              selectionSet: selectionSetTransOpUpcomingBookings,
-              authMode: 'apiKey',
-            });
+            const cargo  = await listTransOpUpcoming(userAttributes.email);
             setTransOpUpcomingBookings(cargo);
           } catch (error) {
             console.error('Error fetching containers:', error);
@@ -458,26 +427,7 @@ function Index() {
           || (userAttributes.role === 'Rail Operator')
           || (userAttributes.role === 'Third Party Logistics Provider')) {
           try {
-            const { data: cargo } = await client.models.Container.list({
-              filter: {
-                and: [
-                  {
-                    transopEmail: { eq: userAttributes.email }
-                  },
-                  {
-                    reservationStatus: { ne: 'unassigned' }
-                  },
-                  {
-                    reservationStatus: { ne: 'Pending Transportation Coordinator Approval' }
-                  },
-                  {
-                    reservationStatus: { ne: 'Picked Up'}
-                  }
-                ]
-              },
-              selectionSet: selectionSetTransOpOngoingBookings,
-              authMode: 'apiKey',
-              });
+            const cargo = await listTermOpOngoing(userAttributes.email);
             setTransOpOngoingBookings(cargo);
           } catch (error) {
             console.error('Error fetching caro unit:', error);
@@ -491,13 +441,15 @@ function Index() {
       // Update container then refetch containers
       async function assignTransOp(cargoUnitID: string, newName: string, newEmail: string, reservationStatus: string) { 
         try {
-          const { data: assignTransportationOp } = await client.models.Container.update({
+          const assignTransportationOp = await saveCargoUnit({
             cargoUnitID: cargoUnitID,
             transopName: newName,
             transopEmail: newEmail,
             reservationStatus: reservationStatus,
             assignmentDate: new Date().toLocaleDateString('en-US'),
             isTransportationNotify: true,
+            isBCONotify: false,
+            isTerminalNotify: false,
           });
           console.log('Updated cargo unit status:', assignTransportationOp);
           // Refetch containers after updating
@@ -515,30 +467,14 @@ function Index() {
       //Fetch the data from the database
       const fetchterminal_operator_requested = async () => {
         //Query the data from the database with selection set and auth mode (always apiKey)
-        const { data: cargo } = await client.models.Container.list({
-          selectionSet:selectionSetTerminalOPUpcoming ,
-          authMode: 'apiKey',
-          filter: {
-            reservationStatus: {
-              eq: 'Pending Reservation Approval'
-            }
-          }
-        });
+        const cargo = await listTermOpRequestedCargoUnits()
         setData(cargo);
       }
     
       const [terminalOpModifiedBookings, setTerminalOpModifiedBookings] = useState<TerminalOpModifiedBookings[]>([])
     
       const fetchTerminalOperatorModified = async() => {
-        const { data: cargo } = await client.models.Container.list({
-          selectionSet: selectionSetTerminalOpModified,
-          authMode: 'apiKey',
-          filter: {
-            reservationStatus: {
-              eq: 'Pickup Modification Requested'
-            }
-          }
-      });
+        const cargo  =  await listTermOpModifiedRequestedCargoUnits()
       setTerminalOpModifiedBookings(cargo);
     }
     
@@ -548,21 +484,7 @@ function Index() {
         const [terminalopBookingongoing, set_terminal_ongoing] = useState<TerminalOPOngoingBookings[]>([])
         const fetchterminal_operator_ongoing = async () => {
           //Query the data from the database with selection set and auth mode (always apiKey)
-          const { data: cargo } = await client.models.Container.list({
-            selectionSet:selectionSetTerminalOPOngoing ,
-            authMode: 'apiKey',
-           
-            filter: {
-              or: [
-                {
-                  reservationStatus: { eq: 'Pending Pick Up' }
-                },
-                {
-                  reservationStatus: { eq: 'Late for Pick Up' }
-                }
-              ]
-            }
-          });
+          const cargo  = await listTermOpOnGoingCargoUnits();
           set_terminal_ongoing(cargo);
         }
       
@@ -621,7 +543,7 @@ function Index() {
               });
             }
             
-            const { data: updatedContainerStatus } = await client.models.Container.update(updatePayload);
+            const updatedContainerStatus = await saveCargoUnit(updatePayload);
             console.log("Updated container status:", updatedContainerStatus);
             toast.success("Container status updated successfully");
         
@@ -685,7 +607,7 @@ function Index() {
           });
         }
     
-        const { data: updatedContainerStatus } = await client.models.Container.update(updatePayload);
+        const updatedContainerStatus  = await saveCargoUnit(updatePayload);
         
         console.log("Updated booking status:", updatedContainerStatus);
         toast.success("Booking status updated successfully");
@@ -707,13 +629,13 @@ function Index() {
     async function  markBookingLate(id: string, status: string){  
       try {
     
-          const { data: updatedContainerStatus } = await client.models.Container.update({
-            cargoUnitID: id, 
+          const updatedContainerStatus = await saveCargoUnit({
+            cargoUnitID: id,   
             reservationStatus: status,
             isTransportationNotify: true,
             isBCONotify: true,
             isTerminalNotify: false,
-    
+
           });
           console.log("Marked Booking status Late for Pick Up:", updatedContainerStatus);
           await fetchterminal_operator_ongoing();
@@ -732,23 +654,7 @@ function Index() {
     async function fetch_bco_ongoing() {
      
         try{
-        const { data: cargo } = await client.models.Container.list({
-          selectionSet:selectionSetBCOOngoing ,
-          authMode: 'apiKey',
-          filter: {
-            and: [
-              {
-                bcoEmail: { eq: userAttributes.email }
-              },
-              {
-                reservationStatus: { ne: 'unassigned' }
-              },
-              {
-                reservationStatus: { ne: 'Picked Up' }
-              }
-            ]
-          },
-        });
+        const cargo = await listBcoOngoing(userAttributes.email);
         setBCOOngoingBookings(cargo);
       }
       catch(error )

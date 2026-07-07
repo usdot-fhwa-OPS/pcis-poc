@@ -2,8 +2,8 @@ import { fetchAuthSession } from "aws-amplify/auth";
 import { UpcomingCargo } from "../../routes/cargo";
 import { BCOCompletedBooking, BCOOngoingBooking, BCOUpcomingBookings, TerminalOPOngoingBookings, TransOpOngoingBookings, TransOpUpcomingBookings } from "../../routes/reservation";
 import { TerminalOpModifiedBookings, TermOperatorCompletedBookings, TransOperatorCompletedBookings } from "../../routes";
-
-
+import { Notifications } from "../app-sidebar/app-sidebar";
+import { BehaviorSubject } from 'rxjs';
 
 export const listCargoUnits = async (): Promise<UpcomingCargo[]> => {
     const session = await fetchAuthSession();
@@ -68,6 +68,26 @@ export const saveCargoUnit = async (cargoUnit:any): Promise<string> => {
     const result = (await response.json());
     return result;
 }
+
+
+export const fetchBcoNotifications = async (bcoEmail: string): Promise<Notifications[]> => {
+    const session = await fetchAuthSession();
+
+    let url = `https://dd1jp7oh40.execute-api.us-east-1.amazonaws.com/dev/fetchBcoNotifications?bcoEmail=${bcoEmail}`
+    
+    const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+            "Authorization": `Bearer ${session.tokens?.accessToken?.toString()}`,
+            "Content-Type": "application/json",
+            "Accept": "*/*"
+        }
+    });
+    const result = (await response.json()).items as Notifications[];
+    return result;
+}
+
+
 export const listTermOpRequestedCargoUnits = async (): Promise<TerminalOPOngoingBookings[]> => {
     const session = await fetchAuthSession();
     let url = `https://dd1jp7oh40.execute-api.us-east-1.amazonaws.com/dev/fetchTerminalOpRequested`
@@ -230,36 +250,9 @@ export const listBcoCompleted = async (bcoEmail: string): Promise<BCOCompletedBo
     return result;
 }
 
-export const onCargoUpdate = () => {
-    const subscribers: { next: any, error: any }[] = [];
+const onCargoUpdate$ = new BehaviorSubject('');
+export const onCargoUpdate = onCargoUpdate$.asObservable();
 
-    return {
-        // Add a subscriber to the list
-        subscribe: (item: { next: any, error: any }) => {
-            subscribers.push(item);
-            return { // Remove a subscriber from the list
-                unsubscribe: () => {
-                    const index = subscribers.indexOf(item);
-
-                    if (index > -1) {
-                        subscribers.splice(index, 1); // 1 means remove exactly one item
-                    }
-                }
-            };
-        },
-
-
-
-        // notify next to all subscribers
-        next: () => {
-            subscribers.forEach((item: { next: any, error: (error: any) => {} }) => item.next());
-        },
-        error: (error: any) => {
-            subscribers.forEach((item: { next: any, error: (error: any) => {} }) => item.error(error));
-        },
-
-    }
-}
 export const saveHazardousCargo = async (UpcomingCargo: UpcomingCargo): Promise<string> => {
     const session = await fetchAuthSession();
     const response = await fetch(`https://bubcodjacl.execute-api.us-east-1.amazonaws.com/dev/hazardousCargos/${UpcomingCargo.vesselId}`, {
@@ -272,7 +265,7 @@ export const saveHazardousCargo = async (UpcomingCargo: UpcomingCargo): Promise<
         body: JSON.stringify(UpcomingCargo)
     });
     const result = (await response.json());
-    onCargoUpdate().next();
+    onCargoUpdate$.next(result);
     return result;
 }
 

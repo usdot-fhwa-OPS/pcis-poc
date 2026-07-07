@@ -315,6 +315,29 @@ async function fetchBcoUpcoming(event) {
   });
 }
 
+async function fetchBcoNotifications(event) {
+  
+  const selectionSet = ['cargoUnitID', 'reservationStatus', "updatedAt", "isBCONotify", "isTransportationNotify"];
+  const expressionNames = {};
+  const expressionValues = {};
+  const clauses = [];
+  const bcoEmail = event.queryStringParameters?.bcoEmail;
+  
+  expressionNames["#isBCONotify"] = "isBCONotify";
+  expressionValues[":isBCONotify"] = true;
+  clauses.push("#isBCONotify = :isBCONotify");
+
+
+if (bcoEmail) {
+  expressionNames["#bcoEmail"] = "bcoEmail";
+  expressionValues[":bcoEmail"] = bcoEmail;
+  clauses.push("#bcoEmail = :bcoEmail");
+}
+
+  return fetchCargoUnits(event, selectionSet.join(), expressionNames, expressionValues, (clauses.length ? clauses.join(" AND ") : undefined))
+}
+
+
 async function fetchBcoOngoing(event) {
 
   const selectionSet = ['vesselID', 'cargoUnitID', 'origin','destination', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail','reservationDate','resApprovalDate','reservationStatus', 'resPickupDate','flag', 'updatedAt'];
@@ -859,6 +882,8 @@ export const handler = async (event) => {
         return await fetchLimit(event);
       case "GET /fetchTerminalOpCompleted":
         return await fetchTerminalOpCompleted(event);
+      case "GET /fetchBcoNotifications":
+        return await fetchBcoNotifications(event);
       
         
       case "PUT /cargoUnits/{cargoUnitID}":

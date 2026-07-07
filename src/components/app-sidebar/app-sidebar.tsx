@@ -22,6 +22,7 @@ import { generateClient, SelectionSet } from 'aws-amplify/data'
 import type { Schema } from '../../../amplify/data/resource'
 import { Subscription } from "rxjs"
 import { useNavigate, useRouterState } from "@tanstack/react-router"
+import { fetchBcoNotifications, onCargoUpdate } from "../cargo/cargo-units-client"
 
 const client = generateClient<Schema>()
 
@@ -105,9 +106,9 @@ export function AppSidebar() {
   const [refresh, setRefresh] = useState(0)
 
   useEffect(() => {
-    const updateSubscription = client.models.Container.onUpdate().subscribe({
+    const updateSubscription =  onCargoUpdate().subscribe({
       next: () => setRefresh((prev) => prev + 1),
-      error: (error) => console.warn(error),
+      error: (error: any) => console.warn(error),
     })
     return () => updateSubscription.unsubscribe()
   }, [])
@@ -117,16 +118,10 @@ export function AppSidebar() {
     let notisSub: Subscription
 
     if (userAttributes.role === "Beneficiary Cargo Owner") {
-      notisSub = client.models.Container.observeQuery({
-        filter: {
-          and: [
-            { bcoEmail: { eq: userAttributes.email } },
-            { isBCONotify: { eq: true } },
-          ],
-        },
-      }).subscribe({
-        next: ({ items }) => setUserNotifications(items),
-      })
+      fetchBcoNotifications(userAttributes.email).then(items => {
+        setUserNotifications(items)
+      });
+
     } else if (
       userAttributes.role === 'Trucking Operator' ||
       userAttributes.role === 'Rail Operator' ||
@@ -145,7 +140,7 @@ export function AppSidebar() {
       })
     }
 
-    return () => notisSub.unsubscribe()
+    //return () => notisSub.unsubscribe()
   }, [userAttributes, refresh])
 
   const handleSignOut = () => {
