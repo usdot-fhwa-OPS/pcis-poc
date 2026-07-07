@@ -20,7 +20,6 @@ import { useEffect, useState } from "react"
 import { NotificationsButton } from "../notifications-button/notifications-button"
 import { generateClient, SelectionSet } from 'aws-amplify/data'
 import type { Schema } from '../../../amplify/data/resource'
-import { Subscription } from "rxjs"
 import { useNavigate, useRouterState } from "@tanstack/react-router"
 import { fetchBcoNotifications, onCargoUpdate } from "../cargo/cargo-units-client"
 
@@ -126,13 +125,13 @@ export function AppSidebar() {
       userAttributes.role === 'Rail Operator' ||
       userAttributes.role === 'Third Party Logistics Provider'
     ) {
-      notisSub = client.models.Container.observeQuery({
+       client.models.Container.observeQuery({
         filter: { isTransportationNotify: { eq: true } },
       }).subscribe({
         next: ({ items }) => setUserNotifications(items),
       })
     } else {
-      notisSub = client.models.Container.observeQuery({
+       client.models.Container.observeQuery({
         filter: { isTerminalNotify: { eq: true } },
       }).subscribe({
         next: ({ items }) => setUserNotifications(items),
