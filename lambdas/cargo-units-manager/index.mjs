@@ -62,12 +62,6 @@ function parseBody(event) {
   }
 }
 
-function normalizeServices(services) {
-  if (!Array.isArray(services)) return [];
-  return services
-    .map((s) => (s || "").toString().trim())
-    .filter((s) => ALLOWED_SERVICES.has(s));
-}
 
 function getClaims(event) {
   return (
@@ -337,6 +331,35 @@ if (bcoEmail) {
   return fetchCargoUnits(event, selectionSet.join(), expressionNames, expressionValues, (clauses.length ? clauses.join(" AND ") : undefined))
 }
 
+async function fetchTransportationNotifications(event) {
+  
+  const selectionSet = ['cargoUnitID', 'reservationStatus', "updatedAt", "isBCONotify", "isTransportationNotify"];
+  const expressionNames = {};
+  const expressionValues = {};
+  const clauses = [];
+  const bcoEmail = event.queryStringParameters?.bcoEmail;
+  
+  expressionNames["#isTransportationNotify"] = "isTransportationNotify";
+  expressionValues[":isTransportationNotify"] = true;
+  clauses.push("#isTransportationNotify = :isTransportationNotify");
+
+  return fetchCargoUnits(event, selectionSet.join(), expressionNames, expressionValues, (clauses.length ? clauses.join(" AND ") : undefined))
+}
+
+async function fetchTerminalNotifications(event) {
+  
+  const selectionSet = ['cargoUnitID', 'reservationStatus', "updatedAt", "isBCONotify", "isTransportationNotify"];
+  const expressionNames = {};
+  const expressionValues = {};
+  const clauses = [];
+  const bcoEmail = event.queryStringParameters?.bcoEmail;
+  
+  expressionNames["#isTerminalNotify"] = "isTerminalNotify";
+  expressionValues[":isTerminalNotify"] = true;
+  clauses.push("#isTerminalNotify = :isTerminalNotify");
+
+  return fetchCargoUnits(event, selectionSet.join(), expressionNames, expressionValues, (clauses.length ? clauses.join(" AND ") : undefined))
+}
 
 async function fetchBcoOngoing(event) {
 
@@ -709,21 +732,6 @@ async function listCargoUnits(event) {
   });
 }
 
-async function getHazardousCargo(event) {
-  const vesselId = event.pathParameters?.vesselId;
-  const cargoUnitID = event.pathParameters?.cargoUnitID;
-  if (!vesselId || !cargoUnitID) return response(400, { message: "vesselId and cargoUnitID are required" });
-
-  const result = await dynamo.send(
-    new GetCommand({
-      TableName: HAZARDOUS_CARGO_TABLE,
-      Key: { vesselId: vesselId, cargoUnitID: cargoUnitID},
-    })
-  );
-
-  if (!result.Item) return response(404, { message: "HazardousCargo not found" });
-  return response(200, result.Item);
-}
 
 async function saveCargoUnit(event) {
   const body = event.body
@@ -759,91 +767,6 @@ async function saveCargoUnit(event) {
 }
 
 
-
-async function approve(event) {
-  const vesselId = event.queryStringParameters?.vesselId;
-  const cargoUnitID = event.queryStringParameters?.cargoUnitID;
-  if (!vesselId || !cargoUnitID) return response(400, { message: "vesselId and cargoUnitID are required" });
-  const existingHazardousCargoRecord = await dynamo.send(
-    new GetCommand({
-      TableName: HAZARDOUS_CARGO_TABLE,
-      Key: { vesselId: vesselId, cargoUnitID: cargoUnitID},
-    })
-  );
-  if (existingHazardousCargoRecord) {
-    const existingHazardousCargo = existingHazardousCargoRecord.Item;
-     const nowIso = new Date().toISOString();
-    const status = 'APPROVED'
-    const command = new TransactWriteCommand({
-      TransactItems: [
-        {
-          Delete: {
-            TableName: HAZARDOUS_CARGO_TABLE,
-            Key: { vesselId: vesselId, cargoUnitID: cargoUnitID },
-            ReturnValues: "ALL_NEW",
-          },
-        },
-        {
-          Put: {
-            TableName: "CargoUnits",
-            Item: {
-              "cargoUnitID": existingHazardousCargo.cargoUnitID,
-              "arrivalDate": existingHazardousCargo.arrivalDate,
-              "bcoEmail": existingHazardousCargo.bcoEmail,
-              "bcoName": existingHazardousCargo.bcoName,
-              //"bookingStatus":  row.cargounitstatus,
-              //"containerStatus": row.containerstatus,
-              "createdAt": nowIso,
-              "destination": existingHazardousCargo.destination,
-              "flag": "FALSE",
-              "isBCONotify": "FALSE",
-              "isHazardous": "FALSE",
-              "isTerminalNotify": "FALSE",
-              "isTransportationNotify": "FALSE",
-              "origin": existingHazardousCargo.origin,
-              "reservationStatus": 'unassigned',
-              "updatedAt": nowIso,
-              "vesselID": existingHazardousCargo.vesselId,
-              "documentsChecked": "TRUE",
-              "isCompliant":"TRUE",
-            },
-          },
-        }
-      ]
-    });
-
-    try {
-    const resp = await  dynamo.send(command);
-    return response(200, { message: resp.Attributes });
-  } catch (error) {
-    return response(500, { message: error });
-  }
-
-  } else {
-    return response(403, { message: `Not able to find Hazardous Cargo for vessel ID ${vesselId} and cargo ID ${cargoUnitID}` });
-  }
-  
-  
-}
-
-
-async function setStatus(vesselId, cargoUnitID, status) {
-  const nowIso = new Date().toISOString();
-  return await dynamo.send(
-    new UpdateCommand({
-      TableName: HAZARDOUS_CARGO_TABLE,
-      Key: { vesselId: vesselId, cargoUnitID: cargoUnitID },
-      UpdateExpression:
-        "SET reviewStatus = :status, updatedAt = :updatedAt",
-      ExpressionAttributeValues: {
-        ":status": status,
-        ":updatedAt": nowIso,
-      },
-      ReturnValues: "ALL_NEW",
-    })
-  );
-
-}
 
 export const handler = async (event) => {
   try {
@@ -884,6 +807,10 @@ export const handler = async (event) => {
         return await fetchTerminalOpCompleted(event);
       case "GET /fetchBcoNotifications":
         return await fetchBcoNotifications(event);
+      case "GET /fetchTransportationNotifications":
+        return await fetchTransportationNotifications(event);
+      case "GET /fetchTerminalNotifications":
+        return await fetchTerminalNotifications(event);
       
         
       case "PUT /cargoUnits/{cargoUnitID}":

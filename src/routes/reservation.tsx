@@ -173,17 +173,17 @@ function RouteComponent() {
       return () => updateSubscription.unsubscribe();
     }, []);
 
-    useEffect(() => {
-      const createSubscription = client.models.Container.onCreate().subscribe({
-        next: () => {
-          // Increment the refresh counter to trigger re-running the observeQuery.
-          setRefresh((prev) => prev + 1);
-          console.log("CREATED")
-        },
-        error: (error) => console.warn(error),
-      });
-      return () => createSubscription.unsubscribe();
-    }, []);
+    // useEffect(() => {
+    //   const createSubscription = client.models.Container.onCreate().subscribe({
+    //     next: () => {
+    //       // Increment the refresh counter to trigger re-running the observeQuery.
+    //       setRefresh((prev) => prev + 1);
+    //       console.log("CREATED")
+    //     },
+    //     error: (error) => console.warn(error),
+    //   });
+    //   return () => createSubscription.unsubscribe();
+    // }, []);
     
 
   // State for Transportation Operator Completed bookings

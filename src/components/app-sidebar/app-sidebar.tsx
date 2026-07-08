@@ -21,7 +21,7 @@ import { NotificationsButton } from "../notifications-button/notifications-butto
 import { generateClient, SelectionSet } from 'aws-amplify/data'
 import type { Schema } from '../../../amplify/data/resource'
 import { useNavigate, useRouterState } from "@tanstack/react-router"
-import { fetchBcoNotifications, onCargoUpdate } from "../cargo/cargo-units-client"
+import { fetchBcoNotifications, fetchTerminalNotifications, fetchTransportationNotifications, onCargoUpdate } from "../cargo/cargo-units-client"
 
 const client = generateClient<Schema>()
 
@@ -125,17 +125,15 @@ export function AppSidebar() {
       userAttributes.role === 'Rail Operator' ||
       userAttributes.role === 'Third Party Logistics Provider'
     ) {
-       client.models.Container.observeQuery({
-        filter: { isTransportationNotify: { eq: true } },
-      }).subscribe({
-        next: ({ items }) => setUserNotifications(items),
+      fetchTransportationNotifications().then((list) =>{
+        setUserNotifications(list);
       })
+      
     } else {
-       client.models.Container.observeQuery({
-        filter: { isTerminalNotify: { eq: true } },
-      }).subscribe({
-        next: ({ items }) => setUserNotifications(items),
+      fetchTerminalNotifications().then((list) =>{
+        setUserNotifications(list);
       })
+       
     }
 
     //return () => notisSub.unsubscribe()

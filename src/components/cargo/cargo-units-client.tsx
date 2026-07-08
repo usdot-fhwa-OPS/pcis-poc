@@ -87,6 +87,40 @@ export const fetchBcoNotifications = async (bcoEmail: string): Promise<Notificat
     return result;
 }
 
+export const fetchTransportationNotifications = async (): Promise<Notifications[]> => {
+    const session = await fetchAuthSession();
+
+    let url = `https://dd1jp7oh40.execute-api.us-east-1.amazonaws.com/dev/fetchTransportationNotifications`
+    
+    const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+            "Authorization": `Bearer ${session.tokens?.accessToken?.toString()}`,
+            "Content-Type": "application/json",
+            "Accept": "*/*"
+        }
+    });
+    const result = (await response.json()).items as Notifications[];
+    return result;
+}
+
+export const fetchTerminalNotifications = async (): Promise<Notifications[]> => {
+    const session = await fetchAuthSession();
+
+    let url = `https://dd1jp7oh40.execute-api.us-east-1.amazonaws.com/dev/fetchTerminalNotifications`
+    
+    const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+            "Authorization": `Bearer ${session.tokens?.accessToken?.toString()}`,
+            "Content-Type": "application/json",
+            "Accept": "*/*"
+        }
+    });
+    const result = (await response.json()).items as Notifications[];
+    return result;
+}
+
 
 export const listTermOpRequestedCargoUnits = async (): Promise<TerminalOPOngoingBookings[]> => {
     const session = await fetchAuthSession();
