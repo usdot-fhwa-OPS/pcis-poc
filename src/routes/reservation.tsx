@@ -10,12 +10,11 @@ import { useEffect, useState } from "react";
 import { useAuthenticator } from "@aws-amplify/ui-react";
 
 //Three Imports needed for Amplify Data Queries and CRUD methods
-import { generateClient, SelectionSet } from 'aws-amplify/data';
+import { SelectionSet } from 'aws-amplify/data';
 import type { Schema } from '../../amplify/data/resource';
 import { getCargoBookingsAmount, listBcoCompleted, listBcoOngoing, listBcoUpcoming, listTermOpCompleted, listTermOpModifiedRequestedCargoUnits, listTermOpOngoing, listTermOpOnGoingCargoUnits, listTermOpRequestedCargoUnits, listTransOpCompleted, listTransOpUpcoming, onCargoUpdate, saveCargoUnit } from '../components/cargo/cargo-units-client.tsx'
 import { getTerrminalCapacity } from '../components/terminal-capacity/terminal-capacity-client.tsx'
 
-const client = generateClient<Schema>();
 
 export const Route = createFileRoute('/reservation')({
   component: RouteComponent,

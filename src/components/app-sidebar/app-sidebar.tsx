@@ -18,12 +18,11 @@ import { useAuthenticator } from "@aws-amplify/ui-react"
 import { fetchUserAttributes } from 'aws-amplify/auth'
 import { useEffect, useState } from "react"
 import { NotificationsButton } from "../notifications-button/notifications-button"
-import { generateClient, SelectionSet } from 'aws-amplify/data'
+import { SelectionSet } from 'aws-amplify/data'
 import type { Schema } from '../../../amplify/data/resource'
 import { useNavigate, useRouterState } from "@tanstack/react-router"
 import { fetchBcoNotifications, fetchTerminalNotifications, fetchTransportationNotifications, onCargoUpdate } from "../cargo/cargo-units-client"
 
-const client = generateClient<Schema>()
 
 const selectionSet = ['cargoUnitID', 'reservationStatus', "updatedAt", "isBCONotify", "isTransportationNotify"] as const
 export type Notifications = SelectionSet<Schema['Container']['type'], typeof selectionSet>
