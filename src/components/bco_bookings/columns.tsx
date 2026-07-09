@@ -5,10 +5,7 @@ import { Flag } from "lucide-react";
 
 //Four Imports needed for Amplify Data Queries and CRUD methods
 
-import { generateClient } from 'aws-amplify/data';
-import type { Schema } from '../../../amplify/data/resource';
 
-const client = generateClient<Schema>();
 
 import { format } from "date-fns";
 

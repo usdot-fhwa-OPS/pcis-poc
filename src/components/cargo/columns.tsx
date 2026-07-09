@@ -16,12 +16,9 @@ import {
 } from "../ui/dropdown-menu"
 //Four Imports needed for Amplify Data Queries and CRUD methods
 
-import { generateClient } from 'aws-amplify/data';
-import type { Schema } from '../../../amplify/data/resource';
 import { UpcomingCargo } from "../../routes/cargo"
 import { saveCargoUnit } from "./cargo-units-client"
 
-const client = generateClient<Schema>();
 
 //Define the selection of data that will be used for the table (type exported from cargo.tsx in this case)
 export const columns: ColumnDef<UpcomingCargo>[] = [
