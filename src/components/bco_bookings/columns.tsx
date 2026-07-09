@@ -13,6 +13,7 @@ const client = generateClient<Schema>();
 import { format } from "date-fns";
 
 import TransportationCoordinator from "./assign_transportation_operator.tsx";
+import { saveCargoUnit } from "../cargo/cargo-units-client.tsx";
 
 
 
@@ -47,10 +48,11 @@ baseColumns.push({
             setFlagged(newFlag)
             try {
               // Call the Amplify update method for the flag (again must always contain containerID)
-              const { data: updatedContainerStatus } = await client.models.Container.update({
-                cargoUnitID: row.original.cargoUnitID, 
+              
+              const updatedContainerStatus = await saveCargoUnit({
+                cargoUnitID: row.original.cargoUnitID,
                 flag: newFlag,
-              })
+              })              
               console.log("Updated flag:", updatedContainerStatus)
             } catch (error) {
               console.error("Error updating flag:", error);

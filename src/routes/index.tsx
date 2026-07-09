@@ -281,7 +281,7 @@ function Index() {
       
     // Subscribe to updates and trigger refresh.
     useEffect(() => {
-      const updateSubscription =  onCargoUpdate.subscribe({  //client.models.Container.onUpdate().subscribe({
+      const updateSubscription =  onCargoUpdate.subscribe({  
         next: () => {
           // Increment the refresh counter to trigger re-running the observeQuery.
           setRefresh((prev) => prev + 1);

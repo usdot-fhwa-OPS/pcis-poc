@@ -110,10 +110,11 @@ export const columns: ColumnDef<UpcomingCargo>[] = [
         setFlagged(newFlag)
         try {
           // Call the Amplify update method for the flag (again must always contain containerID)
-          const { data: updatedContainerStatus } = await client.models.Container.update({
-            cargoUnitID: row.original.cargoUnitID, // changed containerID to cargoUnitID
-            flag: newFlag,
-          })
+              const updatedContainerStatus = await saveCargoUnit({
+                cargoUnitID: row.original.cargoUnitID,
+                flag: newFlag,
+              })              
+
           console.log("Updated flag:", updatedContainerStatus)
         } catch (error) {
           console.error("Error updating flag:", error);

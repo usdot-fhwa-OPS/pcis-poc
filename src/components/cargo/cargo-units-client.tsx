@@ -287,21 +287,6 @@ export const listBcoCompleted = async (bcoEmail: string): Promise<BCOCompletedBo
 const onCargoUpdate$ = new BehaviorSubject('');
 export const onCargoUpdate = onCargoUpdate$.asObservable();
 
-export const saveHazardousCargo = async (UpcomingCargo: UpcomingCargo): Promise<string> => {
-    const session = await fetchAuthSession();
-    const response = await fetch(`https://bubcodjacl.execute-api.us-east-1.amazonaws.com/dev/hazardousCargos/${UpcomingCargo.vesselId}`, {
-        method: 'PUT',
-        headers: {
-            "Authorization": `Bearer ${session.tokens?.accessToken?.toString()}`,
-            "Content-Type": "application/json",
-            "Accept": "*/*"
-        },
-        body: JSON.stringify(UpcomingCargo)
-    });
-    const result = (await response.json());
-    onCargoUpdate$.next(result);
-    return result;
-}
 
 export const deleteHazardousCargo = async (vesselId:string): Promise<any> => {
     const session = await fetchAuthSession();
