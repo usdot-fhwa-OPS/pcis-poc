@@ -22,14 +22,14 @@ import {
 } from 'recharts';
 
 //Three Imports needed for Amplify Data Queries and CRUD methods 
-import { generateClient, SelectionSet } from 'aws-amplify/data';
+import { SelectionSet } from 'aws-amplify/data';
 import type { Schema } from '../../amplify/data/resource';
 import { useAppDispatch, useAppSelector } from '../hooks.tsx';
 import { getTerminalCapacityList, populate } from '../components/terminal-capacity/terminal-capacity-state.tsx';
 import { getTerrminalCapacity, terminalCapacityList } from '../components/terminal-capacity/terminal-capacity-client.tsx';
-import { getCargoBookingsAmount, listBcoCompleted, listBcoOngoing, listBcoUpcoming, listTermOpCompleted, listTermOpModifiedRequestedCargoUnits, listTermOpOngoing, listTermOpOnGoingCargoUnits, listTermOpRequestedCargoUnits, listTransOpCompleted, listTransOpUpcoming, onCargoUpdate, saveCargoUnit } from '../components/cargo/cargo-units-client.tsx';
+import { getCargoBookingsAmount, listBcoCompleted, listBcoOngoing, listBcoUpcoming, listTermOpCompleted, listTermOpModifiedRequestedCargoUnits, listTermOpOngoing, listTermOpOnGoingCargoUnits, listTermOpRequestedCargoUnits, listTransOpCompleted, listTransOpUpcoming,  saveCargoUnit } from '../components/cargo/cargo-units-client.tsx';
+import { onCargoCreate, onCargoUpdate } from '../components/real-time-call.tsx';
 
-const client = generateClient<Schema>();
 
 
 //Define the selection of data that will be used for the table
@@ -292,7 +292,7 @@ function Index() {
     }, []);
     
     useEffect(() => {
-          const createSubscription = client.models.Container.onCreate().subscribe({
+          const createSubscription = onCargoCreate.subscribe({
             next: () => {
               // Increment the refresh counter to trigger re-running the observeQuery.
               setRefresh((prev) => prev + 1);

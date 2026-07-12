@@ -12,8 +12,9 @@ import { useAuthenticator } from "@aws-amplify/ui-react";
 //Three Imports needed for Amplify Data Queries and CRUD methods
 import { SelectionSet } from 'aws-amplify/data';
 import type { Schema } from '../../amplify/data/resource';
-import { getCargoBookingsAmount, listBcoCompleted, listBcoOngoing, listBcoUpcoming, listTermOpCompleted, listTermOpModifiedRequestedCargoUnits, listTermOpOngoing, listTermOpOnGoingCargoUnits, listTermOpRequestedCargoUnits, listTransOpCompleted, listTransOpUpcoming, onCargoUpdate, saveCargoUnit } from '../components/cargo/cargo-units-client.tsx'
+import { getCargoBookingsAmount, listBcoCompleted, listBcoOngoing, listBcoUpcoming, listTermOpCompleted, listTermOpModifiedRequestedCargoUnits, listTermOpOngoing, listTermOpOnGoingCargoUnits, listTermOpRequestedCargoUnits, listTransOpCompleted, listTransOpUpcoming, saveCargoUnit } from '../components/cargo/cargo-units-client.tsx'
 import { getTerrminalCapacity } from '../components/terminal-capacity/terminal-capacity-client.tsx'
+import { onCargoCreate, onCargoUpdate } from '../components/real-time-call.tsx'
 
 
 export const Route = createFileRoute('/reservation')({
@@ -172,17 +173,17 @@ function RouteComponent() {
       return () => updateSubscription.unsubscribe();
     }, []);
 
-    // useEffect(() => {
-    //   const createSubscription = client.models.Container.onCreate().subscribe({
-    //     next: () => {
-    //       // Increment the refresh counter to trigger re-running the observeQuery.
-    //       setRefresh((prev) => prev + 1);
-    //       console.log("CREATED")
-    //     },
-    //     error: (error) => console.warn(error),
-    //   });
-    //   return () => createSubscription.unsubscribe();
-    // }, []);
+    useEffect(() => {
+      const createSubscription = onCargoCreate.subscribe({
+        next: () => {
+          // Increment the refresh counter to trigger re-running the observeQuery.
+          setRefresh((prev) => prev + 1);
+          console.log("CREATED")
+        },
+        error: (error) => console.warn(error),
+      });
+      return () => createSubscription.unsubscribe();
+    }, []);
     
 
   // State for Transportation Operator Completed bookings

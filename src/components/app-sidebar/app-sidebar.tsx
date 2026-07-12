@@ -21,7 +21,8 @@ import { NotificationsButton } from "../notifications-button/notifications-butto
 import { SelectionSet } from 'aws-amplify/data'
 import type { Schema } from '../../../amplify/data/resource'
 import { useNavigate, useRouterState } from "@tanstack/react-router"
-import { fetchBcoNotifications, fetchTerminalNotifications, fetchTransportationNotifications, onCargoUpdate } from "../cargo/cargo-units-client"
+import { fetchBcoNotifications, fetchTerminalNotifications, fetchTransportationNotifications } from "../cargo/cargo-units-client"
+import { onCargoUpdate } from "../real-time-call"
 
 
 const selectionSet = ['cargoUnitID', 'reservationStatus', "updatedAt", "isBCONotify", "isTransportationNotify"] as const

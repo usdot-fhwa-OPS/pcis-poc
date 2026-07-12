@@ -3,7 +3,6 @@ import { UpcomingCargo } from "../../routes/cargo";
 import { BCOCompletedBooking, BCOOngoingBooking, BCOUpcomingBookings, TerminalOPOngoingBookings, TransOpOngoingBookings, TransOpUpcomingBookings } from "../../routes/reservation";
 import { TerminalOpModifiedBookings, TermOperatorCompletedBookings, TransOperatorCompletedBookings } from "../../routes";
 import { Notifications } from "../app-sidebar/app-sidebar";
-import { BehaviorSubject } from 'rxjs';
 
 export const listCargoUnits = async (): Promise<UpcomingCargo[]> => {
     const session = await fetchAuthSession();
@@ -284,89 +283,4 @@ export const listBcoCompleted = async (bcoEmail: string): Promise<BCOCompletedBo
     return result;
 }
 
-const onCargoUpdate$ = new BehaviorSubject('');
-export const onCargoUpdate = onCargoUpdate$.asObservable();
 
-
-export const deleteHazardousCargo = async (vesselId:string): Promise<any> => {
-    const session = await fetchAuthSession();
-    const response = await fetch(`https://bubcodjacl.execute-api.us-east-1.amazonaws.com/dev/hazardousCargos/${vesselId}`, {
-        method: 'DELETE',
-        headers: {
-            "Authorization": `Bearer ${session.tokens?.accessToken?.toString()}`,
-            "Content-Type": "application/json",
-            "Accept": "*/*"
-        }
-    });
-    return response;
-}
-
-export const getHazardousCargo = async (vesselId:string, cargoUnitID:string): Promise<UpcomingCargo> => {
-    const session = await fetchAuthSession();
-    const response = await fetch(`https://bubcodjacl.execute-api.us-east-1.amazonaws.com/dev/hazardousCargos/${vesselId}/${cargoUnitID}`, {
-        method: 'GET',
-        headers: {
-            "Authorization": `Bearer ${session.tokens?.accessToken?.toString()}`,
-            "Content-Type": "application/json",
-            "Accept": "*/*"
-        }
-    });
-    const result = (await response.json()) as UpcomingCargo;
-    return result;
-}
-
-export const requestAdditionalDocument = async (vesselId:string, cargoUnitID:string): Promise<UpcomingCargo> => {
-    const session = await fetchAuthSession();
-    const response = await fetch(`https://bubcodjacl.execute-api.us-east-1.amazonaws.com/dev/requestAdditionalDocument?vesselId=${vesselId}&cargoUnitID=${cargoUnitID}`, {
-        method: 'PUT',
-        headers: {
-            "Authorization": `Bearer ${session.tokens?.accessToken?.toString()}`,
-            "Content-Type": "application/json",
-            "Accept": "*/*"
-        }
-    });
-    const result = (await response.json()) as UpcomingCargo;
-    return result;
-}
-
-export const flagHazardousCargo = async (vesselId:string, cargoUnitID:string): Promise<UpcomingCargo> => {
-    const session = await fetchAuthSession();
-    const response = await fetch(`https://bubcodjacl.execute-api.us-east-1.amazonaws.com/dev/flag?vesselId=${vesselId}&cargoUnitID=${cargoUnitID}`, {
-        method: 'PUT',
-        headers: {
-            "Authorization": `Bearer ${session.tokens?.accessToken?.toString()}`,
-            "Content-Type": "application/json",
-            "Accept": "*/*"
-        }
-    });
-    const result = (await response.json()) as UpcomingCargo;
-    return result;
-}
-
-export const approveHazardousCargo = async (vesselId:string, cargoUnitID:string): Promise<UpcomingCargo> => {
-    const session = await fetchAuthSession();
-    const response = await fetch(`https://bubcodjacl.execute-api.us-east-1.amazonaws.com/dev/approve?vesselId=${vesselId}&cargoUnitID=${cargoUnitID}`, {
-        method: 'PUT',
-        headers: {
-            "Authorization": `Bearer ${session.tokens?.accessToken?.toString()}`,
-            "Content-Type": "application/json",
-            "Accept": "*/*"
-        }
-    });
-    const result = (await response.json()) as UpcomingCargo;
-    return result;
-}
-
-export const completeDocumentCheck = async (vesselId:string, cargoUnitID:string): Promise<UpcomingCargo> => {
-    const session = await fetchAuthSession();
-    const response = await fetch(`https://bubcodjacl.execute-api.us-east-1.amazonaws.com/dev/completeDocumentCheck?vesselId=${vesselId}&cargoUnitID=${cargoUnitID}`, {
-        method: 'PUT',
-        headers: {
-            "Authorization": `Bearer ${session.tokens?.accessToken?.toString()}`,
-            "Content-Type": "application/json",
-            "Accept": "*/*"
-        }
-    });
-    const result = (await response.json()) as UpcomingCargo;
-    return result;
-}
