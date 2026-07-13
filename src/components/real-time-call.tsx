@@ -8,7 +8,7 @@ const onCargoCreate$ = new BehaviorSubject('');
 export const onCargoCreate = onCargoCreate$.asObservable();
 
 const websocket = new WebSocket('wss://n7w79iw8p7.execute-api.us-east-1.amazonaws.com/dev/');
-websocket.onopen = (event) => 
+websocket.onopen = () => 
         console.log('Connected to WebSocket server');
       websocket.onmessage = (event) => {
         console.log('Message received ' + event.data);
