@@ -14,6 +14,7 @@ const realTimeEventNotify = async (message) => {
   const client = new ApiGatewayManagementApiClient({ endpoint: callbackUrl });
   const scanData = await dynamo.send(new ScanCommand({ TableName: WEBSOCKET_CONNECTIONS_TABLE }));
   const connections = scanData.Items.map(item => item.connectionId.S);
+  const restApiCallPromises = [];
 
   console.log(connections)
   connections.map(async (connectionId) => {
@@ -26,15 +27,11 @@ const realTimeEventNotify = async (message) => {
 
       const command = new PostToConnectionCommand(requestParams);
       console.log(`sending notification connection ID ${connectionId} ${message}`)
-      await client.send(command)
-      
-      // await fetch(`${callbackUrl}/@connections/${connectionId}`, {
-      //       method: 'POST',
-      //       body: message,
-            
-      //   });
-
-      console.log(`notified connection ID ${connectionId} ${message}`)
+      const apiReq = client.send(command);
+      restApiCallPromises.push(apiReq);
+      apiReq.then((done) =>{
+        console.log(`notified connection ID ${connectionId} ${message}`)
+    });
 
     } catch (error) {
       console.log(error);
@@ -43,6 +40,8 @@ const realTimeEventNotify = async (message) => {
 
   });
 
+  await Promise.all(restApiCallPromises)
+  console.log(`notified all users`)
 
 }
 
