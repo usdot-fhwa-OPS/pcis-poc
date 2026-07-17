@@ -1,19 +1,23 @@
 "use client"
 
+import { Badge } from "../ui/badge";
 import { Bell } from "lucide-react"
+import { Button } from "../ui/button";
 import { useState } from "react"
 import { Dialog, DialogContent, DialogHeader } from "../ui/dialog"
 import { ScrollArea } from "../ui/scroll-area"
-import { SidebarMenuItem, SidebarMenuButton, SidebarMenuBadge } from "../ui/sidebar"
-import { Notifications } from "../app-sidebar/app-sidebar"
+import { Notifications } from '../../hooks/useNotifications';
 import { Link } from "@tanstack/react-router"
 import { format } from "date-fns"
+
+// This is the original notifications button with dialog, extracted from the left 
+// sidebar menu. The component has been updated to access the useNotifications hook 
+// and can be used anywhere to display a user's notifications in a dialog.
 
 interface NotificationsButtonProps {
     notifications: Notifications[]
     role: string
 }
-
 
 export function NotificationsButton({notifications, role}: NotificationsButtonProps) {
   const [open, setOpen] = useState(false)
@@ -62,15 +66,13 @@ export function NotificationsButton({notifications, role}: NotificationsButtonPr
 
   return (
     <>
-      <SidebarMenuItem>
-        <SidebarMenuButton onClick={() => setOpen(true)}>
+      <Button variant="ghost" className="flex items-center gap-2" onClick={() => setOpen(true)}>
           <Bell className="h-4 w-4" />
-          <span>Notifications</span>
-        </SidebarMenuButton>
+          Notifications
         {unreadCount > 0 && (
-          <SidebarMenuBadge className="bg-red-500 text-white hover:bg-red-500">{unreadCount}</SidebarMenuBadge>
+          <Badge variant="destructive" className="rounded-full">{unreadCount}</Badge>
         )}
-      </SidebarMenuItem>
+      </Button>
 
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="max-w-2xl p-0">
@@ -78,7 +80,7 @@ export function NotificationsButton({notifications, role}: NotificationsButtonPr
             <div className="flex items-center gap-2">
               <h2 className="text-lg font-semibold">Notifications</h2>
               {unreadCount > 0 && (
-                <span className="rounded-full bg-red-500 px-2 py-0.5 text-xs text-white">{unreadCount} Notifications</span>
+                <Badge variant="destructive" className="px-2 py-0.5 rounded-full">{unreadCount} Notifications</Badge>
               )}
             </div>
           </DialogHeader>
@@ -110,4 +112,3 @@ export function NotificationsButton({notifications, role}: NotificationsButtonPr
     </>
   )
 }
-

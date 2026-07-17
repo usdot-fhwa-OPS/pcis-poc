@@ -1,5 +1,5 @@
 import React from "react"
-import { FileUp, Home, Ship, User, CalendarClock, BarChart, Anchor, Container, TriangleAlert, Gauge, LogOut } from "lucide-react"
+import { FileUp, Home, Ship, User, CalendarClock, BarChart, Anchor, Container, TriangleAlert, Gauge, LogOut, ShipWheel } from "lucide-react"
 
 import {
   Sidebar,
@@ -17,16 +17,7 @@ import { cn } from "../../lib/utils"
 import { useAuthenticator } from "@aws-amplify/ui-react"
 import { fetchUserAttributes } from 'aws-amplify/auth'
 import { useEffect, useState } from "react"
-import { NotificationsButton } from "../notifications-button/notifications-button"
-import { SelectionSet } from 'aws-amplify/data'
-import type { Schema } from '../../../amplify/data/resource'
 import { useNavigate, useRouterState } from "@tanstack/react-router"
-import { fetchBcoNotifications, fetchTerminalNotifications, fetchTransportationNotifications } from "../cargo/cargo-units-client"
-import { onCargoUpdate } from "../real-time-call"
-
-
-const selectionSet = ['cargoUnitID', 'reservationStatus', "updatedAt", "isBCONotify", "isTransportationNotify"] as const
-export type Notifications = SelectionSet<Schema['Container']['type'], typeof selectionSet>
 
 type NavItem = { title: string; url: string; icon: React.ElementType }
 
@@ -40,20 +31,21 @@ const itemsByRole: Record<string, NavItem[]> = {
     { title: "Upcoming Cargo", url: "/cargo", icon: Container },
     { title: "Cargo Reservations", url: "/reservation", icon: CalendarClock },
     { title: "Hazardous Cargo", url: "/hazardous-cargo", icon: TriangleAlert },
-    { title: "Berth Reservations", url: "/berth-vessel", icon: Anchor },
+    { title: "Berth Reservations", url: "/berth-manager", icon: Anchor },
     { title: "Analytics", url: "/analytics", icon: BarChart },
   ],
   "Beneficiary Cargo Owner": [
     { title: "Home", url: "/", icon: Home },
+    { title: "Hazardous Cargo", url: "/hazardous-cargo", icon: TriangleAlert },
     { title: "Cargo Reservations", url: "/reservation", icon: CalendarClock },
     { title: "Analytics", url: "/analytics", icon: BarChart },
   ],
   "Vessel Agent": [
-    { title: "Request Berth", url: "/berth-requests", icon: Ship },
-    { title: "Vessel Activity", url: "/vessel-activity", icon: Ship },
+    { title: "Home", url: "/", icon: Home },
+    { title: "Request Berth", url: "/berth-request-add", icon: ShipWheel },
     { title: "Berth Reservations", url: "/berth-vessel", icon: Anchor },
+    { title: "Vessel Activity", url: "/vessel-activity", icon: Ship },
     { title: "Hazardous Cargo", url: "/hazardous-cargo", icon: TriangleAlert },
-    { title: "Analytics", url: "/analytics", icon: BarChart },
   ],
   "Trucking Operator": [
     { title: "Home", url: "/", icon: Home },
@@ -80,8 +72,6 @@ export function AppSidebar() {
     email: '',
   })
 
-  const [userNotifications, setUserNotifications] = useState<Notifications[]>([])
-
   useEffect(() => {
     async function getUserAttributes() {
       if (user) {
@@ -101,43 +91,6 @@ export function AppSidebar() {
   }, [user])
 
   const filteredItems = itemsByRole[userAttributes.role] ?? []
-
-  const [refresh, setRefresh] = useState(0)
-
-  useEffect(() => {
-    const updateSubscription =  onCargoUpdate.subscribe({
-      next: () => setRefresh((prev) => prev + 1),
-      error: (error: any) => console.warn(error),
-    })
-    return () => updateSubscription.unsubscribe()
-  }, [])
-
-  useEffect(() => {
-    if (!userAttributes.role) return
-
-    if (userAttributes.role === "Beneficiary Cargo Owner") {
-      fetchBcoNotifications(userAttributes.email).then(items => {
-        setUserNotifications(items)
-      });
-
-    } else if (
-      userAttributes.role === 'Trucking Operator' ||
-      userAttributes.role === 'Rail Operator' ||
-      userAttributes.role === 'Third Party Logistics Provider'
-    ) {
-      fetchTransportationNotifications().then((list) =>{
-        setUserNotifications(list);
-      })
-      
-    } else {
-      fetchTerminalNotifications().then((list) =>{
-        setUserNotifications(list);
-      })
-       
-    }
-
-    //return () => notisSub.unsubscribe()
-  }, [userAttributes, refresh])
 
   const handleSignOut = () => {
     signOut()
@@ -176,7 +129,6 @@ export function AppSidebar() {
                   </SidebarMenuItem>
                 )
               })}
-              <NotificationsButton notifications={userNotifications} role={userAttributes.role} />
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>

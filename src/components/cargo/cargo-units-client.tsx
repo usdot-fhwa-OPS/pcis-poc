@@ -2,7 +2,7 @@ import { fetchAuthSession } from "aws-amplify/auth";
 import { UpcomingCargo } from "../../routes/cargo";
 import { BCOCompletedBooking, BCOOngoingBooking, BCOUpcomingBookings, TerminalOPOngoingBookings, TransOpOngoingBookings, TransOpUpcomingBookings } from "../../routes/reservation";
 import { TerminalOpModifiedBookings, TermOperatorCompletedBookings, TransOperatorCompletedBookings } from "../../routes";
-import { Notifications } from "../app-sidebar/app-sidebar";
+import { Notifications } from "../../hooks/useNotifications";
 
 export const listCargoUnits = async (): Promise<UpcomingCargo[]> => {
     const session = await fetchAuthSession();

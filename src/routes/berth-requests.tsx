@@ -15,9 +15,9 @@ export function BerthRequestComponent() {
   
   return (
   <>
-    <div className="flex flex-col w-full p-10">
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-semibold">Berth Requests</h1>
+    <div className="flex flex-col w-full px-6 pt-6 md:px-10 md:pt-8">
+      <div className="flex items-center justify-between mb-4">
+        <h1 className="text-2xl font-bold text-gray-900">Berth Reservations</h1>
         {AddNewBerthRequestButton()}
       </div>
     </div>

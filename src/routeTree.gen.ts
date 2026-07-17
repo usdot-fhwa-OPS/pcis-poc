@@ -14,14 +14,13 @@ import { Route as ReservationRouteImport } from './routes/reservation'
 import { Route as OperatorsRouteImport } from './routes/operators'
 import { Route as NotificationsRouteImport } from './routes/notifications'
 import { Route as ImportRouteImport } from './routes/import'
-import { Route as HazardousCargoManagerRouteImport } from './routes/hazardous-cargo-manager'
 import { Route as HazardousCargoRouteImport } from './routes/hazardous-cargo'
 import { Route as CargoRouteImport } from './routes/cargo'
 import { Route as CapacityRouteImport } from './routes/capacity'
 import { Route as BerthVesselRouteImport } from './routes/berth-vessel'
 import { Route as BerthRequestsRouteImport } from './routes/berth-requests'
 import { Route as BerthRequestModifyConfirmationRouteImport } from './routes/berth-request-modify-confirmation'
-import { Route as BerthRequestModifyRouteImport } from './routes/b./routes/berth-request-modify-confirmation'
+import { Route as BerthRequestModifyRouteImport } from './routes/berth-request-modify'
 import { Route as BerthRequestConfirmationRouteImport } from './routes/berth-request-confirmation'
 import { Route as BerthRequestAddRouteImport } from './routes/berth-request-add'
 import { Route as BerthManagerRouteImport } from './routes/berth-manager'
@@ -52,11 +51,6 @@ const NotificationsRoute = NotificationsRouteImport.update({
 const ImportRoute = ImportRouteImport.update({
   id: '/import',
   path: '/import',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const HazardousCargoManagerRoute = HazardousCargoManagerRouteImport.update({
-  id: '/hazardous-cargo-manager',
-  path: '/hazardous-cargo-manager',
   getParentRoute: () => rootRouteImport,
 } as any)
 const HazardousCargoRoute = HazardousCargoRouteImport.update({
@@ -141,7 +135,6 @@ export interface FileRoutesByFullPath {
   '/capacity': typeof CapacityRoute
   '/cargo': typeof CargoRoute
   '/hazardous-cargo': typeof HazardousCargoRouteWithChildren
-  '/hazardous-cargo-manager': typeof HazardousCargoManagerRoute
   '/import': typeof ImportRoute
   '/notifications': typeof NotificationsRoute
   '/operators': typeof OperatorsRoute
@@ -162,7 +155,6 @@ export interface FileRoutesByTo {
   '/capacity': typeof CapacityRoute
   '/cargo': typeof CargoRoute
   '/hazardous-cargo': typeof HazardousCargoRouteWithChildren
-  '/hazardous-cargo-manager': typeof HazardousCargoManagerRoute
   '/import': typeof ImportRoute
   '/notifications': typeof NotificationsRoute
   '/operators': typeof OperatorsRoute
@@ -184,7 +176,6 @@ export interface FileRoutesById {
   '/capacity': typeof CapacityRoute
   '/cargo': typeof CargoRoute
   '/hazardous-cargo': typeof HazardousCargoRouteWithChildren
-  '/hazardous-cargo-manager': typeof HazardousCargoManagerRoute
   '/import': typeof ImportRoute
   '/notifications': typeof NotificationsRoute
   '/operators': typeof OperatorsRoute
@@ -207,7 +198,6 @@ export interface FileRouteTypes {
     | '/capacity'
     | '/cargo'
     | '/hazardous-cargo'
-    | '/hazardous-cargo-manager'
     | '/import'
     | '/notifications'
     | '/operators'
@@ -228,12 +218,11 @@ export interface FileRouteTypes {
     | '/capacity'
     | '/cargo'
     | '/hazardous-cargo'
-    | '/hazardous-cargo-manager'
     | '/import'
-    | '/vessel-activity'
     | '/notifications'
     | '/operators'
     | '/reservation'
+    | '/vessel-activity'
     | '/hazardous-cargo/$cargoUnitID'
   id:
     | '__root__'
@@ -249,7 +238,6 @@ export interface FileRouteTypes {
     | '/capacity'
     | '/cargo'
     | '/hazardous-cargo'
-    | '/hazardous-cargo-manager'
     | '/import'
     | '/notifications'
     | '/operators'
@@ -271,7 +259,6 @@ export interface RootRouteChildren {
   CapacityRoute: typeof CapacityRoute
   CargoRoute: typeof CargoRoute
   HazardousCargoRoute: typeof HazardousCargoRouteWithChildren
-  HazardousCargoManagerRoute: typeof HazardousCargoManagerRoute
   ImportRoute: typeof ImportRoute
   NotificationsRoute: typeof NotificationsRoute
   OperatorsRoute: typeof OperatorsRoute
@@ -314,13 +301,6 @@ declare module '@tanstack/react-router' {
       path: '/import'
       fullPath: '/import'
       preLoaderRoute: typeof ImportRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/hazardous-cargo-manager': {
-      id: '/hazardous-cargo-manager'
-      path: '/hazardous-cargo-manager'
-      fullPath: '/hazardous-cargo-manager'
-      preLoaderRoute: typeof HazardousCargoManagerRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/hazardous-cargo': {
@@ -442,7 +422,6 @@ const rootRouteChildren: RootRouteChildren = {
   CapacityRoute: CapacityRoute,
   CargoRoute: CargoRoute,
   HazardousCargoRoute: HazardousCargoRouteWithChildren,
-  HazardousCargoManagerRoute: HazardousCargoManagerRoute,
   ImportRoute: ImportRoute,
   NotificationsRoute: NotificationsRoute,
   OperatorsRoute: OperatorsRoute,

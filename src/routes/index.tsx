@@ -29,6 +29,13 @@ import { getTerminalCapacityList, populate } from '../components/terminal-capaci
 import { getTerrminalCapacity, terminalCapacityList } from '../components/terminal-capacity/terminal-capacity-client.tsx';
 import { getCargoBookingsAmount, listBcoCompleted, listBcoOngoing, listBcoUpcoming, listTermOpCompleted, listTermOpModifiedRequestedCargoUnits, listTermOpOngoing, listTermOpOnGoingCargoUnits, listTermOpRequestedCargoUnits, listTransOpCompleted, listTransOpUpcoming,  saveCargoUnit } from '../components/cargo/cargo-units-client.tsx';
 import { onCargoCreate, onCargoUpdate } from '../components/real-time-call.tsx';
+import { berthRequestListForVesselAgent, berthConfigList as fetchBerthConfigs } from '../components/berth-requests/berth-request-client.tsx';
+import { populate as populateBerthRequests } from '../components/berth-requests/berth-request-state.tsx';
+import { populate as populateBerthConfig, getBerthConfigList } from '../components/berth-requests/berth-config-state.tsx';
+import { BerthRequestDomain } from '../components/berth-requests/berth-request-domain.tsx';
+import { VesselAgentBerthRequestsTable } from '../components/berth-requests/vessel-agent-table/berth-request-vessel-agent-table.tsx';
+import { BerthRequestComponent } from './berth-requests.tsx';
+import { deleteBerthRequest } from '../components/berth-requests/berth-request-client.tsx';
 
 
 
@@ -676,6 +683,33 @@ function Index() {
       fetchTerminalOperatorModified();
     }, [userAttributes.role, refresh]);
 
+    // Vessel Agent: berth requests
+    const [vaBerthRequests, setVaBerthRequests] = useState<BerthRequestDomain[]>([])
+    const [vaLoading, setVaLoading] = useState(true)
+
+    useEffect(() => {
+      if (userAttributes.role !== "Vessel Agent" || !userAttributes.email) return
+      async function fetchVaBerths() {
+        const brList = await berthRequestListForVesselAgent(userAttributes.email)
+        setVaBerthRequests(brList)
+        dispatch(populateBerthRequests(brList))
+        dispatch(populateBerthConfig(await fetchBerthConfigs()))
+        setVaLoading(false)
+      }
+      fetchVaBerths()
+    }, [userAttributes.role, userAttributes.email, refresh])
+
+    const delBerthRequest = async (requestId: string) => {
+      await deleteBerthRequest(requestId)
+      if (userAttributes.email) {
+        const brList = await berthRequestListForVesselAgent(userAttributes.email)
+        setVaBerthRequests(brList)
+        dispatch(populateBerthRequests(brList))
+      }
+    }
+
+    const vaBerthConfigList = useAppSelector(getBerthConfigList)
+
     // BCO analytics calculations - moved to top level to avoid hooks rules violation
     const bcoAnalytics = React.useMemo(() => {
       if (userAttributes.role !== "Beneficiary Cargo Owner" || !analyticsData?.data) {
@@ -815,6 +849,21 @@ function Index() {
       };
     }, [userAttributes.role, analyticsData]);
   
+    if (userAttributes.role === "Vessel Agent") {
+      if (vaLoading) {
+        return <div>Loading...</div>
+      }
+      return (
+        <div className="w-full">
+          <BerthRequestComponent />
+          <VesselAgentBerthRequestsTable
+            data={vaBerthRequests}
+            meta={{ brConfigList: vaBerthConfigList, deleteBerthRequest: delBerthRequest }}
+          />
+        </div>
+      )
+    }
+
     if (userAttributes.role === "Terminal Operator") {
       return (
         
