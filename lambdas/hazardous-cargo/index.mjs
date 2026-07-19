@@ -330,10 +330,15 @@ async function approve(event) {
     const command = new TransactWriteCommand({
       TransactItems: [
         {
-          Delete: {
+          Update: {
             TableName: HAZARDOUS_CARGO_TABLE,
             Key: { vesselId: vesselId, cargoUnitID: cargoUnitID },
-            ReturnValues: "ALL_NEW",
+            UpdateExpression:
+              "SET reviewStatus = :status, updatedAt = :updatedAt",
+            ExpressionAttributeValues: {
+              ":status": status,
+              ":updatedAt": nowIso,
+            }, ReturnValues: "ALL_NEW",
           },
         },
         {
@@ -359,6 +364,7 @@ async function approve(event) {
               "vesselID": existingHazardousCargo.vesselId,
               "documentsChecked": "TRUE",
               "isCompliant":"TRUE",
+              "containerStatus": "On-Ship",
             },
           },
         }
