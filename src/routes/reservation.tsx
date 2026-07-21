@@ -656,7 +656,6 @@ async function updateBooking(id: string, status: string, reservationDate?: strin
   }
 }
 
-
 const [BCOOngoingData, setBCOOngoingBookings] = useState<BCOOngoingBooking[]>([]);
 
 // Move fetchContainers outside of useEffect so it can be reused
@@ -704,7 +703,7 @@ useEffect(() => {
 
   if (userAttributes.role === "Terminal Operator") {
     return (
-      <div className="w-xl max-w-9/10 px-6 py-6 md:px-10 md:py-8">
+      <div className="w-full px-6 py-6 md:px-10 md:py-8">
         <h1 className="mb-6 text-2xl leading-4 font-semibold text-gray-900">Cargo Reservations</h1>
         <Tabs defaultValue="requested">
           <TabsList className="h-auto mb-4 p-0 bg-transparent gap-x-4">
@@ -713,23 +712,21 @@ useEffect(() => {
             <TabsTrigger value="ongoing" className="pt-0 px-0 pb-2 data-[state=active]:bg-transparent border-b-2 border-transparent data-[state=active]:border-gray-900 rounded-none text-gray-500 hover:text-gray-700 data-[state=active]:text-gray-900 shadow-none data-[state=active]:shadow-none">Ongoing</TabsTrigger>
             <TabsTrigger value="completed" className="pt-0 px-0 pb-2 data-[state=active]:bg-transparent border-b-2 border-transparent data-[state=active]:border-gray-900 rounded-none text-gray-500 hover:text-gray-700 data-[state=active]:text-gray-900 shadow-none data-[state=active]:shadow-none">Completed</TabsTrigger>
           </TabsList>
-          <div className="w-xl max-w-9/10">
-            <TabsContent value="requested" className="mt-0">
-              <TerminalBookingsTable data={terminalopBookingsupcoming} status="Requested" meta={{updateBooking}} />
-            </TabsContent>
-            <TabsContent value="modification" className="mt-0">
-              <TerminalBookingsTable data={terminalOpModifiedBookings} status="Modified" meta={{updateBooking}} />
-            </TabsContent>
-            <TabsContent value="ongoing" className="mt-0">
-              <TerminalBookingsTable data={terminalopBookingongoing} status="Ongoing" meta={{updateBooking, markBookingLate}} />
-            </TabsContent>
-            <TabsContent value="completed" className="mt-0">
-              < TerminalBookingsCompleted data={Terminal_CompletedData} status="Completed" meta={{updateBooking}}/>
-            </TabsContent>
-          </div>
+          <TabsContent value="requested">
+            <TerminalBookingsTable data={terminalopBookingsupcoming} status="Requested" meta={{updateBooking}} />
+          </TabsContent>
+          <TabsContent value="modification">
+            <TerminalBookingsTable data={terminalOpModifiedBookings} status="Modified" meta={{updateBooking}} />
+          </TabsContent>
+          <TabsContent value="ongoing">
+            <TerminalBookingsTable data={terminalopBookingongoing} status="Ongoing" meta={{updateBooking, markBookingLate}} />
+          </TabsContent>
+          <TabsContent value="completed">
+            < TerminalBookingsCompleted data={Terminal_CompletedData} status="Completed" meta={{updateBooking}}/>
+          </TabsContent>
         </Tabs>
       </div>
-    );
+    )
   }
 
   if((userAttributes.role === 'Trucking Operator') 
