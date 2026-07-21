@@ -12,12 +12,6 @@ export const Route = createFileRoute('/hazardous-cargo')({
   component: HazardousCargoPage,
 })
 
-// TODO: Replace dummy data fetch with a real DynamoDB query via Amplify when the
-// HazardousCargo model is available. Example:
-//   const { data } = await client.models.HazardousCargo.list({
-//     filter: { isHazardous: { eq: true } },
-//     authMode: 'apiKey',
-//   })
 function useHazardousCargoData() {
   const userContext = useContext(UserContext);
   const userRole = userContext["custom:role"];

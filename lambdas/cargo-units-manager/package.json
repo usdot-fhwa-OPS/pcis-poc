@@ -1,0 +1,15 @@
+{
+  "name": "berth-registration-manager",
+  "version": "0.1.0",
+  "description": "Lambda API for berth requests and manifest CSV ingestion",
+  "type": "module",
+  "main": "index.mjs",
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.750.0",
+    "@aws-sdk/lib-dynamodb": "^3.750.0",
+    "jsonwebtoken": "^9.0.3"
+  },
+  "engines": {
+    "node": ">=24"
+  }
+}

@@ -19,11 +19,8 @@ import { cn } from "../../lib/utils"
 import { TransOpUpcomingBookings, TransOpOngoingBookings } from "../../routes/reservation.tsx";
 //Four Imports needed for Amplify Data Queries and CRUD methods
 
-import { generateClient } from 'aws-amplify/data';
-import type { Schema } from '../../../amplify/data/resource';
 import { TransOpDataTableMeta } from "./data-table.tsx";
 
-const client = generateClient<Schema>();
 import { TransOperatorCompletedBookings } from "../../routes/reservation.tsx"
 import { Checkbox } from "../ui/checkbox.tsx";
 import { toast } from "sonner";
@@ -31,6 +28,7 @@ import { useAppDispatch } from "../../hooks.tsx";
 import { populate } from "../terminal-capacity/terminal-capacity-state.tsx";
 import { TerminalCapacityDomain } from "../terminal-capacity/terminal-capacity-domain.tsx";
 import { terminalCapacityList } from "../terminal-capacity/terminal-capacity-client.tsx";
+import { saveCargoUnit } from "../cargo/cargo-units-client.tsx";
 import { matchDayAndOrder } from "../../lib/date-utils.tsx";
 
 
@@ -123,10 +121,11 @@ baseColumns.push({
         setFlagged(newFlag)
         try {
           // Call the Amplify update method for the flag (again must always contain containerID)
-          const { data: updatedContainerStatus } = await client.models.Container.update({
-            cargoUnitID: row.original.cargoUnitID, 
+          const updatedContainerStatus = await saveCargoUnit({
+            cargoUnitID: row.original.cargoUnitID,
             flag: newFlag,
-          })
+          })              
+
           console.log("Updated container status:", updatedContainerStatus);
         } catch (error) {
           console.error("Error updating flag:", error);
@@ -881,10 +880,10 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
           setFlagged(newFlag)
           try {
             // Call the Amplify update method for the flag (again must always contain containerID)
-            const { data: updatedContainerStatus } = await client.models.Container.update({
-              cargoUnitID: row.original.cargoUnitID, 
-              flag: newFlag,
-            })
+              const updatedContainerStatus = await saveCargoUnit({
+                cargoUnitID: row.original.cargoUnitID,
+                flag: newFlag,
+              })              
             console.log("Updated flag:", updatedContainerStatus)
           } catch (error) {
             console.error("Error updating flag:", error);
