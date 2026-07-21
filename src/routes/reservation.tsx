@@ -706,7 +706,7 @@ useEffect(() => {
       <div className="w-full px-6 py-6 md:px-10 md:py-8">
         <h1 className="mb-6 text-2xl leading-4 font-semibold text-gray-900">Cargo Reservations</h1>
         <Tabs defaultValue="requested">
-          <TabsList className="h-auto mb-4 p-0 bg-transparent gap-x-4">
+          <TabsList className="w-full mb-4 gap-x-6 border-b border-gray-200">
             <TabsTrigger value="requested" className="pt-0 px-0 pb-2 data-[state=active]:bg-transparent border-b-2 border-transparent data-[state=active]:border-gray-900 rounded-none text-gray-500 hover:text-gray-700 data-[state=active]:text-gray-900 shadow-none data-[state=active]:shadow-none">Requested</TabsTrigger>
             <TabsTrigger value="modification" className="pt-0 px-0 pb-2 data-[state=active]:bg-transparent border-b-2 border-transparent data-[state=active]:border-gray-900 rounded-none text-gray-500 hover:text-gray-700 data-[state=active]:text-gray-900 shadow-none data-[state=active]:shadow-none">Modification Requested</TabsTrigger>
             <TabsTrigger value="ongoing" className="pt-0 px-0 pb-2 data-[state=active]:bg-transparent border-b-2 border-transparent data-[state=active]:border-gray-900 rounded-none text-gray-500 hover:text-gray-700 data-[state=active]:text-gray-900 shadow-none data-[state=active]:shadow-none">Ongoing</TabsTrigger>
