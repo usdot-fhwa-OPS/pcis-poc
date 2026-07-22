@@ -269,7 +269,11 @@ export const CompletedColumn = (): ColumnDef<any>[] => {
     },
     {
       accessorKey: "resApprovalDate",
-      header: "Reservation Approval Date",
+      header: "Date Approved",
+    },
+    {
+      accessorKey: "resPickupDate",
+      header: "Date Picked Up",
     },
     {
       accessorKey: "reservationStatus",
@@ -291,10 +295,6 @@ export const CompletedColumn = (): ColumnDef<any>[] => {
         );
       },
       size: 200,
-    },
-    {
-      accessorKey: "resPickupDate",
-      header: "Reservation Pickup Date",
     },
     {
       accessorKey: "twicEscortRequired",
