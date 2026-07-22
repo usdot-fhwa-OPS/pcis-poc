@@ -20,6 +20,8 @@ import {
   TableRow,
 } from "../ui/table.tsx"
 
+import { ChevronLeft, ChevronRight } from "lucide-react"
+
 //Adding interface for setting Booking status
 export interface TerminalOperatorDataTableMeta {
   updateBooking: (id: string, status: string, reservationDate?: string, reservationTime?: string, twicEscortRequired?: boolean)  => Promise<boolean>;
@@ -54,7 +56,7 @@ export function DataTable<TData, TValue>({ columns, data ,meta}: DataTableProps<
   })
 
   return (
-    <div className="w-full mb-8 bg-white border rounded-xl overflow-hidden">
+    <div className="w-full not-last:mb-8 bg-white border rounded-xl overflow-hidden">
       <div className="overflow-x-auto">
         <Table className="leading-4">
           <TableHeader>
@@ -88,27 +90,42 @@ export function DataTable<TData, TValue>({ columns, data ,meta}: DataTableProps<
             )}
           </TableBody>
         </Table>
-        
-        <div className="flex items-center justify-between mt-4">
-          <div className="flex items-center gap-2">
+      </div>
+      <div className="flex items-center justify-between px-4 py-3 border-t text-sm text-gray-600">
+        <span>{firstRow} - {lastRow} of {totalRows} items</span>
+        <div className="flex items-center gap-1">
+          <button
+            onClick={() => table.previousPage()}
+            disabled={!table.getCanPreviousPage()}
+            className="flex items-center gap-1 px-2 py-1 rounded hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed"
+          >
+            <ChevronLeft className="h-4 w-4" />
+            Previous
+          </button>
+          {Array.from({ length: pageCount }, (_, i) => (
             <button
-              onClick={() => table.previousPage()}
-              disabled={!table.getCanPreviousPage()}
-              className="px-3 py-1 border rounded disabled:opacity-50"
+              key={i}
+              onClick={() => table.setPageIndex(i)}
+              className={`w-8 h-8 rounded text-sm font-medium ${
+                pageIndex === i
+                  ? "bg-gray-900 text-white"
+                  : "hover:bg-gray-100 text-gray-700"
+              }`}
             >
-              Previous
+              {i + 1}
             </button>
+          ))}
+          <button
+            onClick={() => table.nextPage()}
+            disabled={!table.getCanNextPage()}
+            className="flex items-center gap-1 px-2 py-1 rounded hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed"
+          >
+            Next
+            <ChevronRight className="h-4 w-4" />
+          </button>
+        </div>
 
-            <button
-              onClick={() => table.nextPage()}
-              disabled={!table.getCanNextPage()}
-              className="px-3 py-1 border rounded disabled:opacity-50"
-            >
-              Next
-            </button>
-          </div>
-
-          <span className="text-sm">
+          <span className="hidden text-sm">
             Page{" "}
             <strong>
               {table.getState().pagination.pageIndex + 1} of{" "}
@@ -121,7 +138,7 @@ export function DataTable<TData, TValue>({ columns, data ,meta}: DataTableProps<
             onChange={(e) =>
               table.setPageSize(Number(e.target.value))
             }
-            className="border p-1 rounded"
+            className="hidden border p-1 rounded"
           >
             {[5, 10, 20, 50].map((size) => (
               <option key={size} value={size}>
@@ -129,7 +146,6 @@ export function DataTable<TData, TValue>({ columns, data ,meta}: DataTableProps<
               </option>
             ))}
           </select>
-        </div>
       </div>
     </div>
   )
