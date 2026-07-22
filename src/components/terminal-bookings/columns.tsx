@@ -20,8 +20,8 @@ export const columns = (status: string): ColumnDef<any>[] => {
     { accessorKey: "bcoEmail", header: "BCO Email" },
     { accessorKey: "transopName", header: "Transportation Coordinator" },
     { accessorKey: "transopEmail", header: "Transportation Coordinator Email" },
-    { accessorKey: "reservationDate", header: "Original Date Requested" },
-    { accessorKey: "reservationTime", header: "Original Time Requested" },
+    { accessorKey: "reservationDate", header: "Date Requested" },
+    { accessorKey: "reservationTime", header: "Time Requested" },
   
 
   ];
@@ -31,9 +31,9 @@ export const columns = (status: string): ColumnDef<any>[] => {
   if (status === "Requested") {
     baseColumns.push({
       accessorKey: "status",
-      header: () => <div className="text-center min-w-[200px]">Status</div>,
+      header: () => <div className="text-center">Status</div>,
       cell: ({ row,table }) => (
-        <div className="flex space-x-4 justify-center">
+        <div className="min-w-[200px] flex space-x-4 justify-center">
 
           {/* Approve Button */}
           <ApproveReservation
@@ -73,9 +73,9 @@ export const columns = (status: string): ColumnDef<any>[] => {
     });
     baseColumns.push({
       accessorKey: "status",
-      header: () => <div className="text-center min-w-[200px]">Status</div>,
+      header: () => <div className="text-center">Status</div>,
       cell: ({ row,table }) => (
-        <div className="flex space-x-4 min-w-[200px] justify-center">
+        <div className="min-w-[200px] flex space-x-4 justify-center">
           {/* Approve Button */}
 
           {/* Modify selection set to include modified time and date
@@ -105,14 +105,14 @@ export const columns = (status: string): ColumnDef<any>[] => {
   if (status === "Ongoing") {
     baseColumns.push({
       accessorKey: "reservationStatus",
-      header: () => <div className="w-[150px] text-center">Status</div>,
+      header: () => <div className="text-center">Status</div>,
      // Adjust width as needed
       cell: ({ row }) => {
         const status = row.original.reservationStatus; // Get status value
         const isLate = status === "Late for Pick Up"; // Check if status is "Late"
   
         return (
-          <div className="w-[150px] text-center">
+          <div className="min-w-[150px] text-center">
             <Badge
               className={`border-transparent rounded-full ${
                 isLate ? "bg-red-100 hover:bg-red-100/80 text-red-700" : "bg-blue-50 hover:bg-blue-50/80 text-blue-700"
@@ -273,7 +273,7 @@ export const CompletedColumn = (): ColumnDef<any>[] => {
     },
     {
       accessorKey: "reservationStatus",
-      header: () => <div className="min-w-[112px] text-center">Reservation Status</div>,
+      header: () => <div className="text-center">Reservation Status</div>,
       cell: ({ row }) => {
         const status = row.original.reservationStatus; // Get status value
         const isLate = status === "Late for Pick Up"; // Check if status is "Late"
