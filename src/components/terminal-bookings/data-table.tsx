@@ -48,12 +48,18 @@ export function DataTable<TData, TValue>({ columns, data ,meta}: DataTableProps<
     meta: meta as TerminalOperatorDataTableMeta,
    
     state: { columnFilters, pagination },
-     getCoreRowModel: getCoreRowModel(),
-     onPaginationChange: setPagination,
+    getCoreRowModel: getCoreRowModel(),
+    onPaginationChange: setPagination,
     getFilteredRowModel: getFilteredRowModel(),
     onColumnFiltersChange: setColumnFilters,
     getPaginationRowModel: getPaginationRowModel(),
   })
+
+  const { pageIndex, pageSize } = table.getState().pagination
+  const totalRows = table.getFilteredRowModel().rows.length
+  const firstRow = totalRows === 0 ? 0 : pageIndex * pageSize + 1
+  const lastRow = Math.min((pageIndex + 1) * pageSize, totalRows)
+  const pageCount = table.getPageCount()
 
   return (
     <div className="w-full not-last:mb-8 bg-white border rounded-xl overflow-hidden">
