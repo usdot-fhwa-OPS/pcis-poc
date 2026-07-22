@@ -56,7 +56,7 @@ export function DataTable<TData, TValue>({ columns, data ,meta}: DataTableProps<
   return (
     <div className="w-full mb-8 bg-white border rounded-xl overflow-hidden">
       <div className="overflow-x-auto">
-        <Table>
+        <Table className="leading-4">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id} className="bg-gray-50 hover:bg-gray-50/50 data-[state=selected]:bg-gray-50">
