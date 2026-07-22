@@ -191,7 +191,7 @@ export const columns = (status: string): ColumnDef<any>[] => {
 
   baseColumns.push({
     accessorKey: "flag",
-    header: () => <div style={{ minWidth: "50px", textAlign: "center" }}>Flag</div>,
+    header: () => <div className="text-center">Flag</div>,
     cell: ({ row }) => {
       
 
