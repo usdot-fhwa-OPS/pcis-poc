@@ -90,7 +90,7 @@ export function DataTable<TData, TValue>({ columns, data ,meta}: DataTableProps<
             ) : (
               <TableRow>
                 <TableCell colSpan={columns.length} className="h-24 text-center">
-                  No results.
+                  There are no items to display.
                 </TableCell>
               </TableRow>
             )}
@@ -131,27 +131,27 @@ export function DataTable<TData, TValue>({ columns, data ,meta}: DataTableProps<
           </button>
         </div>
 
-          <span className="hidden text-sm">
-            Page{" "}
-            <strong>
-              {table.getState().pagination.pageIndex + 1} of{" "}
-              {table.getPageCount()}
-            </strong>
-          </span>
+        <span className="hidden text-sm">
+          Page{" "}
+          <strong>
+            {table.getState().pagination.pageIndex + 1} of{" "}
+            {table.getPageCount()}
+          </strong>
+        </span>
 
-          <select
-            value={table.getState().pagination.pageSize}
-            onChange={(e) =>
-              table.setPageSize(Number(e.target.value))
-            }
-            className="hidden border p-1 rounded"
-          >
-            {[5, 10, 20, 50].map((size) => (
-              <option key={size} value={size}>
-                Show {size}
-              </option>
-            ))}
-          </select>
+        <select
+          value={table.getState().pagination.pageSize}
+          onChange={(e) =>
+            table.setPageSize(Number(e.target.value))
+          }
+          className="hidden border p-1 rounded"
+        >
+          {[5, 10, 20, 50].map((size) => (
+            <option key={size} value={size}>
+              Show {size}
+            </option>
+          ))}
+        </select>
       </div>
     </div>
   )
