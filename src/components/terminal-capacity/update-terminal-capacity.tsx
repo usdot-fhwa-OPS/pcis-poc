@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
 import { Button } from "../ui/button";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
@@ -283,15 +283,12 @@ const [endTime, setEndTime] = useState<string | undefined>(timeOptions[0])
                     </Button>
                 } />
                 <DialogContent className="DialogContent flex flex-col" style={{maxHeight: '90vh'}}>
-                    <div className="overflow-y-auto flex-1 min-h-0">
-                            <div className="space-y-4">
+                    <DialogHeader className="pb-2 border-b">
+                        <DialogTitle>Edit Temporary Capacity</DialogTitle>
+                    </DialogHeader>
+                    <div className="overflow-y-auto flex-1 min-h-0 pr-1">
+                            <div className="space-y-4 pb-4">
                                 <div className="grid grid-cols-5 gap-y-4 gap-x-2">
-                                    <div className="h-10 col-span-3 col-start-1 ...">
-                                        <DialogHeader>
-                                            <DialogTitle>Edit Temporary Capacity</DialogTitle>
-                                            <DialogDescription></DialogDescription>
-                                        </DialogHeader>
-                                    </div>
                                     <div className="col-start-1 col-end-2 ...">
                                         <Label htmlFor="terminalCapacity" className="text-right">
                                             Terminal Capacity
