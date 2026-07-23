@@ -20,7 +20,7 @@ import {
   TableRow,
 } from "../ui/table.tsx"
 
-import { ChevronLeft, ChevronRight } from "lucide-react"
+import { ChevronLeft, ChevronRight, Search } from "lucide-react"
 
 //Adding interface for setting Booking status
 export interface TerminalOperatorDataTableMeta {
@@ -62,6 +62,19 @@ export function DataTable<TData, TValue>({ columns, data ,meta}: DataTableProps<
   const pageCount = table.getPageCount()
 
   return (
+    <div className="flex items-center gap-2 mb-4 p-2 bg-white border rounded-xl">
+      <div className="relative ml-auto">
+        <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
+        <Input
+          placeholder="Search cargo unit ID..."  
+          value={(table.getColumn("cargoUnitID")?.getFilterValue() as string) ?? ""} 
+          onChange={(event) =>
+            table.getColumn("cargoUnitID")?.setFilterValue(event.target.value) 
+          }
+          className="w-48 pl-8 pr-3 py-1.5 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent"
+        />
+      </div>
+    </div>
     <div className="w-full not-last:mb-8 bg-white border rounded-xl overflow-hidden">
       <div className="overflow-x-auto">
         <Table className="leading-4">
