@@ -62,6 +62,7 @@ export function DataTable<TData, TValue>({ columns, data ,meta}: DataTableProps<
   const pageCount = table.getPageCount()
 
   return (
+    <>
     <div className="flex items-center gap-2 mb-4 p-2 bg-white border rounded-xl">
       <div className="relative ml-auto">
         <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
@@ -167,5 +168,6 @@ export function DataTable<TData, TValue>({ columns, data ,meta}: DataTableProps<
         </select>
       </div>
     </div>
+    </>
   )
 }
