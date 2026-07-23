@@ -706,7 +706,7 @@ useEffect(() => {
       <div className="w-full px-6 py-6 md:px-10 md:py-8">
         <h1 className="mb-6 text-2xl leading-none font-semibold text-gray-900">Cargo Reservations</h1>
         <Tabs defaultValue="requested">
-          <TabsList className="flex flex-wrap items-stretch justify-normal gap-x-6 gap-y-2 w-full h-auto sm:h-[1.875rem] p-0 mb-4 bg-transparent border-b border-gray-200">
+          <TabsList className="flex flex-wrap items-stretch justify-normal gap-x-6 gap-y-2 w-full h-auto min-h-[1.875rem] sm:h-[1.875rem] mb-4 p-0 bg-transparent border-b border-gray-200">
             <TabsTrigger value="requested" className="data-[state=active]:sm:-mb-px pt-0 px-0 pb-2 data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-gray-900 rounded-none text-gray-500 hover:text-gray-700 data-[state=active]:text-gray-900 data-[state=active]:shadow-none">Requested</TabsTrigger>
             <TabsTrigger value="modification" className="data-[state=active]:sm:-mb-px pt-0 px-0 pb-2 data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-gray-900 rounded-none text-gray-500 hover:text-gray-700 data-[state=active]:text-gray-900 data-[state=active]:shadow-none">Modification Requested</TabsTrigger>
             <TabsTrigger value="ongoing" className="data-[state=active]:sm:-mb-px pt-0 px-0 pb-2 data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-gray-900 rounded-none text-gray-500 hover:text-gray-700 data-[state=active]:text-gray-900 data-[state=active]:shadow-none">Ongoing</TabsTrigger>
