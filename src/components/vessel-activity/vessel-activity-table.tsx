@@ -132,7 +132,7 @@ export function VesselActivityTable({ data }: VesselActivityTableProps) {
             placeholder="Search vessels..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-8 pr-3 py-1.5 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent w-48"
+            className="w-48 pl-8 pr-3 py-1.5 border border-gray-300 rounded-md text-sm placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent"
           />
         </div>
       </div>
