@@ -40,22 +40,25 @@ export default function TerminalCapacityComponent() {
 
   }, [])
 
-if (loading) {
-    return <div>Loading...</div>
-  }
- return (
-   <div className="p-6">
-      <div className="flex items-center justify-between mb-4">
-        <p className="text-sm text-gray-700">
-          Maximum Terminal Capacity:&nbsp;
-          <span className="font-semibold">{maxTerminalCapacity[0].capacity} Reservations per day</span>
-          &nbsp;&nbsp;
-          <UpdateTerminalCapacityButton maxTerminalCapacity={maxTerminalCapacity[0]}/>
-        </p>
-        <AddTerminalCapacity/>
-      </div>
-      <TerminalCapacityTable data={data.filter((item)=>(item.capacityType==='TEMPORARY'))}/>
+  return (
+    <div className="p-6">
+      <h1 className="text-2xl font-bold text-gray-900 mb-4">Capacity Planning</h1>
+      {loading ? (
+        <div className="flex items-center justify-center h-64 text-gray-500">Loading capacity data…</div>
+      ) : (
+        <>
+          <div className="flex items-center justify-between mb-4">
+            <p className="text-sm text-gray-700">
+              Maximum Terminal Capacity:&nbsp;
+              <span className="font-semibold">{maxTerminalCapacity[0].capacity} Reservations per day</span>
+              &nbsp;&nbsp;
+              <UpdateTerminalCapacityButton maxTerminalCapacity={maxTerminalCapacity[0]} />
+            </p>
+            <AddTerminalCapacity />
+          </div>
+          <TerminalCapacityTable data={data.filter((item) => item.capacityType === 'TEMPORARY')} />
+        </>
+      )}
     </div>
   )
-
 }

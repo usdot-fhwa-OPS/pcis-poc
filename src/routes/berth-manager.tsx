@@ -54,15 +54,22 @@ function RouteComponent() {
     fetchData();
   }
 
-  if (loading) {
-    return <div>Loading...</div>
-  }
-
-    return (
- 
-    userContext['custom:role']==='Terminal Operator'?<TerminalOperatorBerthRequestsTable data={data}
-    deleteBerthRequest={delBerthRequest} berthConfigs={configs} 
-    modifyBerthRequest={modifyBerthRequest}
-    decideBerthRequest={decideBerthRequest} />:undefined
-    )
+  return (
+    <div className="w-full">
+      <div className="px-6 pt-6 md:px-10 md:pt-8 mb-4">
+        <h1 className="text-2xl font-bold text-gray-900">Berth Reservations</h1>
+      </div>
+      {loading ? (
+        <div className="flex items-center justify-center h-64 text-gray-500">Loading berth requests…</div>
+      ) : userContext['custom:role'] === 'Terminal Operator' ? (
+        <TerminalOperatorBerthRequestsTable
+          data={data}
+          deleteBerthRequest={delBerthRequest}
+          berthConfigs={configs}
+          modifyBerthRequest={modifyBerthRequest}
+          decideBerthRequest={decideBerthRequest}
+        />
+      ) : null}
+    </div>
+  )
 }
