@@ -21,7 +21,6 @@ import { MonthlyRepeatOptions } from "./MonthlyRepeatOptions";
 import { YearlyRepeatOptions } from "./YearlyRepeatOptions.";
 import { useAppDispatch } from "../../hooks";
 import { populate } from "./terminal-capacity-state";
-import { ScrollArea } from "../ui/scroll-area";
 
 export const AddTerminalCapacity = () => {
 
@@ -227,9 +226,8 @@ const [endTime, setEndTime] = useState<string | undefined>(timeOptions[0])
                         </Tooltip>
                     </TooltipProvider>
                 </DialogTrigger>
-                <DialogContent className="DialogContent">
-                    <div className="-mx-4 no-scrollbar max-h-[85vh] overflow-y-auto px-4">
-                        <ScrollArea className="max-h-[82vh] w-full rounded-md p-4">
+                <DialogContent className="DialogContent flex flex-col" style={{maxHeight: '90vh'}}>
+                    <div className="overflow-y-auto flex-1 min-h-0">
                             <div className="space-y-4">
                                 <div className="grid grid-cols-5 gap-y-4 gap-x-2">
                                     <div className="h-10 col-span-3 col-start-1 ...">
@@ -390,9 +388,8 @@ const [endTime, setEndTime] = useState<string | undefined>(timeOptions[0])
 
 
                             </div>
-                        </ScrollArea>
                     </div>
-                    <DialogFooter className="px-4 pb-2 pt-2">
+                    <DialogFooter className="pt-4">
                         <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
                             Cancel
                         </Button>
