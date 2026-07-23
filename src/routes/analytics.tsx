@@ -310,9 +310,6 @@ function Analytics() {
           throw new Error('No authentication token available');
         }
 
-        console.log('Using ID token for authentication');
-        console.log('Token preview:', idToken.substring(0, 50) + '...');
-
         const response = await fetch(API_ENDPOINT, {
           method: 'GET',
           headers: {
@@ -327,14 +324,6 @@ function Analytics() {
         }
 
         const data: AnalyticsResponse = await response.json();
-        
-        console.log('=== Lambda Response ===');
-        console.log('Full response:', JSON.stringify(data, null, 2));
-        console.log('OK status:', data.ok);
-        console.log('Role:', data.role);
-        console.log('Context:', data.context);
-        console.log('Data:', data.data);
-        console.log('======================');
         
         if (!data.ok) {
           throw new Error(data.message || 'Failed to fetch analytics');
