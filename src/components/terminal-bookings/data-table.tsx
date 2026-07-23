@@ -21,6 +21,7 @@ import {
 } from "../ui/table.tsx"
 
 import { ChevronLeft, ChevronRight, Search } from "lucide-react"
+import { Input } from "../ui/input.tsx"
 
 //Adding interface for setting Booking status
 export interface TerminalOperatorDataTableMeta {
