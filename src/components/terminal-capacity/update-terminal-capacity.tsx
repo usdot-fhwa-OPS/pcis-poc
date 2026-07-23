@@ -445,19 +445,17 @@ const [endTime, setEndTime] = useState<string | undefined>(timeOptions[0])
                                 </div>
 
 
-                                <DialogFooter>
-                                    <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
-                                        Cancel
-                                    </Button>
-                                    <Button onClick={() => { save() }}>
-                                        Save
-                                    </Button>
-                                </DialogFooter>
                             </div>
                         </ScrollArea>
                     </div>
-                    
-
+                    <DialogFooter className="px-4 pb-2 pt-2">
+                        <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
+                            Cancel
+                        </Button>
+                        <Button onClick={() => { save() }}>
+                            Save
+                        </Button>
+                    </DialogFooter>
                 </DialogContent>
             </Dialog>
             </>
