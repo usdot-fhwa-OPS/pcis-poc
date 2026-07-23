@@ -64,6 +64,7 @@ export function DataTable<TData, TValue>({ columns, data ,meta}: DataTableProps<
 
   return (
     <>
+    {/* Filtering */}
     <div className="flex items-center gap-2 mb-4 p-2 bg-white border rounded-xl">
       <div className="relative ml-auto">
         <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
@@ -77,6 +78,7 @@ export function DataTable<TData, TValue>({ columns, data ,meta}: DataTableProps<
         />
       </div>
     </div>
+    {/* Scrolling Container */}
     <div className="w-full not-last:mb-8 bg-white border rounded-xl overflow-hidden">
       <div className="overflow-x-auto">
         <Table className="leading-4">
@@ -112,6 +114,7 @@ export function DataTable<TData, TValue>({ columns, data ,meta}: DataTableProps<
           </TableBody>
         </Table>
       </div>
+      {/* Pagination */}
       <div className="flex items-center justify-between px-4 py-3 border-t text-sm text-gray-600">
         <span>{firstRow} - {lastRow} of {totalRows} items</span>
         <div className="flex items-center gap-1">
@@ -145,7 +148,7 @@ export function DataTable<TData, TValue>({ columns, data ,meta}: DataTableProps<
             <ChevronRight className="h-4 w-4" />
           </button>
         </div>
-
+        {/* Page Count --- REMOVE? */}
         <span className="hidden text-sm">
           Page{" "}
           <strong>
@@ -153,7 +156,7 @@ export function DataTable<TData, TValue>({ columns, data ,meta}: DataTableProps<
             {table.getPageCount()}
           </strong>
         </span>
-
+        {/* Items Per Page --- REMOVE? */}
         <select
           value={table.getState().pagination.pageSize}
           onChange={(e) =>
@@ -167,6 +170,7 @@ export function DataTable<TData, TValue>({ columns, data ,meta}: DataTableProps<
             </option>
           ))}
         </select>
+
       </div>
     </div>
     </>
