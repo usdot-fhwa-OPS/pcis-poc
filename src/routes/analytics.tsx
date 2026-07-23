@@ -794,7 +794,6 @@ function Analytics() {
 
         <div className="mb-4 flex items-center gap-4 text-sm text-gray-600">
           <span>Total Items: <strong>{context?.itemCount}</strong></span>
-          <span>Role: <strong>{analyticsData.role}</strong></span>
         </div>
 
         {/* Top Summary Cards (4) */}
@@ -1206,7 +1205,6 @@ function Analytics() {
 
       <div className="mb-4 flex items-center gap-4 text-sm text-gray-600">
         <span>Total Items: <strong>{context?.itemCount}</strong></span>
-        <span>Role: <strong>{analyticsData.role}</strong></span>
       </div>
 
       {/* Top Summary Cards */}
