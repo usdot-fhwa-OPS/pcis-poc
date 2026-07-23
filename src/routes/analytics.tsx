@@ -742,8 +742,7 @@ function Analytics() {
     return (
       <div className="flex flex-col w-full h-screen p-8">
         <div className="flex items-center justify-between mb-6">
-          <Skeleton className="h-9 w-48" />
-          <Skeleton className="h-8 w-64" />
+          <h1 className="text-3xl font-bold">Analytics</h1>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <Skeleton className="h-48" />
