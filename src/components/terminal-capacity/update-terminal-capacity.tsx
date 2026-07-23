@@ -282,12 +282,12 @@ const [endTime, setEndTime] = useState<string | undefined>(timeOptions[0])
                               Modify
                     </Button>
                 } />
-                <DialogContent className="DialogContent flex flex-col" style={{maxHeight: '90vh'}}>
-                    <DialogHeader className="pb-2 border-b">
+                <DialogContent className="DialogContent" style={{maxHeight: '90vh', display: 'flex', flexDirection: 'column', overflow: 'hidden'}}>
+                    <DialogHeader className="pb-4 pr-8">
                         <DialogTitle>Edit Temporary Capacity</DialogTitle>
                     </DialogHeader>
-                    <div className="overflow-y-auto flex-1 min-h-0 pr-1">
-                            <div className="space-y-4 pb-4">
+                    <div className="overflow-y-auto flex-1 min-h-0 pr-2">
+                            <div className="space-y-4 py-4">
                                 <div className="grid grid-cols-5 gap-y-4 gap-x-2">
                                     <div className="col-start-1 col-end-2 ...">
                                         <Label htmlFor="terminalCapacity" className="text-right">
