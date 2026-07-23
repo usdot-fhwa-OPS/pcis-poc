@@ -73,7 +73,7 @@ export function DataTable<TData, TValue>({ columns, data ,meta}: DataTableProps<
           onChange={(event) =>
             table.getColumn("cargoUnitID")?.setFilterValue(event.target.value) 
           }
-          className="w-48 h-auto pl-8 pr-3 py-1.5 text-sm border border-gray-300 rounded-md shadow-none focus:outline-none focus-visible:outline-solid focus-visible:ring-2 focus:border-transparent"
+          className="w-48 h-auto pl-8 pr-3 py-1.5 border border-gray-300 rounded-md shadow-none text-sm placeholder:text-gray-500 focus:outline-none focus:border-transparent focus-visible:outline-solid focus-visible:ring-2"
         />
       </div>
     </div>
