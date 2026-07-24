@@ -105,7 +105,16 @@ const [date, setDate] = React.useState<Date | undefined>(new Date())
             <Calendar
               mode="single"
               selected={date}
-              onSelect={(value:any) => { setDate(value); addDays(value) }}
+              onSelect={(value: Date | undefined) => {
+                if (value) {
+                  setDate(value);
+                  addDays(value);
+                } else if (date) {
+                  // DayPicker deselected the currently-selected date — treat as a toggle
+                  addDays(date);
+                  setDate(undefined);
+                }
+              }}
               className="rounded-lg"
               captionLayout="dropdown"
             />
