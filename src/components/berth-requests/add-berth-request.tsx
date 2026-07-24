@@ -13,6 +13,7 @@ import { berthConfigList } from "./berth-request-client";
 import { populate } from '../../components/berth-requests/berth-config-state';
 import { BerthConfigDomain } from "./berth-config-domain";
 import { Input } from "../ui/input";
+import { ScrollArea } from "../ui/scroll-area";
 
 export interface BerthRequestFormData {
     terminalId: string;
@@ -216,7 +217,7 @@ export const AddBerthRequest = ({ onDataChange, onManifestChange }: AddBerthRequ
                                 </div>
                                 <FileUploader
                                     acceptedFileTypes={['.csv']}
-                                    path="stowPlans/"
+                                    path="stowPlans/berthRequest/"
                                     maxFileCount={1}
                                     isResumable
                                     onUploadSuccess={($event) => getFileInfo($event)}
@@ -279,7 +280,9 @@ export const AddBerthRequest = ({ onDataChange, onManifestChange }: AddBerthRequ
                 </Button>
             </PopoverTrigger>
             <PopoverContent className="w-auto p-0">
-                <Calendar mode="single" selected={startDate} disabled={{ before: new Date() }} onSelect={handleStartDateSelect} initialFocus />
+                <ScrollArea className="h-56 w-auto p-1">
+                    <Calendar mode="single" selected={startDate} disabled={{ before: new Date() }} onSelect={handleStartDateSelect} initialFocus />
+                </ScrollArea>
             </PopoverContent>
         </Popover>;
     }
@@ -312,7 +315,10 @@ export const AddBerthRequest = ({ onDataChange, onManifestChange }: AddBerthRequ
                 </Button>
             </PopoverTrigger>
             <PopoverContent className="w-auto p-0">
-                <Calendar mode="single" selected={endDate} disabled={{ before: new Date() }} onSelect={handleEndDateSelect} initialFocus />
+                <ScrollArea className="h-56 w-auto p-1">
+                    <Calendar mode="single" selected={endDate} disabled={{ before: new Date() }} onSelect={handleEndDateSelect} initialFocus />
+                </ScrollArea>
+
             </PopoverContent>
         </Popover>;
     }

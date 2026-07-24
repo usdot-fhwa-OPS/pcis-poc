@@ -18,17 +18,24 @@ import {
 } from "../ui/table"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 
+export interface VesselAcitivtyTableMeta {
+  setAtaAt:(requestId: string, newVal:string)=>void;
+}
+
+
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
+  meta?: VesselAcitivtyTableMeta
 }
 
-export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData, TValue>) {
+export function DataTable<TData, TValue>({ columns, data, meta}: DataTableProps<TData, TValue>) {
   const [pagination, setPagination] = React.useState({ pageIndex: 0, pageSize: 10 })
 
   const table = useReactTable({
     data,
     columns,
+    meta: meta as VesselAcitivtyTableMeta,
     getCoreRowModel: getCoreRowModel(),
     onPaginationChange: setPagination,
     getPaginationRowModel: getPaginationRowModel(),

@@ -208,8 +208,8 @@ function mapManifestRow(row, nowIso) {
     isTerminalNotify: false,
     createdAt: nowIso,
     updatedAt: nowIso,
-    isHazardous: (row.isHazardous),
-    isCompliant:(row.isCompliant),
+    isHazardous: (row.ishazardous),
+    isCompliant:(row.iscompliant),
   };
 }
 
@@ -338,6 +338,9 @@ async function validateVesselIdInManifest(requestItem) {
      throw new Error("Manifest content missing: cargo information");
   }
   const nowIso = new Date().toISOString(); 
+  const vesselId = rows[0].vesselid
+
+  let hazmatCount = 0;
   for (let i = 0; i < rows.length; i += 1) {
     const row = rows[i];
     const mapped = mapManifestRow(row, nowIso);
@@ -346,11 +349,14 @@ async function validateVesselIdInManifest(requestItem) {
       skippedCount += 1;
       continue;
     }
-    if (row.vesselid !== requestItem.vesselID) {
-      console.log(`Manifest content Vessel IDs ${row.vesselid} do not match Berth Request Vessel Id ${requestItem.vesselID}`);
-      throw new Error(`Manifest content Vessel IDs ${row.vesselid} do not match Berth Request Vessel Id ${requestItem.vesselID}`);
+    if(mapped.isHazardous?.trim() === 'TRUE') hazmatCount++;
+    if (row.vesselid !== vesselId) {
+      console.log(`Manifest content Vessel IDs ${row.vesselid} do not match Vessel Id ${vesselId} of the first entry`);
+      throw new Error(`Manifest content Vessel IDs ${row.vesselid} do not match Vessel Id ${vesselId} of the first entry`);
     }
   }
+  requestItem.hazmatCount = hazmatCount
+  requestItem.vesselID = vesselId;
   return null;
 }
 
@@ -509,6 +515,7 @@ async function createRequest(event) {
     manifestPath: (body.manifestPath || "").toString().trim() || null,
     manifestCsvContent: (body.manifestCsvContent || "").toString() || null,
     manifestCsvBase64: (body.manifestCsvBase64 || "").toString() || null,
+    hazmatCount: body.hazmatCount,
     status: "REQUESTED",
     denialComment: null,
     decisionAt: null,
