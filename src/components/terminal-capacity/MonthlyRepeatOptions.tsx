@@ -89,7 +89,7 @@ export function MonthlyRepeatOptions({monthlyEvery, setMonthlyEvery,
             </Label>
           </div>
           <div className="col-start-2 col-span-4">
-            <div className="grid grid-cols-7 gap-1 rounded-lg border p-3">
+            <div className="grid grid-cols-7 gap-1 rounded-lg border p-3 w-fit">
               {DAYS.map((day) => {
                 const isSelected = daysOfMonth?.includes(day)
                 return (
