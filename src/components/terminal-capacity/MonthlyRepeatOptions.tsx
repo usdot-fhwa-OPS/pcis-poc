@@ -106,7 +106,7 @@ const [date, setDate] = React.useState<Date | undefined>(new Date())
               mode="single"
               selected={date}
               onSelect={(value:any) => { setDate(value); addDays(value) }}
-              className="rounded-lg border"
+              className="rounded-lg border overflow-hidden"
               captionLayout="dropdown"
             />
           </div>
