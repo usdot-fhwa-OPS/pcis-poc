@@ -17,7 +17,7 @@ import { cn } from "../../lib/utils"
 import { useAuthenticator } from "@aws-amplify/ui-react"
 import { fetchUserAttributes } from 'aws-amplify/auth'
 import { useEffect, useState } from "react"
-import { useNavigate, useRouterState } from "@tanstack/react-router"
+import { Link, useNavigate, useRouterState } from "@tanstack/react-router"
 
 type NavItem = { title: string; url: string; icon: React.ElementType }
 
@@ -121,10 +121,10 @@ export function AppSidebar() {
                           : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
                       )}
                     >
-                      <a href={item.url}>
+                      <Link to={item.url}>
                         <item.icon className="h-4 w-4 shrink-0" />
                         <span>{item.title}</span>
-                      </a>
+                      </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 )

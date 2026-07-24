@@ -2,47 +2,36 @@
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
-import { Calendar } from "../ui/calendar";
-import React from "react";
-import { format } from "date-fns";
+import { cn } from "../../lib/utils";
 
 const repeatCycleOption = ["Each" , "OnThe"];
 
 const weekNumber = ["First" , "Second" , "Third" , "Fourth" , "Last"];
 const weekDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
-export function MonthlyRepeatOptions({monthlyEvery, setMonthlyEvery, 
+const DAYS = Array.from({ length: 31 }, (_, i) => String(i + 1).padStart(2, '0'));
+
+export function MonthlyRepeatOptions({monthlyEvery, setMonthlyEvery,
                                       repeatCycle, setRepeatCycle,
                                       daysOfMonth, setDaysOfMonth,
                                       onTheWeek, setOnTheWeek,
-                                      onTheWeekDay, setOnTheWeekDay}:{monthlyEvery:any, setMonthlyEvery:any, 
+                                      onTheWeekDay, setOnTheWeekDay}:{monthlyEvery:any, setMonthlyEvery:any,
                                       repeatCycle:any, setRepeatCycle:any,
                                       daysOfMonth:any, setDaysOfMonth:any,
                                       onTheWeek:any, setOnTheWeek:any,
                                       onTheWeekDay:any, setOnTheWeekDay:any}) {
 
-const [date, setDate] = React.useState<Date | undefined>(new Date())
-
-  
-
-  const addDays = (newDate:Date) =>{
-    if(newDate){
-      const day = newDate ? format(newDate, "dd"):'';
-      const dOfM = [...daysOfMonth];
-      const existingDayIndex = dOfM?.indexOf(day)
-      if(existingDayIndex === -1){
-        
-        dOfM?.push(day);
-        
-      }else{
-        
-        dOfM.splice(existingDayIndex, 1)
-       
-      }
-      setDaysOfMonth(dOfM);
+  const toggleDay = (day: string) => {
+    const dOfM = [...(daysOfMonth ?? [])]
+    const idx = dOfM.indexOf(day)
+    if (idx === -1) {
+      dOfM.push(day)
+    } else {
+      dOfM.splice(idx, 1)
     }
+    setDaysOfMonth(dOfM)
   }
-  
+
   return (
 
     <>
@@ -55,7 +44,6 @@ const [date, setDate] = React.useState<Date | undefined>(new Date())
 
         <Input
           id="weeklyEvery"
-
           type="number"
           value={monthlyEvery}
           onChange={(e) => setMonthlyEvery(e.target.value)}
@@ -63,7 +51,6 @@ const [date, setDate] = React.useState<Date | undefined>(new Date())
           min="0"
           step="1"
         />
-
 
       </div>
       <div className="col-start-3 col-end-6 ...">
@@ -90,7 +77,7 @@ const [date, setDate] = React.useState<Date | undefined>(new Date())
 
             </SelectGroup>
           </SelectContent>
-        </Select>        
+        </Select>
       </div>
 
       {('Each' === repeatCycle) &&
@@ -101,14 +88,27 @@ const [date, setDate] = React.useState<Date | undefined>(new Date())
               Each:
             </Label>
           </div>
-          <div className="col-3">
-            <Calendar
-              mode="single"
-              selected={date}
-              onSelect={(value:any) => { setDate(value); addDays(value) }}
-              className="rounded-lg border"
-              captionLayout="dropdown"
-            />
+          <div className="col-start-2 col-span-4">
+            <div className="grid grid-cols-7 gap-1 rounded-lg border p-3 w-fit">
+              {DAYS.map((day) => {
+                const isSelected = daysOfMonth?.includes(day)
+                return (
+                  <button
+                    key={day}
+                    type="button"
+                    onClick={() => toggleDay(day)}
+                    className={cn(
+                      "h-8 w-8 rounded-md text-sm transition-colors",
+                      isSelected
+                        ? "bg-primary text-primary-foreground"
+                        : "hover:bg-accent hover:text-accent-foreground"
+                    )}
+                  >
+                    {parseInt(day)}
+                  </button>
+                )
+              })}
+            </div>
           </div>
           <div className="col-span-5">
             <span>This temporary capacity will repeat every {monthlyEvery} month(s)</span>
@@ -140,7 +140,7 @@ const [date, setDate] = React.useState<Date | undefined>(new Date())
 
                 </SelectGroup>
               </SelectContent>
-            </Select>        
+            </Select>
           </div>
           <div className="col-3">
             <Select onValueChange={setOnTheWeekDay}>
@@ -155,7 +155,7 @@ const [date, setDate] = React.useState<Date | undefined>(new Date())
 
                 </SelectGroup>
               </SelectContent>
-            </Select>        
+            </Select>
           </div>
           <div className="col-span-5">
             <span>This temporary capacity will repeat every {monthlyEvery} month(s)</span>
@@ -171,4 +171,3 @@ const [date, setDate] = React.useState<Date | undefined>(new Date())
 
   )
 }
-

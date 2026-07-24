@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { useContext, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 
 
 import { useAppDispatch, useAppSelector } from '../hooks';
@@ -21,51 +21,42 @@ export const Route = createFileRoute('/berth-vessel')({
 function RouteComponent() {
   const [data, setData] = useState<BerthRequestDomain[]>([])
   const brConfigList: BerthConfigDomain[] = useAppSelector(getBerthConfigList);
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(false)
 
   const dispatch = useAppDispatch()
   const userContext = useContext(UserContext);
 
   const fetchBerthRequests = async (): Promise<BerthRequestDomain[]> => {
-    const brList = userContext.email?await berthRequestListForVesselAgent(userContext.email):[];
-    
+    const brList = userContext.email ? await berthRequestListForVesselAgent(userContext.email) : [];
     return brList;
   }
 
-      const fetchData = async () => {
-      const result = await fetchBerthRequests()
-      setData(result)
-      dispatch(populate(result));
-     dispatch(populateBerthConfig(await berthConfigList()))
- 
-      setLoading(false)
+  const fetchData = async () => {
+    const result = await fetchBerthRequests()
+    setData(result)
+    dispatch(populate(result));
+    dispatch(populateBerthConfig(await berthConfigList()))
+    setLoading(false)
+  }
 
-    }
-    
-
-    const delBerthRequest = async (requestId: string) =>{
-    
+  const delBerthRequest = async (requestId: string) => {
     await deleteBerthRequest(requestId);
     fetchData();
   }
-  
-  useState(() => {
+
+  useEffect(() => {
+    if (!userContext.email) return
+    setLoading(true)
     fetchData()
-  })
-   
+  }, [userContext.email])
 
-  
-
-  if (loading) {
-    return <div>Loading...</div>
-  }
-    return (
-
- <>
-  <BerthRequestComponent/>
-    
-   <VesselAgentBerthRequestsTable  data = {data} meta = {{brConfigList, deleteBerthRequest:delBerthRequest}} />
-  </>      
-    
+  return (
+    <>
+      <BerthRequestComponent />
+      {loading
+        ? <div className="px-6 py-8 md:px-10 text-sm text-gray-500">Loading reservations…</div>
+        : <VesselAgentBerthRequestsTable data={data} meta={{brConfigList, deleteBerthRequest: delBerthRequest}} />
+      }
+    </>
   )
 }
