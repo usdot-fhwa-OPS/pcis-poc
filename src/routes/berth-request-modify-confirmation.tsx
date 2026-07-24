@@ -66,6 +66,7 @@ function BerthRequestConfirmationComponent() {
           manifestFileName: "",
           manifestPath: "",
           manifestCsvContent: "",
+          hazmatCount:"",
           status:"",
       };
   

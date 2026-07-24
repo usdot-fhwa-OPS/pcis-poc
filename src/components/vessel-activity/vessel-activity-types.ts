@@ -5,7 +5,7 @@ import { BerthRequestDomain } from "../berth-requests/berth-request-domain"
 // TODO: Derive hazmatCount from BerthRequestDomain when that field is available.
 export function getManifestDisplay(req: BerthRequestDomain): string {
   if (req.ataAt && req.atdAt) return "Cleared"
-  if (req.hazmatCount > 0) return `${req.hazmatCount} Hazmat`
+  if (Number(req.hazmatCount) > 0) return `${req.hazmatCount} Hazmat`
   if (req.manifestPath) return "Submitted"
   return ""
 }
