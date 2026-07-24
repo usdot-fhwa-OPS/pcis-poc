@@ -101,12 +101,12 @@ const [date, setDate] = React.useState<Date | undefined>(new Date())
               Each:
             </Label>
           </div>
-          <div className="col-3">
+          <div className="col-start-2 col-span-4">
             <Calendar
               mode="single"
               selected={date}
               onSelect={(value:any) => { setDate(value); addDays(value) }}
-              className="rounded-lg border overflow-hidden"
+              className="rounded-lg"
               captionLayout="dropdown"
             />
           </div>
