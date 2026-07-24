@@ -63,9 +63,9 @@ export function DataTable<TData, TValue>({
         <Table className="leading-4">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
+              <TableRow key={headerGroup.id} className="bg-gray-50 hover:bg-gray-50/50 data-[state=selected]:bg-gray-50">
                 {headerGroup.headers.map((header) => (
-                  <TableHead key={header.id} className="px-4">
+                  <TableHead key={header.id}>
                     {header.isPlaceholder
                       ? null
                       : flexRender(header.column.columnDef.header, header.getContext())}
@@ -88,7 +88,7 @@ export function DataTable<TData, TValue>({
             ) : (
               <TableRow>
                 <TableCell colSpan={columns.length} className="h-24 text-center">
-                  No results.
+                  There are no items to display.
                 </TableCell>
               </TableRow>
             )}
