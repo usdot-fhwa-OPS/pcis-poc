@@ -34,9 +34,9 @@ export function DeleteTerminalCapacityButton(terminalCapacityUid:string) {
         <DialogTrigger render={
             <Button
               variant="link"
-              className="h-auto p-0 text-red-600"
+              className="gap-1 h-auto p-0 text-red-600"
             >
-              <Trash2 />
+              <Trash2 className="h-[0.875rem] w-[0.875rem]" />
               Delete
             </Button>
         } />

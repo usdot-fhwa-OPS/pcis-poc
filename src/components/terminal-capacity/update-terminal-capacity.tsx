@@ -276,11 +276,11 @@ const [endTime, setEndTime] = useState<string | undefined>(timeOptions[0])
                 <DialogTrigger render={
                     <Button
                         variant="link"
-                        className="h-auto p-0 text-blue-600"
+                        className="gap-1 h-auto p-0 text-blue-600"
                         onClick={handleOpen}
                     >
-                        <Pencil />
-                        Modify
+                        <Pencil className="h-[0.875rem] w-[0.875rem]" />
+                        Edit
                     </Button>
                 } />
                 <DialogContent className="DialogContent">
