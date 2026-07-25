@@ -4,7 +4,7 @@ import { Button } from "../ui/button";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { Calendar } from "../ui/calendar";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, Pencil } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import { cn } from "../../lib/utils";
 import { format } from "date-fns"
@@ -275,12 +275,12 @@ const [endTime, setEndTime] = useState<string | undefined>(timeOptions[0])
             >
                 <DialogTrigger render={
                     <Button
-                              size="sm"
-                              variant="link"
-                              className="text-blue-600 p-0 h-auto"
-                              onClick={handleOpen}
-                            >
-                              Modify
+                        variant="link"
+                        className="h-auto p-0 text-blue-600"
+                        onClick={handleOpen}
+                    >
+                        <Pencil />
+                        Modify
                     </Button>
                 } />
                 <DialogContent className="DialogContent">
