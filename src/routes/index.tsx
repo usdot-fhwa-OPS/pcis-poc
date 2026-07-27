@@ -987,17 +987,25 @@ function Index() {
       };
     }, [userAttributes.role, analyticsData]);
   
+    if (!userAttributes.role) {
+      return (
+        <div className="w-full p-4">
+          <p style={{ fontWeight: 400, fontSize: '40px' }}>Welcome</p>
+        </div>
+      )
+    }
+
     if (userAttributes.role === "Vessel Agent") {
-      if (vaLoading) {
-        return <div>Loading...</div>
-      }
       return (
         <div className="w-full">
           <BerthRequestComponent />
-          <VesselAgentBerthRequestsTable
-            data={vaBerthRequests}
-            meta={{ brConfigList: vaBerthConfigList, deleteBerthRequest: delBerthRequest }}
-          />
+          {vaLoading
+            ? <div className="px-6 py-8 md:px-10 text-sm text-gray-500">Loading reservations…</div>
+            : <VesselAgentBerthRequestsTable
+                data={vaBerthRequests}
+                meta={{ brConfigList: vaBerthConfigList, deleteBerthRequest: delBerthRequest }}
+              />
+          }
         </div>
       )
     }

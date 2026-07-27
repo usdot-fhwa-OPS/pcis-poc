@@ -310,9 +310,6 @@ function Analytics() {
           throw new Error('No authentication token available');
         }
 
-        console.log('Using ID token for authentication');
-        console.log('Token preview:', idToken.substring(0, 50) + '...');
-
         const response = await fetch(API_ENDPOINT, {
           method: 'GET',
           headers: {
@@ -327,14 +324,6 @@ function Analytics() {
         }
 
         const data: AnalyticsResponse = await response.json();
-        
-        console.log('=== Lambda Response ===');
-        console.log('Full response:', JSON.stringify(data, null, 2));
-        console.log('OK status:', data.ok);
-        console.log('Role:', data.role);
-        console.log('Context:', data.context);
-        console.log('Data:', data.data);
-        console.log('======================');
         
         if (!data.ok) {
           throw new Error(data.message || 'Failed to fetch analytics');
@@ -742,8 +731,7 @@ function Analytics() {
     return (
       <div className="flex flex-col w-full h-screen p-8">
         <div className="flex items-center justify-between mb-6">
-          <Skeleton className="h-9 w-48" />
-          <Skeleton className="h-8 w-64" />
+          <h1 className="text-3xl font-bold">Analytics</h1>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <Skeleton className="h-48" />
@@ -806,7 +794,6 @@ function Analytics() {
 
         <div className="mb-4 flex items-center gap-4 text-sm text-gray-600">
           <span>Total Items: <strong>{context?.itemCount}</strong></span>
-          <span>Role: <strong>{analyticsData.role}</strong></span>
         </div>
 
         {/* Top Summary Cards (4) */}
@@ -1218,7 +1205,6 @@ function Analytics() {
 
       <div className="mb-4 flex items-center gap-4 text-sm text-gray-600">
         <span>Total Items: <strong>{context?.itemCount}</strong></span>
-        <span>Role: <strong>{analyticsData.role}</strong></span>
       </div>
 
       {/* Top Summary Cards */}
