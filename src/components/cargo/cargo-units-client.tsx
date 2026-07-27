@@ -22,7 +22,7 @@ export const listCargoUnits = async (): Promise<UpcomingCargo[]> => {
 
 export const getCargoBookingsAmount = async (reservationDate: string): Promise<number> => {
     const session = await fetchAuthSession();
-    let url = `https://dd1jp7oh40.execute-api.us-east-1.amazonaws.com/dev/getBookingsAmount?date=${reservationDate}`
+    let url = `https://dd1jp7oh40.execute-api.us-east-1.amazonaws.com/dev/getBookingsAmount?reservationDate=${reservationDate}`
     
     const response = await fetch(url, {
         method: 'GET',
