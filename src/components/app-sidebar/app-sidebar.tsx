@@ -17,7 +17,7 @@ import { cn } from "../../lib/utils"
 import { useAuthenticator } from "@aws-amplify/ui-react"
 import { fetchUserAttributes } from 'aws-amplify/auth'
 import { useEffect, useState } from "react"
-import { Link, useNavigate, useRouterState } from "@tanstack/react-router"
+import { useNavigate, useRouterState, Link} from "@tanstack/react-router"
 
 type NavItem = { title: string; url: string; icon: React.ElementType }
 
