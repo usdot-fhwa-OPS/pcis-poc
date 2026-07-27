@@ -28,7 +28,7 @@ function RouteComponent() {
             acceptedFileTypes={[
               '.csv',
             ]}
-            path="stowPlans/"
+            path="stowPlans/cargoUnits/"
             maxFileCount={1}
             isResumable
           />
