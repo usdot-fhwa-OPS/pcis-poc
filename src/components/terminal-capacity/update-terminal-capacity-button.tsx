@@ -54,7 +54,7 @@ export function UpdateTerminalCapacityButton({maxTerminalCapacity}: {maxTerminal
     return (
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger render={
-          <button className="last:ml-1 only:ml-2 p-0 bg-transparent border-none text-sm text-blue-600 hover:text-blue-800 font-medium hover:underline underline-offset-2 cursor-pointer">
+          <button className="last:ml-2 p-0 bg-transparent border-none text-sm text-blue-600 hover:text-blue-800 font-medium hover:underline underline-offset-2 cursor-pointer">
             (Update)
           </button>
         } />
