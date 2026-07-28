@@ -96,7 +96,7 @@ export function DataTable<TData, TValue>({
         </Table>
       </div>
       {/* Pagination */}
-      <div className="flex flex-row max-sm:flex-col items-center justify-between max-sm:justify-center gap-y-0 max-sm:gap-y-4 px-4 py-3 border-t text-sm text-gray-600">
+      <div className="flex max-sm:flex-col items-center justify-between max-sm:justify-center max-sm:gap-y-4 px-4 py-3 border-t text-sm text-gray-600">
         <span>{firstRow} - {lastRow} of {totalRows} items</span>
         <div className="flex items-center gap-1">
           <button
