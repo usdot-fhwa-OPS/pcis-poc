@@ -44,10 +44,10 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
   return (
     <div className="w-full bg-white border rounded-xl overflow-hidden">
       <div className="overflow-x-auto">
-      <Table>
+      <Table className="leading-4">
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id} className="bg-gray-50">
+            <TableRow key={headerGroup.id} className="bg-gray-50 hover:bg-gray-50/50 data-[state=selected]:bg-gray-50">
               {headerGroup.headers.map((header) => (
                 <TableHead key={header.id} className="px-4 text-xs font-semibold text-gray-500 uppercase tracking-wide">
                   {header.isPlaceholder
@@ -79,8 +79,8 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
         </TableBody>
       </Table>
       </div>
-
-      <div className="flex items-center justify-between px-4 py-3 border-t text-sm text-gray-600">
+      {/* Pagination */}
+      <div className="flex max-sm:flex-col items-center justify-between max-sm:justify-center max-sm:gap-y-4 px-4 py-3 border-t text-sm text-gray-600">
         <span>{firstRow} - {lastRow} of {totalRows} items</span>
         <div className="flex items-center gap-1">
           <button
