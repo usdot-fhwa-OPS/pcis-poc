@@ -563,6 +563,14 @@ useEffect(() => {
 
 
 
+  if (!userAttributes.role) {
+    return (
+      <div className="w-full px-6 py-6 md:px-10 md:py-8">
+        <h1 className="text-2xl font-bold text-gray-900">Cargo Reservations</h1>
+      </div>
+    )
+  }
+
   if (userAttributes.role === "Terminal Operator") {
     return (
       <div className="w-xl max-w-9/10">

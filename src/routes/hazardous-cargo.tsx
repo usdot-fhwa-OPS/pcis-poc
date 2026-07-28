@@ -1,5 +1,5 @@
 import { createFileRoute, Outlet, useMatchRoute } from '@tanstack/react-router'
-import { useContext, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { TriangleAlert } from 'lucide-react'
 import { HazardousCargoTable } from '../components/hazardous-cargo/hazardous-cargo-table'
 import { HazardousCargoItem } from '../components/hazardous-cargo/hazardous-cargo-types'
@@ -44,9 +44,10 @@ function useHazardousCargoData() {
     return hazardousCargoItemList;
   }
 
-  useState(() => {
+  useEffect(() => {
+    if (!userRole) return
     fetchHazardousCargoList().then(list => setData(list))
-  })
+  }, [userRole, userContext.email])
 
   return data
 }
