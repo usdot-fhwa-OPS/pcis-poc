@@ -4,10 +4,11 @@ import { DataTable } from "../components/cargo/cargo-table"
 import { useEffect, useState } from "react"
 
 //Three Imports needed for Amplify Data Queries and CRUD methods
-import { generateClient, SelectionSet } from 'aws-amplify/data';
+import { SelectionSet } from 'aws-amplify/data';
 import type { Schema } from '../../amplify/data/resource';
+import { listCargoUnits } from '../components/cargo/cargo-units-client';
 
-const client = generateClient<Schema>();
+//const client = generateClient<Schema>();
 
 
 export const Route = createFileRoute('/cargo')({
@@ -27,10 +28,8 @@ export default function Cargo() {
   //Fetch the data from the database
   const fetchContainers = async () => {
     //Query the data from the database with selection set and auth mode (always apiKey)
-    const { data: cargo } = await client.models.Container.list({
-      selectionSet,
-      authMode: 'apiKey'
-    });
+     const cargo  =  await listCargoUnits();
+    
     setData(cargo);
   }
 
