@@ -101,7 +101,7 @@ export function VesselActivityTable({ data }: VesselActivityTableProps) {
       </div>
 
       {/* Filter chips + archived toggle + search — all in one row */}
-      <div className="flex items-center gap-2 p-2 bg-white border rounded-xl">
+      <div className="flex max-xl:flex-wrap items-center gap-2 p-2 bg-white border rounded-xl">
         {FILTERS.map(({ key, label, count }) => (
           <button
             key={key}
