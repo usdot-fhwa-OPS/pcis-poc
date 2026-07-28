@@ -53,6 +53,12 @@ export function DataTable<TData, TValue>({
     }
   })
 
+  const { pageIndex, pageSize } = table.getState().pagination
+  const totalRows = table.getFilteredRowModel().rows.length
+  const firstRow = totalRows === 0 ? 0 : pageIndex * pageSize + 1
+  const lastRow = Math.min((pageIndex + 1) * pageSize, totalRows)
+  const pageCount = table.getPageCount()
+  
   return (
     <>
     {/* Filtering */}
@@ -75,7 +81,7 @@ export function DataTable<TData, TValue>({
         <Table className="leading-4">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
+              <TableRow key={headerGroup.id} className="bg-gray-50 hover:bg-gray-50/50 data-[state=selected]:bg-gray-50">
                 {headerGroup.headers.map((header) => {
                   return (
                     <TableHead key={header.id}>
@@ -117,6 +123,7 @@ export function DataTable<TData, TValue>({
         {/* Pagination */}
         <div className="flex max-sm:flex-col items-center justify-between max-sm:justify-center max-sm:gap-y-4 px-4 py-3 border-t text-sm text-gray-600">
           <div className="flex items-center gap-1">
+            <span>{firstRow} - {lastRow} of {totalRows} items</span>
             <button
               onClick={() => table.previousPage()}
               disabled={!table.getCanPreviousPage()}
@@ -125,7 +132,19 @@ export function DataTable<TData, TValue>({
               <ChevronLeft className="h-4 w-4" />
               Previous
             </button>
-
+            {Array.from({ length: pageCount }, (_, i) => (
+              <button
+                key={i}
+                onClick={() => table.setPageIndex(i)}
+                className={`w-8 h-8 rounded text-sm font-medium ${
+                  pageIndex === i
+                    ? "bg-gray-900 text-white"
+                    : "hover:bg-gray-100 text-gray-700"
+                }`}
+              >
+                {i + 1}
+              </button>
+            ))}
             <button
               onClick={() => table.nextPage()}
               disabled={!table.getCanNextPage()}
