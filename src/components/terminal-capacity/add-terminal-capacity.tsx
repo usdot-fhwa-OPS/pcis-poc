@@ -429,9 +429,7 @@ const [endTime, setEndTime] = useState<string | undefined>(timeOptions[0])
                 </Button>
             </PopoverTrigger>
             <PopoverContent className="w-auto p-0">
-                <ScrollArea className="h-56 w-auto p-1">
                     <Calendar mode="single" selected={endDate} disabled={{ before: new Date() }} onSelect={handleEndDateSelect} initialFocus />
-                </ScrollArea>
             </PopoverContent>
         </Popover>;
     }
@@ -464,9 +462,7 @@ const [endTime, setEndTime] = useState<string | undefined>(timeOptions[0])
                 </Button>
             </PopoverTrigger>
             <PopoverContent className="w-auto p-">
-                <ScrollArea className="h-56 w-auto p-1">
                     <Calendar mode="single" selected={startDate} disabled={{ before: new Date() }} onSelect={handleStartDateSelect} initialFocus />
-                </ScrollArea>
             </PopoverContent>
         </Popover>;
     }
