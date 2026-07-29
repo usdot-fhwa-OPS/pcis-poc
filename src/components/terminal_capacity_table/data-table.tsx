@@ -109,7 +109,6 @@ export function DataTable<TData, TValue>({
             <>
             <span>{firstRow} - {lastRow} of {totalRows} items</span>
             <div className="flex items-center gap-x-2 sm:mr-auto">
-              <label htmlFor="rowsPerPage">Rows per page:</label>
               <select
                 id="rowsPerPage"
                 value={table.getState().pagination.pageSize}
@@ -124,6 +123,7 @@ export function DataTable<TData, TValue>({
                   </option>
                 ))}
               </select>
+              <label htmlFor="rowsPerPage">items per page</label>
             </div>
             <div className="flex items-center gap-1">
               <button
