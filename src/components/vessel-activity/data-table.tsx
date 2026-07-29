@@ -113,7 +113,7 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
               <button
                 onClick={() => table.previousPage()}
                 disabled={!table.getCanPreviousPage()}
-                className="flex items-center gap-1 px-2 py-1 rounded hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed"
+                className="flex items-center gap-1 px-2 py-1 rounded hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed text-gray-700"
               >
                 <ChevronLeft className="h-4 w-4" />
                 Previous
@@ -134,7 +134,7 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
               <button
                 onClick={() => table.nextPage()}
                 disabled={!table.getCanNextPage()}
-                className="flex items-center gap-1 px-2 py-1 rounded hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed"
+                className="flex items-center gap-1 px-2 py-1 rounded hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed text-gray-700"
               >
                 Next
                 <ChevronRight className="h-4 w-4" />
