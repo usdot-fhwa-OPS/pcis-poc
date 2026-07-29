@@ -86,7 +86,7 @@ export function DataTable<TData, TValue>({ columns, data ,meta}: DataTableProps<
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id} className="bg-gray-50/50 hover:bg-gray-50 data-[state=selected]:bg-gray-50/50 text-xs tracking-wide">
                 {headerGroup.headers.map((header) => (
-                  <TableHead key={header.id} className="px-4 text-gray-600">
+                  <TableHead key={header.id} className="px-4 text-gray-500">
                     {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
                   </TableHead>
                 ))}
