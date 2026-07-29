@@ -121,9 +121,9 @@ export function DataTable<TData, TValue>({
           </TableBody>
         </Table>
         {/* Pagination */}
-        <div className="flex max-sm:flex-col items-center justify-between max-sm:justify-center gap-4 px-4 py-3 border-t text-sm text-gray-600">
+        <div className="flex max-sm:flex-col items-center justify-between max-sm:justify-center gap-x-8 gap-y-4 px-4 py-3 border-t text-sm text-gray-600">
           <span>{firstRow} - {lastRow} of {totalRows} items</span>
-          <div className="flex-items items-center gap-x-2 mr-auto">
+          <div className="flex items-center gap-x-2 sm:mr-auto">
             <label htmlFor="rowsPerPage">Rows per page:</label>
             <select
               id="rowsPerPage"
@@ -131,7 +131,7 @@ export function DataTable<TData, TValue>({
               onChange={(e) =>
                 table.setPageSize(Number(e.target.value))
               }
-              className="px-2 py-1 border border-gray-300 rounded"
+              className="p-1 border border-gray-300 rounded focus:outline-none focus:border-transparent focus-visible:outline-solid focus-visible:ring-2"
             >
               {[5, 10, 20, 50].map((size) => (
                 <option key={size} value={size} className="hover:bg-gray-900 text-gray-600 hover:text-white">
