@@ -131,7 +131,7 @@ export function DataTable<TData, TValue>({
               onChange={(e) =>
                 table.setPageSize(Number(e.target.value))
               }
-              className="p-1 border border-gray-300 rounded outline-gray-900 focus:outline-none focus:border-transparent focus-visible:outline-solid focus-visible:ring-2"
+              className="p-1 border border-gray-300 rounded outline-gray-900"
             >
               {[5, 10, 20, 50].map((size) => (
                 <option key={size} value={size} className="hover:bg-gray-900 text-gray-600 hover:text-white">
