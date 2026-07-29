@@ -81,10 +81,10 @@ export function DataTable<TData, TValue>({
         <Table className="leading-4">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id} className="bg-gray-50 hover:bg-gray-50/50 data-[state=selected]:bg-gray-50">
+              <TableRow key={headerGroup.id} className="bg-gray-50/50 hover:bg-gray-50 data-[state=selected]:bg-gray-50/50 text-xs">
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead key={header.id} className="px-4">
+                    <TableHead key={header.id} className="px-4 text-gray-600">
                       {header.isPlaceholder
                         ? null
                         : flexRender(
@@ -103,6 +103,7 @@ export function DataTable<TData, TValue>({
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
+                  className="hover:bg-gray-50/50 data-[state=selected]:bg-gray-50/50"
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id} className="p-4">
@@ -114,7 +115,7 @@ export function DataTable<TData, TValue>({
             ) : (
               <TableRow>
                 <TableCell colSpan={columns.length} className="h-24 text-center">
-                  There are no items to display.
+                  There are no users to display.
                 </TableCell>
               </TableRow>
             )}

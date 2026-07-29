@@ -84,9 +84,9 @@ export function DataTable<TData, TValue>({ columns, data ,meta}: DataTableProps<
         <Table className="leading-4">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id} className="bg-gray-50 hover:bg-gray-50/50 data-[state=selected]:bg-gray-50">
+              <TableRow key={headerGroup.id} className="bg-gray-50/50 hover:bg-gray-50 data-[state=selected]:bg-gray-50/50 text-xs">
                 {headerGroup.headers.map((header) => (
-                  <TableHead key={header.id}>
+                  <TableHead key={header.id} className="px-4 text-gray-600">
                     {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
                   </TableHead>
                 ))}
@@ -96,9 +96,9 @@ export function DataTable<TData, TValue>({ columns, data ,meta}: DataTableProps<
           <TableBody>
             {table.getRowModel().rows.length ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id}>
+                <TableRow key={row.id} className="hover:bg-gray-50/50 data-[state=selected]:bg-gray-50/50">
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
+                    <TableCell key={cell.id} className="p-4">
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>
                   ))}
@@ -107,7 +107,7 @@ export function DataTable<TData, TValue>({ columns, data ,meta}: DataTableProps<
             ) : (
               <TableRow>
                 <TableCell colSpan={columns.length} className="h-24 text-center">
-                  There are no items to display.
+                  There are no reservations to display.
                 </TableCell>
               </TableRow>
             )}
