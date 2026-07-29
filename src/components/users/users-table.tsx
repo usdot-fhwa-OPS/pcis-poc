@@ -124,7 +124,7 @@ export function DataTable<TData, TValue>({
         {totalRows > 0 && (
           // Full pagination controls render only if there are more than 12 rows to display
           <div className="flex max-sm:flex-col items-center justify-between max-sm:justify-center gap-x-8 gap-y-4 px-4 py-3 border-t text-sm text-gray-600">
-            {totalRows = 1 && (
+            {totalRows == 1 && (
               <span>{totalRows} item</span>
             )}
             {totalRows > 1 && totalRows < 12 && (
