@@ -131,6 +131,7 @@ export function DataTable<TData, TValue>({
               <span>{totalRows} items</span>
             )}
             {totalRows > 12 && (
+              <>
               <span>{firstRow} - {lastRow} of {totalRows} items</span>
               <div className="flex items-center gap-x-2 sm:mr-auto">
                 <label htmlFor="rowsPerPage">Rows per page:</label>
@@ -180,6 +181,7 @@ export function DataTable<TData, TValue>({
                   <ChevronRight className="h-4 w-4" />
                 </button>
               </div>
+              </>
             )}
           </div>
         )}
