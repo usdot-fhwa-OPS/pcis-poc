@@ -121,19 +121,21 @@ export function DataTable<TData, TValue>({
           </TableBody>
         </Table>
         {/* Pagination */}
-        <div className="flex max-sm:flex-col items-center justify-between max-sm:justify-center max-sm:gap-y-4 px-4 py-3 border-t text-sm text-gray-600">
+        <div className="flex max-sm:flex-col items-center justify-between max-sm:justify-center gap-4 px-4 py-3 border-t text-sm text-gray-600">
           <span>{firstRow} - {lastRow} of {totalRows} items</span>
-          <div className="mr-auto">
+          <div className="flex-items items-center gap-x-2 mr-auto">
+            <label for="rowsPerPage">Rows per page:</label>
             <select
+              id="rowsPerPage"
               value={table.getState().pagination.pageSize}
               onChange={(e) =>
                 table.setPageSize(Number(e.target.value))
               }
-              className="border p-1 rounded"
+              className="px-2 py-1 border border-gray-300 rounded"
             >
               {[5, 10, 20, 50].map((size) => (
-                <option key={size} value={size}>
-                  Show {size}
+                <option key={size} value={size} className="hover:bg-gray-900 text-gray-600 hover:text-white">
+                  {size}
                 </option>
               ))}
             </select>
