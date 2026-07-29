@@ -124,7 +124,7 @@ export function DataTable<TData, TValue>({
         <div className="flex max-sm:flex-col items-center justify-between max-sm:justify-center gap-4 px-4 py-3 border-t text-sm text-gray-600">
           <span>{firstRow} - {lastRow} of {totalRows} items</span>
           <div className="flex-items items-center gap-x-2 mr-auto">
-            <label for="rowsPerPage">Rows per page:</label>
+            <label htmlFor="rowsPerPage">Rows per page:</label>
             <select
               id="rowsPerPage"
               value={table.getState().pagination.pageSize}
