@@ -123,6 +123,21 @@ export function DataTable<TData, TValue>({
         {/* Pagination */}
         <div className="flex max-sm:flex-col items-center justify-between max-sm:justify-center max-sm:gap-y-4 px-4 py-3 border-t text-sm text-gray-600">
           <span>{firstRow} - {lastRow} of {totalRows} items</span>
+          <div className="mr-auto">
+            <select
+              value={table.getState().pagination.pageSize}
+              onChange={(e) =>
+                table.setPageSize(Number(e.target.value))
+              }
+              className="border p-1 rounded"
+            >
+              {[5, 10, 20, 50].map((size) => (
+                <option key={size} value={size}>
+                  Show {size}
+                </option>
+              ))}
+            </select>
+          </div>
           <div className="flex items-center gap-1">
             <button
               onClick={() => table.previousPage()}
@@ -154,28 +169,6 @@ export function DataTable<TData, TValue>({
               <ChevronRight className="h-4 w-4" />
             </button>
           </div>
-
-          <span className="hidden text-sm">
-            Page{" "}
-            <strong>
-              {table.getState().pagination.pageIndex + 1} of{" "}
-              {table.getPageCount()}
-            </strong>
-          </span>
-
-          <select
-            value={table.getState().pagination.pageSize}
-            onChange={(e) =>
-              table.setPageSize(Number(e.target.value))
-            }
-            className="hidden border p-1 rounded"
-          >
-            {[5, 10, 20, 50].map((size) => (
-              <option key={size} value={size}>
-                Show {size}
-              </option>
-            ))}
-          </select>
         </div>
       </div>
     </div>
