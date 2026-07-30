@@ -58,7 +58,7 @@ export function DataTable<TData, TValue>({
   const pageCount = table.getPageCount()
 
   return (
-    <div className="w-full not-last:mb-8 bg-white border rounded-xl overflow-hidden">
+    <div className="@container w-full not-last:mb-8 bg-white border rounded-xl overflow-hidden">
       <div className="overflow-x-auto">
         <Table className="leading-4">
           <TableHeader>
@@ -98,7 +98,7 @@ export function DataTable<TData, TValue>({
       {/* Pagination */}
       {totalRows > 0 && (
         // Full pagination controls render only if there are more than 12 rows to display
-        <div className="flex max-sm:flex-col items-center justify-between max-sm:justify-center gap-x-8 gap-y-4 px-4 py-3 border-t text-sm text-gray-500">
+        <div className="flex @max-sm:flex-col items-center justify-between @max-sm:justify-center gap-x-8 gap-y-4 px-4 py-3 border-t text-sm text-gray-500">
           {totalRows == 1 && (
             <span>{totalRows} item</span>
           )}
@@ -108,7 +108,7 @@ export function DataTable<TData, TValue>({
           {totalRows > 12 && (
             <>
             <span>{firstRow} - {lastRow} of {totalRows} items</span>
-            <div className="flex items-center gap-x-2 sm:mr-auto">
+            <div className="flex items-center gap-x-2 @sm:mr-auto">
               <select
                 id="rowsPerPage"
                 value={table.getState().pagination.pageSize}
