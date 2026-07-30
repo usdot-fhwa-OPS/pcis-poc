@@ -58,7 +58,7 @@ export function DataTable<TData, TValue>({
   const pageCount = table.getPageCount()
 
   return (
-    <div className="@container w-full not-last:mb-8 bg-white border rounded-xl overflow-hidden">
+    <div className="w-full not-last:mb-8 bg-white border rounded-xl overflow-hidden">
       <div className="overflow-x-auto">
         <Table className="leading-4">
           <TableHeader>
@@ -98,66 +98,68 @@ export function DataTable<TData, TValue>({
       {/* Pagination */}
       {totalRows > 0 && (
         // Full pagination controls render only if there are more than 12 rows to display
-        <div className="flex @max-sm:flex-col items-center justify-between @max-sm:justify-center gap-x-8 gap-y-4 px-4 py-3 border-t text-sm text-gray-500">
-          {totalRows == 1 && (
-            <span>{totalRows} item</span>
-          )}
-          {totalRows > 1 && totalRows < 12 && (
-            <span>{totalRows} items</span>
-          )}
-          {totalRows > 12 && (
-            <>
-            <span>{firstRow} - {lastRow} of {totalRows} items</span>
-            <div className="flex items-center gap-x-2 @sm:mr-auto">
-              <select
-                id="rowsPerPage"
-                value={table.getState().pagination.pageSize}
-                onChange={(e) =>
-                  table.setPageSize(Number(e.target.value))
-                }
-                className="p-1 border border-gray-300 rounded outline-gray-900 text-gray-700"
-              >
-                {[5, 10, 20, 50].map((size) => (
-                  <option key={size} value={size} className="hover:bg-gray-900 text-gray-600 hover:text-white">
-                    {size}
-                  </option>
-                ))}
-              </select>
-              <label htmlFor="rowsPerPage">items per page</label>
-            </div>
-            <div className="flex items-center gap-1">
-              <button
-                onClick={() => table.previousPage()}
-                disabled={!table.getCanPreviousPage()}
-                className="flex items-center gap-1 px-2 py-1 rounded hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed text-gray-700"
-              >
-                <ChevronLeft className="h-4 w-4" />
-                Previous
-              </button>
-              {Array.from({ length: pageCount }, (_, i) => (
-                <button
-                  key={i}
-                  onClick={() => table.setPageIndex(i)}
-                  className={`w-8 h-8 rounded text-sm font-medium ${
-                    pageIndex === i
-                      ? "bg-gray-900 text-white"
-                      : "hover:bg-gray-100 text-gray-700"
-                  }`}
+        <div className="@container">
+          <div className="flex @max-sm:flex-col items-center justify-between @max-sm:justify-center gap-x-8 gap-y-4 px-4 py-3 border-t text-sm text-gray-500">
+            {totalRows == 1 && (
+              <span>{totalRows} item</span>
+            )}
+            {totalRows > 1 && totalRows < 12 && (
+              <span>{totalRows} items</span>
+            )}
+            {totalRows > 12 && (
+              <>
+              <span>{firstRow} - {lastRow} of {totalRows} items</span>
+              <div className="flex items-center gap-x-2 @sm:mr-auto">
+                <select
+                  id="rowsPerPage"
+                  value={table.getState().pagination.pageSize}
+                  onChange={(e) =>
+                    table.setPageSize(Number(e.target.value))
+                  }
+                  className="p-1 border border-gray-300 rounded outline-gray-900 text-gray-700"
                 >
-                  {i + 1}
+                  {[5, 10, 20, 50].map((size) => (
+                    <option key={size} value={size} className="hover:bg-gray-900 text-gray-600 hover:text-white">
+                      {size}
+                    </option>
+                  ))}
+                </select>
+                <label htmlFor="rowsPerPage">items per page</label>
+              </div>
+              <div className="flex items-center gap-1">
+                <button
+                  onClick={() => table.previousPage()}
+                  disabled={!table.getCanPreviousPage()}
+                  className="flex items-center gap-1 px-2 py-1 rounded hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed text-gray-700"
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                  Previous
                 </button>
-              ))}
-              <button
-                onClick={() => table.nextPage()}
-                disabled={!table.getCanNextPage()}
-                className="flex items-center gap-1 px-2 py-1 rounded hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed text-gray-700"
-              >
-                Next
-                <ChevronRight className="h-4 w-4" />
-              </button>
-            </div>
-            </>
-          )}
+                {Array.from({ length: pageCount }, (_, i) => (
+                  <button
+                    key={i}
+                    onClick={() => table.setPageIndex(i)}
+                    className={`w-8 h-8 rounded text-sm font-medium ${
+                      pageIndex === i
+                        ? "bg-gray-900 text-white"
+                        : "hover:bg-gray-100 text-gray-700"
+                    }`}
+                  >
+                    {i + 1}
+                  </button>
+                ))}
+                <button
+                  onClick={() => table.nextPage()}
+                  disabled={!table.getCanNextPage()}
+                  className="flex items-center gap-1 px-2 py-1 rounded hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed text-gray-700"
+                >
+                  Next
+                  <ChevronRight className="h-4 w-4" />
+                </button>
+              </div>
+              </>
+            )}
+          </div>
         </div>
       )}
     </div>
