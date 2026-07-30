@@ -41,7 +41,7 @@ export default function TerminalCapacityComponent() {
  return (
    <div className="w-full px-6 py-6 md:px-10 md:py-8">
       <h1 className="mb-6 text-2xl leading-none font-semibold text-gray-900">Capacity Planning</h1>
-      <div className="flex max-sm:flex-col max-sm:gap-y-2 items-center max-sm:items-start justify-between mb-4">
+      <div className="flex max-sm:flex-col max-sm:gap-y-4 items-center max-sm:items-start justify-between mb-6">
         <p className="flex max-sm:flex-wrap gap-x-2 text-sm text-gray-700">
           <span>Maximum Terminal Capacity:</span>
           <span className="font-medium">
