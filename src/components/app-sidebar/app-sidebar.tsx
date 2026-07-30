@@ -50,14 +50,17 @@ const itemsByRole: Record<string, NavItem[]> = {
   "Trucking Operator": [
     { title: "Home", url: "/", icon: Home },
     { title: "Cargo Reservations", url: "/reservation", icon: CalendarClock },
+    { title: "Analytics", url: "/analytics", icon: BarChart },
   ],
   "Rail Operator": [
     { title: "Home", url: "/", icon: Home },
     { title: "Cargo Reservations", url: "/reservation", icon: CalendarClock },
+    { title: "Analytics", url: "/analytics", icon: BarChart },
   ],
   "Third Party Logistics Provider": [
     { title: "Home", url: "/", icon: Home },
     { title: "Cargo Reservations", url: "/reservation", icon: CalendarClock },
+    { title: "Analytics", url: "/analytics", icon: BarChart },
   ],
 }
 
