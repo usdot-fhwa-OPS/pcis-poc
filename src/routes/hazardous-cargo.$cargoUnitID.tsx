@@ -32,9 +32,6 @@ function HazardousCargoDetailPage() {
   const hazCargoList = useAppSelector(getHazardousCargoList)
   
 
-  // TODO: Replace dummy data lookup with a DynamoDB query via Amplify once the
-  // HazardousCargo model is available. Example:
-  //   const { data: item } = await client.models.HazardousCargo.get({ cargoUnitID }, { authMode: 'apiKey' })
   const item: HazardousCargoItem | undefined = hazCargoList.find(
     (d) => d.cargoUnitID === cargoUnitID
   )

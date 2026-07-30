@@ -3,13 +3,11 @@ import { Button } from "../ui/button.tsx";
 import { useState } from "react";
 import { Flag, XIcon, ShieldHalf } from "lucide-react";
 import {TerminalOperatorDataTableMeta} from './data-table.tsx'
-import { generateClient } from 'aws-amplify/data';
-import type { Schema } from '../../../amplify/data/resource';
 import { TermOperatorCompletedBookings } from "../../routes/reservation.tsx"
 import { Checkbox } from "../ui/checkbox.tsx";
 import { ApproveReservation } from "../reservations/approve-reservation.tsx";
 import { Badge } from "../ui/badge.tsx";
-const client = generateClient<Schema>();
+import { saveCargoUnit } from "../cargo/cargo-units-client.tsx";
 export const columns = (status: string): ColumnDef<any>[] => {
   const baseColumns: ColumnDef<any>[] = [
 
@@ -206,10 +204,11 @@ export const columns = (status: string): ColumnDef<any>[] => {
               setFlagged(newFlag)
               try {
                 // Call the Amplify update method for the flag (again must always contain containerID)
-                const { data: updatedContainerStatus } = await client.models.Container.update({
-                  cargoUnitID: row.original.cargoUnitID, 
+                const updatedContainerStatus = await saveCargoUnit({
+                  cargoUnitID: row.original.cargoUnitID,
                   flag: newFlag,
-                })
+                })              
+
                 console.log("Updated flag:", updatedContainerStatus)
               } catch (error) {
                 console.error("Error updating flag:", error);

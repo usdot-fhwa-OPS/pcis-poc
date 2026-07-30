@@ -1,11 +1,11 @@
-import { generateClient, SelectionSet } from 'aws-amplify/data';
+import { SelectionSet } from 'aws-amplify/data';
 import type { Schema } from '../../amplify/data/resource';
-import { Subscription } from "rxjs";
 import { fetchUserAttributes } from 'aws-amplify/auth';
 import { useAuthenticator } from "@aws-amplify/ui-react";
 import { useEffect, useState } from "react";
+import { onCargoUpdate } from '../components/real-time-call';
+import { fetchBcoNotifications, fetchTerminalNotifications, fetchTransportationNotifications } from '../components/cargo/cargo-units-client';
 
-const client = generateClient<Schema>();
 const selectionSet = ['cargoUnitID', 'reservationStatus', "updatedAt", "isBCONotify", "isTransportationNotify"] as const; 
 export type Notifications = SelectionSet<Schema['Container']['type'], typeof selectionSet>
 
@@ -43,59 +43,35 @@ export function useNotifications() {
 
     // Subscribe to updates and trigger a refresh.
     useEffect(() => {
-        const updateSubscription = client.models.Container.onUpdate().subscribe({
-        next: () => {
-            // Increment the refresh counter to trigger re-running the observeQuery.
-            setRefresh((prev) => prev + 1);
-        },
-        error: (error) => console.warn(error),
-        });
-        return () => updateSubscription.unsubscribe();
-    }, []);
+        const updateSubscription =  onCargoUpdate.subscribe({
+        next: () => setRefresh((prev) => prev + 1),
+        error: (error: any) => console.warn(error),
+        })
+        return () => updateSubscription.unsubscribe()
+    }, [])    
 
     // Subscribe to notifications based on user attributes and refresh state.
     useEffect(() => {
         if (!userAttributes.role) return;
-        let notisSub: Subscription;
-
+        
         if (userAttributes.role === "Beneficiary Cargo Owner") {
-        notisSub = client.models.Container.observeQuery({
-            filter: {
-            and: [
-                { bcoEmail: { eq: userAttributes.email } },
-                { isBCONotify: { eq: true } },
-            ],
-            },
-        }).subscribe({
-            next: ({ items }) => {
-            setUserNotifications(items);
-            },
-        });
-        } else if ((userAttributes.role === 'Trucking Operator') 
+            fetchBcoNotifications(userAttributes.email).then(items => {
+                setUserNotifications(items)
+            });
+        } else if ((userAttributes.role === 'Trucking Operator')
             || (userAttributes.role === 'Rail Operator')
             || (userAttributes.role === 'Third Party Logistics Provider')) {
-        notisSub = client.models.Container.observeQuery({
-            filter: {
-            isTransportationNotify: { eq: true },
-            },
-        }).subscribe({
-            next: ({ items }) => {
-            setUserNotifications(items);
-            },
-        });
+
+            fetchTransportationNotifications().then((list) => {
+                setUserNotifications(list);
+            })
         } else if (userAttributes.role === 'Terminal Operator') {
-        notisSub = client.models.Container.observeQuery({
-            filter: {
-            isTerminalNotify: { eq: true },
-            },
-        }).subscribe({
-            next: ({ items }) => {
-            setUserNotifications(items);
-            },
-        });
+
+            fetchTerminalNotifications().then((list) => {
+                setUserNotifications(list);
+            })
         }
 
-        return () => notisSub.unsubscribe();
     }, [userAttributes, refresh]);
 
     return { userNotifications, userAttributes };
