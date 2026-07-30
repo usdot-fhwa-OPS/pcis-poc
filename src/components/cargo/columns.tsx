@@ -16,11 +16,9 @@ import {
 } from "../ui/dropdown-menu"
 //Four Imports needed for Amplify Data Queries and CRUD methods
 
-import { generateClient } from 'aws-amplify/data';
-import type { Schema } from '../../../amplify/data/resource';
 import { UpcomingCargo } from "../../routes/cargo"
+import { saveCargoUnit } from "./cargo-units-client"
 
-const client = generateClient<Schema>();
 
 //Define the selection of data that will be used for the table (type exported from cargo.tsx in this case)
 export const columns: ColumnDef<UpcomingCargo>[] = [
@@ -77,7 +75,7 @@ export const columns: ColumnDef<UpcomingCargo>[] = [
                 setStatus(val as "On-Ship" | "On-Dock")
                 try {
                   // Call the Amplify update method (must always contain containerID)
-                  const { data: updatedContainerStatus } = await client.models.Container.update({
+                  const updatedContainerStatus  = await saveCargoUnit({
                     cargoUnitID: row.original.cargoUnitID, 
                     containerStatus: val,
                   })
@@ -109,10 +107,11 @@ export const columns: ColumnDef<UpcomingCargo>[] = [
         setFlagged(newFlag)
         try {
           // Call the Amplify update method for the flag (again must always contain containerID)
-          const { data: updatedContainerStatus } = await client.models.Container.update({
-            cargoUnitID: row.original.cargoUnitID, // changed containerID to cargoUnitID
-            flag: newFlag,
-          })
+              const updatedContainerStatus = await saveCargoUnit({
+                cargoUnitID: row.original.cargoUnitID,
+                flag: newFlag,
+              })              
+
           console.log("Updated flag:", updatedContainerStatus)
         } catch (error) {
           console.error("Error updating flag:", error);

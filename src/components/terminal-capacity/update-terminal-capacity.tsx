@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
 import { Button } from "../ui/button";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
@@ -18,7 +18,6 @@ import { MonthlyRepeatOptions } from "./MonthlyRepeatOptions";
 import { YearlyRepeatOptions } from "./YearlyRepeatOptions.";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import { getTerminalCapacityList, populate } from "./terminal-capacity-state";
-import { ScrollArea } from "../ui/scroll-area";
 
 export const UpdateTerminalCapacity = (terminalCapacityUid:string) => {
 
@@ -283,17 +282,13 @@ const [endTime, setEndTime] = useState<string | undefined>(timeOptions[0])
                         Edit
                     </Button>
                 } />
-                <DialogContent className="DialogContent">
-                    <div className="-mx-4 no-scrollbar max-h-[100vh] overflow-y-auto px-4">
-                        <ScrollArea className="h-[800px] w-full rounded-md border p-4">
-                            <div className="space-y-4">
-                                <div className="grid grid-cols-5 gap-2">
-                                    <div className="h-10 col-span-3 col-start-1 ...">
-                                        <DialogHeader>
-                                            <DialogTitle>Edit Temporary Capacity</DialogTitle>
-                                            <DialogDescription></DialogDescription>
-                                        </DialogHeader>
-                                    </div>
+                <DialogContent className="DialogContent" style={{maxHeight: '90vh', display: 'flex', flexDirection: 'column', overflow: 'hidden'}}>
+                    <DialogHeader className="pb-4 pr-8">
+                        <DialogTitle>Edit Temporary Capacity</DialogTitle>
+                    </DialogHeader>
+                    <div className="overflow-y-auto flex-1 min-h-0 pr-2">
+                            <div className="space-y-4 py-4">
+                                <div className="grid grid-cols-5 gap-y-4 gap-x-2">
                                     <div className="col-start-1 col-end-2 ...">
                                         <Label htmlFor="terminalCapacity" className="text-right">
                                             Terminal Capacity
@@ -445,19 +440,16 @@ const [endTime, setEndTime] = useState<string | undefined>(timeOptions[0])
                                 </div>
 
 
-                                <DialogFooter>
-                                    <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
-                                        Cancel
-                                    </Button>
-                                    <Button onClick={() => { save() }}>
-                                        Save
-                                    </Button>
-                                </DialogFooter>
                             </div>
-                        </ScrollArea>
                     </div>
-                    
-
+                    <DialogFooter className="pt-4">
+                        <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
+                            Cancel
+                        </Button>
+                        <Button onClick={() => { save() }}>
+                            Save
+                        </Button>
+                    </DialogFooter>
                 </DialogContent>
             </Dialog>
             </>

@@ -392,7 +392,6 @@ async function ingestManifest(requestItem) {
             "cargoType": row.cargotype,
             "cargoUnitStatus": row.cargounitstatus,
             "destination": row.destination,
-            "documentsChecked": false,
             "flaggedDateTime": row.flaggeddatetime,
             "isCompliant": (row.iscompliant.toLowerCase() === 'true')?true:false,
             "isHazardous": true,
@@ -402,7 +401,7 @@ async function ingestManifest(requestItem) {
             "vesselAgentEmail": requestItem.vesselAgentEmail,
             "vesselAgentName": requestItem.vesselAgentName,
             "weight": row.weight,
-            "documentsChecked": row.documentschecked,
+            "documentsChecked": (row.documentschecked.toLowerCase() === 'true')?true:false,
             "hazmatClass": row.hazmatclass,
             "unNumber": row.unnumber
           }

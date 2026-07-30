@@ -10,7 +10,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "../ui/dialog"
-import "./terminal-capacity.css"
 import { deleteTerminalCapacity, terminalCapacityList } from "./terminal-capacity-client"
 import { useAppDispatch } from "../../hooks"
 import { populate } from "./terminal-capacity-state"
@@ -40,21 +39,19 @@ export function DeleteTerminalCapacityButton(terminalCapacityUid:string) {
               Delete
             </Button>
         } />
-        <DialogContent>
-            <DialogHeader className="p-4 border-b">
-              <DialogTitle>CONFIRMATION REQUIRED</DialogTitle>
-            </DialogHeader>
-              <div className="dialog-content center-text">
-                <br/>
-                <div className="center-text">
-                    Deleting a temporary capacity can't be undone
-                </div>
-                Do you want to continue?
-              </div>
-            <DialogFooter className="center-buttons">
-                <Button type="button" onClick={()=>deleteTc()} >Yes</Button>
-                <Button type="button" variant="outline" onClick={() => setOpen(false)}>No</Button>
-            </DialogFooter>
+        <DialogContent className="sm:max-w-sm">
+          <DialogHeader>
+            <DialogTitle className="text-center">Confirmation Required</DialogTitle>
+          </DialogHeader>
+          <p className="py-2 text-center text-sm text-gray-600">
+            Deleting a temporary capacity can't be undone.
+            <br />
+            Do you want to continue?
+          </p>
+          <DialogFooter className="flex-row justify-center gap-2 sm:justify-center">
+            <Button type="button" onClick={() => deleteTc()}>Yes</Button>
+            <Button type="button" variant="outline" onClick={() => setOpen(false)}>No</Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     )

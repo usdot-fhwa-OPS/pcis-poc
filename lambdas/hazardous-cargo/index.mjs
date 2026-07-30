@@ -359,6 +359,7 @@ async function approve(event) {
               "vesselID": existingHazardousCargo.vesselId,
               "documentsChecked": "TRUE",
               "isCompliant":"TRUE",
+              "containerStatus": "On-Ship",
             },
           },
         }

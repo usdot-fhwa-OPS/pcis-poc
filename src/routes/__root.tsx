@@ -66,16 +66,14 @@ function RootComponent() {
     <div className="flex min-h-screen bg-background">
       <SidebarProvider>
         <AppSidebar />
-        {userSecurityAttrubutes.given_name && <UserContext.Provider value={userSecurityAttrubutes} >  
+        <UserContext.Provider value={userSecurityAttrubutes}>
         <div className="flex-1 min-w-0 bg-gray-50">
           <Toaster position="top-center" richColors={true} expand={true} />
           <UserHeader fullName={userAttributes.fullName} role={userAttributes.role} />
-         
-            <Outlet /> 
-            
+          <Outlet />
         </div>
         <Selfhelp />
-        </UserContext.Provider>}
+        </UserContext.Provider>
       </SidebarProvider>
     </div>
   )

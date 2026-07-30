@@ -36,15 +36,14 @@ export default function Operators() {
     fetchData();
   }, [])
 
-  if (loading) {
-    return <div>Loading...</div>
-  }
-
   return (
     <div className="w-full px-6 py-6 md:px-10 md:py-8">
       <h1 className="mb-2 text-2xl leading-none font-semibold text-gray-900">Available Users</h1>
       <p className="mb-4 text-sm text-gray-700">Manage and approve users accross all roles and organizations.</p>
-      <DataTable columns={columns} data={data} />
+      {loading
+        ? <div className="flex items-center justify-center h-64 text-gray-500">Loading users…</div>
+        : <DataTable columns={columns} data={data} />
+      }
     </div>
   )
 }

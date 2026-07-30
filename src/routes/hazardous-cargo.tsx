@@ -1,5 +1,5 @@
 import { createFileRoute, Outlet, useMatchRoute } from '@tanstack/react-router'
-import { useContext, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { TriangleAlert } from 'lucide-react'
 import { HazardousCargoTable } from '../components/hazardous-cargo/hazardous-cargo-table'
 import { HazardousCargoItem } from '../components/hazardous-cargo/hazardous-cargo-types'
@@ -12,12 +12,6 @@ export const Route = createFileRoute('/hazardous-cargo')({
   component: HazardousCargoPage,
 })
 
-// TODO: Replace dummy data fetch with a real DynamoDB query via Amplify when the
-// HazardousCargo model is available. Example:
-//   const { data } = await client.models.HazardousCargo.list({
-//     filter: { isHazardous: { eq: true } },
-//     authMode: 'apiKey',
-//   })
 function useHazardousCargoData() {
   const userContext = useContext(UserContext);
   const userRole = userContext["custom:role"];
@@ -50,9 +44,10 @@ function useHazardousCargoData() {
     return hazardousCargoItemList;
   }
 
-  useState(() => {
+  useEffect(() => {
+    if (!userRole) return
     fetchHazardousCargoList().then(list => setData(list))
-  })
+  }, [userRole, userContext.email])
 
   return data
 }
