@@ -21,6 +21,7 @@ import {
   TableRow,
 } from "../ui/table"
 
+import { ChevronLeft, ChevronRight, Search } from "lucide-react"
 import { Input } from "../ui/input"
 
 export interface CargoTableMeta {
@@ -64,101 +65,141 @@ export function DataTable<TData, TValue>({
     },
   })
 
+  const { pageIndex, pageSize } = table.getState().pagination
+  const totalRows = table.getFilteredRowModel().rows.length
+  const firstRow = totalRows === 0 ? 0 : pageIndex * pageSize + 1
+  const lastRow = Math.min((pageIndex + 1) * pageSize, totalRows)
+  const pageCount = table.getPageCount()
+
   return (
-    <div className="mb-4 w-full px-3 py-2 border rounded-md">
+    <>
+    {/* Filtering */}
+    <div className="flex max-xl:flex-wrap items-center gap-2 mb-4 p-2 bg-white border rounded-xl">
+      <div className="relative ml-auto">
+        <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
         <Input
-          placeholder="Filter by Cargo Unit ID..." 
+          placeholder="Search cargo unit ID..." 
           value={(table.getColumn("cargoUnitID")?.getFilterValue() as string) ?? ""} 
           onChange={(event) =>
             table.getColumn("cargoUnitID")?.setFilterValue(event.target.value) 
           }
-          className="max-w-sm"
+          className="w-48 h-auto pl-8 pr-3 py-1.5 border border-gray-300 rounded-md shadow-none text-sm placeholder:text-gray-500 focus:outline-none focus:border-transparent focus-visible:outline-solid focus-visible:ring-2"
         />
-      
-
-      <Table>
-        <TableHeader>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id}>
-              {headerGroup.headers.map((header) => {
-                return (
-                  <TableHead key={header.id}>
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
-                  </TableHead>
-                )
-              })}
-            </TableRow>
-          ))}
-        </TableHeader>
-        <TableBody>
-          {table.getRowModel().rows?.length ? (
-            table.getRowModel().rows.map((row) => (
-              <TableRow
-                key={row.id}
-                data-state={row.getIsSelected() && "selected"}
-              >
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
-                ))}
-              </TableRow>
-            ))
-          ) : (
-            <TableRow>
-              <TableCell colSpan={columns.length} className="h-24 text-center">
-                No results.
-              </TableCell>
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
-       <div className="flex items-center justify-between mt-4">
-        <div className="flex items-center gap-2">
-          <button
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
-            className="px-3 py-1 border rounded disabled:opacity-50"
-          >
-            Previous
-          </button>
-
-          <button
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
-            className="px-3 py-1 border rounded disabled:opacity-50"
-          >
-            Next
-          </button>
-        </div>
-
-        <span className="text-sm">
-          Page{" "}
-          <strong>
-            {table.getState().pagination.pageIndex + 1} of{" "}
-            {table.getPageCount()}
-          </strong>
-        </span>
-
-        <select
-          value={table.getState().pagination.pageSize}
-          onChange={(e) =>
-            table.setPageSize(Number(e.target.value))
-          }
-          className="border p-1 rounded"
-        >
-          {[5, 10, 20, 50].map((size) => (
-            <option key={size} value={size}>
-              Show {size}
-            </option>
-          ))}
-        </select>
       </div>
     </div>
+    {/* Scrolling Container */}
+    <div className="w-full not-last:mb-8 bg-white border rounded-xl overflow-hidden">
+      <div className="overflow-x-auto">
+        <Table className="leading-4">
+          <TableHeader>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <TableRow key={headerGroup.id} className="bg-gray-50/50 hover:bg-gray-50 data-[state=selected]:bg-gray-50/50 text-xs tracking-wide">
+                {headerGroup.headers.map((header) => {
+                  return (
+                    <TableHead key={header.id} className="px-4 text-gray-500">
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
+                    </TableHead>
+                  )
+                })}
+              </TableRow>
+            ))}
+          </TableHeader>
+          <TableBody>
+            {table.getRowModel().rows?.length ? (
+              table.getRowModel().rows.map((row) => (
+                <TableRow
+                  key={row.id}
+                  data-state={row.getIsSelected() && "selected"}
+                  className="hover:bg-gray-50/50 data-[state=selected]:bg-gray-50/50"
+                >
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id} className="p-4">
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
+            ) : (
+              <TableRow className="hover:bg-transparent data-[state=selected]:bg-transparent">
+                <TableCell colSpan={columns.length} className="h-24 text-center text-gray-500">
+                  There is no cargo to display.
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </div>
+      {/* Pagination */}
+      {totalRows > 0 && (
+        // Full pagination controls render only if there are more than 12 rows to display
+        <div className="flex max-sm:flex-col items-center justify-between max-sm:justify-center gap-x-8 gap-y-4 px-4 py-3 border-t text-sm text-gray-500">
+          {totalRows == 1 && (
+            <span>{totalRows} item</span>
+          )}
+          {totalRows > 1 && totalRows < 12 && (
+            <span>{totalRows} items</span>
+          )}
+          {totalRows > 12 && (
+            <>
+            <span>{firstRow} - {lastRow} of {totalRows} items</span>
+            <div className="flex items-center gap-x-2 sm:mr-auto">
+              <select
+                id="rowsPerPage"
+                value={table.getState().pagination.pageSize}
+                onChange={(e) =>
+                  table.setPageSize(Number(e.target.value))
+                }
+                className="p-1 border border-gray-300 rounded outline-gray-900 text-gray-700"
+              >
+                {[5, 10, 20, 50].map((size) => (
+                  <option key={size} value={size} className="hover:bg-gray-900 text-gray-600 hover:text-white">
+                    {size}
+                  </option>
+                ))}
+              </select>
+              <label htmlFor="rowsPerPage">items per page</label>
+            </div>
+            <div className="flex items-center gap-1">
+              <button
+                onClick={() => table.previousPage()}
+                disabled={!table.getCanPreviousPage()}
+                className="flex items-center gap-1 px-2 py-1 rounded hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed text-gray-700"
+              >
+                <ChevronLeft className="h-4 w-4" />
+                Previous
+              </button>
+              {Array.from({ length: pageCount }, (_, i) => (
+                <button
+                  key={i}
+                  onClick={() => table.setPageIndex(i)}
+                  className={`w-8 h-8 rounded text-sm font-medium ${
+                    pageIndex === i
+                      ? "bg-gray-900 text-white"
+                      : "hover:bg-gray-100 text-gray-700"
+                  }`}
+                >
+                  {i + 1}
+                </button>
+              ))}
+              <button
+                onClick={() => table.nextPage()}
+                disabled={!table.getCanNextPage()}
+                className="flex items-center gap-1 px-2 py-1 rounded hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed text-gray-700"
+              >
+                Next
+                <ChevronRight className="h-4 w-4" />
+              </button>
+            </div>
+            </>
+          )}
+        </div>
+      )}
+    </div>
+    </>
   )
 }
