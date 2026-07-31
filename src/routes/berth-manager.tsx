@@ -62,7 +62,7 @@ function RouteComponent() {
     <div className="w-full px-6 py-6 md:px-10 md:py-8">
       <div className="flex max-sm:flex-col max-sm:gap-y-4 items-center max-sm:items-start justify-between mb-6">
         <h1 className="text-2xl leading-none font-semibold text-gray-900">Berth Reservations</h1>
-        <Button variant="secondary" onClick={() => setBerthAvailabilityOpen(true)}>Set Berth Availability</Button>
+        <Button variant="outline" onClick={() => setBerthAvailabilityOpen(true)}>Set Berth Availability</Button>
         <BerthAvailability isDialogOpen={berthAvailabilityOpen} handleCloseDialog={setBerthAvailabilityOpen} />
       </div>
       {loading ? (
