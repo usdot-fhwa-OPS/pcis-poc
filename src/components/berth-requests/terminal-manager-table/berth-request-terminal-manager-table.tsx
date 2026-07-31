@@ -44,32 +44,28 @@ export function TerminalOperatorBerthRequestsTable({
   const meta = { decideBerthRequest, deleteBerthRequest, berthConfigs, modifyBerthRequest }
 
   return (
-    <div className="container mx-auto p-10 overflow-x-auto">
+    <div>
+      <Button onClick={() => setBerthAvailabilityOpen(true)}>Set Berth Availability</Button>
+      <BerthAvailability isDialogOpen={berthAvailabilityOpen} handleCloseDialog={setBerthAvailabilityOpen} />
       <Tabs defaultValue="requested">
-        <div className="flex items-center justify-between mb-4">
-          <TabsList className="flex justify-start gap-x-4">
-            <TabsTrigger value="requested">Requested</TabsTrigger>
-            <TabsTrigger value="modification-requested">Modification Requested</TabsTrigger>
-            <TabsTrigger value="ongoing">Ongoing</TabsTrigger>
-            <TabsTrigger value="completed">Completed</TabsTrigger>
-          </TabsList>
-          <Button onClick={() => setBerthAvailabilityOpen(true)}>Set Berth Availability</Button>
-        </div>
-        <BerthAvailability isDialogOpen={berthAvailabilityOpen} handleCloseDialog={setBerthAvailabilityOpen} />
-        <div className="w-xl max-w-9/10">
-          <TabsContent value="requested">
-            <DataTable columns={requestedColumns} data={requested} meta={meta} />
-          </TabsContent>
-          <TabsContent value="modification-requested">
-            <DataTable columns={modificationRequestedColumns} data={modificationRequested} meta={meta} />
-          </TabsContent>
-          <TabsContent value="ongoing">
-            <DataTable columns={ongoingColumns} data={ongoing} meta={meta} />
-          </TabsContent>
-          <TabsContent value="completed">
-            <DataTable columns={completedColumns} data={completed} meta={meta} />
-          </TabsContent>
-        </div>
+        <TabsList className="flex justify-start gap-x-4">
+          <TabsTrigger value="requested" className="data-[state=active]:sm:-mb-px pt-0 px-0 pb-2 data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-gray-900 rounded-none text-gray-500 hover:text-gray-700 data-[state=active]:text-gray-900 data-[state=active]:shadow-none">Requested</TabsTrigger>
+          <TabsTrigger value="modification-requested" className="data-[state=active]:sm:-mb-px pt-0 px-0 pb-2 data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-gray-900 rounded-none text-gray-500 hover:text-gray-700 data-[state=active]:text-gray-900 data-[state=active]:shadow-none">Modification Requested</TabsTrigger>
+          <TabsTrigger value="ongoing" className="data-[state=active]:sm:-mb-px pt-0 px-0 pb-2 data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-gray-900 rounded-none text-gray-500 hover:text-gray-700 data-[state=active]:text-gray-900 data-[state=active]:shadow-none">Ongoing</TabsTrigger>
+          <TabsTrigger value="completed" className="data-[state=active]:sm:-mb-px pt-0 px-0 pb-2 data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-gray-900 rounded-none text-gray-500 hover:text-gray-700 data-[state=active]:text-gray-900 data-[state=active]:shadow-none">Completed</TabsTrigger>
+        </TabsList>
+        <TabsContent value="requested">
+          <DataTable columns={requestedColumns} data={requested} meta={meta} />
+        </TabsContent>
+        <TabsContent value="modification-requested">
+          <DataTable columns={modificationRequestedColumns} data={modificationRequested} meta={meta} />
+        </TabsContent>
+        <TabsContent value="ongoing">
+          <DataTable columns={ongoingColumns} data={ongoing} meta={meta} />
+        </TabsContent>
+        <TabsContent value="completed">
+          <DataTable columns={completedColumns} data={completed} meta={meta} />
+        </TabsContent>
       </Tabs>
     </div>
   );
