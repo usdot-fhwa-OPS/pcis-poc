@@ -52,7 +52,7 @@ export default function Cargo() {
   return (
     <div className="w-full px-6 py-6 md:px-10 md:py-8">
       <h1 className="mb-2 text-2xl leading-none font-semibold text-gray-900">Upcoming Cargo</h1>
-      <p className="mb-4 text-sm text-gray-700">Description.</p>
+      <p className="mb-4 text-sm text-gray-700">Real-time status and readiness for this terminal.</p>
       <DataTable
         columns={columns}
         data={data}
