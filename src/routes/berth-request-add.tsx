@@ -13,7 +13,8 @@ export const Route = createFileRoute('/berth-request-add')({
 function AddBerthRequestComponent() {
 
   const navigate = useNavigate();
-  const formDataRef = useRef<BerthRequestFormData | null>(null);
+   const raw = sessionStorage.getItem('berthRequestDraft');
+  const formDataRef = useRef<BerthRequestFormData | null>(raw ? JSON.parse(raw) : null);
   const [manifestUploaded, setManifestUploaded] = useState(false);
   const [manifestFileName, setManifestFileName] = useState("");
 

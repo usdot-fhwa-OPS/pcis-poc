@@ -24,7 +24,7 @@ export const Route = createFileRoute('/berth-request-modify-confirmation')({
 function BerthRequestConfirmationComponent() {
   const userContext = useContext(UserContext);
   const navigate = useNavigate();
-  const raw = sessionStorage.getItem('berthRequestOriginal');
+  const raw = sessionStorage.getItem('berthRequestConfirmed');
   const formData: BerthRequestFormData | null = raw ? JSON.parse(raw) : null;
 
   const [cancelOpen, setCancelOpen] = useState(false);
@@ -139,7 +139,9 @@ function BerthRequestConfirmationComponent() {
         <Button variant="outline" onClick={() => setCancelOpen(true)}>
           Cancel
         </Button>
-        <Button variant="outline" onClick={() => navigate({ to: '/berth-request-modify' })}>
+        <Button variant="outline" onClick={() => {
+              sessionStorage.setItem('berthRequestConfirmed', JSON.stringify(formData));
+                navigate({ to: '/berth-request-modify' })}}>
           Modify Request
         </Button>
         <Button onClick={() => setSuccessOpen(true)}>
