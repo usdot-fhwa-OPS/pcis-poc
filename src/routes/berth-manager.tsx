@@ -64,9 +64,8 @@ function RouteComponent() {
         <h1 className="text-2xl leading-none font-semibold text-gray-900">Berth Reservations</h1>
         <Button 
           variant="outline" 
-          size="lg" 
           onClick={() => setBerthAvailabilityOpen(true)} 
-          className="border-gray-300 hover:border-gray-500 text-gray-700 hover:text-gray-900 hover:shadow-xs"
+          className="h-auto border-gray-300 hover:border-gray-900 rounded-lg text-gray-700 hover:text-gray-900"
         >
           Set Berth Availability
         </Button>
