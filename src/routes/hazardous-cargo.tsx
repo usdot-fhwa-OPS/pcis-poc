@@ -96,21 +96,19 @@ function HazardousCargoPage() {
   const documentationMissing = data.filter((item) => !item.isCompliant).length
 
   return (
-    <div className="w-full px-6 py-6 md:px-10 md:py-8 flex flex-col gap-6">
+    <div className="w-full px-6 py-6 md:px-10 md:py-8">
       {/* Page header */}
-      <div>
-        <h1 className="flex items-center gap-2 mb-2 text-2xl leading-none font-bold text-gray-900">
-          <TriangleAlert className="h-6 w-6 text-gray-700" />
-          Hazardous Cargo
-        </h1>
-        <p className="text-sm text-gray-700">
-          System automatically scans all manifests for hazardous cargo classifications — UN number and hazard class
-        </p>
-      </div>
+      <h1 className="flex items-center gap-2 mb-2 text-2xl leading-none font-bold text-gray-900">
+        <TriangleAlert className="h-6 w-6 text-gray-700" />
+        Hazardous Cargo
+      </h1>
+      <p className="mb-4 text-sm text-gray-700">
+        System automatically scans all manifests for hazardous cargo classifications — UN number and hazard class
+      </p>
 
       {/* Summary widgets */}
       {/* TODO: Hook up each stat to the live DynamoDB query result once backend is integrated. */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
         <StatCard
           label="Total Hazmat Cargo"
           value={totalHazmat}
