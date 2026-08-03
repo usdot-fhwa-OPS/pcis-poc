@@ -9,25 +9,18 @@ interface BcoBookingsTableProps {
 
 export function BcoBookingsTableUpcoming({ data, meta }: BcoBookingsTableProps) {
   return (
-    <div className="w-full">
-      <DataTable columns={columns()} data={data} meta={meta} />
-    </div>
+    <DataTable columns={columns()} data={data} meta={meta} />
   );
 }
 
 export function BcoBookingsTableOngoing({ data,meta}: BcoBookingsTableProps) {
   return (
-    <div className="w-full">
-      <DataTable columns={OngoingColumn()}  data={data} meta={meta}  />
-    </div>
+    <DataTable columns={OngoingColumn()}  data={data} meta={meta}  />
   );
 }
 
   export function BcoBookingsTableCompleted({ data,meta }: BcoBookingsTableProps) {
     return (
-      <div className="w-full">
-        <DataTable columns={CompletedColumn()} data={data} meta={meta}/>
-      </div>
+      <DataTable columns={CompletedColumn()} data={data} meta={meta}/>
     );
-
 }
