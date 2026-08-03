@@ -57,9 +57,11 @@ baseColumns.push({
           }
     
           return (
-            <Button variant="ghost" onClick={handleFlagToggle} className="p-2">
-              <Flag className={flagged ? "text-red-600" : "text-gray-400"} />
-            </Button>
+            <div class="text-center">
+              <Button variant="ghost" onClick={handleFlagToggle} className="p-2">
+                <Flag className={flagged ? "text-red-600" : "text-gray-400"} />
+              </Button>
+            </div>
           )
   },
 });
