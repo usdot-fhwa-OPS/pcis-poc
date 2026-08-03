@@ -108,7 +108,7 @@ function HazardousCargoPage() {
 
       {/* Summary widgets */}
       {/* TODO: Hook up each stat to the live DynamoDB query result once backend is integrated. */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-x-4 gap-y-2 mb-6">
         <StatCard
           label="Total Hazmat Cargo"
           value={totalHazmat}
