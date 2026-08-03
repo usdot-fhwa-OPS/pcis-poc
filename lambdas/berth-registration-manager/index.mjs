@@ -210,6 +210,7 @@ function mapManifestRow(row, nowIso) {
     updatedAt: nowIso,
     isHazardous: (row.ishazardous),
     isCompliant:(row.iscompliant),
+    documentsChecked:(row.documentschecked)
   };
 }
 
@@ -244,7 +245,7 @@ async function validateRequestPayload(body) {
     return "etdAt must be greater than etaAt";
   }
 
-  await  validateVesselIdInManifest(body)
+  await  validateManifest(body)
 
     return null;
  
@@ -326,7 +327,7 @@ function validateBerthAssignment(assignment, config) {
   return null;
 }
 
-async function validateVesselIdInManifest(requestItem) {
+async function validateManifest(requestItem) {
   //const csvText = decodeManifestCsv(requestItem.manifestCsvContent, requestItem.manifestCsvBase64);
   const csvText = await readFile(requestItem.manifestPath);
   if (!csvText.trim()) {
@@ -341,6 +342,7 @@ async function validateVesselIdInManifest(requestItem) {
   const vesselId = rows[0].vesselid
 
   let hazmatCount = 0;
+  const errorList = new Set();
   for (let i = 0; i < rows.length; i += 1) {
     const row = rows[i];
     const mapped = mapManifestRow(row, nowIso);
@@ -349,11 +351,26 @@ async function validateVesselIdInManifest(requestItem) {
       skippedCount += 1;
       continue;
     }
-    if(mapped.isHazardous?.trim() === 'TRUE') hazmatCount++;
+    if(mapped.isHazardous?.trim() === 'TRUE'){
+        if((mapped.isCompliant?.trim() === 'FALSE') && (mapped.documentsChecked === 'TRUE')){
+          const err = `Ensure Manifest content for CargoUnit ID ${mapped.cargoUnitID} and Vessel ID ${mapped.vesselID} has documentsChecked and isCompliant are both TRUE or both FALSE `
+          console.log(err);
+          errorList.add(err);
+
+        }
+      hazmatCount++;
+    } 
     if (row.vesselid !== vesselId) {
-      console.log(`Manifest content Vessel IDs ${row.vesselid} do not match Vessel Id ${vesselId} of the first entry`);
-      throw new Error(`Manifest content Vessel IDs ${row.vesselid} do not match Vessel Id ${vesselId} of the first entry`);
+      const err = `Ensure the Vessel ID in the Manifest content for Cargo Unit  ${mapped.cargoUnitID} matches the Vessel ID of the first entry `;
+      console.log(err);
+      errorList.add(err);
     }
+  }
+  if(errorList.size > 0){
+    let errors = [];
+    for(const error of  errorList){
+      errors.push(error)}
+    throw new Error(`Validation of Manifest file ${requestItem.manifestPath} failed with errors, ${errors}`)
   }
   requestItem.hazmatCount = hazmatCount
   requestItem.vesselID = vesselId;

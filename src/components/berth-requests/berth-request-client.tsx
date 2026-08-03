@@ -81,8 +81,12 @@ export const saveBerthRequest = async (berthRequestDomain: BerthRequestDomain): 
         },
         body: JSON.stringify(berthRequestDomain)
     });
-    const result = (await response.json());
-    return result;
+    
+    if(response.status === 500){
+        return JSON.stringify({error:await response.json()});
+    }else{
+        return JSON.stringify(await response.json());
+}
 }
 
 export const updateBerthRequest = async (berthRequestDomain: BerthRequestDomain): Promise<string> => {

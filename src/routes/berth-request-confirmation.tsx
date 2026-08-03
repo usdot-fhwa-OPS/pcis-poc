@@ -28,6 +28,7 @@ function BerthRequestConfirmationComponent() {
 
   const [cancelOpen, setCancelOpen] = useState(false);
   const [successOpen, setSuccessOpen] = useState(false);
+  const [error, setError] = useState('');
 
   const handleConfirmCancel = () => {
     setCancelOpen(false);
@@ -35,9 +36,14 @@ function BerthRequestConfirmationComponent() {
   };
 
   const handleConfirmSubmit = async () => {
-    await save();
     setSuccessOpen(false);
-    navigate({ to: '/berth-vessel' });
+    const resp = JSON.parse(await save());
+    if (resp.error) {
+      setError(resp.error.message);
+    } else {
+
+      navigate({ to: '/berth-vessel' });
+    }
   };
 
   const formatDate = (date: Date | string | undefined) => {
@@ -66,7 +72,7 @@ function BerthRequestConfirmationComponent() {
       };
   
     const userContext = useContext(UserContext);
-    const save = async () => {
+    const save = async ():Promise<string>  => {
       if (formData) {
         berthRequest.vesselAgentEmail = userContext.email ? userContext.email : "";
         berthRequest.terminalId = formData.terminalId;
@@ -77,7 +83,24 @@ function BerthRequestConfirmationComponent() {
         berthRequest.vesselID = formData.vesselId;
       }
 
-      await saveBerthRequest(berthRequest)
+      return await saveBerthRequest(berthRequest)
+    }
+  const printDError = () => {
+
+    if (error.length > 0) {
+      const content = error.split(',');
+      
+
+      return (
+        <>
+          <b>{content[0]}</b>
+          <ul>{content.map((item, i) => ((i > 0) && <li>-{item}</li>))}  </ul>
+        </>
+
+      )
+
+    }
+
     }
  
   return (
@@ -167,6 +190,20 @@ function BerthRequestConfirmationComponent() {
           </DialogDescription>
           <DialogFooter className="bg-transparent border-0 -mx-0 -mb-0 rounded-none flex-row justify-center">
             <Button onClick={handleConfirmSubmit}>Done</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+      {/* Error Dialog when Berth registration submission fails*/}
+      <Dialog open={error?.length > 0} onOpenChange={()=>setError('')}>
+        <DialogContent showCloseButton>
+          <DialogHeader>
+            <DialogTitle className="uppercase tracking-wide">Error</DialogTitle>
+          </DialogHeader>
+          <DialogDescription className="w-full max-w-md text-left py-2">
+            {printDError()}
+          </DialogDescription>
+          <DialogFooter className="bg-transparent border-0 -mx-0 -mb-0 rounded-none flex-row justify-center">
+            <Button onClick={()=>setError('')}>Close</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
