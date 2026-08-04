@@ -631,7 +631,7 @@ function Index() {
     if (!userAttributes.role) {
       return (
         <div className="w-full px-6 py-6 md:px-10 md:py-8">
-          <p style={{ fontWeight: 400, fontSize: '40px' }}>Welcome</p>
+          <h1 className="text-2xl leading-none font-bold text-gray-900">Welcome</h1>
         </div>
       )
     }
@@ -639,6 +639,14 @@ function Index() {
     if (userAttributes.role === "Vessel Agent") {
       return (
         <div className="w-full">
+          <div className="w-full px-6 pt-6 md:px-10 md:pt-8">
+            <h1 className="mb-2 text-2xl leading-none font-bold text-gray-900">
+              Welcome, {userAttributes.fullName}
+            </h1>
+            <p className="mb-4 text-sm text-gray-700">
+              {userAttributes.role} &#128900; {dateString}
+            </p>
+          </div>
           <BerthRequestComponent />
           {vaLoading
             ? <div className="flex items-center justify-center w-full min-h-64 pt-0 px-6 md:px-10 pb-6 md:pb-8 text-gray-500">Loading reservations…</div>
