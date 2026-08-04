@@ -83,7 +83,7 @@ export function VesselActivityTable({ data }: VesselActivityTableProps) {
     <div className="flex flex-col gap-4">
       {/* Tab navigation */}
       <div className="border-b border-gray-200">
-        <div className="flex gap-6">
+        <div className="flex flex-wrap gap-x-6 gap-y-2">
           {TABS.map(({ key, label }) => (
             <button
               key={key}
