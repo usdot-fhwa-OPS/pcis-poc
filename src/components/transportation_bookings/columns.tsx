@@ -133,7 +133,7 @@ baseColumns.push({
       }
 
       return (
-        <div class="text-center">
+        <div className="text-center">
           <Button variant="ghost" onClick={handleFlagToggle} className="p-2">
             <Flag className={flagged ? "text-red-600" : "text-gray-400"} />
           </Button>
