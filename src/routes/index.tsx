@@ -738,84 +738,47 @@ function Index() {
     }
   
     // Default return for General Role or Unknown Role
-    if (userAttributes.role==="Beneficiary Cargo Owner")
-    {
+    if (userAttributes.role==="Beneficiary Cargo Owner") {
       return (
         <div className="w-full px-6 py-6 md:px-10 md:py-8">
-        <div className="p-2" style={{ textAlign: 'left' }}>
-        <div>
-          <p
-            style={{
-              fontWeight: 400,
-              fontSize: '40px'
-            }}
-          >
-            Welcome {userAttributes.fullName}
+          <h1 className="mb-2 text-2xl leading-none font-bold text-gray-900">
+            Welcome, {userAttributes.fullName}
+          </h1>
+          <p className="mb-4 text-sm text-gray-700">
+            {userAttributes.role} &#128900; {dateString}
           </p>
-          <p
-            style={{
-              opacity: 0.66,
-              fontWeight: 400,
-              fontSize: '24px'
-            }}
-          >
-            {userAttributes.role}
-          </p>
+          {!analyticsLoading && analyticsData?.data && (
+            <BcoAnalyticsDashboard data={analyticsData.data as BCOAnalyticsData} variant="compact" />
+          )}
+          <Tabs defaultValue="upcoming">
+            <TabsList className="flex flex-wrap items-stretch justify-normal gap-x-6 gap-y-2 w-full h-auto min-h-[1.875rem] sm:h-[1.875rem] mb-4 p-0 bg-transparent border-b border-gray-200">
+              <TabsTrigger value="upcoming" className="data-[state=active]:sm:-mb-px pt-0 px-0 pb-2 data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-gray-900 rounded-none text-gray-500 hover:text-gray-700 data-[state=active]:text-gray-900 data-[state=active]:shadow-none">Upcoming</TabsTrigger>
+              <TabsTrigger value="ongoing" className="data-[state=active]:sm:-mb-px pt-0 px-0 pb-2 data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-gray-900 rounded-none text-gray-500 hover:text-gray-700 data-[state=active]:text-gray-900 data-[state=active]:shadow-none">Ongoing</TabsTrigger>
+              <TabsTrigger value="completed" className="data-[state=active]:sm:-mb-px pt-0 px-0 pb-2 data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-gray-900 rounded-none text-gray-500 hover:text-gray-700 data-[state=active]:text-gray-900 data-[state=active]:shadow-none">Completed</TabsTrigger>
+            </TabsList>
+            <TabsContent value="upcoming">
+              <BcoBookingsTableUpcoming
+                data={bcoUpcomingBookings}
+                status="Upcoming"
+                meta={{ assignTransOp, fetchTransportationCoordinators }}
+              />
+            </TabsContent>
+            <TabsContent value="ongoing">
+              <BcoBookingsTableOngoing
+                data={ BCOOngoingData}
+                meta={null}
+                status="Ongoing"
+              />
+            </TabsContent>
+            <TabsContent value="completed">
+              <BcoBookingsTableCompleted
+                data={bcocompletedBookings}
+                meta={null}
+                status='completed'
+              />
+            </TabsContent>
+          </Tabs>
         </div>
-        <div>
-          <p
-            style={{
-              opacity: 0.66,
-              fontWeight: 400,
-              fontSize: '14px'
-            }}
-          >
-            {dateString}
-          </p>
-        </div>
-      </div>
-
-        {!analyticsLoading && analyticsData?.data && (
-          <BcoAnalyticsDashboard data={analyticsData.data as BCOAnalyticsData} variant="compact" />
-        )}
-
-        <Tabs defaultValue="upcoming">
-          <TabsList className="mb-4 flex w-full justify-start gap-x-4">
-            <TabsTrigger value="upcoming">Upcoming</TabsTrigger>
-            <TabsTrigger value="ongoing">Ongoing</TabsTrigger>
-            <TabsTrigger value="completed">Completed</TabsTrigger>
-          </TabsList>
-    
-          <TabsContent value="upcoming">
-            <BcoBookingsTableUpcoming
-              data={bcoUpcomingBookings}
-              status="Upcoming"
-              meta={{ assignTransOp, fetchTransportationCoordinators }}
-            />
-          </TabsContent>
-    
-          <TabsContent value="ongoing">
-            <BcoBookingsTableOngoing
-              data={ BCOOngoingData}
-              meta={null}
-              status="Ongoing"
-            />
-          </TabsContent>
-    
-          <TabsContent value="completed">
-          <BcoBookingsTableCompleted
-              data={bcocompletedBookings}
-              meta={null}
-              status='completed'
-            />
-          </TabsContent>
-        </Tabs>
-
-        
-        
-      </div>
- 
-
-    );
-  }
+      );
+    }
 }
