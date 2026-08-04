@@ -630,7 +630,7 @@ function Index() {
 
     if (!userAttributes.role) {
       return (
-        <div className="w-full p-4">
+        <div className="w-full px-6 py-6 md:px-10 md:py-8">
           <p style={{ fontWeight: 400, fontSize: '40px' }}>Welcome</p>
         </div>
       )
@@ -641,7 +641,7 @@ function Index() {
         <div className="w-full">
           <BerthRequestComponent />
           {vaLoading
-            ? <div className="px-6 py-8 md:px-10 text-sm text-gray-500">Loading reservations…</div>
+            ? <div className="flex items-center justify-center w-full min-h-64 pt-0 px-6 md:px-10 pb-6 md:pb-8 text-gray-500">Loading reservations…</div>
             : <VesselAgentBerthRequestsTable
                 data={vaBerthRequests}
                 meta={{ brConfigList: vaBerthConfigList, deleteBerthRequest: delBerthRequest }}
@@ -654,7 +654,7 @@ function Index() {
     if (userAttributes.role === "Terminal Operator") {
       return (
         
-        <div className="w-full">
+        <div className="w-full px-6 py-6 md:px-10 md:py-8">
           <div className="p-2" style={{ textAlign: 'left' }}>
         <div>
           <p
@@ -729,7 +729,7 @@ function Index() {
           || (userAttributes.role === 'Rail Operator')
           || (userAttributes.role === 'Third Party Logistics Provider')) {
       return (
-      <div className="w-full">
+      <div className="w-full px-6 py-6 md:px-10 md:py-8">
       <div className="p-2" style={{ textAlign: 'left' }}>
         <div>
           <p
@@ -807,7 +807,7 @@ function Index() {
     if (userAttributes.role==="Beneficiary Cargo Owner")
     {
       return (
-        <div className="w-full">
+        <div className="w-full px-6 py-6 md:px-10 md:py-8">
         <div className="p-2" style={{ textAlign: 'left' }}>
         <div>
           <p
