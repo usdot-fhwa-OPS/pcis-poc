@@ -109,7 +109,7 @@ export const columns = (): ColumnDef<any>[] => {
 
 baseColumns.push({
   accessorKey: "flag",
-  header: () => <div style={{ minWidth: "50px", textAlign: "center" }}>Flag</div>,
+  header: () => <div className="text-center">Flag</div>,
   cell: ({ row }) => {
     // Initialize flagged state from the row data; fallback to false if undefined.
       const [flagged, setFlagged] = useState<boolean>(row.original.flag || false)
@@ -135,7 +135,7 @@ baseColumns.push({
       return (
         <div className="text-center">
           <Button variant="ghost" onClick={handleFlagToggle} className="p-2">
-            <Flag className={flagged ? "text-red-600" : "text-gray-400"} />
+            <Flag className={flagged ? "text-red-600" : "text-gray-500"} />
           </Button>
         </div>
       )
