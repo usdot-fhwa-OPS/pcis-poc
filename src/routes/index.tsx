@@ -638,18 +638,16 @@ function Index() {
 
     if (userAttributes.role === "Vessel Agent") {
       return (
-        <div className="w-full">
-          <div className="w-full px-6 pt-6 md:px-10 md:pt-8">
-            <h1 className="mb-2 text-2xl leading-none font-bold text-gray-900">
-              Welcome, {userAttributes.fullName}
-            </h1>
-            <p className="flex max-sm:flex-col gap-x-2 mb-4 text-sm text-gray-500">
-              <span>{userAttributes.role}</span> <span className="max-sm:hidden font-bold">&#128900;</span> <span>{dateString}</span>
-            </p>
-          </div>
+        <div className="w-full px-6 py-6 md:px-10 md:py-8">
+          <h1 className="mb-2 text-2xl leading-none font-bold text-gray-900">
+            Welcome, {userAttributes.fullName}
+          </h1>
+          <p className="flex max-sm:flex-col gap-x-2 mb-4 text-sm text-gray-500">
+            <span>{userAttributes.role}</span> <span className="max-sm:hidden font-bold">&#128900;</span> <span>{dateString}</span>
+          </p>
           <BerthRequestComponent />
           {vaLoading
-            ? <div className="flex items-center justify-center w-full min-h-64 pt-0 px-6 md:px-10 pb-6 md:pb-8 text-gray-500">Loading reservations…</div>
+            ? <div className="flex items-center justify-center h-64 text-gray-500">Loading reservations…</div>
             : <VesselAgentBerthRequestsTable
                 data={vaBerthRequests}
                 meta={{ brConfigList: vaBerthConfigList, deleteBerthRequest: delBerthRequest }}

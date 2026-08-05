@@ -51,12 +51,12 @@ function RouteComponent() {
   }, [userContext.email])
 
   return (
-    <>
+    <div className="w-full px-6 py-6 md:pt-6 md:px-10 md:pb-8">
       <BerthRequestComponent />
       {loading
-        ? <div className="flex items-center justify-center w-full min-h-64 pt-0 px-6 md:px-10 pb-6 md:pb-8 text-gray-500">Loading reservations…</div>
+        ? <div className="flex items-center justify-center h-64 text-gray-500">Loading reservations…</div>
         : <VesselAgentBerthRequestsTable data={data} meta={{brConfigList, deleteBerthRequest: delBerthRequest}} />
       }
-    </>
+    </div>
   )
 }

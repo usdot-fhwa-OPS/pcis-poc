@@ -45,7 +45,7 @@ export function VesselAgentBerthRequestsTable({ data, meta }: VesselAgentBerthRe
   const current = tabConfig[activeTab]
 
   return (
-    <div className="w-full pt-0 px-6 md:px-10 pb-6 md:pb-8">
+    <>
       {/* Tab navigation */}
       <div className="mb-4 border-b border-gray-200">
         <div className="flex flex-wrap gap-x-6 gap-y-2">
@@ -64,9 +64,8 @@ export function VesselAgentBerthRequestsTable({ data, meta }: VesselAgentBerthRe
           ))}
         </div>
       </div>
-
       {/* Table — columns change per tab */}
       <DataTable columns={current.columns} data={current.data} meta={meta} />
-    </div>
+    </>
   );
 }
