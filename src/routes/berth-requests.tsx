@@ -14,7 +14,7 @@ export const Route = createFileRoute('/berth-requests')({
 export function BerthRequestComponent() {
   
   return (
-    <div className="flex max-sm:flex-col max-sm:gap-y-4 items-center max-sm:items-start justify-between max-sm:mb-6">
+    <div className="flex max-sm:flex-col max-sm:gap-y-4 items-center max-sm:items-start justify-between mb-4 max-sm:mb-6">
       <h1 className="text-2xl leading-none font-semibold text-gray-900">Berth Reservations</h1>
       {AddNewBerthRequestButton()}
     </div>

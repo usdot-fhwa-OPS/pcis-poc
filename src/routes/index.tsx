@@ -642,9 +642,10 @@ function Index() {
           <h1 className="mb-2 text-2xl leading-none font-bold text-gray-900">
             Welcome, {userAttributes.fullName}
           </h1>
-          <p className="flex max-sm:flex-col gap-x-2 mb-4 text-sm text-gray-500">
+          <p className="flex max-sm:flex-col gap-x-2 mb-8 text-sm text-gray-500">
             <span>{userAttributes.role}</span> <span className="max-sm:hidden font-bold">&#128900;</span> <span>{dateString}</span>
           </p>
+          {/* Dev Note: Add analytics here, change above paragraph's mb-8 to mb-4   */}
           <BerthRequestComponent />
           {vaLoading
             ? <div className="flex items-center justify-center h-64 text-gray-500">Loading reservations…</div>
