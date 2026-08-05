@@ -643,8 +643,8 @@ function Index() {
             <h1 className="mb-2 text-2xl leading-none font-bold text-gray-900">
               Welcome, {userAttributes.fullName}
             </h1>
-            <p className="mb-4 text-sm text-gray-700">
-              {userAttributes.role} &#128900; {dateString}
+            <p className="flex max-sm:flex-col gap-x-2 mb-4 text-sm text-gray-500">
+              <span>{userAttributes.role}</span> <span className="max-sm:hidden font-bold">&#128900;</span> <span>{dateString}</span>
             </p>
           </div>
           <BerthRequestComponent />
@@ -665,8 +665,8 @@ function Index() {
           <h1 className="mb-2 text-2xl leading-none font-bold text-gray-900">
             Welcome, {userAttributes.fullName}
           </h1>
-          <p className="mb-4 text-sm text-gray-700">
-            {userAttributes.role} &#128900; {dateString}
+          <p className="flex max-sm:flex-col gap-x-2 mb-4 text-sm text-gray-500">
+            <span>{userAttributes.role}</span> <span className="max-sm:hidden font-bold">&#128900;</span> <span>{dateString}</span>
           </p>
           {!analyticsLoading && analyticsData?.data && (
             <TerminalAnalyticsDashboard
@@ -707,8 +707,8 @@ function Index() {
           <h1 className="mb-2 text-2xl leading-none font-bold text-gray-900">
             Welcome, {userAttributes.fullName}
           </h1>
-          <p className="mb-4 text-sm text-gray-700">
-            {userAttributes.role} &#128900; {dateString}
+          <p className="flex max-sm:flex-col gap-x-2 mb-4 text-sm text-gray-500">
+            <span>{userAttributes.role}</span> <span className="max-sm:hidden font-bold">&#128900;</span> <span>{dateString}</span>
           </p>
           {!analyticsLoading && analyticsData?.data && (
             <TransOpAnalyticsDashboard data={analyticsData.data as TransOpAnalyticsData} variant="compact" />
@@ -752,8 +752,8 @@ function Index() {
           <h1 className="mb-2 text-2xl leading-none font-bold text-gray-900">
             Welcome, {userAttributes.fullName}
           </h1>
-          <p className="mb-4 text-sm text-gray-700">
-            {userAttributes.role} &#128900; {dateString}
+          <p className="flex max-sm:flex-col gap-x-2 mb-4 text-sm text-gray-500">
+            <span>{userAttributes.role}</span> <span className="max-sm:hidden font-bold">&#128900;</span> <span>{dateString}</span>
           </p>
           {!analyticsLoading && analyticsData?.data && (
             <BcoAnalyticsDashboard data={analyticsData.data as BCOAnalyticsData} variant="compact" />
