@@ -93,7 +93,7 @@ export function DataTable<TData, TValue>({
         <Table className="leading-4">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id} className="bg-gray-50/50 hover:bg-gray-50 data-[state=selected]:bg-gray-50/50 text-xs tracking-wide">
+              <TableRow key={headerGroup.id} className="bg-gray-50/50 hover:bg-gray-50 data-[state=selected]:bg-gray-50/50 text-xs uppercase tracking-wide">
                 {headerGroup.headers.map((header) => {
                   return (
                     <TableHead key={header.id} className="px-4 text-gray-500">
@@ -118,7 +118,7 @@ export function DataTable<TData, TValue>({
                   className="hover:bg-gray-50/50 data-[state=selected]:bg-gray-50/50"
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id} className="px-4 py-4">
+                    <TableCell key={cell.id} className="p-4 has-[button]:px-4 has-[button]:py-3">
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>
                   ))}
