@@ -84,7 +84,7 @@ export function DataTable<TData, TValue>({ columns, data ,meta}: DataTableProps<
         <Table className="leading-4">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id} className="bg-gray-50/50 hover:bg-gray-50 data-[state=selected]:bg-gray-50/50 text-xs tracking-wide">
+              <TableRow key={headerGroup.id} className="bg-gray-50/50 hover:bg-gray-50 data-[state=selected]:bg-gray-50/50 text-xs uppercase tracking-wide">
                 {headerGroup.headers.map((header) => (
                   <TableHead key={header.id} className="px-4 text-gray-500">
                     {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
@@ -98,7 +98,7 @@ export function DataTable<TData, TValue>({ columns, data ,meta}: DataTableProps<
               table.getRowModel().rows.map((row) => (
                 <TableRow key={row.id} className="hover:bg-gray-50/50 data-[state=selected]:bg-gray-50/50">
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id} className="p-4">
+                    <TableCell key={cell.id} className="p-4 has-[button]:px-4 has-[button]:py-3">
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>
                   ))}
@@ -113,7 +113,7 @@ export function DataTable<TData, TValue>({ columns, data ,meta}: DataTableProps<
             )}
           </TableBody>
         </Table>
-      </div>  
+      </div>
       {/* Pagination */}
       {totalRows > 0 && (
         // Full pagination controls render only if there are more than 12 rows to display

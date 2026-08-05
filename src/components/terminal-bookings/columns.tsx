@@ -216,10 +216,10 @@ export const columns = (status: string): ColumnDef<any>[] => {
             }
       
             return (
-              <div className="flex space-x-4 justify-center">
-              <Button variant="ghost" onClick={handleFlagToggle} className="p-2">
-                <Flag className={flagged ? "text-red-600" : "text-gray-400"} />
-              </Button>
+              <div className="text-center">
+                <Button variant="ghost" onClick={handleFlagToggle} className="p-2">
+                  <Flag className={flagged ? "text-red-600" : "text-gray-500"} />
+                </Button>
               </div>
             )
     },
