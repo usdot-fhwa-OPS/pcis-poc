@@ -65,7 +65,7 @@ function RouteComponent() {
         <Button 
           variant="outline" 
           onClick={() => setBerthAvailabilityOpen(true)} 
-          className="h-auto hover:bg-gray-50/50 border-gray-300 hover:border-gray-900 rounded-lg text-gray-700 hover:text-gray-900"
+          className="h-9 hover:bg-gray-50/50 border-gray-300 hover:border-gray-900 rounded-lg text-gray-700 hover:text-gray-900"
         >
           Set Berth Availability
         </Button>
