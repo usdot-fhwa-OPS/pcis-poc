@@ -43,7 +43,7 @@ export default function TerminalCapacityComponent() {
       ) : (
         <>
           <div className="flex max-sm:flex-col max-sm:gap-y-4 items-center max-sm:items-start justify-between mb-6">
-            <p className="flex max-sm:flex-wrap gap-x-2 text-sm text-gray-700">
+            <p className="flex max-lg:flex-wrap gap-x-2 text-sm text-gray-700">
               <span>Maximum Terminal Capacity:</span>
               <span className="font-medium">
                 {maxTerminalCapacity[0].capacity} Reservations per day
