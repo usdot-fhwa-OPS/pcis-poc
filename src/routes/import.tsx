@@ -18,7 +18,7 @@ function RouteComponent() {
           <span>Accepted format: .csv</span> <span className="max-sm:hidden font-bold">&#128900;</span> <span>This file contains: cargo unit IDs, vessel info, origin/destination, arrival timing</span>
         </p>
         <h3 className="mb-2 leading-none font-medium text-gray-900">Instructions for file attachment:</h3>
-        <ol className="mb-6 space-y-2 list-decimal list-inside text-sm text-gray-700">
+        <ol role="list" className="list-decimal list-inside space-y-2 mb-6 text-sm text-gray-700">
           <li>Locate your cargo manifest file on your computer.</li>
           <li>Drag and drop the file into the upload area below or select &ldquo;Browse Files&rdquo; to find it.</li>
           <li>A check mark will appear next to your file&apos;s name when it is uploaded.</li>
@@ -35,20 +35,20 @@ function RouteComponent() {
       <div className="mb-6 p-6 bg-white border border-gray-200 rounded-xl">
         <h3 className="mb-2 leading-none font-medium text-gray-900">Required Data Fields</h3>
         <p className="mb-4 pb-1 border-b text-sm text-gray-500">The manifest CSV must include the following columns:</p>
-        <ul className="list-disc pl-4 grid grid-cols-2 gap-3 text-sm">
-          <li className="marker:text-blue-600 marker:text-xl">
+        <ul role="list" className="list-disc pl-4 marker:text-blue-600 marker:text-xl grid grid-cols-2 gap-x-4 gap-y-3 text-sm">
+          <li>
             <p className="font-medium text-gray-900">Cargo Unit ID</p>
             <p className="text-xs text-gray-500">Unique identifier per cargo unit (e.g. CGO-2026-0041)</p>
           </li>
-          <li className="marker:text-blue-600 marker:text-xl">
+          <li>
             <p className="font-medium text-gray-900">Vessel Name</p>
             <p className="text-xs text-gray-500">Name of the vessel (e.g. MV Pacific Star)</p>
           </li>
-          <li className="marker:text-blue-600 marker:text-xl">
+          <li>
             <p className="font-medium text-gray-900">Origin / Destination</p>
             <p className="text-xs text-gray-500">Port of origin and delivery destination</p>
           </li>
-          <li className="marker:text-blue-600 marker:text-xl">
+          <li>
             <p className="font-medium text-gray-900">Arrival Timing</p>
             <p className="text-xs text-gray-500">Expected arrival date and time window</p>
           </li>
