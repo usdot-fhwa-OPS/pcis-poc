@@ -35,24 +35,24 @@ function RouteComponent() {
       <div className="mb-6 p-6 bg-white border border-gray-200 rounded-xl">
         <h3 className="mb-2 leading-none font-medium text-gray-900">Required Data Fields</h3>
         <p className="mb-4 pb-1 border-b text-sm text-gray-500">The manifest CSV must include the following columns:</p>
-        <div className="grid grid-cols-2 gap-3 text-sm">
-          <div>
+        <ul className="list-disc pl-4 grid grid-cols-2 gap-3 text-sm">
+          <li className="marker:text-blue-600 marker:text-xl">
             <p className="font-medium text-gray-900">Cargo Unit ID</p>
             <p className="text-xs text-gray-500">Unique identifier per cargo unit (e.g. CGO-2026-0041)</p>
-          </div>
-          <div>
+          </li>
+          <li className="marker:text-blue-600 marker:text-xl">
             <p className="font-medium text-gray-900">Vessel Name</p>
             <p className="text-xs text-gray-500">Name of the vessel (e.g. MV Pacific Star)</p>
-          </div>
-          <div>
+          </li>
+          <li className="marker:text-blue-600 marker:text-xl">
             <p className="font-medium text-gray-900">Origin / Destination</p>
             <p className="text-xs text-gray-500">Port of origin and delivery destination</p>
-          </div>
-          <div>
+          </li>
+          <li className="marker:text-blue-600 marker:text-xl">
             <p className="font-medium text-gray-900">Arrival Timing</p>
             <p className="text-xs text-gray-500">Expected arrival date and time window</p>
-          </div>
-        </div>
+          </li>
+        </ul>
       </div>
       <div className="flex justify-end gap-3">
         <Button variant="outline">Cancel</Button>
