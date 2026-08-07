@@ -11,6 +11,8 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/
 import { cn } from "../../lib/utils"
 import { BerthRequestDomain } from "../berth-requests/berth-request-domain"
 import { getManifestDisplay, getBerthDisplay } from "./vessel-activity-types"
+import { updateBerthRequest } from "../berth-requests/berth-request-client"
+import { VesselAcitivtyTableMeta } from "./data-table"
 
 const TIME_OPTIONS = [
   "12:00 AM", "01:00 AM", "02:00 AM", "03:00 AM", "04:00 AM", "05:00 AM",
@@ -25,11 +27,13 @@ function DateTimePicker({
   requestId,
   field,
   disabled = false,
+  afterSaved,
 }: {
   initialValue: string | undefined
   requestId: string
   field: "ataAt" | "atdAt"
   disabled?: boolean
+  afterSaved?: any
 }) {
   const parsedDate = initialValue ? new Date(initialValue) : undefined
   const parsedTime = (() => {
@@ -44,12 +48,16 @@ function DateTimePicker({
 
   const label = field === "ataAt" ? "Enter ATA" : "Enter ATD"
   const displayLabel = date ? `${format(date, "MM/dd/yyyy")} ${time}` : undefined
+  
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!date) return
     const combined = `${format(date, "MM/dd/yyyy")} ${time}`
     setOpen(false)
-    // TODO: call updateBerthRequest(requestId, { [field]: combined }) once wired up
+    let berthReq = {requestId:requestId} as BerthRequestDomain;
+    berthReq[field] = combined;
+    await updateBerthRequest(berthReq)
+    afterSaved(requestId, combined);
     console.log("TODO updateBerthRequest", requestId, field, combined)
   }
 
@@ -134,11 +142,14 @@ const etaColumn: ColumnDef<BerthRequestDomain> = {
 const ataColumn: ColumnDef<BerthRequestDomain> = {
   id: "ataAt",
   header: "ATA",
-  cell: ({ row }) => (
+  cell: ({ row, table }) => (
     <DateTimePicker
       initialValue={row.original.ataAt}
       requestId={row.original.requestId}
       field="ataAt"
+      afterSaved= {(requestId:string, newVal:string)=>{
+        (table.options.meta as VesselAcitivtyTableMeta).setAtaAt(requestId, newVal)
+      }}
     />
   ),
 }
@@ -160,6 +171,7 @@ const atdColumn: ColumnDef<BerthRequestDomain> = {
       requestId={row.original.requestId}
       field="atdAt"
       disabled={!row.original.ataAt}
+      
     />
   ),
 }
@@ -194,7 +206,7 @@ const manifestColumn: ColumnDef<BerthRequestDomain> = {
   header: () => <div className="text-center">MANIFEST</div>,
   cell: ({ row }) => {
     // TODO: Pass actual hazmatCount from backend when available.
-    const display = getManifestDisplay(row.original, 0)
+    const display = getManifestDisplay(row.original)
     if (!display) return <div className="flex justify-center"><span className="text-gray-400 text-sm">—</span></div>
 
     const isHazmat = display.includes("Hazmat")

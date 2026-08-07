@@ -25,7 +25,7 @@ function ModifyBerthRequestComponent() {
 
   const handleSubmit = () => {
     if (formDataRef.current) {
-      sessionStorage.setItem('berthRequestOriginal', JSON.stringify(formDataRef.current));
+      sessionStorage.setItem('berthRequestConfirmed', JSON.stringify(formDataRef.current));
     }
     navigate({ to: "/berth-request-modify-confirmation" });
   }

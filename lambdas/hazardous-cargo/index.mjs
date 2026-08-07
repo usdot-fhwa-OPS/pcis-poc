@@ -330,10 +330,15 @@ async function approve(event) {
     const command = new TransactWriteCommand({
       TransactItems: [
         {
-          Delete: {
+          Update: {
             TableName: HAZARDOUS_CARGO_TABLE,
             Key: { vesselId: vesselId, cargoUnitID: cargoUnitID },
-            ReturnValues: "ALL_NEW",
+            UpdateExpression:
+              "SET reviewStatus = :status, updatedAt = :updatedAt",
+            ExpressionAttributeValues: {
+              ":status": status,
+              ":updatedAt": nowIso,
+            }, ReturnValues: "ALL_NEW",
           },
         },
         {
@@ -423,6 +428,8 @@ export const handler = async (event) => {
       case "PUT /setDocumentCompliant":
         return await setDocumentCompliant(event);
       case "PUT /completeDocumentCheck":
+        await completeDocumentCheck(event);
+        await setDocumentCompliant(event);
         return await approve(event);
       default:
         return response(404, { message: `Unsupported route: ${routeKey}` });

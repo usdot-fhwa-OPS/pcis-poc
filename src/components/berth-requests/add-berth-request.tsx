@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "../ui/button";
 import { Calendar } from "../ui/calendar";
 import { CalendarIcon, CheckCircle2, Info, Upload } from "lucide-react";
@@ -13,6 +13,7 @@ import { berthConfigList } from "./berth-request-client";
 import { populate } from '../../components/berth-requests/berth-config-state';
 import { BerthConfigDomain } from "./berth-config-domain";
 import { Input } from "../ui/input";
+import { ScrollArea } from "../ui/scroll-area";
 
 export interface BerthRequestFormData {
     terminalId: string;
@@ -38,11 +39,15 @@ interface AddBerthRequestProps {
 
 export const AddBerthRequest = ({ onDataChange, onManifestChange }: AddBerthRequestProps) => {
 
+      const raw = sessionStorage.getItem('berthRequestDraft');
+      const formDataRef = useRef<BerthRequestFormData | null>(raw ? JSON.parse(raw) : null);
+    
+
     const [selectedTerminalId, setSelectedTerminalId] = useState<string>("")
     const [startDate, setStartDate] = useState<Date>(new Date())
     const [endDate, setEndDate] = useState<Date>(new Date())
-    const [isStartCalendarOpen, setIsStartCalendarOpen] = useState(false)
-    const [isEndCalendarOpen, setIsEndCalendarOpen] = useState(false)
+     const [isStartCalendarOpen, setIsStartCalendarOpen] = useState(false)
+     const [isEndCalendarOpen, setIsEndCalendarOpen] = useState(false)
     const [selectedServices, setSelectedServices] = useState<string[]>([])
     const [selectedCargoManifestPath, setSelectedCargoManifestPath] = useState<string>('')
     const [manifestFileName, setManifestFileName] = useState<string>('')
@@ -69,23 +74,37 @@ export const AddBerthRequest = ({ onDataChange, onManifestChange }: AddBerthRequ
 
     useEffect(() => {
         if (!onDataChange) return;
-        fetchBerthConfigList();
+        fetchBerthConfigList().then(() => {
+            const terminal = TERMINALS[selectedTerminalId];
+            onDataChange({
+                terminalId: selectedTerminalId,
+                terminalName: terminal?.name ?? "",
+                terminalPhone: terminal?.phone ?? "",
+                terminalEmail: terminal?.email ?? "",
+                startDate,
+                startTime,
+                endDate,
+                endTime,
+                services: selectedServices,
+                cargoManifestName: manifestFileName,
+                cargoManifestPath: selectedCargoManifestPath,
+                vesselId: vesselId,
+            });
 
-        const terminal = TERMINALS[selectedTerminalId];
-        onDataChange({
-            terminalId: selectedTerminalId,
-            terminalName: terminal?.name ?? "",
-            terminalPhone: terminal?.phone ?? "",
-            terminalEmail: terminal?.email ?? "",
-            startDate,
-            startTime,
-            endDate,
-            endTime,
-            services: selectedServices,
-            cargoManifestName: manifestFileName,
-            cargoManifestPath: selectedCargoManifestPath,
-            vesselId: vesselId,
-        });
+            if (formDataRef.current) {
+                setSelectedTerminalId(formDataRef.current.terminalId || "")
+                setStartDate(formDataRef.current?.startDate || new Date())
+                setEndDate(formDataRef.current?.endDate || new Date())
+                setSelectedServices(formDataRef.current?.services || [])
+                setSelectedCargoManifestPath(formDataRef.current?.cargoManifestPath || '')
+                setManifestFileName(formDataRef.current?.cargoManifestName || '')
+                formDataRef.current = null;
+
+            }
+
+        })
+
+        
     }, [selectedTerminalId, startDate, startTime, endDate, endTime, selectedServices, selectedCargoManifestPath]);
 
     const getFileInfo = ($event: any) => {
@@ -122,6 +141,7 @@ export const AddBerthRequest = ({ onDataChange, onManifestChange }: AddBerthRequ
         setTerminals(terminal);
         dispatch(populate(brConfigList));
     }
+   
 
     return (
         <div className="border border-gray-200 rounded-xl bg-white p-6 md:p-8">
@@ -146,7 +166,7 @@ export const AddBerthRequest = ({ onDataChange, onManifestChange }: AddBerthRequ
                     {/* Requested Terminal */}
                     <div>
                         <Label className="text-xs font-medium text-gray-500 mb-2 block">Requested Terminal</Label>
-                        <Select onValueChange={setSelectedTerminalId}>
+                        <Select onValueChange={setSelectedTerminalId} value={selectedTerminalId}>
                             <SelectTrigger className="bg-white border-gray-200 h-10">
                                 <SelectValue placeholder="Select a terminal" />
                             </SelectTrigger>
@@ -216,7 +236,7 @@ export const AddBerthRequest = ({ onDataChange, onManifestChange }: AddBerthRequ
                                 </div>
                                 <FileUploader
                                     acceptedFileTypes={['.csv']}
-                                    path="stowPlans/"
+                                    path="stowPlans/berthRequest/"
                                     maxFileCount={1}
                                     isResumable
                                     onUploadSuccess={($event) => getFileInfo($event)}
@@ -279,7 +299,9 @@ export const AddBerthRequest = ({ onDataChange, onManifestChange }: AddBerthRequ
                 </Button>
             </PopoverTrigger>
             <PopoverContent className="w-auto p-0">
-                <Calendar mode="single" selected={startDate} disabled={{ before: new Date() }} onSelect={handleStartDateSelect} initialFocus />
+                <ScrollArea className="h-56 w-auto p-1">
+                    <Calendar mode="single" selected={startDate} disabled={{ before: new Date() }} onSelect={handleStartDateSelect} initialFocus />
+                </ScrollArea>
             </PopoverContent>
         </Popover>;
     }
@@ -312,7 +334,10 @@ export const AddBerthRequest = ({ onDataChange, onManifestChange }: AddBerthRequ
                 </Button>
             </PopoverTrigger>
             <PopoverContent className="w-auto p-0">
-                <Calendar mode="single" selected={endDate} disabled={{ before: new Date() }} onSelect={handleEndDateSelect} initialFocus />
+                <ScrollArea className="h-56 w-auto p-1">
+                    <Calendar mode="single" selected={endDate} disabled={{ before: new Date() }} onSelect={handleEndDateSelect} initialFocus />
+                </ScrollArea>
+
             </PopoverContent>
         </Popover>;
     }
