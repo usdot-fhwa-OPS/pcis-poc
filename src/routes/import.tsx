@@ -23,22 +23,14 @@ function RouteComponent() {
           <li>Drag and drop the file into the upload area below or select &ldquo;Browse Files&rdquo; to find it.</li>
           <li>A check mark will appear next to your file&apos;s name when it is uploaded.</li>
         </ol>
-        <div className="mt-8">
-          <h2 className="text-xl font-semibold tracking-tight">Start Stow Plan Data Import</h2>
-          <p className="mt-2 text-sm text-muted-foreground">
-            Upload and process your Stow Plan file for your container planning and management.<br />
-            Required columns (in order): cargoUnitID, arrivalDate (M/DD/YYYY format), bcoEmail, bcoName, containerStatus 
-            (On-Dock/On-Ship), destination, origin
-          </p>
-          <FileUploader
-            acceptedFileTypes={[
-              '.csv',
-            ]}
-            path="stowPlans/"
-            maxFileCount={1}
-            isResumable
-          />
-        </div>
+        <FileUploader
+          acceptedFileTypes={[
+            '.csv',
+          ]}
+          path="stowPlans/cargoUnits/"
+          maxFileCount={1}
+          isResumable
+        />
       </div>
       <div className="mb-6 p-6 bg-white border border-gray-200 rounded-xl">
         <h3 className="mb-2 leading-none font-medium text-gray-900">Required Data Fields</h3>
