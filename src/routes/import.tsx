@@ -31,6 +31,10 @@ function RouteComponent() {
           path="stowPlans/cargoUnits/"
           maxFileCount={1}
           isResumable
+          displayText={{
+            dropFilesText: 'Drag and drop your CSV file here, or...',
+            browseFilesText: 'Browse Files',
+          }}
         />
       </div>
       <div className="mb-6 p-6 bg-white border border-gray-200 rounded-xl">
