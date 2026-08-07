@@ -9,25 +9,18 @@ interface TerminalBookingsTableProps {
 
 export function TerminalBookingsTable({ data, status, meta }: TerminalBookingsTableProps) {
   return (
-    <div className="container mx-auto p-10 overflow-x-auto">
-      <DataTable columns={columns(status)} data={data} meta={meta} />
-    </div>
-  );
+    <DataTable columns={columns(status)} data={data} meta={meta} />
+  )
 }
 
 export function TerminalBookingModification({ data, status, meta }: TerminalBookingsTableProps) {
-    return (
-      <div className="container mx-auto p-10 overflow-x-auto">
-        <DataTable columns={columns(status)} data={data} meta={meta} />
-      </div>
-    )
+  return (
+    <DataTable columns={columns(status)} data={data} meta={meta} />
+  )
 }
 
-  export function TerminalBookingsCompleted({ data}: TerminalBookingsTableProps) {
-    return (
-      <div className="container w-xl max-w-9/10 p-10 overflow-x-auto">
-        <DataTable columns={CompletedColumn()} data={data} />
-      </div>
-    );
-
+export function TerminalBookingsCompleted({ data}: TerminalBookingsTableProps) {
+  return (
+    <DataTable columns={CompletedColumn()} data={data} />
+  )
 }

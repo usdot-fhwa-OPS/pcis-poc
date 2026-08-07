@@ -8,8 +8,6 @@ interface HazardousCargoTableProps {
 
 export function HazardousCargoTable({ data }: HazardousCargoTableProps) {
   return (
-    <div className="w-full overflow-x-auto">
-      <DataTable columns={columns} data={data} />
-    </div>
+    <DataTable columns={columns} data={data} />
   )
 }

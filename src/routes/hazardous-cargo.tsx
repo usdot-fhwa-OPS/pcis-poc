@@ -74,7 +74,7 @@ function StatCard({
     variant === 'missing' ? 'border-red-200' : 'border-gray-200'
 
   return (
-    <div className={`bg-white border ${borderColor} rounded-lg p-5 flex flex-col gap-1`}>
+    <div className={`bg-white border ${borderColor} rounded-xl p-4 flex flex-col gap-1`}>
       <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">{label}</span>
       <span className={`text-3xl font-bold ${valueColor}`}>{value}</span>
       <span className="text-sm text-gray-500">{sublabel}</span>
@@ -96,21 +96,19 @@ function HazardousCargoPage() {
   const documentationMissing = data.filter((item) => !item.isCompliant).length
 
   return (
-    <div className="w-full px-6 py-6 md:px-10 md:py-8 flex flex-col gap-6">
+    <div className="w-full px-6 py-6 md:px-10 md:py-8">
       {/* Page header */}
-      <div className="flex flex-col gap-1">
-        <div className="flex items-center gap-2">
-          <TriangleAlert className="h-6 w-6 text-gray-700" />
-          <h1 className="text-2xl font-bold text-gray-900">Hazardous Cargo</h1>
-        </div>
-        <p className="text-sm text-gray-500">
-          System automatically scans all manifests for hazardous cargo classifications — UN number and hazard class
-        </p>
-      </div>
+      <h1 className="flex items-center gap-2 mb-2 text-2xl leading-none font-bold text-gray-900">
+        <TriangleAlert className="h-6 w-6 text-gray-700" />
+        Hazardous Cargo
+      </h1>
+      <p className="mb-4 text-sm text-gray-700">
+        System automatically scans all manifests for hazardous cargo classifications — UN number and hazard class
+      </p>
 
       {/* Summary widgets */}
       {/* TODO: Hook up each stat to the live DynamoDB query result once backend is integrated. */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-x-4 gap-y-2 mb-6">
         <StatCard
           label="Total Hazmat Cargo"
           value={totalHazmat}

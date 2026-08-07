@@ -25,13 +25,13 @@ const itemsByRole: Record<string, NavItem[]> = {
   "Terminal Operator": [
     { title: "Home", url: "/", icon: Home },
     { title: "Capacity Planning", url: "/capacity", icon: Gauge },
+    { title: "Berth Reservations", url: "/berth-manager", icon: Anchor },
+    { title: "Hazardous Cargo", url: "/hazardous-cargo", icon: TriangleAlert },
     { title: "Vessel Activity", url: "/vessel-activity", icon: Ship },
     { title: "Available Users", url: "/operators", icon: User },
     { title: "Upload Manifest", url: "/import", icon: FileUp },
     { title: "Upcoming Cargo", url: "/cargo", icon: Container },
     { title: "Cargo Reservations", url: "/reservation", icon: CalendarClock },
-    { title: "Hazardous Cargo", url: "/hazardous-cargo", icon: TriangleAlert },
-    { title: "Berth Reservations", url: "/berth-manager", icon: Anchor },
     { title: "Analytics", url: "/analytics", icon: BarChart },
   ],
   "Beneficiary Cargo Owner": [

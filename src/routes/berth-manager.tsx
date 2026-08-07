@@ -9,6 +9,8 @@ import { TerminalOperatorBerthRequestsTable } from '../components/berth-requests
 import { UserContext } from '../AppContext';
 import { BerthRequestDomain } from '../components/berth-requests/berth-request-domain';
 import { BerthConfigDomain } from '../components/berth-requests/berth-config-domain';
+import { Button } from "../components/ui/button.tsx";
+import { BerthAvailability } from "../components/berth/berth-availability.tsx";
 
 export const Route = createFileRoute('/berth-manager')({
   component: RouteComponent,
@@ -54,10 +56,20 @@ function RouteComponent() {
     fetchData();
   }
 
+  const [berthAvailabilityOpen, setBerthAvailabilityOpen] = useState(false)
+
   return (
-    <div className="w-full">
-      <div className="px-6 pt-6 md:px-10 md:pt-8 mb-4">
-        <h1 className="text-2xl font-bold text-gray-900">Berth Reservations</h1>
+    <div className="w-full px-6 py-6 md:pt-6 md:px-10 md:pb-8">
+      <div className="flex max-sm:flex-col max-sm:gap-y-4 items-center max-sm:items-start justify-between mb-4 max-sm:mb-6">
+        <h1 className="text-2xl leading-none font-semibold text-gray-900">Berth Reservations</h1>
+        <Button 
+          variant="outline" 
+          onClick={() => setBerthAvailabilityOpen(true)} 
+          className="h-9 hover:bg-gray-50/50 border-gray-300 hover:border-gray-900 rounded-lg text-gray-700 hover:text-gray-900"
+        >
+          Set Berth Availability
+        </Button>
+        <BerthAvailability isDialogOpen={berthAvailabilityOpen} handleCloseDialog={setBerthAvailabilityOpen} />
       </div>
       {loading ? (
         <div className="flex items-center justify-center h-64 text-gray-500">Loading berth requests…</div>

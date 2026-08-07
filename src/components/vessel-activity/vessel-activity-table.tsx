@@ -83,7 +83,7 @@ export function VesselActivityTable({ data }: VesselActivityTableProps) {
     <div className="flex flex-col gap-4">
       {/* Tab navigation */}
       <div className="border-b border-gray-200">
-        <div className="flex gap-6">
+        <div className="flex flex-wrap gap-x-6 gap-y-2">
           {TABS.map(({ key, label }) => (
             <button
               key={key}
@@ -101,7 +101,7 @@ export function VesselActivityTable({ data }: VesselActivityTableProps) {
       </div>
 
       {/* Filter chips + archived toggle + search — all in one row */}
-      <div className="flex items-center gap-2 p-2 bg-white border rounded-xl">
+      <div className="flex max-xl:flex-wrap items-center gap-2 p-2 bg-white border rounded-xl">
         {FILTERS.map(({ key, label, count }) => (
           <button
             key={key}
@@ -132,7 +132,7 @@ export function VesselActivityTable({ data }: VesselActivityTableProps) {
             placeholder="Search vessels..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-8 pr-3 py-1.5 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent w-48"
+            className="w-48 pl-8 pr-3 py-1.5 border border-gray-300 rounded-md text-sm placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent"
           />
         </div>
       </div>

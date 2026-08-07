@@ -3,7 +3,7 @@
 import { ColumnDef, Row, Table } from "@tanstack/react-table"
 import { useState } from "react"
 import { format } from "date-fns"
-import { CalendarIcon, CheckIcon, XIcon } from "lucide-react"
+import { CalendarIcon, CheckIcon, Pencil, Trash2, XIcon } from "lucide-react"
 import { Button } from "../../ui/button"
 import { Calendar } from "../../ui/calendar"
 import { Popover, PopoverContent, PopoverTrigger } from "../../ui/popover"
@@ -152,7 +152,7 @@ function DeleteDialog({ row, table }: { row: Row<BerthRequestDomain>; table: Tab
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger render={<Button size="sm" variant="link" className="text-red-600 p-0 h-auto">Delete</Button>} />
+      <DialogTrigger render={<Button variant="link" className="gap-1 h-auto p-0 text-red-600"><Trash2 className="h-[0.875rem] w-[0.875rem]" />Delete</Button>} />
       <DialogContent className="sm:max-w-sm" showCloseButton={false}>
         <DialogHeader>
           <DialogTitle className="uppercase tracking-wide text-center">Confirmation Required</DialogTitle>
@@ -341,7 +341,7 @@ export const columns: ColumnDef<BerthRequestDomain>[] = [
   },
   {
     accessorKey: "etdAt",
-    header: "Depature (ETA)",
+    header: "Depature (ETD)",
   },
   {
     accessorKey: "requestedAt",
@@ -355,16 +355,16 @@ export const columns: ColumnDef<BerthRequestDomain>[] = [
       return(
       <div className="flex space-x-4">
         <Button
-          size="sm"
           variant="link"
-          className="text-blue-600 p-0 h-auto"
+          className="gap-1 h-auto p-0 text-blue-600"
           onClick={() => {
              sessionStorage.setItem('berthRequestOriginal', JSON.stringify(row.original))
             navigate({to:'/berth-request-modify'});
 
           }}
         >
-          Modify
+          <Pencil className="h-[0.875rem] w-[0.875rem]" />
+          Edit
         </Button>
         <DeleteDialog row={row} table={table as Table<BerthRequestDomain>} />
       </div>

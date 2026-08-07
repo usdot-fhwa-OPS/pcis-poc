@@ -9,25 +9,18 @@ interface TransportationBookingsTableProps {
 
 export function TransportationBookingsTableUpcoming({ data, meta }: TransportationBookingsTableProps) {
   return (
-    <div className="container mx-auto p-10 overflow-x-auto">
-      <DataTable columns={columns()} data={data} meta={meta} />
-    </div>
+    <DataTable columns={columns()} data={data} meta={meta} />
   );
 }
 
 export function TransportationBookingsTableOngoing({ data, meta }: TransportationBookingsTableProps) {
   return (
-    <div className="container mx-auto p-10 overflow-x-auto">
-      <DataTable columns={OngoingColumn()} data={data} meta={meta}/>
-    </div>
+    <DataTable columns={OngoingColumn()} data={data} meta={meta}/>
   );
 }
 
   export function TransportationBookingsTableCompleted({ data}: TransportationBookingsTableProps) {
     return (
-      <div className="container mx-auto p-10 overflow-x-auto">
-        <DataTable columns={CompletedColumn()} data={data} />
-      </div>
+      <DataTable columns={CompletedColumn()} data={data} />
     );
-
 }
