@@ -14,8 +14,8 @@ function RouteComponent() {
       <p className="mb-6 text-sm text-gray-700">Upload vessel manifest or Manifest &mdash; CSV format supported.</p>
       <div className="mb-4 p-6 bg-white border border-gray-200 rounded-xl">
         <h2 className="mb-2 text-lg leading-none font-medium text-gray-900">Upload Manifest File</h2>
-        <p className="flex max-sm:flex-col gap-x-2 mb-6 text-sm text-gray-500">
-          <span>Accepted format: .csv</span> <span className="max-sm:hidden font-bold">&#128900;</span> <span>This file contains: cargo unit IDs, vessel info, origin/destination, arrival timing</span>
+        <p className="flex max-lg:flex-col gap-2 mb-6 text-sm text-gray-500">
+          <span>Accepted format: .csv</span> <span className="max-lg:hidden font-bold">&#128900;</span> <span>This file contains: cargo unit IDs, vessel info, origin/destination, arrival timing</span>
         </p>
         <h3 className="mb-2 leading-none font-medium text-gray-900">Instructions for file attachment:</h3>
         <ol role="list" className="list-decimal list-inside space-y-2 mb-6 text-sm text-gray-700">
@@ -35,7 +35,7 @@ function RouteComponent() {
       <div className="mb-6 p-6 bg-white border border-gray-200 rounded-xl">
         <h3 className="mb-2 leading-none font-medium text-gray-900">Required Data Fields</h3>
         <p className="mb-4 pb-1 border-b text-sm text-gray-500">The manifest CSV must include the following columns:</p>
-        <ul role="list" className="list-image-[url('data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20width=%278%27%20height=%278%27%3E%3Ccircle%20cx=%274%27%20cy=%274%27%20r=%274%27%20fill=%27%232563eb%27/%3E%3C/svg%3E')] pl-0 grid grid-cols-2 gap-x-6 gap-y-3 text-sm">
+        <ul role="list" className="list-image-[url('data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20width=%278%27%20height=%278%27%3E%3Ccircle%20cx=%274%27%20cy=%274%27%20r=%274%27%20fill=%27%232563eb%27/%3E%3C/svg%3E')] pl-0 grid grid-cols-2 max-sm:grid-cols-1 gap-x-6 gap-y-3 text-sm">
           <li className="ml-6 pr-6">
             <p className="font-medium text-gray-900">Cargo Unit ID</p>
             <p className="text-xs text-gray-500">Unique identifier per cargo unit (e.g. CGO-2026-0041)</p>
@@ -54,7 +54,7 @@ function RouteComponent() {
           </li>
         </ul>
       </div>
-      <div className="flex justify-end gap-3">
+      <div className="flex items-center med:justify-end gap-3">
         <Button variant="outline">Cancel</Button>
         <Button variant="default">Submit Manifest</Button>
       </div>
