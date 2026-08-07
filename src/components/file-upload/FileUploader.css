@@ -1,0 +1,9 @@
+
+/* Custom styling for Amplify's FileUploader component used in Upload Manifest  */
+
+.amplify-fileuploader__dropzone {
+  --amplify-components-fileuploader-dropzone-border-color: #155dfc;
+  --amplify-components-fileuploader-dropzone-border-width: 2px;
+  --amplify-components-fileuploader-dropzone-border-style: dashed;
+  --amplify-components-fileuploader-dropzone-background-color: #eff6ff;
+}

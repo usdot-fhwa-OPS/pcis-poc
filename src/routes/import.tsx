@@ -2,6 +2,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { FileUploader } from '@aws-amplify/ui-react-storage';
 import { Button } from "../components/ui/button";
 import '@aws-amplify/ui-react/styles.css';
+import '../components/file-upload/FileUploader.css';
 
 export const Route = createFileRoute('/import')({
   component: RouteComponent,
