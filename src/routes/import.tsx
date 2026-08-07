@@ -35,7 +35,7 @@ function RouteComponent() {
       <div className="mb-6 p-6 bg-white border border-gray-200 rounded-xl">
         <h3 className="mb-2 leading-none font-medium text-gray-900">Required Data Fields</h3>
         <p className="mb-4 pb-1 border-b text-sm text-gray-500">The manifest CSV must include the following columns:</p>
-        <ul role="list" className="list-disc list-outside pl-0 marker:text-blue-600 marker:text-2xl marker:leading-2 grid grid-cols-2 gap-x-6 gap-y-3 text-sm">
+        <ul role="list" className="list-image-[url('data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20width=%278%27%20height=%278%27%3E%3Ccircle%20cx=%274%27%20cy=%274%27%20r=%274%27%20fill=%27%232563eb%27/%3E%3C/svg%3E')] pl-0 grid grid-cols-2 gap-x-6 gap-y-3 text-sm">
           <li className="ml-6 pr-6">
             <p className="font-medium text-gray-900">Cargo Unit ID</p>
             <p className="text-xs text-gray-500">Unique identifier per cargo unit (e.g. CGO-2026-0041)</p>
