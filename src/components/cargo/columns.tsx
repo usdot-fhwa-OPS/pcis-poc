@@ -53,7 +53,7 @@ export const columns: ColumnDef<UpcomingCargo>[] = [
   }, 
   {
     accessorKey: "containerStatus",
-    header: "Container Status",
+    header: "Cargo Status",
     cell: ({ row }) => {
       // Initialize local state with the current containerStatus.
       const [cargoStatus, setStatus] = useState<"On-Ship" | "On-Dock">(
@@ -95,7 +95,7 @@ export const columns: ColumnDef<UpcomingCargo>[] = [
   },
   {
     accessorKey: "flag",
-    header: "Flag",
+    header: () => <div className="text-center">Flag</div>,
     cell: ({ row }) => {
       // Initialize flagged state from the row data; fallback to false if undefined.
       const [flagged, setFlagged] = useState<boolean>(row.original.flag || false)
@@ -119,9 +119,11 @@ export const columns: ColumnDef<UpcomingCargo>[] = [
       }
 
       return (
-        <Button variant="ghost" onClick={handleFlagToggle} className="p-2">
-          <Flag className={flagged ? "text-red-600" : "text-gray-400"} />
-        </Button>
+        <div className="text-center">
+          <Button variant="ghost" onClick={handleFlagToggle} className="p-2">
+            <Flag className={flagged ? "text-red-600" : "text-gray-500"} />
+          </Button>
+        </div>
       )
     },
   },

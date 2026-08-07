@@ -44,7 +44,7 @@ function VesselActivityPage() {
 
   return (
     <div className="w-full px-6 py-6 md:px-10 md:py-8 flex flex-col gap-6">
-      <h1 className="text-2xl font-bold text-gray-900">Vessel Activity</h1>
+      <h1 className="text-2xl leading-none font-bold text-gray-900">Vessel Activity</h1>
       {loading
         ? <div className="flex items-center justify-center h-64 text-gray-500">Loading vessel activity…</div>
         : <VesselActivityTable data={data} />

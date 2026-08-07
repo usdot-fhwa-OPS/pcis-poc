@@ -12,12 +12,12 @@ export const columns: ColumnDef<TerminalCapacityDomain>[] = [
   },
   {
     id: "startDateTime",
-    header: "Start Date/Time",
+    header: "Start",
     cell: ({ row }) => `${row.original.startDate ?? ""} ${row.original.startTime ?? ""}`.trim(),
   },
   {
     id: "endDateTime",
-    header: "End Date/Time",
+    header: "End",
     cell: ({ row }) => `${row.original.endDate ?? ""} ${row.original.endTime ?? ""}`.trim(),
   },
   {

@@ -278,7 +278,7 @@ const [endTime, setEndTime] = useState<string | undefined>(timeOptions[0])
                                             <SelectTrigger className={cn("w-[150px]",)}>
                                                 <SelectValue placeholder={repeatOption} />
                                             </SelectTrigger>
-                                            <SelectContent>
+                                            <SelectContent className="max-h-56 overflow-y-auto">
                                                 {repeatOptionList.map((repeatOption) => (
                                                     <SelectItem key={repeatOption} value={repeatOption}>
                                                         {repeatOption}
@@ -429,7 +429,7 @@ const [endTime, setEndTime] = useState<string | undefined>(timeOptions[0])
                 </Button>
             </PopoverTrigger>
             <PopoverContent className="w-auto p-0">
-                <Calendar mode="single" selected={endDate} disabled={{ before: new Date() }} onSelect={handleEndDateSelect} initialFocus />
+                    <Calendar mode="single" selected={endDate} disabled={{ before: new Date() }} onSelect={handleEndDateSelect} initialFocus />
             </PopoverContent>
         </Popover>;
     }
@@ -461,8 +461,8 @@ const [endTime, setEndTime] = useState<string | undefined>(timeOptions[0])
                     {startDate ? format(startDate, "MM/dd/yyyy") : <span>Pick a date</span>}
                 </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-auto p-0">
-                <Calendar mode="single" selected={startDate} disabled={{ before: new Date() }} onSelect={handleStartDateSelect} initialFocus />
+            <PopoverContent className="w-auto p-">
+                    <Calendar mode="single" selected={startDate} disabled={{ before: new Date() }} onSelect={handleStartDateSelect} initialFocus />
             </PopoverContent>
         </Popover>;
     }

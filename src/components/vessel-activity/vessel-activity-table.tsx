@@ -24,19 +24,31 @@ export function VesselActivityTable({ data }: VesselActivityTableProps) {
   const [activeFilter, setActiveFilter] = useState<FilterKey>("all")
   const [includeArchived, setIncludeArchived] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
+  const [refresh, setRefresh] = useState(0)
+
+
+  const setAtaAt = (requestId:string, newVal:string) =>{
+    data.map((item:BerthRequestDomain)=>{
+     if( item.requestId === requestId){
+      item.ataAt = newVal;
+      setRefresh(refresh+1);
+     }
+     
+    })
+  }
 
   // Base data: archived filter applied.
   const baseData = useMemo(() => {
     if (includeArchived) return data
     return data.filter((r) => !isVesselArchived(r))
-  }, [data, includeArchived])
+  }, [data, includeArchived, refresh])
 
   // Tab-filtered data: inbound = no ATA yet, outbound = ATA set but no ATD yet.
   const tabData = useMemo(() => {
     if (activeTab === "inbound") return baseData.filter((r) => !r.ataAt)
     if (activeTab === "outbound") return baseData.filter((r) => !!r.ataAt && !r.atdAt)
     return baseData
-  }, [baseData, activeTab])
+  }, [baseData, activeTab, refresh])
 
   // Chip counts from tab-filtered data (before chip filter).
   // TODO: Pass real hazmatCount per item once the backend provides it.
@@ -45,7 +57,7 @@ export function VesselActivityTable({ data }: VesselActivityTableProps) {
     needsAttention: tabData.filter((r) => needsAttention(r, 0)).length,
     berthPending: tabData.filter(isBerthPending).length,
     cleared: tabData.filter(isVesselArchived).length,
-  }), [tabData])
+  }), [tabData, refresh])
 
   // Final data: tab + chip filter + vessel search.
   const filteredData = useMemo(() => {
@@ -65,7 +77,7 @@ export function VesselActivityTable({ data }: VesselActivityTableProps) {
     }
 
     return d
-  }, [tabData, activeFilter, searchQuery])
+  }, [tabData, activeFilter, searchQuery, refresh])
 
   const FILTERS: { key: FilterKey; label: string; count: number }[] = [
     { key: "all", label: "All", count: counts.all },
@@ -83,7 +95,7 @@ export function VesselActivityTable({ data }: VesselActivityTableProps) {
     <div className="flex flex-col gap-4">
       {/* Tab navigation */}
       <div className="border-b border-gray-200">
-        <div className="flex gap-6">
+        <div className="flex flex-wrap gap-x-6 gap-y-2">
           {TABS.map(({ key, label }) => (
             <button
               key={key}
@@ -101,7 +113,7 @@ export function VesselActivityTable({ data }: VesselActivityTableProps) {
       </div>
 
       {/* Filter chips + archived toggle + search — all in one row */}
-      <div className="flex items-center gap-2 p-2 bg-white border rounded-xl">
+      <div className="flex max-xl:flex-wrap items-center gap-2 p-2 bg-white border rounded-xl">
         {FILTERS.map(({ key, label, count }) => (
           <button
             key={key}
@@ -132,13 +144,13 @@ export function VesselActivityTable({ data }: VesselActivityTableProps) {
             placeholder="Search vessels..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-8 pr-3 py-1.5 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent w-48"
+            className="w-48 pl-8 pr-3 py-1.5 border border-gray-300 rounded-md text-sm placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent"
           />
         </div>
       </div>
 
       {/* Table — columns change per tab */}
-      <DataTable columns={activeColumns} data={filteredData} />
+      <DataTable columns={activeColumns} data={filteredData} meta={{setAtaAt:setAtaAt}}/>
     </div>
   )
 }

@@ -3,10 +3,10 @@ import { BerthRequestDomain } from "../berth-requests/berth-request-domain"
 // Returns "Cleared" | "X Hazmat" | "Submitted" | "" for the MANIFEST column.
 // hazmatCount must be passed in from the caller once the backend provides it.
 // TODO: Derive hazmatCount from BerthRequestDomain when that field is available.
-export function getManifestDisplay(req: BerthRequestDomain, hazmatCount = 0): string {
+export function getManifestDisplay(req: BerthRequestDomain): string {
   if (req.ataAt && req.atdAt) return "Cleared"
-  if (hazmatCount > 0) return `${hazmatCount} Hazmat`
-  if (req.manifestFileName) return "Submitted"
+  if (Number(req.hazmatCount) > 0) return `${req.hazmatCount} Hazmat`
+  if (req.manifestPath) return "Submitted"
   return ""
 }
 
