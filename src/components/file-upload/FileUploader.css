@@ -18,20 +18,19 @@
 }
 
 /* DropZone Icon */
-
 .amplify-fileuploader__dropzone__icon {
     --amplify-components-fileuploader-dropzone-icon-font-size: 24px;
-    --amplify-components-fileuploader-dropzone-icon-line-height: 0;
+    line-height: 0;
 }
 
 .amplify-fileuploader__dropzone__icon .amplify-icon {
-    width: auto;
-    height: auto;
+    width: 16px;
+    height: 24px;
 }
 
 .amplify-fileuploader__dropzone__icon .amplify-icon>svg {
     --amplify-components-icon-height: 24px;
-    --amplify-components-icon-width: 24px;
+    --amplify-components-icon-width: 16px;
 }
 
 /* DropZone Text */
@@ -51,7 +50,7 @@
     --amplify-components-button-hover-background-color: #f9fafb80;
     --amplify-components-button-hover-border-color: #101828;
     --amplify-components-button-hover-color: #101828;
-    --amplify-components-button-text-font-weight: 500;
+    --amplify-components-button-font-weight: 500;
     --amplify-components-button-focus-background-color: #f9fafb80;
     --amplify-components-button-focus-border-color: #101828;
     --amplify-components-button-focus-color: #101828;
@@ -66,4 +65,5 @@
     --amplify-components-button-focus-color: #101828;
     --amplify-components-fieldcontrol-focus-border-color: #101828;
     outline-color: #101828;
+    box-shadow: none;
 }
