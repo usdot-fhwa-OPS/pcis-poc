@@ -33,4 +33,8 @@
   --amplify-components-button-hover-background-color: #f9fafb80;
   --amplify-components-button-hover-border-color: #101828;
   --amplify-components-button-hover-color: #101828;
+  --amplify-components-button-text-font-weight: 500;
+  --amplify-components-button-focus-background-color: #f9fafb80;
+  --amplify-components-button-focus-border-color: #101828;
+  --amplify-components-button-focus-color: #101828;
 }
