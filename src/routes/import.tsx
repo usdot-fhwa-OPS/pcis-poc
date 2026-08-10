@@ -46,9 +46,8 @@ function RouteComponent() {
           </li>
         </ul>
       </div>
-      <div className="flex md:justify-end gap-3">
-        <Button variant="outline" className="rounded-lg">Cancel</Button>
-        <Button variant="default" className="rounded-lg">Submit Manifest</Button>
+      <div className="flex gap-3">
+        <Button onClick={() => navigate(-1)} variant="outline" className="rounded-lg">Cancel</Button>
       </div>
     </div>
   )
