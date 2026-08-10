@@ -1,8 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { FileUploader } from '@aws-amplify/ui-react-storage';
+import { UploadManifestFile } from '../components/file-upload/file-upload.tsx';
 import { Button } from "../components/ui/button";
-import '@aws-amplify/ui-react/styles.css';
-import '../components/file-upload/FileUploader.css';
 
 export const Route = createFileRoute('/import')({
   component: RouteComponent,
@@ -24,18 +22,7 @@ function RouteComponent() {
           <li>Drag and drop the file into the upload area below or select &ldquo;Browse Files&rdquo; to find it.</li>
           <li>A check mark will appear next to your file&apos;s name when it is uploaded.</li>
         </ol>
-        <FileUploader
-          acceptedFileTypes={[
-            '.csv',
-          ]}
-          path="stowPlans/cargoUnits/"
-          maxFileCount={1}
-          isResumable
-          displayText={{
-            dropFilesText: 'Drag and drop your CSV file here, or...',
-            browseFilesText: 'Browse Files',
-          }}
-        />
+        <UploadManifestFile />
       </div>
       <div className="mb-6 p-6 bg-white border border-gray-200 rounded-xl">
         <h3 className="mb-2 leading-none font-medium text-gray-900">Required Data Fields</h3>
