@@ -72,22 +72,13 @@
     --amplify-components-button-focus-border-color: #101828;
     --amplify-components-button-focus-color: #101828;
     --amplify-components-button-text-font-weight: 500;
-    --amplify-components-button-active-background-color: #ffff00;
-    --amplify-components-button-active-border-color: #ff0000;
-    --amplify-components-button-active-color: #ff00ff;
-    box-shadow: 0 1px 3px 0 #0000001a;
-}
-/*
-.amplify-fileuploader__file__picker:focus,
-.amplify-fileuploader__file__picker[data-focus='true'] {
-    --amplify-components-button-focus-background-color: #f9fafb80;
-    --amplify-components-button-focus-border-color: #101828;
-    --amplify-components-button-focus-color: #101828;
-    --amplify-components-fieldcontrol-focus-border-color: #101828;
-    --amplify-components-button-active-background-color: #ff0000;
+    --amplify-components-button-active-background-color: #f9fafb80;
     --amplify-components-button-active-border-color: #101828;
     --amplify-components-button-active-color: #101828;
-    outline-color: #101828;
+    box-shadow: 0 1px 3px 0 #0000001a;
+}
+
+.amplify-fileuploader__file__picker:focus,
+.amplify-fileuploader__file__picker[data-focus='true'] {
     box-shadow: none;
 }
-*/
