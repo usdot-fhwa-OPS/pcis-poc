@@ -4,6 +4,12 @@
 
 /* DropZone */
 .amplify-fileuploader__dropzone {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 24px;
     --amplify-components-fileuploader-dropzone-background-color: #eff6ff;
     --amplify-components-fileuploader-dropzone-border-color: #155dfc;
     --amplify-components-fileuploader-dropzone-border-width: 2px;
@@ -12,6 +18,17 @@
 }
 
 /* DropZone Icon */
+
+.amplify-fileuploader__dropzone__icon {
+    --amplify-components-fileuploader-dropzone-icon-font-size: 24px;
+    --amplify-components-fileuploader-dropzone-icon-line-height: 0;
+}
+
+.amplify-fileuploader__dropzone__icon .amplify-icon {
+    width: auto;
+    height: auto;
+}
+
 .amplify-fileuploader__dropzone__icon .amplify-icon>svg {
     --amplify-components-icon-height: 24px;
     --amplify-components-icon-width: 24px;
@@ -26,6 +43,7 @@
 
 /* Browse Files button */
 .amplify-fileuploader__file__picker {
+    margin: 0 8px;
     --amplify-components-button-background-color: #ffffff;
     --amplify-components-button-border-color: #d1d5dc;
     --amplify-components-button-border-radius: 8px;
@@ -37,6 +55,7 @@
     --amplify-components-button-focus-background-color: #f9fafb80;
     --amplify-components-button-focus-border-color: #101828;
     --amplify-components-button-focus-color: #101828;
+    --amplify-components-button-text-font-weight: 500;
     box-shadow: 0 1px 3px 0 #0000001a;
 }
 
