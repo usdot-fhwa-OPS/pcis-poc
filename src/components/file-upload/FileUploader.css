@@ -10,7 +10,7 @@
     justify-content: center;
     gap: 0.5rem;
     padding: 1.5rem;
-    --amplify-components-fileuploader-dropzone-background-color: #eff6ff;
+    --amplify-components-fileuploader-dropzone-background-color: #eff6ff80;
     --amplify-components-fileuploader-dropzone-border-color: #155dfc;
     --amplify-components-fileuploader-dropzone-border-width: 0.125rem;
     --amplify-components-fileuploader-dropzone-border-radius: 0.75rem;
@@ -35,7 +35,7 @@
 
 /* DropZone Icon */
 .amplify-fileuploader__dropzone__icon {
-    --amplify-components-fileuploader-dropzone-icon-color: #6a7282;
+    --amplify-components-fileuploader-dropzone-icon-color: #155dfc;
     --amplify-components-fileuploader-dropzone-icon-font-size: 1.5rem;
     line-height: 0;
 }
