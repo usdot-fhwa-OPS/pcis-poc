@@ -1,5 +1,6 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router';
 import { UploadManifestFile } from '../components/file-upload/file-upload.tsx';
+import { useNavigate } from '@tanstack/react-router';
 import { Button } from "../components/ui/button";
 
 export const Route = createFileRoute('/import')({
@@ -7,6 +8,9 @@ export const Route = createFileRoute('/import')({
 })
 
 function RouteComponent() {
+
+  const navigate = useNavigate();
+
   return (
     <div className="w-full max-w-4xl px-6 py-6 md:px-10 md:py-8">
       <h1 className="mb-2 text-2xl leading-none font-bold text-gray-900">Upload Manifest</h1>
