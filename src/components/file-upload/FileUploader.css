@@ -8,29 +8,46 @@
     flex-wrap: wrap;
     align-items: center;
     justify-content: center;
-    gap: 8px;
-    padding: 24px;
+    gap: 0.5rem;
+    padding: 1.5rem;
     --amplify-components-fileuploader-dropzone-background-color: #eff6ff;
     --amplify-components-fileuploader-dropzone-border-color: #155dfc;
-    --amplify-components-fileuploader-dropzone-border-width: 2px;
-    --amplify-components-fileuploader-dropzone-border-radius: 12px;
+    --amplify-components-fileuploader-dropzone-border-width: 0.125rem;
+    --amplify-components-fileuploader-dropzone-border-radius: 0.75rem;
     --amplify-components-fileuploader-dropzone-border-style: dashed;
+}
+
+@media (width >= 48rem) {
+
+    .amplify-fileuploader__dropzone {
+        padding: 2rem 1.5rem;
+    }
+
+}
+
+@media (width >= 64rem) {
+
+    .amplify-fileuploader__dropzone {
+        padding: 3rem 1.5rem;
+    }
+
 }
 
 /* DropZone Icon */
 .amplify-fileuploader__dropzone__icon {
-    --amplify-components-fileuploader-dropzone-icon-font-size: 24px;
+    --amplify-components-fileuploader-dropzone-icon-color: #6a7282;
+    --amplify-components-fileuploader-dropzone-icon-font-size: 1.5rem;
     line-height: 0;
 }
 
 .amplify-fileuploader__dropzone__icon .amplify-icon {
-    width: 16px;
-    height: 24px;
+    width: 1rem;
+    height: 1.5rem;
 }
 
 .amplify-fileuploader__dropzone__icon .amplify-icon>svg {
-    --amplify-components-icon-height: 24px;
-    --amplify-components-icon-width: 16px;
+    --amplify-components-icon-height: 1.5rem;
+    --amplify-components-icon-width: 1rem;
 }
 
 /* DropZone Text */
@@ -45,7 +62,7 @@
     margin: 0 8px;
     --amplify-components-button-background-color: #ffffff;
     --amplify-components-button-border-color: #d1d5dc;
-    --amplify-components-button-border-radius: 8px;
+    --amplify-components-button-border-radius: 0.5rem;
     --amplify-components-button-color: #364153;
     --amplify-components-button-hover-background-color: #f9fafb80;
     --amplify-components-button-hover-border-color: #101828;
