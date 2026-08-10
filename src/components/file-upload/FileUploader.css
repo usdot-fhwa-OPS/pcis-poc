@@ -73,8 +73,8 @@
     --amplify-components-button-focus-color: #101828;
     --amplify-components-button-text-font-weight: 500;
     --amplify-components-button-active-background-color: #ffff00;
-    --amplify-components-button-active-border-color: #101828;
-    --amplify-components-button-active-color: #101828;
+    --amplify-components-button-active-border-color: #ff0000;
+    --amplify-components-button-active-color: #ff00ff;
     box-shadow: 0 1px 3px 0 #0000001a;
 }
 /*
