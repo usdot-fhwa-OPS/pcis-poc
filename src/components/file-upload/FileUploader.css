@@ -194,7 +194,8 @@
 }
 
 /* File Status */
-.amplify-fileuploader__file__status, .amplify-fileuploader__file__status>span {
+.amplify-fileuploader__file__status, 
+.amplify-fileuploader__file__status>span {
     --amplify-font-sizes-xl: 0.875rem;
     font-size: var(--amplify-font-sizes-xl);
     font-weight: 500;
@@ -232,7 +233,7 @@
 }
 
 .amplify-fileuploader__loader {
-    top: -0.25rem;
-    left: 1rem;
-    width: calc(100% - 2rem);
+    bottom: 1.125rem;
+    left: 8rem;
+    width: calc(100% - 9rem);
 }
