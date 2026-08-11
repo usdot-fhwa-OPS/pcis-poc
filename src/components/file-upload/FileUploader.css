@@ -41,13 +41,13 @@
 }
 
 .amplify-fileuploader__dropzone__icon .amplify-icon {
-    width: 1rem;
-    height: 1.5rem;
+    width: 1.25rem !important;
+    height: 1.5rem !important;
 }
 
 .amplify-fileuploader__dropzone__icon .amplify-icon>svg {
     --amplify-components-icon-height: 1.5rem;
-    --amplify-components-icon-width: 1rem;
+    width: 1.25rem;
 }
 
 /* DropZone Text */
@@ -117,8 +117,8 @@
 }
 
 .amplify-fileuploader__file__image .amplify-icon {
-    width: 1rem;
-    height: 1.25rem;
+    width: 1rem !important;
+    height: 1.25rem !important;
 }
 
 .amplify-fileuploader__file__image .amplify-icon>svg {
@@ -168,14 +168,14 @@
 }
 
 .amplify-fileuploader__file .amplify-field-group__control .amplify-icon {
-    width: 1rem;
-    height: 1em;
+    width: 1rem !important;
+    height: 1em !important;
     line-height: 0;
 }
 
 .amplify-fileuploader__file .amplify-field-group__control .amplify-icon>svg {
     --amplify-components-icon-height: 1rem;
-    --amplify-components-icon-width: 1rem;
+    width: var(--amplify-components-icon-height);
 }
 
 /* File Status */
