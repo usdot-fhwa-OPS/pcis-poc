@@ -57,7 +57,7 @@
     --amplify-components-fileuploader-dropzone-text-font-weight: 400;
 }
 
-/* Browse Files button */
+/* DropZone Browse Files button */
 .amplify-fileuploader__file__picker {
     margin: 0 8px;
     --amplify-components-button-background-color: #ffffff;
@@ -76,4 +76,107 @@
     --amplify-components-button-active-border-color: #101828;
     --amplify-components-button-active-color: #101828;
     box-shadow: 0 1px 3px 0 #0000001a;
+}
+
+
+/* Previewer */
+.amplify-fileuploader__previewer {
+    padding: 0;
+    border: none;
+    border-radius: 0;
+}
+
+.amplify-fileuploader__previewer__text {
+    --amplify-components-fileuploader-previewer-text-font-weight: 400;
+    --amplify-components-fileuploader-previewer-text-font-size: 0.875rem;
+    --amplify-components-fileuploader-previewer-text-color: #6a7282;
+}
+
+/* File List */
+.amplify-fileuploader__file {
+    --amplify-components-fileuploader-file-padding-block: 1rem;
+    --amplify-components-fileuploader-file-padding-inline: 1rem;
+    --amplify-components-fileuploader-file-border-color: #e5e7eb;
+    --amplify-components-fileuploader-file-border-radius: 0.75rem;
+}
+
+/* File Wrapper */
+.amplify-fileuploader__file__wrapper {
+    --amplify-components-fileuploader-file-gap: 0.5rem;
+}
+
+/* File Icon */
+.amplify-fileuploader__file__image {
+    --amplify-components-fileuploader-file-image-width: 1rem;
+    --amplify-components-fileuploader-file-image-height: 1rem;
+    --amplify-components-fileuploader-file-image-background-color: transparent;
+    --amplify-components-fileuploader-file-image-border-radius: 0;
+    --amplify-components-fileuploader-file-image-color: #6a7282;
+}
+
+.amplify-fileuploader__file__image .amplify-icon>svg {
+    --amplify-components-icon-height: 1rem;
+}
+
+/* Filename */
+.amplify-fileuploader__file__name {
+    --amplify-components-fileuploader-file-name-font-weight: 500;
+    --amplify-components-fileuploader-file-name-font-size: 0.875rem;
+    --amplify-components-fileuploader-file-name-color: #101828;
+}
+
+/* File Size */
+.amplify-fileuploader__file__size {
+    --amplify-components-fileuploader-file-size-font-weight: 400;
+    --amplify-components-fileuploader-file-size-font-size: 0.875rem;
+    --amplify-components-fileuploader-file-size-color: #6a7282;
+}
+
+/* Remove Button */
+.amplify-field-group__control {
+    margin-left: 1.5rem;
+    padding: 0.5rem;
+    --amplify-components-button-background-color: #ffffff;
+    --amplify-components-button-border-color: #d1d5dc;
+    --amplify-components-button-border-radius: 0.5rem;
+    --amplify-components-button-color: #364153;
+    --amplify-components-button-hover-background-color: #f9fafb80;
+    --amplify-components-button-hover-border-color: #101828;
+    --amplify-components-button-hover-color: #101828;
+    --amplify-components-button-font-weight: 500;
+    --amplify-components-button-focus-background-color: #f9fafb80;
+    --amplify-components-button-focus-border-color: #101828;
+    --amplify-components-button-focus-color: #101828;
+    --amplify-components-button-text-font-weight: 500;
+    --amplify-components-button-active-background-color: #f9fafb80;
+    --amplify-components-button-active-border-color: #101828;
+    --amplify-components-button-active-color: #101828;
+    box-shadow: 0 1px 3px 0 #0000001a;
+}
+
+.amplify-field-group__control span:nth-child(2) {
+    padding: 0.5rem;
+    font-size: 1rem;
+    line-height: 0;
+}
+
+.amplify-field-group__control .amplify-icon {
+    width: 1rem;
+    height: 1em;
+    line-height: 0;
+}
+
+.amplify-field-group__control .amplify-icon>svg {
+    --amplify-components-icon-height: 1rem;
+    --amplify-components-icon-width: 1rem;
+}
+
+/* File Status */
+.amplify-fileuploader__file__status {
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.amplify-fileuploader__file__status .amplify-icon {
+    margin-right: 0.25rem;
 }
