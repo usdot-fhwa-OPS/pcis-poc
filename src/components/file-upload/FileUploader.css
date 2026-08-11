@@ -41,13 +41,13 @@
 }
 
 .amplify-fileuploader__dropzone__icon .amplify-icon {
-    width: 1.25rem !important;
+    width: 1.5rem !important;
     height: 1.5rem !important;
 }
 
 .amplify-fileuploader__dropzone__icon .amplify-icon>svg {
     --amplify-components-icon-height: 1.5rem;
-    width: 1.25rem;
+    width: var(--amplify-components-icon-height);
 }
 
 /* DropZone Text */
@@ -191,7 +191,7 @@
 }
 
 .amplify-fileuploader__file__status--success {
-    --amplify-colors-font-success: #00a63e;
+    --amplify-colors-font-success: #008236;
 }
 
 .amplify-fileuploader__file__status--success .amplify-icon {
