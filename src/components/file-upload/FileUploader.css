@@ -186,23 +186,33 @@
     font-weight: 500;
 }
 
-.amplify-fileuploader__file__status .amplify-icon {
-    margin-right: 0.5rem;
-}
-
 .amplify-fileuploader__file__status--success {
     --amplify-colors-font-success: #008236;
 }
 
-.amplify-fileuploader__file__status--success .amplify-icon {
+.amplify-fileuploader__file__status--error {
+    --amplify-colors-font-error: #C10007;
+}
+
+.amplify-fileuploader__file__status--success .amplify-icon,
+.amplify-fileuploader__file__status--error .amplify-icon {
     width: auto !important;
     height: auto !important;
+    margin-right: 0.5rem;
     padding: 0.5rem;
-    background-color: #f0fdf4;
     border-radius: 100%;
 }
 
-.amplify-fileuploader__file__status--success .amplify-icon>svg {
+.amplify-fileuploader__file__status--success .amplify-icon {
+    background-color: #f0fdf4;
+}
+
+.amplify-fileuploader__file__status--error .amplify-icon {
+    background-color: #fef2f2;
+}
+
+.amplify-fileuploader__file__status--success .amplify-icon>svg,
+.amplify-fileuploader__file__status--error .amplify-icon>svg {
     --amplify-components-icon-height: 1rem;
     width: var(--amplify-components-icon-height);
 }
