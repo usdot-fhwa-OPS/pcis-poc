@@ -102,6 +102,7 @@
 
 /* File Wrapper */
 .amplify-fileuploader__file__wrapper {
+    margin-bottom: 0.75rem;
     padding-bottom: 0.5rem;
     border-bottom: 1px solid #e5e7eb;
     --amplify-components-fileuploader-file-gap: 0.5rem;
@@ -179,11 +180,28 @@
 }
 
 /* File Status */
-.amplify-fileuploader__file__status {
+.amplify-fileuploader__file__status, .amplify-fileuploader__file__status>span {
     font-size: 0.875rem;
     font-weight: 500;
 }
 
 .amplify-fileuploader__file__status .amplify-icon {
-    margin-right: 0.25rem;
+    margin-right: 0.5rem;
+}
+
+.amplify-fileuploader__file__status--success {
+    --amplify-colors-font-success: #00a63e;
+}
+
+.amplify-fileuploader__file__status--success .amplify-icon {
+    width: auto !important;
+    height: auto !important;
+    padding: 0.5rem;
+    background-color: #f0fdf4;
+    border-radius: 100%;
+}
+
+.amplify-fileuploader__file__status--success .amplify-icon>svg {
+    --amplify-components-icon-height: 1rem;
+    width: var(--amplify-components-icon-height);
 }
