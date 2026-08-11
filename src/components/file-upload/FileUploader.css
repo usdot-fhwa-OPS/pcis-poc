@@ -136,14 +136,22 @@
 
 /* File Size */
 .amplify-fileuploader__file__size {
+    padding-right: 0.5rem;
     --amplify-components-fileuploader-file-size-font-weight: 400;
     --amplify-components-fileuploader-file-size-font-size: 0.875rem;
     --amplify-components-fileuploader-file-size-color: #6a7282;
 }
 
+@media (width >= 40rem) {
+
+    .amplify-fileuploader__file__size {
+        padding-right: 1rem;
+    }
+
+}
+
 /* Remove Button */
 .amplify-fileuploader__file .amplify-field-group__control {
-    margin-left: 1.5rem;
     padding: 0.5rem;
     --amplify-components-button-background-color: #ffffff;
     --amplify-components-button-border-color: transparent;
@@ -233,7 +241,7 @@
 }
 
 .amplify-fileuploader__loader {
-    bottom: 1.125rem;
+    bottom: 1.25rem;
     left: 8rem;
     width: calc(100% - 9rem);
 }
