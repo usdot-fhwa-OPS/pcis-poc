@@ -144,24 +144,23 @@
     padding: 0.5rem;
     --amplify-components-button-background-color: #ffffff;
     --amplify-components-button-border-color: #d1d5dc;
+    --amplify-components-button-border-width: 0;
     --amplify-components-button-border-radius: 0.5rem;
-    --amplify-components-button-color: #364153;
-    --amplify-components-button-hover-background-color: #f9fafb80;
+    --amplify-components-button-color: #101828;
+    --amplify-components-button-hover-background-color: #f4f4f5;
     --amplify-components-button-hover-border-color: #101828;
     --amplify-components-button-hover-color: #101828;
     --amplify-components-button-font-weight: 500;
-    --amplify-components-button-focus-background-color: #f9fafb80;
+    --amplify-components-button-focus-background-color: #f4f4f5;
     --amplify-components-button-focus-border-color: #101828;
     --amplify-components-button-focus-color: #101828;
     --amplify-components-button-text-font-weight: 500;
-    --amplify-components-button-active-background-color: #f9fafb80;
+    --amplify-components-button-active-background-color: #f4f4f5;
     --amplify-components-button-active-border-color: #101828;
     --amplify-components-button-active-color: #101828;
-    box-shadow: 0 1px 3px 0 #0000001a;
 }
 
 .amplify-field-group__control span:nth-child(2) {
-    padding: 0.5rem;
     font-size: 1rem;
     line-height: 0;
 }
