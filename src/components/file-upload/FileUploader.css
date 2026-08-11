@@ -205,6 +205,7 @@
 .amplify-fileuploader__file__status, 
 .amplify-fileuploader__file__status>span {
     --amplify-font-sizes-xl: 0.875rem;
+    --amplify-components-text-color: #364153;
     font-size: var(--amplify-font-sizes-xl);
     font-weight: 500;
 }
@@ -242,8 +243,9 @@
 
 .amplify-fileuploader__loader {
     bottom: 1.25rem;
-    left: 8rem;
-    width: calc(100% - 9rem);
+    left: 8.625rem;
+    width: calc(100% - 9.625rem);
+    --amplify-components-fileuploader-loader-stroke-width: 0.25rem;
 }
 
 .amplify-loader line {
