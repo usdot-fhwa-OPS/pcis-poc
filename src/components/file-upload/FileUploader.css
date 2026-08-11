@@ -181,7 +181,8 @@
 
 /* File Status */
 .amplify-fileuploader__file__status, .amplify-fileuploader__file__status>span {
-    font-size: 0.875rem;
+    --amplify-font-sizes-xl: 0.875rem;
+    font-size: var(--amplify-font-sizes-xl);
     font-weight: 500;
 }
 
