@@ -2,6 +2,12 @@
 /* Custom styling for Amplify's FileUploader component used in Upload Manifest  */
 /* Styles and colors match up with Tailwind CSS classes used in the system. */
 
+/* 
+SCD - Dev Note 8/11/2026: refine the CSS below, create variables for colors being reused 
+that line up with Tailwind's naming. For example #101828 approximates gray-900 so
+the variable could be --t-gray-900 or something similar
+*/
+
 /* DropZone */
 .amplify-fileuploader__dropzone {
     flex-direction: row;
@@ -183,6 +189,10 @@
     --amplify-components-button-link-active-color: #101828;
     --amplify-components-button-focus-box-shadow: none;
     --amplify-components-button-link-focus-box-shadow: none;
+}
+
+.amplify-fileuploader__file .amplify-button--link {
+    line-height: 1;
 }
 
 .amplify-fileuploader__file .amplify-field-group__control span:nth-child(2) {
