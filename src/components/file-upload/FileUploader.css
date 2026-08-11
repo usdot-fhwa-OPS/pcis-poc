@@ -94,7 +94,7 @@
 
 /* File List */
 .amplify-fileuploader__file {
-    --amplify-components-fileuploader-file-padding-block: 1rem;
+    --amplify-components-fileuploader-file-padding-block: 0.75rem;
     --amplify-components-fileuploader-file-padding-inline: 1rem;
     --amplify-components-fileuploader-file-border-color: #e5e7eb;
     --amplify-components-fileuploader-file-border-radius: 0.75rem;
@@ -102,6 +102,8 @@
 
 /* File Wrapper */
 .amplify-fileuploader__file__wrapper {
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #e5e7eb;
     --amplify-components-fileuploader-file-gap: 0.5rem;
 }
 
@@ -139,39 +141,39 @@
 }
 
 /* Remove Button */
-.amplify-field-group__control {
+.amplify-fileuploader__file .amplify-field-group__control {
     margin-left: 1.5rem;
     padding: 0.5rem;
     --amplify-components-button-background-color: #ffffff;
-    --amplify-components-button-border-color: #d1d5dc;
+    --amplify-components-button-border-color: transparent;
     --amplify-components-button-border-width: 0;
     --amplify-components-button-border-radius: 0.5rem;
     --amplify-components-button-color: #101828;
     --amplify-components-button-hover-background-color: #f4f4f5;
-    --amplify-components-button-hover-border-color: #101828;
+    --amplify-components-button-hover-border-color: transparent;
     --amplify-components-button-hover-color: #101828;
     --amplify-components-button-font-weight: 500;
     --amplify-components-button-focus-background-color: #f4f4f5;
-    --amplify-components-button-focus-border-color: #101828;
+    --amplify-components-button-focus-border-color: transparent;
     --amplify-components-button-focus-color: #101828;
     --amplify-components-button-text-font-weight: 500;
     --amplify-components-button-active-background-color: #f4f4f5;
-    --amplify-components-button-active-border-color: #101828;
+    --amplify-components-button-active-border-color: transparent;
     --amplify-components-button-active-color: #101828;
 }
 
-.amplify-field-group__control span:nth-child(2) {
+.amplify-fileuploader__file .amplify-field-group__control span:nth-child(2) {
     font-size: 1rem;
     line-height: 0;
 }
 
-.amplify-field-group__control .amplify-icon {
+.amplify-fileuploader__file .amplify-field-group__control .amplify-icon {
     width: 1rem;
     height: 1em;
     line-height: 0;
 }
 
-.amplify-field-group__control .amplify-icon>svg {
+.amplify-fileuploader__file .amplify-field-group__control .amplify-icon>svg {
     --amplify-components-icon-height: 1rem;
     --amplify-components-icon-width: 1rem;
 }
