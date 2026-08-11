@@ -161,6 +161,7 @@
     --amplify-components-button-active-background-color: #f4f4f5;
     --amplify-components-button-active-border-color: transparent;
     --amplify-components-button-active-color: #101828;
+    --amplify-components-button-focus-box-shadow: none;
 }
 
 .amplify-fileuploader__file .amplify-field-group__control span:nth-child(2) {
