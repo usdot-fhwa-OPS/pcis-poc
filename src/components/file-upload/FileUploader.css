@@ -237,3 +237,8 @@
     left: 8rem;
     width: calc(100% - 9rem);
 }
+
+.amplify-loader line {
+    --amplify-components-loader-linear-stroke-filled: #008236;
+    --amplify-components-loader-linear-stroke-empty: #e5e7eb;
+}
