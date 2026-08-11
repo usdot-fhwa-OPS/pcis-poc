@@ -161,7 +161,20 @@
     --amplify-components-button-active-background-color: #f4f4f5;
     --amplify-components-button-active-border-color: transparent;
     --amplify-components-button-active-color: #101828;
+    --amplify-components-button-link-background-color: #ffffff;
+    --amplify-components-button-link-border-color: transparent;
+    --amplify-components-button-link-color: #101828;
+    --amplify-components-button-link-hover-background-color: #f4f4f5;
+    --amplify-components-button-link-hover-border-color: transparent;
+    --amplify-components-button-link-hover-color: #101828;
+    --amplify-components-button-link-focus-background-color: #f4f4f5;
+    --amplify-components-button-link-focus-border-color: transparent;
+    --amplify-components-button-link-focus-color: #101828;
+    --amplify-components-button-link-active-background-color: #f4f4f5;
+    --amplify-components-button-link-active-border-color: transparent;
+    --amplify-components-button-link-active-color: #101828;
     --amplify-components-button-focus-box-shadow: none;
+    --amplify-components-button-link-focus-box-shadow: none;
 }
 
 .amplify-fileuploader__file .amplify-field-group__control span:nth-child(2) {
@@ -216,4 +229,10 @@
 .amplify-fileuploader__file__status--error .amplify-icon>svg {
     --amplify-components-icon-height: 1rem;
     width: var(--amplify-components-icon-height);
+}
+
+.amplify-fileuploader__loader {
+    top: -0.25rem;
+    left: 1rem;
+    width: calc(100% - 2rem);
 }
