@@ -108,14 +108,20 @@
 /* File Icon */
 .amplify-fileuploader__file__image {
     --amplify-components-fileuploader-file-image-width: 1rem;
-    --amplify-components-fileuploader-file-image-height: 1rem;
+    --amplify-components-fileuploader-file-image-height: 1.25rem;
     --amplify-components-fileuploader-file-image-background-color: transparent;
     --amplify-components-fileuploader-file-image-border-radius: 0;
     --amplify-components-fileuploader-file-image-color: #6a7282;
 }
 
+.amplify-fileuploader__file__image .amplify-icon {
+    width: 1rem;
+    height: 1.25rem;
+}
+
 .amplify-fileuploader__file__image .amplify-icon>svg {
-    --amplify-components-icon-height: 1rem;
+    width: 1rem;
+    height: 1.25rem;
 }
 
 /* Filename */
