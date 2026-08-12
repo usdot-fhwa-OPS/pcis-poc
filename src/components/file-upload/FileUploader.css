@@ -2,11 +2,28 @@
 /* Custom styling for Amplify's FileUploader component used in Upload Manifest  */
 /* Styles and colors match up with Tailwind CSS classes used in the system. */
 
-/* 
-SCD - Dev Note 8/11/2026: refine the CSS below, create variables for colors being reused 
-that line up with Tailwind's naming. For example #101828 approximates gray-900 so
-the variable could be --t-gray-900 or something similar
+/*
+SCD Dev Note 8/12/26: If Tailwind is updated to v4, remove the Root Variables below.
+In v4 Tailwind's variables can be accessed by component stylesheets.
 */
+
+/* Root Variables (from Tailwind CSS) */
+:root {
+    --accent: hsl(240 4.8% 95.9%);
+    --color-gray-50: oklch(98.5% 0.002 247.839);
+    --color-gray-200: oklch(92.8% 0.006 264.531);
+    --color-gray-300: oklch(87.2% 0.01 258.338);
+    --color-gray-500: oklch(55.1% 0.027 264.364);
+    --color-gray-700: oklch(37.3% 0.034 259.733);
+    --color-gray-900: oklch(21% 0.034 264.665);
+    --color-red-50: oklch(97.1% 0.013 17.38);
+    --color-red-700: oklch(50.5% 0.213 27.518);
+    --color-green-50: oklch(98.2% 0.018 155.826);
+    --color-green-700: oklch(52.7% 0.154 150.069);
+    --color-blue-50: oklch(97% 0.014 254.604);
+    --color-blue-600: oklch(54.6% 0.245 262.881);
+    --color-white: #fff;
+}
 
 /* DropZone */
 .amplify-fileuploader__dropzone {
@@ -16,8 +33,8 @@ the variable could be --t-gray-900 or something similar
     justify-content: center;
     gap: 0.5rem;
     padding: 1.5rem;
-    --amplify-components-fileuploader-dropzone-background-color: #eff6ff80;
-    --amplify-components-fileuploader-dropzone-border-color: #155dfc;
+    --amplify-components-fileuploader-dropzone-background-color: color-mix(in oklch, var(--color-blue-50) 50%, transparent);
+    --amplify-components-fileuploader-dropzone-border-color: var(--color-blue-600);
     --amplify-components-fileuploader-dropzone-border-width: 0.125rem;
     --amplify-components-fileuploader-dropzone-border-radius: 0.75rem;
     --amplify-components-fileuploader-dropzone-border-style: dashed;
@@ -41,7 +58,7 @@ the variable could be --t-gray-900 or something similar
 
 /* DropZone Icon */
 .amplify-fileuploader__dropzone__icon {
-    --amplify-components-fileuploader-dropzone-icon-color: #155dfc;
+    --amplify-components-fileuploader-dropzone-icon-color: var(--color-blue-600);
     --amplify-components-fileuploader-dropzone-icon-font-size: 1.5rem;
     line-height: 0;
 }
@@ -58,7 +75,7 @@ the variable could be --t-gray-900 or something similar
 
 /* DropZone Text */
 .amplify-fileuploader__dropzone__text {
-    --amplify-components-fileuploader-dropzone-text-color: #364153;
+    --amplify-components-fileuploader-dropzone-text-color: var(--color-gray-700);
     --amplify-components-fileuploader-dropzone-text-font-size: 1rem;
     --amplify-components-fileuploader-dropzone-text-font-weight: 400;
 }
@@ -66,21 +83,21 @@ the variable could be --t-gray-900 or something similar
 /* DropZone Browse Files button */
 .amplify-fileuploader__file__picker {
     margin: 0 8px;
-    --amplify-components-button-background-color: #ffffff;
-    --amplify-components-button-border-color: #d1d5dc;
+    --amplify-components-button-background-color: var(--color-white);
+    --amplify-components-button-border-color: var(--color-gray-300);
     --amplify-components-button-border-radius: 0.5rem;
-    --amplify-components-button-color: #364153;
-    --amplify-components-button-hover-background-color: #f9fafb80;
-    --amplify-components-button-hover-border-color: #101828;
-    --amplify-components-button-hover-color: #101828;
+    --amplify-components-button-color: var(--color-gray-700);
+    --amplify-components-button-hover-background-color: color-mix(in oklch, var(--color-gray-50) 50%, transparent);
+    --amplify-components-button-hover-border-color: var(--color-gray-900);
+    --amplify-components-button-hover-color: var(--color-gray-900);
     --amplify-components-button-font-weight: 500;
-    --amplify-components-button-focus-background-color: #f9fafb80;
-    --amplify-components-button-focus-border-color: #101828;
-    --amplify-components-button-focus-color: #101828;
+    --amplify-components-button-focus-background-color: var(--amplify-components-button-hover-background-color);
+    --amplify-components-button-focus-border-color: var(--color-gray-900);
+    --amplify-components-button-focus-color: var(--color-gray-900);
     --amplify-components-button-text-font-weight: 500;
-    --amplify-components-button-active-background-color: #f9fafb80;
-    --amplify-components-button-active-border-color: #101828;
-    --amplify-components-button-active-color: #101828;
+    --amplify-components-button-active-background-color: var(--amplify-components-button-hover-background-color);
+    --amplify-components-button-active-border-color: var(--color-gray-900);
+    --amplify-components-button-active-color: var(--color-gray-900);
     box-shadow: 0 1px 3px 0 #0000001a;
 }
 
@@ -95,14 +112,14 @@ the variable could be --t-gray-900 or something similar
 .amplify-fileuploader__previewer__text {
     --amplify-components-fileuploader-previewer-text-font-weight: 400;
     --amplify-components-fileuploader-previewer-text-font-size: 0.875rem;
-    --amplify-components-fileuploader-previewer-text-color: #6a7282;
+    --amplify-components-fileuploader-previewer-text-color: var(--color-gray-500);
 }
 
 /* File List */
 .amplify-fileuploader__file {
     --amplify-components-fileuploader-file-padding-block: 0.75rem;
     --amplify-components-fileuploader-file-padding-inline: 1rem;
-    --amplify-components-fileuploader-file-border-color: #e5e7eb;
+    --amplify-components-fileuploader-file-border-color: var(--color-gray-200);
     --amplify-components-fileuploader-file-border-radius: 0.75rem;
 }
 
@@ -110,7 +127,7 @@ the variable could be --t-gray-900 or something similar
 .amplify-fileuploader__file__wrapper {
     margin-bottom: 0.75rem;
     padding-bottom: 0.5rem;
-    border-bottom: 1px solid #e5e7eb;
+    border-bottom: 1px solid var(--color-gray-200);
     --amplify-components-fileuploader-file-gap: 0.5rem;
 }
 
@@ -120,7 +137,7 @@ the variable could be --t-gray-900 or something similar
     --amplify-components-fileuploader-file-image-height: 1.25rem;
     --amplify-components-fileuploader-file-image-background-color: transparent;
     --amplify-components-fileuploader-file-image-border-radius: 0;
-    --amplify-components-fileuploader-file-image-color: #6a7282;
+    --amplify-components-fileuploader-file-image-color: var(--color-gray-500);
 }
 
 .amplify-fileuploader__file__image .amplify-icon {
@@ -137,7 +154,7 @@ the variable could be --t-gray-900 or something similar
 .amplify-fileuploader__file__name {
     --amplify-components-fileuploader-file-name-font-weight: 500;
     --amplify-components-fileuploader-file-name-font-size: 0.875rem;
-    --amplify-components-fileuploader-file-name-color: #101828;
+    --amplify-components-fileuploader-file-name-color: var(--color-gray-900);
 }
 
 /* File Size */
@@ -145,7 +162,7 @@ the variable could be --t-gray-900 or something similar
     padding-right: 0.5rem;
     --amplify-components-fileuploader-file-size-font-weight: 400;
     --amplify-components-fileuploader-file-size-font-size: 0.875rem;
-    --amplify-components-fileuploader-file-size-color: #6a7282;
+    --amplify-components-fileuploader-file-size-color: var(--color-gray-500);
 }
 
 @media (width >= 40rem) {
@@ -159,34 +176,34 @@ the variable could be --t-gray-900 or something similar
 /* Remove Button */
 .amplify-fileuploader__file .amplify-field-group__control {
     padding: 0.5rem;
-    --amplify-components-button-background-color: #ffffff;
+    --amplify-components-button-background-color: var(--color-white);
     --amplify-components-button-border-color: transparent;
     --amplify-components-button-border-width: 0;
     --amplify-components-button-border-radius: 0.5rem;
-    --amplify-components-button-color: #101828;
-    --amplify-components-button-hover-background-color: #f4f4f5;
+    --amplify-components-button-color: var(--color-gray-900);
+    --amplify-components-button-hover-background-color: var(--accent);
     --amplify-components-button-hover-border-color: transparent;
-    --amplify-components-button-hover-color: #101828;
+    --amplify-components-button-hover-color: var(--color-gray-900);
     --amplify-components-button-font-weight: 500;
-    --amplify-components-button-focus-background-color: #f4f4f5;
+    --amplify-components-button-focus-background-color: var(--accent);
     --amplify-components-button-focus-border-color: transparent;
-    --amplify-components-button-focus-color: #101828;
+    --amplify-components-button-focus-color: var(--color-gray-900);
     --amplify-components-button-text-font-weight: 500;
-    --amplify-components-button-active-background-color: #f4f4f5;
+    --amplify-components-button-active-background-color: var(--accent);
     --amplify-components-button-active-border-color: transparent;
-    --amplify-components-button-active-color: #101828;
-    --amplify-components-button-link-background-color: #ffffff;
+    --amplify-components-button-active-color: var(--color-gray-900);
+    --amplify-components-button-link-background-color: var(--color-white);
     --amplify-components-button-link-border-color: transparent;
-    --amplify-components-button-link-color: #101828;
-    --amplify-components-button-link-hover-background-color: #f4f4f5;
+    --amplify-components-button-link-color: var(--color-gray-900);
+    --amplify-components-button-link-hover-background-color: var(--accent);
     --amplify-components-button-link-hover-border-color: transparent;
-    --amplify-components-button-link-hover-color: #101828;
-    --amplify-components-button-link-focus-background-color: #f4f4f5;
+    --amplify-components-button-link-hover-color: var(--color-gray-900);
+    --amplify-components-button-link-focus-background-color: var(--accent);
     --amplify-components-button-link-focus-border-color: transparent;
-    --amplify-components-button-link-focus-color: #101828;
-    --amplify-components-button-link-active-background-color: #f4f4f5;
+    --amplify-components-button-link-focus-color: var(--color-gray-900);
+    --amplify-components-button-link-active-background-color: var(--accent);
     --amplify-components-button-link-active-border-color: transparent;
-    --amplify-components-button-link-active-color: #101828;
+    --amplify-components-button-link-active-color: var(--color-gray-900);
     --amplify-components-button-focus-box-shadow: none;
     --amplify-components-button-link-focus-box-shadow: none;
 }
@@ -215,17 +232,17 @@ the variable could be --t-gray-900 or something similar
 .amplify-fileuploader__file__status, 
 .amplify-fileuploader__file__status>span {
     --amplify-font-sizes-xl: 0.875rem;
-    --amplify-components-text-color: #364153;
+    --amplify-components-text-color: var(--color-gray-700);
     font-size: var(--amplify-font-sizes-xl);
     font-weight: 500;
 }
 
 .amplify-fileuploader__file__status--success {
-    --amplify-colors-font-success: #008236;
+    --amplify-colors-font-success: var(--color-green-700);
 }
 
 .amplify-fileuploader__file__status--error {
-    --amplify-colors-font-error: #C10007;
+    --amplify-colors-font-error: var(--color-red-700);
 }
 
 .amplify-fileuploader__file__status--success .amplify-icon,
@@ -238,11 +255,11 @@ the variable could be --t-gray-900 or something similar
 }
 
 .amplify-fileuploader__file__status--success .amplify-icon {
-    background-color: #f0fdf4;
+    background-color: var(--color-green-50);
 }
 
 .amplify-fileuploader__file__status--error .amplify-icon {
-    background-color: #fef2f2;
+    background-color: var(--color-red-50);
 }
 
 .amplify-fileuploader__file__status--success .amplify-icon>svg,
@@ -259,6 +276,6 @@ the variable could be --t-gray-900 or something similar
 }
 
 .amplify-loader line {
-    --amplify-components-loader-linear-stroke-filled: #008236;
-    --amplify-components-loader-linear-stroke-empty: #e5e7eb;
+    --amplify-components-loader-linear-stroke-filled: var(--color-green-700);
+    --amplify-components-loader-linear-stroke-empty: var(--color-gray-200);
 }
