@@ -19,7 +19,7 @@ function RouteComponent() {
         <ol role="list" className="list-decimal list-inside space-y-2 mb-6 text-sm text-gray-700">
           <li>Locate your cargo manifest file on your computer.</li>
           <li>Drag and drop the file into the upload area below or select &ldquo;Browse Files&rdquo; to find it.</li>
-          <li>A check mark will appear next to your file&apos;s name when it is uploaded.</li>
+          <li>A check mark will appear below your file&apos;s name when it is uploaded.</li>
         </ol>
         <UploadManifestFile />
       </div>
