@@ -1,6 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { UploadManifestFile } from '../components/file-upload/file-upload.tsx';
-import { Button } from "../components/ui/button";
 
 export const Route = createFileRoute('/import')({
   component: RouteComponent,
@@ -45,9 +44,6 @@ function RouteComponent() {
             <p className="text-xs text-gray-500">Expected arrival date and time window</p>
           </li>
         </ul>
-      </div>
-      <div className="flex gap-3">
-        <Button variant="outline" className="rounded-lg">Cancel</Button>
       </div>
     </div>
   )
