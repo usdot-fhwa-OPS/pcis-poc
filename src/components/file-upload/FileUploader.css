@@ -173,7 +173,7 @@ In v4 Tailwind's variables can be accessed by component stylesheets.
 
 }
 
-/* Remove Button */
+/* Remove Button, Pause Button, Resume Button */
 .amplify-fileuploader__file .amplify-field-group__control {
     padding: 0.5rem;
     --amplify-components-button-background-color: var(--color-white);
