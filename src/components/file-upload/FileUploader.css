@@ -9,7 +9,7 @@ In v4 Tailwind's variables can be accessed by component stylesheets.
 
 /* Root Variables from Tailwind CSS */
 .amplify-fileuploader {
-    --accent: hsl(240 4.8% 95.9%);
+    --accent: 240 4.8% 95.9%;
     --color-gray-50: oklch(98.5% 0.002 247.839);
     --color-gray-200: oklch(92.8% 0.006 264.531);
     --color-gray-300: oklch(87.2% 0.01 258.338);
