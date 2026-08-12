@@ -7,8 +7,8 @@ SCD Dev Note 8/12/26: If Tailwind is updated to v4, remove the Root Variables be
 In v4 Tailwind's variables can be accessed by component stylesheets.
 */
 
-/* Root Variables (from Tailwind CSS) */
-:root {
+/* Root Variables from Tailwind CSS */
+.amplify-fileuploader {
     --accent: hsl(240 4.8% 95.9%);
     --color-gray-50: oklch(98.5% 0.002 247.839);
     --color-gray-200: oklch(92.8% 0.006 264.531);
@@ -181,27 +181,27 @@ In v4 Tailwind's variables can be accessed by component stylesheets.
     --amplify-components-button-border-width: 0;
     --amplify-components-button-border-radius: 0.5rem;
     --amplify-components-button-color: var(--color-gray-900);
-    --amplify-components-button-hover-background-color: var(--accent);
+    --amplify-components-button-hover-background-color: hsl(var(--accent));
     --amplify-components-button-hover-border-color: transparent;
     --amplify-components-button-hover-color: var(--color-gray-900);
     --amplify-components-button-font-weight: 500;
-    --amplify-components-button-focus-background-color: var(--accent);
+    --amplify-components-button-focus-background-color: hsl(var(--accent));
     --amplify-components-button-focus-border-color: transparent;
     --amplify-components-button-focus-color: var(--color-gray-900);
     --amplify-components-button-text-font-weight: 500;
-    --amplify-components-button-active-background-color: var(--accent);
+    --amplify-components-button-active-background-color: hsl(var(--accent));
     --amplify-components-button-active-border-color: transparent;
     --amplify-components-button-active-color: var(--color-gray-900);
     --amplify-components-button-link-background-color: var(--color-white);
     --amplify-components-button-link-border-color: transparent;
     --amplify-components-button-link-color: var(--color-gray-900);
-    --amplify-components-button-link-hover-background-color: var(--accent);
+    --amplify-components-button-link-hover-background-color: hsl(var(--accent));
     --amplify-components-button-link-hover-border-color: transparent;
     --amplify-components-button-link-hover-color: var(--color-gray-900);
-    --amplify-components-button-link-focus-background-color: var(--accent);
+    --amplify-components-button-link-focus-background-color: hsl(var(--accent));
     --amplify-components-button-link-focus-border-color: transparent;
     --amplify-components-button-link-focus-color: var(--color-gray-900);
-    --amplify-components-button-link-active-background-color: var(--accent);
+    --amplify-components-button-link-active-background-color: hsl(var(--accent));
     --amplify-components-button-link-active-border-color: transparent;
     --amplify-components-button-link-active-color: var(--color-gray-900);
     --amplify-components-button-focus-box-shadow: none;
