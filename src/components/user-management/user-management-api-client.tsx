@@ -1,0 +1,19 @@
+import { fetchAuthSession } from "aws-amplify/auth";
+import { UserInfoDomain } from "./user-info-domain";
+
+
+export const listUsers = async (): Promise<UserInfoDomain[]> => {
+    const session = await fetchAuthSession();
+    const response = await fetch("https://2472g0pixa.execute-api.us-east-1.amazonaws.com/dev/listUsers", {
+        method: 'GET',
+        headers: {
+            "Authorization": `Bearer ${session.tokens?.accessToken?.toString()}`,
+            "Content-Type": "application/json",
+            "Accept": "*/*"
+        }
+    });
+    const result = (await (response.json())).users as UserInfoDomain[];
+    return result;
+}
+
+
