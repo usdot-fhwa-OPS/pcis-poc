@@ -196,7 +196,7 @@ import {  AdminUpdateUserAttributesCommand } from "@aws-sdk/client-cognito-ident
 //Name and Email Address.
 const update = async (event) => {
   const username = event.queryStringParameters?.username || event.body?.username;
-  const giveNmae = event.queryStringParameters?.givenname || event.body?.givenname;
+  const givenName = event.queryStringParameters?.givenname || event.body?.givenname;
   const familyName = event.queryStringParameters?.familyname || event.body?.familyname;
   const email = event.queryStringParameters?.email || event.body?.email;
 
@@ -205,16 +205,16 @@ const update = async (event) => {
     Username: username,
     UserAttributes: []
   };
-  if (giveNmae) {
+  if (givenName) {
     params.UserAttributes.push({
       Name: "family_name",
-      Value: giveNmae
+      Value: familyName
     })
   }
   if (familyName) {
     params.UserAttributes.push({
       Name: "given_name",
-      Value: familyName
+      Value: givenName
     })
   }
   if (email) {
@@ -256,13 +256,6 @@ const CORS_HEADERS = {
   "Access-Control-Allow-Headers": "Authorization, Content-Type",
 };
 
-const ALLOWED_SERVICES = new Set([
-  "Food",
-  "Water",
-  "Crew Services",
-  "Waste Disposal",
-  "Fuel",
-]);
 
 
 
@@ -375,11 +368,9 @@ export const handler = async (event) => {
         return response(404, { message: `Unsupported route: ${routeKey}` });
     }
   } catch (err) {
-    if (err?.name === "ConditionalCheckFailedException") {
-      return response(404, { message: "HazardousCargo not found" });
-    }
+    
 
-    console.error("hazardous-cargo-manager error:", err);
+    console.error("pcis-user-managenent error:", err);
     return response(500, { message: err?.message || "Internal server error" });
   }
 };
