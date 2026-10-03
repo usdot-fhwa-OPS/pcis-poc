@@ -58,3 +58,17 @@ export const updateUser = async (username:string, familyname:string, givenname:s
     const result = (await (response.json()));
     return result;
 }
+
+export const deleteUser = async (username:String): Promise<string> => {
+    const session = await fetchAuthSession();
+    const response = await fetch(`https://2472g0pixa.execute-api.us-east-1.amazonaws.com/dev/deleteUser?username=${username}`, {
+        method: 'Post',
+        headers: {
+            "Authorization": `Bearer ${session.tokens?.accessToken?.toString()}`,
+            "Content-Type": "application/json",
+            "Accept": "*/*"
+        }
+    });
+    const result = (await (response.json()));
+    return result;
+}
