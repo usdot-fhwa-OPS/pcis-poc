@@ -61,7 +61,26 @@ Ensure that these changes make it to the develop branch. Within the Amplify cons
 
 [Step by step instructions for creating this Lambda function and API Gateway.](<lambdas/s3todynamodb/s3todynamodb.md>)
 
+Lambda function - to disable users' account aftre the acttont confirmation
+    lambdas\cognito-post-confirmation-trigger\index.mjs
 
+Lambda function - to manage the berth registration
+    lambdas\berth-registration-manager\index.mjs
+
+Lambda function - to notify/sync cargo unit insert and modification to all online user's browser
+    lambdas\cargo-unit-sync\index.mjs
+
+Lambda function- to manage cargo unit 
+    lambdas\cargo-units-manager\index.mjs
+
+Lambda function- to manage hazardous cargo
+    lambdas\hazardous-cargo\index.mjs
+
+Lambda function to manage terminal capacity
+    lambdas\terminal-capacity-manager\index.mjs
+
+Lambda function - to manage users account in aws cognito
+    lambdas\user-management\index.mjs
 
 
 ## Instructions for Local Deployment
