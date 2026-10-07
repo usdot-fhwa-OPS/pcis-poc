@@ -44,7 +44,7 @@ export const disableUser = async (userName:string): Promise<string> => {
     return result;
 }
 
-export const updateUser = async (username:string, familyname:string, givenname:string, email:string): Promise<string> => {
+export const updateUser = async (username:string, familyname:string, givenname:string): Promise<string> => {
     const session = await fetchAuthSession();
     const response = await fetch(`https://2472g0pixa.execute-api.us-east-1.amazonaws.com/dev/updateUser?username=${username}`, {
         method: 'Post',
@@ -53,7 +53,7 @@ export const updateUser = async (username:string, familyname:string, givenname:s
             "Content-Type": "application/json",
             "Accept": "*/*"
         },
-        body: JSON.stringify({'familyname':familyname,'givenname':givenname,'email':email})
+        body: JSON.stringify({'familyname':familyname,'givenname':givenname})
     });
     const result = (await (response.json()));
     return result;
