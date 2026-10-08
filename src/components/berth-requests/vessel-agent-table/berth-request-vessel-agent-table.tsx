@@ -1,16 +1,16 @@
 import { useState } from "react";
-import { DataTable } from "./data-table.tsx";
+import { DataTable } from "../../ui/data-table";
 import {
+  VesselAgentBerthRequestsTableMeta,
   requestedColumns,
   modificationRequestedColumns,
   ongoingColumns,
   completedColumns,
 } from "./columns.tsx";
-import { BerthConfigDomain } from "../berth-config-domain.tsx";
 
 interface VesselAgentBerthRequestsTableProps {
   data: any[];
-  meta: { brConfigList: BerthConfigDomain[], deleteBerthRequest: any };
+  meta: VesselAgentBerthRequestsTableMeta;
 }
 
 type TabKey = "requested" | "modification-requested" | "ongoing" | "completed"
@@ -64,8 +64,16 @@ export function VesselAgentBerthRequestsTable({ data, meta }: VesselAgentBerthRe
           ))}
         </div>
       </div>
-      {/* Table — columns change per tab */}
-      <DataTable columns={current.columns} data={current.data} meta={meta} />
+      {/* Table — columns change per tab; the key resets filters and sorting on tab change */}
+      <DataTable
+        key={activeTab}
+        columns={current.columns}
+        data={current.data}
+        meta={meta}
+        getRowId={(row) => row.requestId}
+        searchPlaceholder="Search vessels"
+        emptyMessage="There are no berth requests to display."
+      />
     </>
   );
 }

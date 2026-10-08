@@ -5,7 +5,6 @@ import { useState } from "react"
 import { Button } from "../../ui/button"
 import { BerthRequestDomain } from "../berth-request-domain"
 import { BerthConfigDomain } from "../berth-config-domain"
-import { VesselAgentBerthRequestsTableMeta } from "./data-table"
 import { useNavigate } from "@tanstack/react-router"
 import {
   Dialog,
@@ -16,6 +15,11 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "../../../components/ui/dialog"
+
+export interface VesselAgentBerthRequestsTableMeta {
+  brConfigList: BerthConfigDomain[],
+  deleteBerthRequest: any
+}
 
 function DeleteDialog({ row, table }: { row: Row<BerthRequestDomain>; table: Table<BerthRequestDomain> }) {
   const [open, setOpen] = useState(false)
@@ -78,8 +82,9 @@ export const columns: ColumnDef<BerthRequestDomain>[] = [
     header: "Vessel ID",
   },
 {
-    accessorKey: "terminal",
+    id: "terminal",
     header: () => <div style={{ minWidth: "50px" }}>Terminal</div>,
+    meta: { label: "Terminal" },
     cell: ({ row, table }) => {
       const terminal: BerthConfigDomain | undefined = (table.options.meta as VesselAgentBerthRequestsTableMeta)
                                               .brConfigList.find((value) =>(value.terminalId === row.original.terminalId)) 
@@ -94,6 +99,7 @@ export const columns: ColumnDef<BerthRequestDomain>[] = [
   {
     accessorKey: "etaAt",
     header: "Arrival (ETA)",
+    meta: { filterVariant: "dateRange" },
   },
   {
     accessorKey: "etdAt",
@@ -104,8 +110,10 @@ export const columns: ColumnDef<BerthRequestDomain>[] = [
     header: "Date Requested",
   },
   {
-    accessorKey: "actions",
+    id: "actions",
     header: () => <div style={{ minWidth: "50px" }}>Actions</div>,
+    meta: { label: "Actions" },
+    enableHiding: false,
     cell: ({ row, table }) => {
        const navigate = useNavigate();
       return(
@@ -148,6 +156,7 @@ const terminalNameOnlyColumn: ColumnDef<BerthRequestDomain> = {
 const contactColumn: ColumnDef<BerthRequestDomain> = {
   id: "contact",
   header: "Contact",
+  enableHiding: false,
   cell: ({ row, table }) => {
     const terminal = (table.options.meta as VesselAgentBerthRequestsTableMeta)
       .brConfigList.find((t) => t.terminalId === row.original.terminalId)

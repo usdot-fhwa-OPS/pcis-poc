@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { User, columns } from "../components/users/columns"
-import { DataTable } from "../components/users/users-table"
+import { DataTable } from "../components/ui/data-table"
 import { useEffect, useState } from "react"
 import { fetchAuthSession } from 'aws-amplify/auth';
 
@@ -40,10 +40,13 @@ export default function Operators() {
     <div className="w-full px-6 py-6 md:px-10 md:py-8">
       <h1 className="mb-2 text-2xl leading-none font-semibold text-gray-900">Available Users</h1>
       <p className="mb-4 text-sm text-gray-700">Manage and approve users accross all roles and organizations.</p>
-      {loading
-        ? <div className="flex items-center justify-center h-64 text-gray-500">Loading users…</div>
-        : <DataTable columns={columns} data={data} />
-      }
+      <DataTable
+        columns={columns}
+        data={data}
+        isLoading={loading}
+        searchPlaceholder="Search users"
+        emptyMessage="There are no users to display."
+      />
     </div>
   )
 }

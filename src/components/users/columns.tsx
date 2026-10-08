@@ -16,20 +16,16 @@ export type User = {
 export const columns: ColumnDef<User>[] = [
     {
         id: "full_name",
+        accessorFn: (user) => `${user.given_name ?? ""} ${user.family_name ?? ""}`.trim(),
         header: "Full Name",
-        cell: ({ row }) => (
-            <span className="font-medium text-gray-900">
-                {`${row.original.given_name ?? ""} ${row.original.family_name ?? ""}`.trim()}
-            </span>
+        cell: ({ getValue }) => (
+            <span className="font-medium text-gray-900">{getValue<string>()}</span>
         ),
-        filterFn: (row, _, filterValue: string) => {
-            const fullName = `${row.original.given_name ?? ""} ${row.original.family_name ?? ""}`.toLowerCase()
-            return fullName.includes(filterValue.toLowerCase())
-        },
     },
     {
         accessorKey: "custom:role",
         header: "Role",
+        meta: { filterVariant: "multiSelect" },
     },
     {
         accessorKey: "custom:organization",
@@ -46,6 +42,7 @@ export const columns: ColumnDef<User>[] = [
     {
         accessorKey: "verification_status",
         header: "Status",
+        meta: { filterVariant: "select" },
         cell: ({ row }) => {
             const status = row.original.verification_status
             const isVerified = status?.toLowerCase() === "verified"

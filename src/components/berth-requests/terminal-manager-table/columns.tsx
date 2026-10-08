@@ -10,7 +10,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "../../ui/popover"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../ui/select"
 import { cn } from "../../../lib/utils"
 import { BerthRequestDomain } from "../berth-request-domain"
-import { TerminalOperatorBerthRequestsTableMeta } from "./data-table"
+import { BerthConfigDomain } from "../berth-config-domain"
 import {
   Dialog,
   DialogClose,
@@ -25,6 +25,13 @@ import { Textarea } from "../../../components/ui/textarea"
 import { useNavigate } from "@tanstack/react-router"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../../../components/ui/tooltip"
 import { Badge } from "../../../components/ui/badge"
+
+export interface TerminalOperatorBerthRequestsTableMeta {
+  decideBerthRequest: (requestId: string, decision: string, options?: { denialComment?: string; berthAssignment?: string }) => void
+  deleteBerthRequest: any
+  berthConfigs: BerthConfigDomain[]
+  modifyBerthRequest:(berthRequrst: BerthRequestDomain)=>void;
+}
 
 function RequestDetails({ row, table }: { row: Row<BerthRequestDomain>; table: Table<BerthRequestDomain> }) {
   const meta = table.options.meta as TerminalOperatorBerthRequestsTableMeta
@@ -325,8 +332,10 @@ export const columns: ColumnDef<BerthRequestDomain>[] = [
     ),
   },
 {
-    accessorKey: "respond",
+    id: "respond",
     header: () => <div style={{ minWidth: "50px" }}>Respond to Request</div>,
+    meta: { label: "Respond to Request" },
+    enableHiding: false,
     cell: ({ row, table }) => (
       <div className="flex space-x-4">
         <ApproveDialog row={row} table={table as Table<BerthRequestDomain>} />
@@ -338,6 +347,7 @@ export const columns: ColumnDef<BerthRequestDomain>[] = [
   {
     accessorKey: "etaAt",
     header: "Arrival (ETA)",
+    meta: { filterVariant: "dateRange" },
   },
   {
     accessorKey: "etdAt",
@@ -348,8 +358,10 @@ export const columns: ColumnDef<BerthRequestDomain>[] = [
     header: "Date Requested",
   },
   {
-    accessorKey: "actions",
+    id: "actions",
     header: () => <div style={{ minWidth: "50px" }}>Actions</div>,
+    meta: { label: "Actions" },
+    enableHiding: false,
     cell: ({ row, table }) => { 
       const navigate = useNavigate();
       return(
@@ -385,6 +397,7 @@ const vesselIdOnlyColumn: ColumnDef<BerthRequestDomain> = {
 const contactColumn: ColumnDef<BerthRequestDomain> = {
   id: "contact",
   header: "Contact",
+  enableHiding: false,
   cell: ({ row }) => (
     <a href={`mailto:${row.original.vesselAgentEmail}`}>
       <Button size="sm" variant="link" className="text-blue-600 p-0 h-auto">Contact</Button>
@@ -479,6 +492,7 @@ export const completedColumns: ColumnDef<BerthRequestDomain>[] = [
   {
     accessorKey: "status",
     header: "Status",
+    meta: { filterVariant: "multiSelect" },
     cell: ({ row }) => {
       const s = row.original.status
       return (

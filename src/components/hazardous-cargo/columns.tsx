@@ -16,6 +16,7 @@ export const columns: ColumnDef<HazardousCargoItem>[] = [
   {
     accessorKey: "vesselId",
     header: "Vessel",
+    meta: { filterVariant: "multiSelect" },
   },
   {
     accessorKey: "hazmatClass",
@@ -40,6 +41,13 @@ export const columns: ColumnDef<HazardousCargoItem>[] = [
   {
     accessorKey: "isCompliant",
     header: "Documentation Status",
+    meta: {
+      filterVariant: "select",
+      filterOptions: [
+        { label: "Compliant", value: "true" },
+        { label: "Non-Compliant", value: "false" },
+      ],
+    },
     cell: ({ row }) => {
       const compliant = row.original.isCompliant
       return compliant ? (
@@ -56,6 +64,7 @@ export const columns: ColumnDef<HazardousCargoItem>[] = [
   {
     id: "actions",
     header: "Actions",
+    enableHiding: false,
     // TODO: Wire up navigation to real detail page once backend is connected.
     cell: ({ row }) => (
       <Button

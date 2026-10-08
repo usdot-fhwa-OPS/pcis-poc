@@ -12,7 +12,10 @@ import { cn } from "../../lib/utils"
 import { BerthRequestDomain } from "../berth-requests/berth-request-domain"
 import { getManifestDisplay, getBerthDisplay } from "./vessel-activity-types"
 import { updateBerthRequest } from "../berth-requests/berth-request-client"
-import { VesselAcitivtyTableMeta } from "./data-table"
+
+export interface VesselAcitivtyTableMeta {
+  setAtaAt:(requestId: string, newVal:string)=>void;
+}
 
 const TIME_OPTIONS = [
   "12:00 AM", "01:00 AM", "02:00 AM", "03:00 AM", "04:00 AM", "05:00 AM",
@@ -123,7 +126,9 @@ function DateTimePicker({
 
 const vesselColumn: ColumnDef<BerthRequestDomain> = {
   id: "vessel",
+  accessorKey: "vesselID",
   header: "VESSEL",
+  meta: { label: "Vessel" },
   cell: ({ row }) => (
     <span className="font-semibold text-gray-900 text-sm whitespace-nowrap">
       {row.original.vesselID}
@@ -134,6 +139,7 @@ const vesselColumn: ColumnDef<BerthRequestDomain> = {
 const etaColumn: ColumnDef<BerthRequestDomain> = {
   accessorKey: "etaAt",
   header: "ETA",
+  meta: { filterVariant: "dateRange" },
   cell: ({ row }) => (
     <span className="text-sm text-gray-700 whitespace-nowrap">{row.original.etaAt}</span>
   ),
@@ -157,6 +163,7 @@ const ataColumn: ColumnDef<BerthRequestDomain> = {
 const etdColumn: ColumnDef<BerthRequestDomain> = {
   accessorKey: "etdAt",
   header: "ETD",
+  meta: { filterVariant: "dateRange" },
   cell: ({ row }) => (
     <span className="text-sm text-gray-700 whitespace-nowrap">{row.original.etdAt}</span>
   ),
@@ -179,6 +186,7 @@ const atdColumn: ColumnDef<BerthRequestDomain> = {
 const berthColumn: ColumnDef<BerthRequestDomain> = {
   id: "berth",
   header: () => <div className="text-center">BERTH</div>,
+  meta: { label: "Berth" },
   cell: ({ row }) => {
     const display = getBerthDisplay(row.original)
     return (
@@ -204,6 +212,7 @@ const berthColumn: ColumnDef<BerthRequestDomain> = {
 const manifestColumn: ColumnDef<BerthRequestDomain> = {
   id: "manifest",
   header: () => <div className="text-center">MANIFEST</div>,
+  meta: { label: "Manifest" },
   cell: ({ row }) => {
     // TODO: Pass actual hazmatCount from backend when available.
     const display = getManifestDisplay(row.original)

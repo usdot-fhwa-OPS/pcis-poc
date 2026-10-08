@@ -1,12 +1,14 @@
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "../../ui/tabs.tsx";
-import { DataTable } from "./data-table.tsx";
+import { DataTable } from "../../ui/data-table";
 import {
+  TerminalOperatorBerthRequestsTableMeta,
   requestedColumns,
   modificationRequestedColumns,
   ongoingColumns,
   completedColumns,
 } from "./columns.tsx";
 import { BerthConfigDomain } from "../berth-config-domain.tsx";
+import { BerthRequestDomain } from "../berth-request-domain.tsx";
 
 interface TerminalOperatorBerthRequestsTableProps {
   data: any[];
@@ -37,7 +39,8 @@ export function TerminalOperatorBerthRequestsTable({
     (r.status === "APPROVED" && r.ataAt && r.atdAt)
   )
 
-  const meta = { decideBerthRequest, deleteBerthRequest, berthConfigs, modifyBerthRequest }
+  const meta: TerminalOperatorBerthRequestsTableMeta = { decideBerthRequest, deleteBerthRequest, berthConfigs, modifyBerthRequest }
+  const tableProps = { meta, getRowId: (row: BerthRequestDomain) => row.requestId, searchPlaceholder: "Search vessels", emptyMessage: "There are no berth requests to display." }
 
   return (
     <Tabs defaultValue="requested">
@@ -48,16 +51,16 @@ export function TerminalOperatorBerthRequestsTable({
         <TabsTrigger value="completed" className="data-[state=active]:sm:-mb-px pt-0 px-0 pb-2 data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-gray-900 rounded-none text-gray-500 hover:text-gray-700 data-[state=active]:text-gray-900 data-[state=active]:shadow-none">Completed</TabsTrigger>
       </TabsList>
       <TabsContent value="requested">
-        <DataTable columns={requestedColumns} data={requested} meta={meta} />
+        <DataTable columns={requestedColumns} data={requested} {...tableProps} />
       </TabsContent>
       <TabsContent value="modification-requested">
-        <DataTable columns={modificationRequestedColumns} data={modificationRequested} meta={meta} />
+        <DataTable columns={modificationRequestedColumns} data={modificationRequested} {...tableProps} />
       </TabsContent>
       <TabsContent value="ongoing">
-        <DataTable columns={ongoingColumns} data={ongoing} meta={meta} />
+        <DataTable columns={ongoingColumns} data={ongoing} {...tableProps} />
       </TabsContent>
       <TabsContent value="completed">
-        <DataTable columns={completedColumns} data={completed} meta={meta} />
+        <DataTable columns={completedColumns} data={completed} {...tableProps} />
       </TabsContent>
     </Tabs>
   );

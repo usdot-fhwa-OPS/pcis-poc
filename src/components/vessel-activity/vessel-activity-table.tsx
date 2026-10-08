@@ -1,9 +1,8 @@
 import { useMemo, useState } from "react"
-import { Search } from "lucide-react"
 import { BerthRequestDomain } from "../berth-requests/berth-request-domain"
 import { isVesselArchived, isBerthPending, needsAttention } from "./vessel-activity-types"
 import { allColumns, inboundColumns, outboundColumns } from "./columns"
-import { DataTable } from "./data-table"
+import { DataTable } from "../ui/data-table"
 import { Checkbox } from "../ui/checkbox"
 
 interface VesselActivityTableProps {
@@ -23,7 +22,6 @@ export function VesselActivityTable({ data }: VesselActivityTableProps) {
   const [activeTab, setActiveTab] = useState<TabKey>("all")
   const [activeFilter, setActiveFilter] = useState<FilterKey>("all")
   const [includeArchived, setIncludeArchived] = useState(false)
-  const [searchQuery, setSearchQuery] = useState("")
   const [refresh, setRefresh] = useState(0)
 
 
@@ -59,7 +57,7 @@ export function VesselActivityTable({ data }: VesselActivityTableProps) {
     cleared: tabData.filter(isVesselArchived).length,
   }), [tabData, refresh])
 
-  // Final data: tab + chip filter + vessel search.
+  // Final data: tab + chip filter. Vessel search is the table's global search.
   const filteredData = useMemo(() => {
     let d = tabData
 
@@ -71,13 +69,8 @@ export function VesselActivityTable({ data }: VesselActivityTableProps) {
       d = d.filter(isVesselArchived)
     }
 
-    if (searchQuery.trim()) {
-      const q = searchQuery.toLowerCase()
-      d = d.filter((r) => r.vesselID?.toLowerCase().includes(q))
-    }
-
     return d
-  }, [tabData, activeFilter, searchQuery, refresh])
+  }, [tabData, activeFilter, refresh])
 
   const FILTERS: { key: FilterKey; label: string; count: number }[] = [
     { key: "all", label: "All", count: counts.all },
@@ -112,45 +105,45 @@ export function VesselActivityTable({ data }: VesselActivityTableProps) {
         </div>
       </div>
 
-      {/* Filter chips + archived toggle + search — all in one row */}
-      <div className="flex max-xl:flex-wrap items-center gap-2 p-2 bg-white border rounded-xl">
-        {FILTERS.map(({ key, label, count }) => (
-          <button
-            key={key}
-            onClick={() => setActiveFilter(key)}
-            className={`px-3 py-1 rounded-full text-sm font-medium transition-colors whitespace-nowrap ${
-              activeFilter === key
-                ? "bg-gray-900 text-white"
-                : "border border-gray-300 text-gray-700 hover:bg-gray-50"
-            }`}
-          >
-            {label} {count}
-          </button>
-        ))}
-        <label className="flex items-center gap-2 cursor-pointer select-none ml-1 whitespace-nowrap">
-          <Checkbox
-            checked={includeArchived}
-            onCheckedChange={(checked) => {
-              setIncludeArchived(!!checked)
-              if (!checked && activeFilter === "cleared") setActiveFilter("all")
-            }}
-          />
-          <span className="text-sm text-gray-700">Include Archived Items</span>
-        </label>
-        <div className="relative ml-auto">
-          <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
-          <input
-            type="text"
-            placeholder="Search vessels..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-48 pl-8 pr-3 py-1.5 border border-gray-300 rounded-md text-sm placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent"
-          />
-        </div>
+      {/* Table — columns change per tab; the key resets filters and sorting on tab change */}
+      <div>
+        <DataTable
+          key={activeTab}
+          columns={activeColumns}
+          data={filteredData}
+          meta={{ setAtaAt: setAtaAt }}
+          getRowId={(row) => row.requestId}
+          searchPlaceholder="Search vessels..."
+          emptyMessage="There are no vessels to display."
+          toolbarLeading={
+            <>
+              {FILTERS.map(({ key, label, count }) => (
+                <button
+                  key={key}
+                  onClick={() => setActiveFilter(key)}
+                  className={`px-3 py-1 rounded-full text-sm font-medium transition-colors whitespace-nowrap ${
+                    activeFilter === key
+                      ? "bg-gray-900 text-white"
+                      : "border border-gray-300 text-gray-700 hover:bg-gray-50"
+                  }`}
+                >
+                  {label} {count}
+                </button>
+              ))}
+              <label className="flex items-center gap-2 cursor-pointer select-none ml-1 whitespace-nowrap">
+                <Checkbox
+                  checked={includeArchived}
+                  onCheckedChange={(checked) => {
+                    setIncludeArchived(!!checked)
+                    if (!checked && activeFilter === "cleared") setActiveFilter("all")
+                  }}
+                />
+                <span className="text-sm text-gray-700">Include Archived Items</span>
+              </label>
+            </>
+          }
+        />
       </div>
-
-      {/* Table — columns change per tab */}
-      <DataTable columns={activeColumns} data={filteredData} meta={{setAtaAt:setAtaAt}}/>
     </div>
   )
 }
