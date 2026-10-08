@@ -21,6 +21,7 @@ export const columns: ColumnDef<HazardousCargoItem>[] = [
   {
     accessorKey: "hazmatClass",
     header: "Hazmat Class",
+    meta: { filterVariant: "multiSelect" },
     // TODO: Replace placeholder once hazmatClass is added to DynamoDB schema.
     cell: ({ row }) => {
       const val = row.original.hazmatClass
