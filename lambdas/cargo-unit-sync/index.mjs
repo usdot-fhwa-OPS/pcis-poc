@@ -6,41 +6,47 @@ import { DynamoDBClient, ScanCommand, PutItemCommand, DeleteItemCommand } from "
 const dynamo = new DynamoDBClient({});
 
 
-const CARGO_UNITS_TABLE = process.env.CARGO_UNITS_TABLE || "CargoUnits";
-const WEBSOCKET_CONNECTIONS_TABLE = process.env.CARGO_UNITS_TABLE || "PcisWebsocketConn"
+// The frontend (src/components/real-time-call.tsx) matches on "<eventName> CargoUnits",
+// so the broadcast name is fixed and independent of the physical table name.
+const CARGO_UNITS_EVENT_SOURCE = "CargoUnits";
+const WEBSOCKET_CONNECTIONS_TABLE = process.env.WEBSOCKET_CONNECTIONS_TABLE || "PcisWebsocketConn"
+const callbackUrl = `https://n7w79iw8p7.execute-api.us-east-1.amazonaws.com/dev/`;
+const client = new ApiGatewayManagementApiClient({ endpoint: callbackUrl });
+
+const listWebSocketConnections = async () => {
+  const connections = [];
+  let ExclusiveStartKey;
+  do {
+    const scanData = await dynamo.send(new ScanCommand({ TableName: WEBSOCKET_CONNECTIONS_TABLE, ExclusiveStartKey }));
+    connections.push(...scanData.Items.map(item => item.connectionId.S));
+    ExclusiveStartKey = scanData.LastEvaluatedKey;
+  } while (ExclusiveStartKey);
+  return connections;
+}
+
 const realTimeEventNotify = async (message) => {
 
-  const callbackUrl = `https://n7w79iw8p7.execute-api.us-east-1.amazonaws.com/dev/`;
-  const client = new ApiGatewayManagementApiClient({ endpoint: callbackUrl });
-  const scanData = await dynamo.send(new ScanCommand({ TableName: WEBSOCKET_CONNECTIONS_TABLE }));
-  const connections = scanData.Items.map(item => item.connectionId.S);
-  const restApiCallPromises = [];
+  const connections = await listWebSocketConnections();
+  console.log(`sending "${message}" to ${connections.length} connections`)
 
-  console.log(connections)
-  connections.map(async (connectionId) => {
-    try {
+  // allSettled so one dead connection can't fail the invocation; a failed invocation
+  // makes the DynamoDB stream retry this batch and blocks all later updates.
+  const results = await Promise.allSettled(connections.map((connectionId) =>
+    client.send(new PostToConnectionCommand({ ConnectionId: connectionId, Data: message }))
+  ));
 
-      const requestParams = {
-        ConnectionId: connectionId,
-        Data: message,
-      };
-
-      const command = new PostToConnectionCommand(requestParams);
-      console.log(`sending notification connection ID ${connectionId} ${message}`)
-      const apiReq = client.send(command);
-      restApiCallPromises.push(apiReq);
-      apiReq.then((done) =>{
-        console.log(`notified connection ID ${connectionId} ${message}`)
-    });
-
-    } catch (error) {
-      console.log(error);
+  await Promise.all(results.map(async (result, i) => {
+    if (result.status === "fulfilled") return;
+    const connectionId = connections[i];
+    const error = result.reason;
+    if (error?.name === "GoneException" || error?.$metadata?.httpStatusCode === 410) {
+      console.log(`removing stale connection ID ${connectionId}`)
       await removeWebSocketConnection(connectionId);
+    } else {
+      console.log(`failed to notify connection ID ${connectionId}`, error);
     }
+  }));
 
-  });
-
-  await Promise.all(restApiCallPromises)
   console.log(`notified all users`)
 
 }
@@ -71,10 +77,17 @@ export const handler = async (event, context) => {
     }
   }
 
-  // for database trigger  
+  // for database trigger
   if (event.Records) {
-    for (const record of event.Records) {
-      await realTimeEventNotify(`${record.eventName} ${CARGO_UNITS_TABLE}`)
+    // Clients refetch everything on any message, so one broadcast per event type per batch is enough.
+    const eventNames = new Set(event.Records.map(record => record.eventName));
+    for (const eventName of eventNames) {
+      try {
+        await realTimeEventNotify(`${eventName} ${CARGO_UNITS_EVENT_SOURCE}`)
+      } catch (error) {
+        // Real-time notifications are best effort; never block the stream on them.
+        console.log(`failed to broadcast ${eventName}`, error);
+      }
     }
 
   }
