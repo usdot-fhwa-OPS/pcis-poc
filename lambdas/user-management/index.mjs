@@ -198,32 +198,25 @@ const update = async (event) => {
   const username = event.queryStringParameters?.username || event.body?.username;
   const givenName = event.queryStringParameters?.givenname || event.body?.givenname;
   const familyName = event.queryStringParameters?.familyname || event.body?.familyname;
-  const email = event.queryStringParameters?.email || event.body?.email;
-
+  
   const params = {
     UserPoolId: USER_POOL_ID,
     Username: username,
     UserAttributes: []
   };
-  if (givenName) {
+  if (familyName) {
     params.UserAttributes.push({
       Name: "family_name",
       Value: familyName
     })
   }
-  if (familyName) {
+  if (givenName) {
     params.UserAttributes.push({
       Name: "given_name",
       Value: givenName
     })
   }
-  if (email) {
-    params.UserAttributes.push({
-      Name: "email",
-      Value: email
-    })
-  }
-
+  
 
 
 
