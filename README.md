@@ -82,6 +82,9 @@ Lambda function to manage terminal capacity
 Lambda function - to manage users account in aws cognito
     lambdas\user-management\index.mjs
 
+Lambda function - to get data for charts
+    lambdas\pcis-chart-aggregator
+
 
 ## Instructions for Local Deployment
 **Step 1:**
