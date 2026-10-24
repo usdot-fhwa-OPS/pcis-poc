@@ -137,6 +137,16 @@ async function listReservations(event) {
   const body = event.body
   if (body) {
     const params = JSON.parse(body);
+    if (params.reservationId) {
+      expressionNames["#reservationId"] = "reservationId";
+      expressionValues[":reservationId"] = params.reservationId;
+      clauses.push("#reservationId = :reservationId");
+    }
+    if (params.confirmationCode) {
+      expressionNames["#confirmationCode"] = "confirmationCode";
+      expressionValues[":confirmationCode"] = params.confirmationCode;
+      clauses.push("#confirmationCode = :confirmationCode");
+    }
     if (params.terminalId) {
       expressionNames["#terminalId"] = "terminalId";
       expressionValues[":terminalId"] = params.terminalId;
@@ -221,6 +231,11 @@ async function listReservationMoves(event) {
   const body = event.body
   if (body) {
     const params = JSON.parse(body);
+    if (params.moveId) {
+      expressionNames["#moveId"] = "moveId";
+      expressionValues[":moveId"] = params.moveId;
+      clauses.push("#moveId = :moveId");
+    }
     if (params.cargoUnitID) {
       expressionNames["#cargoUnitID"] = "cargoUnitID";
       expressionValues[":cargoUnitID"] = params.cargoUnitID;
@@ -291,6 +306,11 @@ async function listReservationEvents(event) {
   const body = event.body
   if (body) {
     const params = JSON.parse(body);
+    if (params.eventId) {
+      expressionNames["#eventId"] = "eventId";
+      expressionValues[":eventId"] = params.eventId;
+      clauses.push("#eventId = :eventId");
+    }
     if (params.actorEmail) {
       expressionNames["#actorEmail"] = "actorEmail";
       expressionValues[":actorEmail"] = params.actorEmail;
@@ -544,8 +564,7 @@ export const handler = async (event) => {
     const routeKey = getRouteKey(event);
 
     switch (routeKey) {
-      case "GET /list":
-        return await listCargoUnits(event);
+      
       case "PUT /createReservation":
         return await createReservation(event);
       case "POST /saveReservation":
@@ -556,11 +575,11 @@ export const handler = async (event) => {
         return await saveReservationMove(event);
       case "PUT /createReservationEvent":
         return await createReservationEvent(event);
-      case "GET /listReservations":
+      case "POST /listReservations":
         return await listReservations(event);
-      case "GET /listReservationMoves":
+      case "POST /listReservationMoves":
         return await listReservationMoves(event);
-      case "GET /listReservationEvents":
+      case "POST /listReservationEvents":
         return await listReservationEvents(event);
       case "DELETE /deleteReservationMove":
         return await deleteReservationMove(event);
