@@ -5,7 +5,7 @@ import { format } from "date-fns"
 
 export const terminalCapacityList = async (): Promise<TerminalCapacityDomain[]> => {
     const session = await fetchAuthSession();
-    const response = await fetch("https://xlj2x9eurh.execute-api.us-east-1.amazonaws.com/dev/terminalCapacityList", {
+    const response = await fetch("https://e8x24eocp1.execute-api.us-east-1.amazonaws.com/dev/terminalCapacityList", {
         method: 'GET',
         headers: {
             "Authorization": `Bearer ${session.tokens?.accessToken?.toString()}`,
@@ -28,7 +28,7 @@ export const terminalCapacityList = async (): Promise<TerminalCapacityDomain[]> 
 
 export const saveTerminalCapacity = async (termCapDomain: TerminalCapacityDomain): Promise<string> => {
     const session = await fetchAuthSession();
-    const response = await fetch("https://xlj2x9eurh.execute-api.us-east-1.amazonaws.com/dev/terminalCapacity", {
+    const response = await fetch("https://e8x24eocp1.execute-api.us-east-1.amazonaws.com/dev/terminalCapacity", {
         method: 'PUT',
         headers: {
             "Authorization": `Bearer ${session.tokens?.accessToken?.toString()}`,
@@ -43,7 +43,7 @@ export const saveTerminalCapacity = async (termCapDomain: TerminalCapacityDomain
 
 export const deleteTerminalCapacity = async (terminalCapacityUid:string): Promise<any> => {
     const session = await fetchAuthSession();
-    const response = await fetch(`https://xlj2x9eurh.execute-api.us-east-1.amazonaws.com/dev/terminalCapacity/${terminalCapacityUid}`, {
+    const response = await fetch(`https://e8x24eocp1.execute-api.us-east-1.amazonaws.com/dev/terminalCapacity/${terminalCapacityUid}`, {
         method: 'DELETE',
         headers: {
             "Authorization": `Bearer ${session.tokens?.accessToken?.toString()}`,
@@ -56,7 +56,7 @@ export const deleteTerminalCapacity = async (terminalCapacityUid:string): Promis
 
 export const getTerrminalCapacity = async (terminalCapacityUid:string): Promise<TerminalCapacityDomain> => {
     const session = await fetchAuthSession();
-    const response = await fetch(`https://xlj2x9eurh.execute-api.us-east-1.amazonaws.com/dev/terminalCapacity/${terminalCapacityUid}`, {
+    const response = await fetch(`https://e8x24eocp1.execute-api.us-east-1.amazonaws.com/dev/terminalCapacity/${terminalCapacityUid}`, {
         method: 'GET',
         headers: {
             "Authorization": `Bearer ${session.tokens?.accessToken?.toString()}`,
