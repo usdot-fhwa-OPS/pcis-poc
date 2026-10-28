@@ -8,5 +8,7 @@ export type ReservationMoveDomain =
  "moveType": string,
  "reservationId": string,
  "status": string,
+ "laborType":string,
+ "laborQuantity":number,
  "updatedAt": string
 }

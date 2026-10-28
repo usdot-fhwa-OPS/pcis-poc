@@ -6,15 +6,19 @@ import {
   PutCommand,
   GetCommand,
   ScanCommand,
-  UpdateCommand,
-  TransactWriteCommand,
   DeleteCommand,
+  QueryCommand,
+  TransactWriteCommand,
 } from "@aws-sdk/lib-dynamodb";
 
 
 const RESERVATIONS_TABLE = process.env.RESERVATIONS_TABLE || "Reservations";
 const RESERVATION_EVENTS_TABLE = process.env.RESERVATION_EVENTS_TABLE || "ReservationEvents";
 const RESERVATION_MOVES_TABLE = process.env.RESERVATION_MOVES || "ReservationMoves";
+const CARGO_UNITS_TABLE = process.env.CARGO_UNITS_TABLE || "CargoUnits";
+const RESERVATION_EVENTS_GSI = process.env.RESERVATION_EVENTS_GSI || "GSI_reservationId";
+const RESERVATION_MOVES_GSI = process.env.RESERVATION_MOVES_GSI || "GSI_reservationId";
+
 
 const dynamo = DynamoDBDocumentClient.from(new DynamoDBClient({}), {
   marshallOptions: {
@@ -212,6 +216,96 @@ async function listReservations(event) {
   });
 }
 
+
+const getCargoUnit = async (cargoUnitID) => {
+    
+    const params = {
+        TableName: CARGO_UNITS_TABLE,
+        KeyConditionExpression: "cargoUnitID  = :cargoUnitIDValue",
+        ExpressionAttributeValues: {
+            ":cargoUnitIDValue": cargoUnitID,
+        },
+    };
+
+    try {
+        const command = new QueryCommand(params);
+        const response = await dynamo.send(command);
+        
+        return {
+            statusCode: 200,
+            body: JSON.stringify({
+                message: "Query successful",
+                items: response.Items, // Automatically unmarshalled plain JS objects
+                count: response.Count
+            }),
+        };
+    } catch (error) {
+        console.error("DynamoDB Query Error: ", error);
+        return {
+            statusCode: 500,
+            body: JSON.stringify({
+                message: "Failed to query table",
+                error: error.message
+            }),
+        };
+    }
+};
+
+
+async function getReservationByConfirmationCode(event) {
+
+  const requestedLimit = Number(event.queryStringParameters?.limit || 25);
+  const limit = Number.isFinite(requestedLimit)
+    ? Math.max(1, Math.min(100, requestedLimit))
+    : 25;
+
+  const nextToken = event.queryStringParameters?.nextToken;
+  const exclusiveStartKey = decodeNextToken(nextToken);
+  if (nextToken && !exclusiveStartKey) {
+    return response(400, { message: "Invalid nextToken" });
+  }
+
+  const expressionNames = {};
+  const expressionValues = {};
+  const clauses = [];
+  const confirmationCode = event.queryStringParameters?.confirmationCode;
+  if (confirmationCode) {
+    expressionNames["#confirmationCode"] = "confirmationCode";
+    expressionValues[":confirmationCode"] = confirmationCode;
+    clauses.push("#confirmationCode = :confirmationCode");
+  }
+
+
+
+  const scanInput = {
+    TableName: RESERVATIONS_TABLE,
+    Limit: limit,
+    ExclusiveStartKey: exclusiveStartKey || undefined,
+    FilterExpression: clauses.length ? clauses.join(" AND ") : undefined,
+    ExpressionAttributeNames: Object.keys(expressionNames).length ? expressionNames : undefined,
+    ExpressionAttributeValues: Object.keys(expressionValues).length ? expressionValues : undefined,
+  };
+
+  const result = await dynamo.send(new ScanCommand(scanInput));
+  const items = (result.Items || []).sort((a, b) =>
+    (b.createdAt || "").localeCompare(a.createdAt || "")
+  );
+  const combinedList =  await Promise.all(items.map(async item => {
+    const reservationMoveList = await listReservationMoves({ 'reservationId': item.reservationId })
+    const body = JSON.parse(reservationMoveList.body)
+    const updatedItems = await Promise.all(body.items.map(async move => {
+      const cargoUnitList = await getCargoUnit(move.cargoUnitID)
+      return ({...item, 'cargoUnitList':JSON.parse(cargoUnitList.body).items})
+    }))
+    return (updatedItems)
+  }))
+  return response(200, {
+    combinedList,
+    count: combinedList.length,
+    nextToken: encodeNextToken(result.LastEvaluatedKey),
+  });
+}
+
 async function listReservationMoves(event) {
   
   const requestedLimit = Number(event.queryStringParameters?.limit || 25);
@@ -392,7 +486,7 @@ async function createReservation(event) {
       Item: record,
     })
   );
-  return response(200, result);
+  return response(200, {'reservationId':record.reservationId,'confirmationCode': record.confirmationCode});
 }
 
 
@@ -445,7 +539,7 @@ async function createReservationMove(event) {
       Item: record,
     })
   );
-  return response(200, result);
+  return response(200, {'moveId':record.moveId});
 }
 
 
@@ -497,7 +591,7 @@ async function createReservationEvent(event) {
       Item: record,
     })
   );
-  return response(200, result);
+  return response(200, {'eventId':record.eventId});
 }
 
 
@@ -536,6 +630,121 @@ async function deleteReservation(event) {
 
   return response(200, result);
 }
+
+async function getAllReservationMoveByReservationId(reservationId) {
+
+  try {
+    const queryParams = {
+      TableName: RESERVATION_MOVES_TABLE,
+      IndexName: RESERVATION_MOVES_GSI,
+      KeyConditionExpression: "reservationId  = :val",
+      ExpressionAttributeValues: {
+        ":val": reservationId,
+      },
+    };
+
+    const queryResponse = await dynamo.send(new QueryCommand(queryParams));
+    const items = queryResponse.Items || [];
+
+    if (items.length === 0) {
+      return { statusCode: 200, body: "No items found matching the index value." };
+    }
+
+    return items;
+  } catch (error) {
+    console.error("Error executing deletion operation:", error);
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ message: "Internal Server Error", error: error.message }),
+    };
+  }
+}
+
+async function getAllReservationEventByReservationId(reservationId) {
+
+  try {
+    const queryParams = {
+      TableName: RESERVATION_EVENTS_TABLE,
+      IndexName: RESERVATION_EVENTS_GSI,
+      KeyConditionExpression: "reservationId  = :val",
+      ExpressionAttributeValues: {
+        ":val": reservationId,
+      },
+    };
+
+    const queryResponse = await dynamo.send(new QueryCommand(queryParams));
+    const items = queryResponse.Items || [];
+
+    if (items.length === 0) {
+      return { statusCode: 200, body: "No items found matching the index value." };
+    }
+
+    return items;
+  } catch (error) {
+    console.error("Error executing deletion operation:", error);
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ message: "Internal Server Error", error: error.message }),
+    };
+  }
+}
+
+async function deleteCompleteReservation(event) {
+  const reservationId = event.queryStringParameters?.reservationId;
+  if (!reservationId) return response(400, { message: "Reservation ID is required" });
+
+  const txnItems = [
+      {
+        Delete: {
+          TableName: RESERVATIONS_TABLE,
+          Key: {
+            reservationId: reservationId,
+          },
+          // Optional: Return the item attributes as they appeared before deletion
+          ReturnValues: "ALL_OLD",
+        }
+      }
+    ]
+
+    const reservationMovesItems = await getAllReservationMoveByReservationId(reservationId);
+    reservationMovesItems.map(item=>{
+      txnItems.push({
+        Delete: {
+          TableName: RESERVATION_MOVES_TABLE,
+          Key: {
+            moveId: item.moveId,
+          },
+          // Optional: Return the item attributes as they appeared before deletion
+          ReturnValues: "ALL_OLD",
+        }
+      })
+    })
+
+    const reservationEventItems = await getAllReservationEventByReservationId(reservationId);
+    reservationEventItems.map(item=>{
+      txnItems.push({
+        Delete: {
+          TableName: RESERVATION_EVENTS_TABLE,
+          Key: {
+            eventId: item.eventId,
+          },
+          // Optional: Return the item attributes as they appeared before deletion
+          ReturnValues: "ALL_OLD",
+        }
+      })
+    })
+
+  
+  const command = new TransactWriteCommand({
+    TransactItems: txnItems
+  })
+
+  const result = await dynamo.send(command);
+
+
+  return response(200, result);
+}
+
 
 async function deleteReservationEvent(event) {
   const eventId = event.queryStringParameters?.eventId;
@@ -587,6 +796,11 @@ export const handler = async (event) => {
         return await deleteReservationEvent(event);
       case "DELETE /deleteReservation":
         return await deleteReservation(event);
+      case "GET /getReservationByConfirmationCode":
+        return await getReservationByConfirmationCode(event);
+      case "DELETE /deleteCompleteReservation":
+        return await deleteCompleteReservation(event);
+
       
       default:
         return response(404, { message: `Unsupported route: ${routeKey}` });
