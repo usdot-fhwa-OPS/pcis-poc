@@ -694,20 +694,21 @@ async function deleteCompleteReservation(event) {
   if (!reservationId) return response(400, { message: "Reservation ID is required" });
 
   const txnItems = [
-      {
-        Delete: {
-          TableName: RESERVATIONS_TABLE,
-          Key: {
-            reservationId: reservationId,
-          },
-          // Optional: Return the item attributes as they appeared before deletion
-          ReturnValues: "ALL_OLD",
-        }
+    {
+      Delete: {
+        TableName: RESERVATIONS_TABLE,
+        Key: {
+          reservationId: reservationId,
+        },
+        // Optional: Return the item attributes as they appeared before deletion
+        ReturnValues: "ALL_OLD",
       }
-    ]
+    }
+  ]
 
-    const reservationMovesItems = await getAllReservationMoveByReservationId(reservationId);
-    reservationMovesItems.map(item=>{
+  const reservationMovesItems = await getAllReservationMoveByReservationId(reservationId);
+  if (reservationMovesItems.length > 0) {
+    reservationMovesItems.map(item => {
       txnItems.push({
         Delete: {
           TableName: RESERVATION_MOVES_TABLE,
@@ -720,8 +721,11 @@ async function deleteCompleteReservation(event) {
       })
     })
 
-    const reservationEventItems = await getAllReservationEventByReservationId(reservationId);
-    reservationEventItems.map(item=>{
+  }
+
+  const reservationEventItems = await getAllReservationEventByReservationId(reservationId);
+  if (reservationEventItems.length > 0) {
+    reservationEventItems.map(item => {
       txnItems.push({
         Delete: {
           TableName: RESERVATION_EVENTS_TABLE,
@@ -734,7 +738,9 @@ async function deleteCompleteReservation(event) {
       })
     })
 
-  
+  }
+
+
   const command = new TransactWriteCommand({
     TransactItems: txnItems
   })

@@ -240,5 +240,36 @@ export const createReservationEvent = async (reservationEvent:ReservationEventDo
     const result = (await response.json())
     return result;
 }
+export const deleteCompleteReservation = async (reservationId:string): Promise<any> => {
+    const session = await fetchAuthSession();
+    let url = `https://ubw4jy0m7j.execute-api.us-east-1.amazonaws.com/dev/deleteCompleteReservation?reservationId=${reservationId}`
+    
+    const response = await fetch(url, {
+        method: 'DELETE',
+        headers: {
+            "Authorization": `Bearer ${session.tokens?.accessToken?.toString()}`,
+            "Content-Type": "application/json",
+            "Accept": "*/*"
+        }
+    });
+    const result = (await response.json())
+    return result;
+}
+
+export const getReservationByConfirmationCode = async (confirmationCode:string): Promise<any> => {
+    const session = await fetchAuthSession();
+    let url = `https://ubw4jy0m7j.execute-api.us-east-1.amazonaws.com/dev/getReservationByConfirmationCode?confirmationCode=${confirmationCode}`
+    
+    const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+            "Authorization": `Bearer ${session.tokens?.accessToken?.toString()}`,
+            "Content-Type": "application/json",
+            "Accept": "*/*"
+        }
+    });
+    const result = (await response.json()).combinedList;
+    return result;
+}
 
 
