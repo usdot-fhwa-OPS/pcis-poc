@@ -240,12 +240,12 @@ export const createReservationEvent = async (reservationEvent:ReservationEventDo
     const result = (await response.json())
     return result;
 }
-export const deleteCompleteReservation = async (reservationId:string): Promise<any> => {
+export const denyReservation = async (reservationId:string): Promise<any> => {
     const session = await fetchAuthSession();
-    let url = `https://ubw4jy0m7j.execute-api.us-east-1.amazonaws.com/dev/deleteCompleteReservation?reservationId=${reservationId}`
+    let url = `https://ubw4jy0m7j.execute-api.us-east-1.amazonaws.com/dev/denyReservation?reservationId=${reservationId}`
     
     const response = await fetch(url, {
-        method: 'DELETE',
+        method: 'POST',
         headers: {
             "Authorization": `Bearer ${session.tokens?.accessToken?.toString()}`,
             "Content-Type": "application/json",
