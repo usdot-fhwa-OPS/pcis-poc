@@ -85,6 +85,9 @@ Lambda function - to manage users account in aws cognito
 Lambda function - to get data for charts
     lambdas\pcis-chart-aggregator
 
+Lambda function - to manage reservation, revervation moves and reservation events
+    lambdas\reservations-manager
+
 
 ## Instructions for Local Deployment
 **Step 1:**
