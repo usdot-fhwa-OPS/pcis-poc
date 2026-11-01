@@ -11,12 +11,17 @@ import {
 
 import { GetObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { fromIni } from "@aws-sdk/credential-providers";
+import { AdminGetUserCommand, CognitoIdentityProviderClient,AdminUpdateUserAttributesCommand  } from "@aws-sdk/client-cognito-identity-provider";
 
 
 
 const BERTH_REQUESTS_TABLE = process.env.BERTH_REQUESTS_TABLE || "BerthRequests";
 const BERTH_MANIFEST_TABLE = process.env.BERTH_MANIFEST_TABLE || "BerthManifestItems";
 const BERTH_CONFIG_TABLE = process.env.BERTH_CONFIG_TABLE || "BerthConfig";
+
+const cognitoClient = new CognitoIdentityProviderClient({ region: process.env.AWS_REGION || 'us-east-1' });
+const USER_POOL_ID = process.env.USER_POOL_ID || 'us-east-1_ODcx7VXFP';
+
 
 const dynamo = DynamoDBDocumentClient.from(new DynamoDBClient({}), {
   marshallOptions: {
@@ -465,23 +470,61 @@ async function ingestManifest(requestItem) {
   return { ingestedCount, skippedCount };
 }
 
-async function createBerthConfig(event) {
-  if (!ensureTerminalOperator(event)) {
-    return response(403, { message: "Only Terminal Operator can update berth configuration" });
+async function addTerminalIdInUsersProfile(username, userAttributes, terminalId){
+  const existingTerminalId = userAttributes.attributes["custom:terminalId"]
+  const params = {
+    UserPoolId: USER_POOL_ID,
+    Username: username,
+    UserAttributes: []
+  };
+  if (terminalId) {
+    params.UserAttributes.push({
+      Name: "custom:terminalId",
+      Value: (existingTerminalId)?existingTerminalId+','+terminalId:terminalId
+    })
   }
 
-  const body = parseBody(event);
-  const user = getUserIdentity(event);
-  const cfg = normalizeBerthConfig(body, user);
+  try {
+    const command = new AdminUpdateUserAttributesCommand(params);
+    const response = await cognitoClient.send(command);
 
-  await dynamo.send(
+    return response
+  } catch (error) {
+    console.error("Error updating user attributes:", error);
+    return error
+  }
+
+};
+
+async function createBerthConfig(event, userId, userAttributes) {
+
+  const body = parseBody(event);
+  const nowIso = new Date().toISOString();
+  const result = await dynamo.send(
     new PutCommand({
       TableName: BERTH_CONFIG_TABLE,
-      Item: cfg,
+      Item: {
+        "terminalId": body.terminalId,
+        "terminalName": body.terminalName,
+        "terminalEmail": body.terminalEmail,
+        "terminalPhone": body.terminalPhone,
+        "assignmentMode": body.assignmentMode,
+        "berthCapacity": body.berthCapacity,
+        "berthDesignations": body.berthDesignations,
+        "address": body.address,
+        "timezone": body.timezone,
+        "terminalType": body.terminalType,
+        "overtimeRatePerHour": body.overtimeRatePerHour,
+        "lateGracePeriodMins": body.lateGracePeriodMins,
+        "weeklyHours": body.weeklyHours,
+        "createdAt": nowIso,
+        "createdBy": userAttributes.attributes.email,
+      },
+      ConditionExpression: "attribute_not_exists(terminalId)", 
     })
   );
-
-  return response(200, cfg);
+  await addTerminalIdInUsersProfile(userId, userAttributes, body.terminalId)
+  return response(200, result);
 }
 
 async function readBerthConfig(event) {
@@ -550,8 +593,8 @@ async function createRequest(event) {
   return response(201, requestItem);
 }
 
-async function listRequests(event) {
-  const terminalId = event.queryStringParameters?.terminalId;
+async function listRequests(event, userAttributes) {
+  const terminalIdList = userAttributes.attributes['custom:terminalId'];
   const vesselAgentEmail = event.queryStringParameters?.vesselAgentEmail;
   const status = event.queryStringParameters?.status;
 
@@ -570,10 +613,15 @@ async function listRequests(event) {
   const expressionValues = {};
   const clauses = [];
 
-  if (terminalId) {
-    expressionNames["#terminalId"] = "terminalId";
-    expressionValues[":terminalId"] = terminalId;
-    clauses.push("#terminalId = :terminalId");
+  if (terminalIdList) {
+    const orClause = [];
+    terminalIdList.split(',').forEach((terminalId, i) => {
+      expressionNames["#terminalId"] = "terminalId";
+      expressionValues[":terminalId"+i] = terminalId;
+      orClause.push("#terminalId = :terminalId"+i);
+
+    })
+    clauses.push('('+orClause.join(' OR ')+')')
   }
 
   if (vesselAgentEmail) {
@@ -887,8 +935,56 @@ async function recordDeparture(event) {
   return getRequest(event);
 }
 
+function decodeJwtPayload(token) {
+  const parts = token.split('.');
+  if (parts.length !== 3) {
+    throw new Error('Invalid JWT format');
+  }
+  const payload = Buffer.from(parts[1], 'base64url').toString('utf8');
+  return JSON.parse(payload);
+}
+
+async function getUserAttributes(username) {
+  const params = {
+    UserPoolId: USER_POOL_ID, 
+    Username: username, 
+  };
+
+  try {
+    const command = new AdminGetUserCommand(params);
+    const response = await cognitoClient.send(command);
+
+    const attributes = response.UserAttributes.reduce((acc, attr) => {
+      acc[attr.Name] = attr.Value;
+      return acc;
+    }, {});
+
+    return {
+      username: response.Username,
+      status: response.UserStatus,
+      enabled: response.Enabled,
+      attributes, // Contains standard attributes (e.g., email) and custom attributes (e.g., custom:role)
+    };
+  } catch (error) {
+    console.error("Error retrieving user attributes:", error);
+    throw error;
+  }
+}
+
 export const handler = async (event) => {
   console.log(event)
+
+  const authHeader = event.headers?.authorization || event.headers?.Authorization;
+  if (!authHeader) {
+    return { statusCode: 401, body: 'No authorization header' };
+  }
+
+  const token = authHeader.replace(/^Bearer\s+/i, '');
+  const decoded = decodeJwtPayload(token);
+  const userId = decoded.sub;
+
+  const userAttributes = await getUserAttributes(userId);
+
   try {
     if (event.httpMethod === "OPTIONS") {
       return response(200, { ok: true });
@@ -902,11 +998,11 @@ export const handler = async (event) => {
       case "GET /berthConfig/list":
           return await listBerthConfig(event);                
       case "PUT /berthConfig":
-        return await createBerthConfig(event);
+        return await createBerthConfig(event, userId , userAttributes);
       case "POST /berthRequests":
         return await createRequest(event);
       case "GET /berthRequests":
-        return await listRequests(event);
+        return await listRequests(event, userAttributes);
       case "GET /berthRequests/{requestId}":
         return await getRequest(event);
       case "PUT /berthRequests/{requestId}":
