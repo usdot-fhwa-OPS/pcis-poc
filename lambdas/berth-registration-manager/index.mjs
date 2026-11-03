@@ -7,6 +7,7 @@ import {
   ScanCommand,
   UpdateCommand,
   DeleteCommand,
+  BatchGetCommand,
 } from "@aws-sdk/lib-dynamodb";
 
 import { GetObjectCommand, S3Client } from "@aws-sdk/client-s3";
@@ -256,6 +257,45 @@ async function validateRequestPayload(body) {
  
 }
 
+async function getBerthConfigList(event, userAttributes) {
+
+  const keyTerminalIds = [];
+  const terminalIdList = userAttributes.attributes['custom:terminalId'];
+  if (terminalIdList) {
+
+    terminalIdList.split(',').forEach((terminalId) => {
+      keyTerminalIds.push({ terminalId: terminalId });
+
+    })
+  }
+
+  const params = {
+    RequestItems: {
+      [BERTH_CONFIG_TABLE]: {
+        Keys: keyTerminalIds,
+
+      }
+    }
+  };
+
+  try {
+    const data = await dynamo.send(new BatchGetCommand(params));
+    console.log("Success:", data.Responses[BERTH_CONFIG_TABLE]);
+
+    // Note: Always check for UnprocessedKeys in production if hitting limits
+    if (Object.keys(data.UnprocessedKeys).length > 0) {
+      console.log("Unprocessed keys remain:", data.UnprocessedKeys);
+    }
+    return response(200, data.Responses[BERTH_CONFIG_TABLE] || null);
+  } catch (err) {
+    console.error("Error fetching batch:", err);
+  }
+  
+}
+
+
+
+
 async function getBerthConfig(terminalId) {
   const result = await dynamo.send(
     new GetCommand({
@@ -496,7 +536,7 @@ async function addTerminalIdInUsersProfile(username, userAttributes, terminalId)
 
 };
 
-async function createBerthConfig(event, userId, userAttributes) {
+async function createBerthConfig(event) {
 
   const body = parseBody(event);
   const nowIso = new Date().toISOString();
@@ -523,7 +563,13 @@ async function createBerthConfig(event, userId, userAttributes) {
       ConditionExpression: "attribute_not_exists(terminalId)", 
     })
   );
-  await addTerminalIdInUsersProfile(userId, userAttributes, body.terminalId)
+
+  const userId = event.queryStringParameters?.userId;
+  if (userId) {
+    const userAttributes = await getUserAttributes(userId);
+    await addTerminalIdInUsersProfile(userId, userAttributes, body.terminalId)
+  }
+  
   return response(200, result);
 }
 
@@ -593,8 +639,22 @@ async function createRequest(event) {
   return response(201, requestItem);
 }
 
-async function listRequests(event, userAttributes) {
+function addTerminalIdToClause(expressionNames, expressionValues, clauses, userAttributes) {
   const terminalIdList = userAttributes.attributes['custom:terminalId'];
+  if (terminalIdList) {
+    const orClause = [];
+    terminalIdList.split(',').forEach((terminalId, i) => {
+      expressionNames["#terminalId"] = "terminalId";
+      expressionValues[":terminalId"+i] = terminalId;
+      orClause.push("#terminalId = :terminalId"+i);
+
+    })
+    clauses.push('('+orClause.join(' OR ')+')')
+  }
+}
+
+async function listRequests(event, userAttributes) {
+  
   const vesselAgentEmail = event.queryStringParameters?.vesselAgentEmail;
   const status = event.queryStringParameters?.status;
 
@@ -613,17 +673,8 @@ async function listRequests(event, userAttributes) {
   const expressionValues = {};
   const clauses = [];
 
-  if (terminalIdList) {
-    const orClause = [];
-    terminalIdList.split(',').forEach((terminalId, i) => {
-      expressionNames["#terminalId"] = "terminalId";
-      expressionValues[":terminalId"+i] = terminalId;
-      orClause.push("#terminalId = :terminalId"+i);
-
-    })
-    clauses.push('('+orClause.join(' OR ')+')')
-  }
-
+  
+  addTerminalIdToClause(expressionNames, expressionValues, clauses, userAttributes)
   if (vesselAgentEmail) {
     expressionNames["#vesselAgentEmail"] = "vesselAgentEmail";
     expressionValues[":vesselAgentEmail"] = vesselAgentEmail;
@@ -996,9 +1047,9 @@ export const handler = async (event) => {
       case "GET /berthConfig":
         return await readBerthConfig(event);
       case "GET /berthConfig/list":
-          return await listBerthConfig(event);                
+          return await getBerthConfigList(event, userAttributes);                
       case "PUT /berthConfig":
-        return await createBerthConfig(event, userId , userAttributes);
+        return await createBerthConfig(event);
       case "POST /berthRequests":
         return await createRequest(event);
       case "GET /berthRequests":
@@ -1015,6 +1066,8 @@ export const handler = async (event) => {
         return await recordDeparture(event);
       case "DELETE /berthRequest/{requestId}":
         return await recordDelete(event);
+
+        
   
       default:
         return response(404, { message: `Unsupported route: ${routeKey}` });
