@@ -536,41 +536,44 @@ async function addTerminalIdInUsersProfile(username, userAttributes, terminalId)
 
 };
 
-async function createBerthConfig(event) {
-
+async function saveBerthConfig(event, userAttributes) {
   const body = parseBody(event);
-  const nowIso = new Date().toISOString();
-  const result = await dynamo.send(
-    new PutCommand({
-      TableName: BERTH_CONFIG_TABLE,
-      Item: {
-        "terminalId": body.terminalId,
-        "terminalName": body.terminalName,
-        "terminalEmail": body.terminalEmail,
-        "terminalPhone": body.terminalPhone,
-        "assignmentMode": body.assignmentMode,
-        "berthCapacity": body.berthCapacity,
-        "berthDesignations": body.berthDesignations,
-        "address": body.address,
-        "timezone": body.timezone,
-        "terminalType": body.terminalType,
-        "overtimeRatePerHour": body.overtimeRatePerHour,
-        "lateGracePeriodMins": body.lateGracePeriodMins,
-        "weeklyHours": body.weeklyHours,
-        "createdAt": nowIso,
-        "createdBy": userAttributes.attributes.email,
-      },
-      ConditionExpression: "attribute_not_exists(terminalId)", 
-    })
-  );
+  const terminalIdList = userAttributes.attributes['custom:terminalId'];
+  if (terminalIdList.includes(body.terminalId)) {
+    const nowIso = new Date().toISOString();
+    const result = await dynamo.send(
+      new PutCommand({
+        TableName: BERTH_CONFIG_TABLE,
+        Item: {
+          "terminalId": body.terminalId,
+          "terminalName": body.terminalName,
+          "terminalEmail": body.terminalEmail,
+          "terminalPhone": body.terminalPhone,
+          "assignmentMode": body.assignmentMode,
+          "berthCapacity": body.berthCapacity,
+          "berthDesignations": body.berthDesignations,
+          "address": body.address,
+          "timezone": body.timezone,
+          "terminalType": body.terminalType,
+          "overtimeRatePerHour": body.overtimeRatePerHour,
+          "lateGracePeriodMins": body.lateGracePeriodMins,
+          "weeklyHours": body.weeklyHours,
+          "createdAt": nowIso,
+          "createdBy": userAttributes.attributes.email,
+        },
+      })
+    );
 
-  const userId = event.queryStringParameters?.userId;
-  if (userId) {
-    const userAttributes = await getUserAttributes(userId);
-    await addTerminalIdInUsersProfile(userId, userAttributes, body.terminalId)
+    const userId = event.queryStringParameters?.userId;
+    if (userId) {
+      const userAttributes = await getUserAttributes(userId);
+      await addTerminalIdInUsersProfile(userId, userAttributes, body.terminalId)
+    }
+
+    return response(200, result);
+  } else {
+    return response(403, 'Access denied to Terminal.');
   }
-  
-  return response(200, result);
 }
 
 async function readBerthConfig(event) {
@@ -810,13 +813,14 @@ async function updateRequest(event) {
   return getRequest(event);
 }
 
-async function decideRequest(event) {
-  if (!ensureTerminalOperator(event)) {
-    return response(403, { message: "Only Terminal Operator can approve/deny berth requests" });
+async function decideRequest(event, userAttributes) {
+  const body = parseBody(event);
+  const terminalIdList = userAttributes.attributes['custom:terminalId'];
+  if (!terminalIdList.includes(body.terminalId)) {
+    return response(403, { message: "Only assigned Terminal Operator can approve/deny berth requests" });
   }
 
   const requestId = event.pathParameters?.requestId;
-  const body = parseBody(event);
   const decision = (body.decision || "").toString().toUpperCase();
 
   if (!requestId) return response(400, { message: "requestId is required" });
@@ -1033,6 +1037,7 @@ export const handler = async (event) => {
   const token = authHeader.replace(/^Bearer\s+/i, '');
   const decoded = decodeJwtPayload(token);
   const userId = decoded.sub;
+  const cognitoGroups = decoded['cognito:groups']
 
   const userAttributes = await getUserAttributes(userId);
 
@@ -1047,9 +1052,14 @@ export const handler = async (event) => {
       case "GET /berthConfig":
         return await readBerthConfig(event);
       case "GET /berthConfig/list":
-          return await getBerthConfigList(event, userAttributes);                
+        if (cognitoGroups.includes('pcis_Terminal_Operator')) {
+          return await getBerthConfigList(event, userAttributes);
+        } else {
+          return await listBerthConfig(event);
+        }
+          
       case "PUT /berthConfig":
-        return await createBerthConfig(event);
+        return await saveBerthConfig(event, userAttributes);
       case "POST /berthRequests":
         return await createRequest(event);
       case "GET /berthRequests":
@@ -1059,7 +1069,7 @@ export const handler = async (event) => {
       case "PUT /berthRequests/{requestId}":
         return await updateRequest(event);
       case "POST /berthRequests/{requestId}/decision":
-        return await decideRequest(event);
+        return await decideRequest(event, userAttributes);
       case "POST /berthRequests/{requestId}/arrival":
         return await recordArrival(event);
       case "POST /berthRequests/{requestId}/departure":

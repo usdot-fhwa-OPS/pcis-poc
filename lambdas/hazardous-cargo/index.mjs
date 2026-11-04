@@ -8,6 +8,7 @@ import {
   UpdateCommand,
   TransactWriteCommand,
 } from "@aws-sdk/lib-dynamodb";
+import { AdminGetUserCommand, CognitoIdentityProviderClient } from "@aws-sdk/client-cognito-identity-provider";
 
 
 const HAZARDOUS_CARGO_TABLE = process.env.HAZARDOUS_CARGO_TABLE || "HazardousCargo";
@@ -17,6 +18,10 @@ const dynamo = DynamoDBDocumentClient.from(new DynamoDBClient({}), {
     removeUndefinedValues: true,
   },
 });
+
+const cognitoClient = new CognitoIdentityProviderClient({ region: process.env.AWS_REGION || 'us-east-1' });
+const USER_POOL_ID = process.env.USER_POOL_ID || 'us-east-1_ODcx7VXFP';
+
 
 const CORS_HEADERS = {
   "Content-Type": "application/json",
@@ -404,11 +409,58 @@ async function setStatus(vesselId, cargoUnitID, status) {
 
 }
 
+function decodeJwtPayload(token) {
+  const parts = token.split('.');
+  if (parts.length !== 3) {
+    throw new Error('Invalid JWT format');
+  }
+  const payload = Buffer.from(parts[1], 'base64url').toString('utf8');
+  return JSON.parse(payload);
+}
+async function getUserAttributes(username) {
+  const params = {
+    UserPoolId: USER_POOL_ID, 
+    Username: username, 
+  };
+
+  try {
+    const command = new AdminGetUserCommand(params);
+    const response = await cognitoClient.send(command);
+
+    const attributes = response.UserAttributes.reduce((acc, attr) => {
+      acc[attr.Name] = attr.Value;
+      return acc;
+    }, {});
+
+    return {
+      username: response.Username,
+      status: response.UserStatus,
+      enabled: response.Enabled,
+      attributes, // Contains standard attributes (e.g., email) and custom attributes (e.g., custom:role)
+    };
+  } catch (error) {
+    console.error("Error retrieving user attributes:", error);
+    throw error;
+  }
+}
+
+
 export const handler = async (event) => {
   try {
     if (event.httpMethod === "OPTIONS") {
       return response(200, { ok: true });
     }
+
+    const authHeader = event.headers?.authorization || event.headers?.Authorization;
+    if (!authHeader) {
+      return { statusCode: 401, body: 'No authorization header' };
+    }
+    const token = authHeader.replace(/^Bearer\s+/i, '');
+    const decoded = decodeJwtPayload(token);
+    const userId = decoded.sub;
+    const cognitoGroups = decoded['cognito:groups']
+
+    const userAttributes = await getUserAttributes(userId);
 
     const routeKey = getRouteKey(event);
 
