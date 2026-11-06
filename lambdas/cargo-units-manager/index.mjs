@@ -8,10 +8,15 @@ import {
   UpdateCommand,
   TransactWriteCommand,
 } from "@aws-sdk/lib-dynamodb";
+import { AdminGetUserCommand, CognitoIdentityProviderClient } from "@aws-sdk/client-cognito-identity-provider";
 
 
 const CARGO_UNITS_TABLE = process.env.CARGO_UNITS_TABLE || "CargoUnits";
 const LIMIT_TABLE = process.env.LIMIT_TABLE || "Limit-sfyg4lmhl5axxnl6js6gbcn7fu-NONE";
+
+const cognitoClient = new CognitoIdentityProviderClient({ region: process.env.AWS_REGION || 'us-east-1' });
+const USER_POOL_ID = process.env.USER_POOL_ID || 'us-east-1_ODcx7VXFP';
+
 
 const dynamo = DynamoDBDocumentClient.from(new DynamoDBClient({}), {
   marshallOptions: {
@@ -205,7 +210,7 @@ async function fetchTransOpBookings(event) {
   });
 }
 
-async function fetchTermOperatorBookingsCargoUnits(event) {
+async function fetchTermOperatorBookingsCargoUnits(event, userAttributes) {
   
 
   const requestedLimit = Number(event.queryStringParameters?.limit || 25);
@@ -229,6 +234,8 @@ async function fetchTermOperatorBookingsCargoUnits(event) {
     expressionValues[":reservationStatus"] = 'Picked Up';
     clauses.push("#reservationStatus = :reservationStatus");
   
+addTerminalIdToClause(expressionNames, expressionValues, clauses, userAttributes);
+
 
   const scanInput = {
     TableName: CARGO_UNITS_TABLE,
@@ -255,9 +262,9 @@ async function fetchTermOperatorBookingsCargoUnits(event) {
 
 
 
-async function fetchBcoUpcoming(event) {
+async function fetchBcoUpcoming(event, userAttributes) {
   
-  const bcoEmail = event.queryStringParameters?.bcoEmail;
+  const bcoEmail = userAttributes.attributes.email;
 
   const requestedLimit = Number(event.queryStringParameters?.limit || 25);
   const limit = Number.isFinite(requestedLimit)
@@ -309,14 +316,14 @@ async function fetchBcoUpcoming(event) {
   });
 }
 
-async function fetchBcoNotifications(event) {
+async function fetchBcoNotifications(event, userAttributes) {
   
   const selectionSet = ['cargoUnitID', 'reservationStatus', "updatedAt", "isBCONotify", "isTransportationNotify"];
   const expressionNames = {};
   const expressionValues = {};
   const clauses = [];
-  const bcoEmail = event.queryStringParameters?.bcoEmail;
-  
+  const bcoEmail = userAttributes.attributes.email;
+
   expressionNames["#isBCONotify"] = "isBCONotify";
   expressionValues[":isBCONotify"] = true;
   clauses.push("#isBCONotify = :isBCONotify");
@@ -361,14 +368,14 @@ async function fetchTerminalNotifications(event) {
   return fetchCargoUnits(event, selectionSet.join(), expressionNames, expressionValues, (clauses.length ? clauses.join(" AND ") : undefined))
 }
 
-async function fetchBcoOngoing(event) {
+async function fetchBcoOngoing(event, userAttributes) {
 
   const selectionSet = ['vesselID', 'cargoUnitID', 'origin','destination', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail','reservationDate','resApprovalDate','reservationStatus', 'resPickupDate','flag', 'updatedAt'];
   const expressionNames = {};
   const expressionValues = {};
   const clauses = [];
-  const bcoEmail = event.queryStringParameters?.bcoEmail;
-  
+  const bcoEmail = userAttributes.attributes.email;
+
   expressionNames["#reservationStatus1"] = "reservationStatus";
   expressionValues[":reservationStatus1"] = 'unassigned';
   clauses.push("#reservationStatus1 <> :reservationStatus1");
@@ -387,9 +394,9 @@ if (bcoEmail) {
   return fetchCargoUnits(event, selectionSet.join(), expressionNames, expressionValues, (clauses.length ? clauses.join(" AND ") : undefined))
 }
 
-async function fetchBcoCompleted(event) {
-  
-  const bcoEmail = event.queryStringParameters?.bcoEmail;
+async function fetchBcoCompleted(event, userAttributes) {
+
+  const bcoEmail = userAttributes.attributes.email;
 
   const requestedLimit = Number(event.queryStringParameters?.limit || 25);
   const limit = Number.isFinite(requestedLimit)
@@ -558,7 +565,7 @@ async function fetchTransOpOngoing(event) {
 }
 
 
-async function fetchTerminalOpRequested(event) {
+async function fetchTerminalOpRequested(event, userAttributes) {
 
   const selectionSet = 'vesselID, cargoUnitID, origin, bcoName, bcoEmail, transopName, transopEmail,reservationDate,reservationTime,reservationStatus, flag';
   const expressionNames = {};
@@ -568,11 +575,14 @@ async function fetchTerminalOpRequested(event) {
   expressionValues[":reservationStatus"] = 'Pending Reservation Approval';
   clauses.push("#reservationStatus = :reservationStatus");
 
+  addTerminalIdToClause(expressionNames, expressionValues, clauses, userAttributes);
+
+
   return fetchCargoUnits(event, selectionSet, expressionNames, expressionValues, (clauses.length ? clauses.join(" AND ") : undefined))
 
 }
 
-async function fetchTerminalOpModifiedRequested(event) {
+async function fetchTerminalOpModifiedRequested(event, userAttributes) {
 
   const selectionSet = ['vesselID', 'cargoUnitID', 'origin', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail','reservationDate','reservationTime', 'reservationStatus', 'modifiedReservationDate', 'modifiedReservationTime']; 
 
@@ -583,10 +593,27 @@ async function fetchTerminalOpModifiedRequested(event) {
   expressionValues[":reservationStatus"] = 'Pickup Modification Requested';
   clauses.push("#reservationStatus = :reservationStatus");
 
+  addTerminalIdToClause(expressionNames, expressionValues, clauses, userAttributes);
+
+
   return fetchCargoUnits(event, selectionSet.join(), expressionNames, expressionValues, (clauses.length ? clauses.join(" AND ") : undefined))
 
 }
-async function fetchTerminalOpCompleted(event) {
+function addTerminalIdToClause(expressionNames, expressionValues, clauses, userAttributes) {
+  const terminalIdList = userAttributes.attributes['custom:terminalId'];
+  if (terminalIdList) {
+    const orClause = [];
+    terminalIdList.split(',').forEach((terminalId, i) => {
+      expressionNames["#terminalId"] = "terminalID";
+      expressionValues[":terminalId"+i] = terminalId;
+      orClause.push("#terminalId = :terminalId"+i);
+
+    })
+    clauses.push('('+orClause.join(' OR ')+')')
+  }
+}
+
+async function fetchTerminalOpCompleted(event, userAttributes) {
 
   const selectionSet = [
     'vesselID',
@@ -610,12 +637,14 @@ async function fetchTerminalOpCompleted(event) {
   expressionValues[":reservationStatus"] = 'Picked Up';
   clauses.push("#reservationStatus = :reservationStatus");
 
+ addTerminalIdToClause(expressionNames, expressionValues, clauses, userAttributes);
+
   return fetchCargoUnits(event, selectionSet.join(), expressionNames, expressionValues, (clauses.length ? clauses.join(" AND ") : undefined))
 
 }
 
 
-async function fetchTerminalOpOnGoing(event) {
+async function fetchTerminalOpOnGoing(event, userAttributes) {
 
   const selectionSet = 'vesselID, cargoUnitID, origin, bcoName, bcoEmail, transopName, transopEmail, reservationDate, reservationTime, reservationStatus, twicEscortRequired, flag';
   const expressionNames = {};
@@ -629,7 +658,14 @@ async function fetchTerminalOpOnGoing(event) {
   expressionValues[":reservationStatus2"] = 'Late for Pick Up';
   clauses.push("#reservationStatus2 = :reservationStatus2");
 
-  return fetchCargoUnits(event, selectionSet, expressionNames, expressionValues, (clauses.length ? clauses.join(" OR ") : undefined))
+  
+  const termanIdClause = [];
+  addTerminalIdToClause(expressionNames, expressionValues, termanIdClause, userAttributes);
+  const finalClause = []
+  finalClause.push('('+clauses.join(" OR ")+')')
+  finalClause.push(termanIdClause)
+
+  return fetchCargoUnits(event, selectionSet, expressionNames, expressionValues, finalClause.join(" AND "))
 
 }
 
@@ -690,7 +726,7 @@ async function fetchLimit(event) {
   return response(200,result.Item);
 }
 
-async function listCargoUnits(event) {
+async function listCargoUnits(event, cognitoGroups, userAttributes) {
   
   const requestedLimit = Number(event.queryStringParameters?.limit || 25);
   const limit = Number.isFinite(requestedLimit)
@@ -707,8 +743,10 @@ async function listCargoUnits(event) {
   const expressionValues = {};
   const clauses = [];
 
-  
-  
+  if (isTerminalOperator(cognitoGroups)) {
+
+    addTerminalIdToClause(expressionNames, expressionValues, clauses, userAttributes);
+  }
 
   const scanInput = {
     TableName: CARGO_UNITS_TABLE,
@@ -766,7 +804,44 @@ async function saveCargoUnit(event) {
   return response(200, result);
 }
 
+function decodeJwtPayload(token) {
+  const parts = token.split('.');
+  if (parts.length !== 3) {
+    throw new Error('Invalid JWT format');
+  }
+  const payload = Buffer.from(parts[1], 'base64url').toString('utf8');
+  return JSON.parse(payload);
+}
+async function getUserAttributes(username) {
+  const params = {
+    UserPoolId: USER_POOL_ID, 
+    Username: username, 
+  };
 
+  try {
+    const command = new AdminGetUserCommand(params);
+    const response = await cognitoClient.send(command);
+
+    const attributes = response.UserAttributes.reduce((acc, attr) => {
+      acc[attr.Name] = attr.Value;
+      return acc;
+    }, {});
+
+    return {
+      username: response.Username,
+      status: response.UserStatus,
+      enabled: response.Enabled,
+      attributes, // Contains standard attributes (e.g., email) and custom attributes (e.g., custom:role)
+    };
+  } catch (error) {
+    console.error("Error retrieving user attributes:", error);
+    throw error;
+  }
+}
+
+function isTerminalOperator(cognitoGroups){
+  return(cognitoGroups.includes('pcis_Terminal_Operator'))
+}
 
 export const handler = async (event) => {
   try {
@@ -774,11 +849,23 @@ export const handler = async (event) => {
       return response(200, { ok: true });
     }
 
+    const authHeader = event.headers?.authorization || event.headers?.Authorization;
+    if (!authHeader) {
+      return { statusCode: 401, body: 'No authorization header' };
+    }
+
+  const token = authHeader.replace(/^Bearer\s+/i, '');
+  const decoded = decodeJwtPayload(token);
+  const userId = decoded.sub;
+  const cognitoGroups = decoded['cognito:groups']
+
+  const userAttributes = await getUserAttributes(userId);
+
     const routeKey = getRouteKey(event);
 
     switch (routeKey) {
       case "GET /list":
-        return await listCargoUnits(event);
+        return await listCargoUnits(event, cognitoGroups, userAttributes);
       case "PUT /saveCargoUnit":
         return await saveCargoUnit(event);
       case "GET /getBookingsAmount":
@@ -786,27 +873,27 @@ export const handler = async (event) => {
       case "GET /fetchTransOpBookings":
         return await fetchTransOpBookings(event);
       case "GET /fetchBcoUpcoming":
-        return await fetchBcoUpcoming(event);
+        return await fetchBcoUpcoming(event, userAttributes);
       case "GET /fetchBcoOngoing":
-        return await fetchBcoOngoing(event);
+        return await fetchBcoOngoing(event, userAttributes);
       case "GET /fetchBcoCompleted":
-        return await fetchBcoCompleted(event);
+        return await fetchBcoCompleted(event, userAttributes);
       case "GET /fetchTransOpUpcoming":
         return await fetchTransOpUpcoming(event);
       case "GET /fetchTransOpOngoing":
         return await fetchTransOpOngoing(event);
       case "GET /fetchTerminalOpRequested":
-        return await fetchTerminalOpRequested(event);
+        return await fetchTerminalOpRequested(event, userAttributes);
       case "GET /fetchTerminalOpOnGoing":
-        return await fetchTerminalOpOnGoing(event);
+        return await fetchTerminalOpOnGoing(event, userAttributes);
       case "GET /fetchTerminalOpModifiedRequested":
-        return await fetchTerminalOpModifiedRequested(event);
+        return await fetchTerminalOpModifiedRequested(event,  userAttributes);
       case "GET /fetchLimit":
         return await fetchLimit(event);
       case "GET /fetchTerminalOpCompleted":
-        return await fetchTerminalOpCompleted(event);
+        return await fetchTerminalOpCompleted(event, userAttributes);
       case "GET /fetchBcoNotifications":
-        return await fetchBcoNotifications(event);
+        return await fetchBcoNotifications(event, userAttributes);
       case "GET /fetchTransportationNotifications":
         return await fetchTransportationNotifications(event);
       case "GET /fetchTerminalNotifications":

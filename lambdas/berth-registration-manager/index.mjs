@@ -7,16 +7,22 @@ import {
   ScanCommand,
   UpdateCommand,
   DeleteCommand,
+  BatchGetCommand,
 } from "@aws-sdk/lib-dynamodb";
 
 import { GetObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { fromIni } from "@aws-sdk/credential-providers";
+import { AdminGetUserCommand, CognitoIdentityProviderClient,AdminUpdateUserAttributesCommand  } from "@aws-sdk/client-cognito-identity-provider";
 
 
 
 const BERTH_REQUESTS_TABLE = process.env.BERTH_REQUESTS_TABLE || "BerthRequests";
 const BERTH_MANIFEST_TABLE = process.env.BERTH_MANIFEST_TABLE || "BerthManifestItems";
 const BERTH_CONFIG_TABLE = process.env.BERTH_CONFIG_TABLE || "BerthConfig";
+
+const cognitoClient = new CognitoIdentityProviderClient({ region: process.env.AWS_REGION || 'us-east-1' });
+const USER_POOL_ID = process.env.USER_POOL_ID || 'us-east-1_ODcx7VXFP';
+
 
 const dynamo = DynamoDBDocumentClient.from(new DynamoDBClient({}), {
   marshallOptions: {
@@ -251,6 +257,45 @@ async function validateRequestPayload(body) {
  
 }
 
+async function getBerthConfigList(event, userAttributes) {
+
+  const keyTerminalIds = [];
+  const terminalIdList = userAttributes.attributes['custom:terminalId'];
+  if (terminalIdList) {
+
+    terminalIdList.split(',').forEach((terminalId) => {
+      keyTerminalIds.push({ terminalId: terminalId });
+
+    })
+  }
+
+  const params = {
+    RequestItems: {
+      [BERTH_CONFIG_TABLE]: {
+        Keys: keyTerminalIds,
+
+      }
+    }
+  };
+
+  try {
+    const data = await dynamo.send(new BatchGetCommand(params));
+    console.log("Success:", data.Responses[BERTH_CONFIG_TABLE]);
+
+    // Note: Always check for UnprocessedKeys in production if hitting limits
+    if (Object.keys(data.UnprocessedKeys).length > 0) {
+      console.log("Unprocessed keys remain:", data.UnprocessedKeys);
+    }
+    return response(200, data.Responses[BERTH_CONFIG_TABLE] || null);
+  } catch (err) {
+    console.error("Error fetching batch:", err);
+  }
+  
+}
+
+
+
+
 async function getBerthConfig(terminalId) {
   const result = await dynamo.send(
     new GetCommand({
@@ -465,23 +510,70 @@ async function ingestManifest(requestItem) {
   return { ingestedCount, skippedCount };
 }
 
-async function createBerthConfig(event) {
-  if (!ensureTerminalOperator(event)) {
-    return response(403, { message: "Only Terminal Operator can update berth configuration" });
+async function addTerminalIdInUsersProfile(username, userAttributes, terminalId){
+  const existingTerminalId = userAttributes.attributes["custom:terminalId"]
+  const params = {
+    UserPoolId: USER_POOL_ID,
+    Username: username,
+    UserAttributes: []
+  };
+  if (terminalId) {
+    params.UserAttributes.push({
+      Name: "custom:terminalId",
+      Value: (existingTerminalId)?existingTerminalId+','+terminalId:terminalId
+    })
   }
 
+  try {
+    const command = new AdminUpdateUserAttributesCommand(params);
+    const response = await cognitoClient.send(command);
+
+    return response
+  } catch (error) {
+    console.error("Error updating user attributes:", error);
+    return error
+  }
+
+};
+
+async function saveBerthConfig(event, userAttributes) {
   const body = parseBody(event);
-  const user = getUserIdentity(event);
-  const cfg = normalizeBerthConfig(body, user);
+  const terminalIdList = userAttributes.attributes['custom:terminalId'];
+  if (terminalIdList.includes(body.terminalId)) {
+    const nowIso = new Date().toISOString();
+    const result = await dynamo.send(
+      new PutCommand({
+        TableName: BERTH_CONFIG_TABLE,
+        Item: {
+          "terminalId": body.terminalId,
+          "terminalName": body.terminalName,
+          "terminalEmail": body.terminalEmail,
+          "terminalPhone": body.terminalPhone,
+          "assignmentMode": body.assignmentMode,
+          "berthCapacity": body.berthCapacity,
+          "berthDesignations": body.berthDesignations,
+          "address": body.address,
+          "timezone": body.timezone,
+          "terminalType": body.terminalType,
+          "overtimeRatePerHour": body.overtimeRatePerHour,
+          "lateGracePeriodMins": body.lateGracePeriodMins,
+          "weeklyHours": body.weeklyHours,
+          "createdAt": nowIso,
+          "createdBy": userAttributes.attributes.email,
+        },
+      })
+    );
 
-  await dynamo.send(
-    new PutCommand({
-      TableName: BERTH_CONFIG_TABLE,
-      Item: cfg,
-    })
-  );
+    const userId = event.queryStringParameters?.userId;
+    if (userId) {
+      const userAttributes = await getUserAttributes(userId);
+      await addTerminalIdInUsersProfile(userId, userAttributes, body.terminalId)
+    }
 
-  return response(200, cfg);
+    return response(200, result);
+  } else {
+    return response(403, 'Access denied to Terminal.');
+  }
 }
 
 async function readBerthConfig(event) {
@@ -550,8 +642,22 @@ async function createRequest(event) {
   return response(201, requestItem);
 }
 
-async function listRequests(event) {
-  const terminalId = event.queryStringParameters?.terminalId;
+function addTerminalIdToClause(expressionNames, expressionValues, clauses, userAttributes) {
+  const terminalIdList = userAttributes.attributes['custom:terminalId'];
+  if (terminalIdList) {
+    const orClause = [];
+    terminalIdList.split(',').forEach((terminalId, i) => {
+      expressionNames["#terminalId"] = "terminalId";
+      expressionValues[":terminalId"+i] = terminalId;
+      orClause.push("#terminalId = :terminalId"+i);
+
+    })
+    clauses.push('('+orClause.join(' OR ')+')')
+  }
+}
+
+async function listRequests(event, userAttributes) {
+  
   const vesselAgentEmail = event.queryStringParameters?.vesselAgentEmail;
   const status = event.queryStringParameters?.status;
 
@@ -570,12 +676,8 @@ async function listRequests(event) {
   const expressionValues = {};
   const clauses = [];
 
-  if (terminalId) {
-    expressionNames["#terminalId"] = "terminalId";
-    expressionValues[":terminalId"] = terminalId;
-    clauses.push("#terminalId = :terminalId");
-  }
-
+  
+  addTerminalIdToClause(expressionNames, expressionValues, clauses, userAttributes)
   if (vesselAgentEmail) {
     expressionNames["#vesselAgentEmail"] = "vesselAgentEmail";
     expressionValues[":vesselAgentEmail"] = vesselAgentEmail;
@@ -624,7 +726,7 @@ async function getRequest(event) {
   return response(200, result.Item);
 }
 
-async function updateRequest(event) {
+async function updateRequest(event, cognitoGroups, userAttributes) {
   console.log(event)
   const requestId = event.pathParameters?.requestId;
   const body = parseBody(event);
@@ -638,7 +740,11 @@ async function updateRequest(event) {
   );
 
   if (!existing.Item) return response(404, { message: "Request not found" });
-
+  if((isTerminalOperator(cognitoGroups) && !(existing.Item.terminalId.includes( userAttributes.attributes['custom:terminalId']))
+    || (isVesselAgent(cognitoGroups) && (existing.Item.vesselAgentEmail !== userAttributes.attributes.email)))){
+    return response(403, 'Access denied to Terminal.');
+  }
+  
   const mergedForValidation = {
     ...existing.Item,
     ...body,
@@ -711,13 +817,10 @@ async function updateRequest(event) {
   return getRequest(event);
 }
 
-async function decideRequest(event) {
-  if (!ensureTerminalOperator(event)) {
-    return response(403, { message: "Only Terminal Operator can approve/deny berth requests" });
-  }
-
-  const requestId = event.pathParameters?.requestId;
+async function decideRequest(event, userAttributes) {
   const body = parseBody(event);
+  
+  const requestId = event.pathParameters?.requestId;
   const decision = (body.decision || "").toString().toUpperCase();
 
   if (!requestId) return response(400, { message: "requestId is required" });
@@ -739,6 +842,11 @@ async function decideRequest(event) {
  if (decision === "APPROVED" && existing.status === "APPROVED") {
 
     return response(200, existing);
+  }
+
+  const terminalIdList = userAttributes.attributes['custom:terminalId'];
+  if (!terminalIdList.includes(existing.terminalId)) {
+    return response(403, { message: "Only assigned Terminal Operator can approve/deny berth requests" });
   }
 
   const nowIso = new Date().toISOString();
@@ -846,9 +954,21 @@ async function recordArrival(event) {
   return getRequest(event);
 }
 
-async function recordDelete(event) {
+async function recordDelete(event, cognitoGroups, userAttributes) {
   const requestId = event.pathParameters?.requestId;
   if (!requestId) return response(400, { message: "requestId is required" });
+  const existing = await dynamo.send(
+    new GetCommand({
+      TableName: BERTH_REQUESTS_TABLE,
+      Key: { requestId },
+    })
+  );
+
+  if (!existing.Item) return response(404, { message: "Request not found" });
+  if((isTerminalOperator(cognitoGroups) && !(existing.Item.terminalId.includes( userAttributes.attributes['custom:terminalId']))
+    || (isVesselAgent(cognitoGroups) && (existing.Item.vesselAgentEmail !== userAttributes.attributes.email)))){
+    return response(403, 'Access denied to Terminal.');
+  }
   const deleteResp = await dynamo.send(
     new DeleteCommand({
       TableName: BERTH_REQUESTS_TABLE,
@@ -887,8 +1007,65 @@ async function recordDeparture(event) {
   return getRequest(event);
 }
 
+function decodeJwtPayload(token) {
+  const parts = token.split('.');
+  if (parts.length !== 3) {
+    throw new Error('Invalid JWT format');
+  }
+  const payload = Buffer.from(parts[1], 'base64url').toString('utf8');
+  return JSON.parse(payload);
+}
+
+async function getUserAttributes(username) {
+  const params = {
+    UserPoolId: USER_POOL_ID, 
+    Username: username, 
+  };
+
+  try {
+    const command = new AdminGetUserCommand(params);
+    const response = await cognitoClient.send(command);
+
+    const attributes = response.UserAttributes.reduce((acc, attr) => {
+      acc[attr.Name] = attr.Value;
+      return acc;
+    }, {});
+
+    return {
+      username: response.Username,
+      status: response.UserStatus,
+      enabled: response.Enabled,
+      attributes, // Contains standard attributes (e.g., email) and custom attributes (e.g., custom:role)
+    };
+  } catch (error) {
+    console.error("Error retrieving user attributes:", error);
+    throw error;
+  }
+}
+
+function isTerminalOperator(cognitoGroups){
+  return(cognitoGroups.includes('pcis_Terminal_Operator'))
+}
+
+function isVesselAgent(cognitoGroups){
+  return(cognitoGroups.includes('pcis_Vessel_Agent'))
+}
+
 export const handler = async (event) => {
   console.log(event)
+
+  const authHeader = event.headers?.authorization || event.headers?.Authorization;
+  if (!authHeader) {
+    return { statusCode: 401, body: 'No authorization header' };
+  }
+
+  const token = authHeader.replace(/^Bearer\s+/i, '');
+  const decoded = decodeJwtPayload(token);
+  const userId = decoded.sub;
+  const cognitoGroups = decoded['cognito:groups']
+
+  const userAttributes = await getUserAttributes(userId);
+
   try {
     if (event.httpMethod === "OPTIONS") {
       return response(200, { ok: true });
@@ -900,25 +1077,32 @@ export const handler = async (event) => {
       case "GET /berthConfig":
         return await readBerthConfig(event);
       case "GET /berthConfig/list":
-          return await listBerthConfig(event);                
+        if (isTerminalOperator(cognitoGroups)) {
+          return await getBerthConfigList(event, userAttributes);
+        } else {
+          return await listBerthConfig(event);
+        }
+          
       case "PUT /berthConfig":
-        return await createBerthConfig(event);
+        return await saveBerthConfig(event, userAttributes);
       case "POST /berthRequests":
         return await createRequest(event);
       case "GET /berthRequests":
-        return await listRequests(event);
+        return await listRequests(event, userAttributes);
       case "GET /berthRequests/{requestId}":
         return await getRequest(event);
       case "PUT /berthRequests/{requestId}":
-        return await updateRequest(event);
+        return await updateRequest(event, cognitoGroups, userAttributes);
       case "POST /berthRequests/{requestId}/decision":
-        return await decideRequest(event);
+        return await decideRequest(event, userAttributes);
       case "POST /berthRequests/{requestId}/arrival":
         return await recordArrival(event);
       case "POST /berthRequests/{requestId}/departure":
         return await recordDeparture(event);
       case "DELETE /berthRequest/{requestId}":
-        return await recordDelete(event);
+        return await recordDelete(event, cognitoGroups, userAttributes);
+
+        
   
       default:
         return response(404, { message: `Unsupported route: ${routeKey}` });
