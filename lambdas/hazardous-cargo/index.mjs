@@ -129,14 +129,19 @@ function decodeNextToken(token) {
   }
 }
 
+function isBeneficiaryCargoOwner(cognitoGroups){
+  return(cognitoGroups.includes('pcis_Beneficiary_Cargo_Owner'))
+}
+function isVesselAgent(cognitoGroups){
+  return(cognitoGroups.includes('pcis_Vessel_Agent'))
+}
 
 
-
-async function listHazardousCargo(event) {
+async function listHazardousCargo(event, cognitoGroups, userAttributes) {
   
   const vesselId = event.queryStringParameters?.vesselId;
-  const vesselAgentEmail = event.queryStringParameters?.vesselAgentEmail; 
-  const bcoEmail = event.queryStringParameters?.bcoEmail; 
+  const vesselAgentEmail = isVesselAgent(cognitoGroups)?userAttributes.attributes.email:undefined; 
+  const bcoEmail = isBeneficiaryCargoOwner(cognitoGroups)?userAttributes.attributes.email:undefined;  
   
   const reviewStatus = event.queryStringParameters?.reviewStatus;
 
@@ -466,7 +471,7 @@ export const handler = async (event) => {
 
     switch (routeKey) {
       case "GET /hazardousCargos":
-        return await listHazardousCargo(event);
+        return await listHazardousCargo(event, cognitoGroups, userAttributes);
       case "GET /hazardousCargos/{vesselId}/{cargoUnitID}":
         return await getHazardousCargo(event);
       case "PUT /hazardousCargos/{vesselId}":

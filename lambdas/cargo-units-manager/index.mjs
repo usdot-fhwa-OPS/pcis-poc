@@ -604,7 +604,7 @@ function addTerminalIdToClause(expressionNames, expressionValues, clauses, userA
   if (terminalIdList) {
     const orClause = [];
     terminalIdList.split(',').forEach((terminalId, i) => {
-      expressionNames["#terminalId"] = "terminalId";
+      expressionNames["#terminalId"] = "terminalID";
       expressionValues[":terminalId"+i] = terminalId;
       orClause.push("#terminalId = :terminalId"+i);
 
@@ -658,10 +658,14 @@ async function fetchTerminalOpOnGoing(event, userAttributes) {
   expressionValues[":reservationStatus2"] = 'Late for Pick Up';
   clauses.push("#reservationStatus2 = :reservationStatus2");
 
-  addTerminalIdToClause(expressionNames, expressionValues, clauses, userAttributes);
+  
+  const termanIdClause = [];
+  addTerminalIdToClause(expressionNames, expressionValues, termanIdClause, userAttributes);
+  const finalClause = []
+  finalClause.push('('+clauses.join(" OR ")+')')
+  finalClause.push(termanIdClause)
 
-
-  return fetchCargoUnits(event, selectionSet, expressionNames, expressionValues, (clauses.length ? clauses.join(" OR ") : undefined))
+  return fetchCargoUnits(event, selectionSet, expressionNames, expressionValues, finalClause.join(" AND "))
 
 }
 
@@ -722,7 +726,7 @@ async function fetchLimit(event) {
   return response(200,result.Item);
 }
 
-async function listCargoUnits(event) {
+async function listCargoUnits(event, cognitoGroups, userAttributes) {
   
   const requestedLimit = Number(event.queryStringParameters?.limit || 25);
   const limit = Number.isFinite(requestedLimit)
@@ -739,8 +743,10 @@ async function listCargoUnits(event) {
   const expressionValues = {};
   const clauses = [];
 
-  
-  
+  if (isTerminalOperator(cognitoGroups)) {
+
+    addTerminalIdToClause(expressionNames, expressionValues, clauses, userAttributes);
+  }
 
   const scanInput = {
     TableName: CARGO_UNITS_TABLE,
@@ -832,6 +838,11 @@ async function getUserAttributes(username) {
     throw error;
   }
 }
+
+function isTerminalOperator(cognitoGroups){
+  return(cognitoGroups.includes('pcis_Terminal_Operator'))
+}
+
 export const handler = async (event) => {
   try {
     if (event.httpMethod === "OPTIONS") {
@@ -854,7 +865,7 @@ export const handler = async (event) => {
 
     switch (routeKey) {
       case "GET /list":
-        return await listCargoUnits(event);
+        return await listCargoUnits(event, cognitoGroups, userAttributes);
       case "PUT /saveCargoUnit":
         return await saveCargoUnit(event);
       case "GET /getBookingsAmount":

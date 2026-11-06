@@ -815,11 +815,7 @@ async function updateRequest(event) {
 
 async function decideRequest(event, userAttributes) {
   const body = parseBody(event);
-  const terminalIdList = userAttributes.attributes['custom:terminalId'];
-  if (!terminalIdList.includes(body.terminalId)) {
-    return response(403, { message: "Only assigned Terminal Operator can approve/deny berth requests" });
-  }
-
+  
   const requestId = event.pathParameters?.requestId;
   const decision = (body.decision || "").toString().toUpperCase();
 
@@ -842,6 +838,11 @@ async function decideRequest(event, userAttributes) {
  if (decision === "APPROVED" && existing.status === "APPROVED") {
 
     return response(200, existing);
+  }
+
+  const terminalIdList = userAttributes.attributes['custom:terminalId'];
+  if (!terminalIdList.includes(existing.terminalId)) {
+    return response(403, { message: "Only assigned Terminal Operator can approve/deny berth requests" });
   }
 
   const nowIso = new Date().toISOString();
