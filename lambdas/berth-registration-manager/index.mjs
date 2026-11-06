@@ -726,7 +726,7 @@ async function getRequest(event) {
   return response(200, result.Item);
 }
 
-async function updateRequest(event) {
+async function updateRequest(event, cognitoGroups, userAttributes) {
   console.log(event)
   const requestId = event.pathParameters?.requestId;
   const body = parseBody(event);
@@ -740,7 +740,11 @@ async function updateRequest(event) {
   );
 
   if (!existing.Item) return response(404, { message: "Request not found" });
-
+  if((isTerminalOperator(cognitoGroups) && !(existing.Item.terminalId.includes( userAttributes.attributes['custom:terminalId']))
+    || (isVesselAgent(cognitoGroups) && (existing.Item.vesselAgentEmail !== userAttributes.attributes.email)))){
+    return response(403, 'Access denied to Terminal.');
+  }
+  
   const mergedForValidation = {
     ...existing.Item,
     ...body,
@@ -1027,6 +1031,14 @@ async function getUserAttributes(username) {
   }
 }
 
+function isTerminalOperator(cognitoGroups){
+  return(cognitoGroups.includes('pcis_Terminal_Operator'))
+}
+
+function isVesselAgent(cognitoGroups){
+  return(cognitoGroups.includes('pcis_Vessel_Agent'))
+}
+
 export const handler = async (event) => {
   console.log(event)
 
@@ -1053,7 +1065,7 @@ export const handler = async (event) => {
       case "GET /berthConfig":
         return await readBerthConfig(event);
       case "GET /berthConfig/list":
-        if (cognitoGroups.includes('pcis_Terminal_Operator')) {
+        if (isTerminalOperator(cognitoGroups)) {
           return await getBerthConfigList(event, userAttributes);
         } else {
           return await listBerthConfig(event);
@@ -1068,7 +1080,7 @@ export const handler = async (event) => {
       case "GET /berthRequests/{requestId}":
         return await getRequest(event);
       case "PUT /berthRequests/{requestId}":
-        return await updateRequest(event);
+        return await updateRequest(event, cognitoGroups, userAttributes);
       case "POST /berthRequests/{requestId}/decision":
         return await decideRequest(event, userAttributes);
       case "POST /berthRequests/{requestId}/arrival":
