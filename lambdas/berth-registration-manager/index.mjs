@@ -954,9 +954,21 @@ async function recordArrival(event) {
   return getRequest(event);
 }
 
-async function recordDelete(event) {
+async function recordDelete(event, cognitoGroups, userAttributes) {
   const requestId = event.pathParameters?.requestId;
   if (!requestId) return response(400, { message: "requestId is required" });
+  const existing = await dynamo.send(
+    new GetCommand({
+      TableName: BERTH_REQUESTS_TABLE,
+      Key: { requestId },
+    })
+  );
+
+  if (!existing.Item) return response(404, { message: "Request not found" });
+  if((isTerminalOperator(cognitoGroups) && !(existing.Item.terminalId.includes( userAttributes.attributes['custom:terminalId']))
+    || (isVesselAgent(cognitoGroups) && (existing.Item.vesselAgentEmail !== userAttributes.attributes.email)))){
+    return response(403, 'Access denied to Terminal.');
+  }
   const deleteResp = await dynamo.send(
     new DeleteCommand({
       TableName: BERTH_REQUESTS_TABLE,
@@ -1088,7 +1100,7 @@ export const handler = async (event) => {
       case "POST /berthRequests/{requestId}/departure":
         return await recordDeparture(event);
       case "DELETE /berthRequest/{requestId}":
-        return await recordDelete(event);
+        return await recordDelete(event, cognitoGroups, userAttributes);
 
         
   
