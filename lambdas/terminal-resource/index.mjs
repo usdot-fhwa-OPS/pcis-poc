@@ -9,6 +9,7 @@
     DeleteCommand,
     QueryCommand,
     TransactWriteCommand,
+    BatchGetCommand,
   } from "@aws-sdk/lib-dynamodb";
 import { AdminGetUserCommand, CognitoIdentityProviderClient } from '@aws-sdk/client-cognito-identity-provider';
 
@@ -317,29 +318,150 @@ import { AdminGetUserCommand, CognitoIdentityProviderClient } from '@aws-sdk/cli
 
 
 async function getTerminalResource(event, userAttributes) {
-    const terminalId = userAttributes.attributes['custom:terminalId'];
-    if (!terminalId) {
-      return response(404, 'Terminal Resource not assigned to Terminal Operator');
-    }
 
-    const sk = event.queryStringParameters.sk;
-    if(!sk){
-      return response(400, 'Sort key is missing in HTTP request.');
-    }
-    
-    const result = await dynamo.send(
-      new GetCommand({
-        TableName: TERMINAL_RESOURCES_TABLE,
-        Key: {terminalId: terminalId, sk: sk},
-      })
-    );
-    if(result.Item){
-return response(200, result.Item);
-    }else{
-      return response(404, `Terminal Resource for terminal Id ${terminalId} and sort ket ${sk} not found.`);
-    }
-    
+  const sk = event.queryStringParameters.sk;
+  if (!sk) {
+    return response(400, 'Sort key is missing in HTTP request.');
   }
+
+  const keyTerminalIds = [];
+  const terminalIdList = userAttributes.attributes['custom:terminalId'];
+  if (terminalIdList) {
+
+    terminalIdList.split(',').forEach((terminalId) => {
+      keyTerminalIds.push({ terminalId: terminalId, sk: sk });
+
+    })
+  }
+
+  const params = {
+    RequestItems: {
+      [TERMINAL_RESOURCES_TABLE]: {
+        Keys: keyTerminalIds,
+
+      }
+    }
+  };
+
+  try {
+    const data = await dynamo.send(new BatchGetCommand(params));
+    
+    // Note: Always check for UnprocessedKeys in production if hitting limits
+    if (Object.keys(data.UnprocessedKeys).length > 0) {
+      console.log("Unprocessed keys remain:", data.UnprocessedKeys);
+    }
+    return response(200, data.Responses[TERMINAL_RESOURCES_TABLE] || null);
+  } catch (err) {
+    console.error("Error fetching batch:", err);
+  }
+
+}
+
+async function listTerminalResource(event, userAttributes) {
+
+  const keyExpression = [];
+  const attributeNames = {};
+  const attributeValues = {};
+  const terminalIdList = userAttributes.attributes['custom:terminalId'];
+  let i = 0;
+  if (terminalIdList) {
+
+    terminalIdList.split(',').forEach((terminalId) => {
+      keyExpression.push(`#pk${i} = :pkValue${i}`)
+      attributeNames[`#pk${i}`] = "terminalId"
+      attributeValues[`:pkValue${i}`] = terminalId
+      i++;
+    })
+  } else {
+    return response(403, 'User is not associated with Terminal Id');
+  }
+
+
+  const params = {
+    TableName: TERMINAL_RESOURCES_TABLE,
+    KeyConditionExpression: keyExpression.join(' OR '),
+    ExpressionAttributeNames: attributeNames,
+    ExpressionAttributeValues: attributeValues
+  };
+
+  try {
+    const command = new QueryCommand(params);
+    const result = await dynamo.send(command);
+
+    return response(200, result.Items);
+  } catch (error) {
+    console.error("Error querying DynamoDB:", error);
+    throw error;
+  }
+}
+
+
+async function listEquipemnts(event, userAttributes) {
+
+  return listEntities(event, userAttributes, "EQTYPE")
+  
+}
+async function listGangs(event, userAttributes) {
+
+  return listEntities(event, userAttributes, "GANG")
+  
+}
+async function listUnits(event, userAttributes) {
+
+  return listEntities(event, userAttributes, "UNIT")
+  
+}
+async function listClosures(event, userAttributes) {
+
+  return listEntities(event, userAttributes, "CLOSURE")
+  
+}
+async function listOutages(event, userAttributes) {
+
+  return listEntities(event, userAttributes, "OUTAGE")
+  
+}
+
+async function listEntities(event, userAttributes, entityType) {
+  const keyExpression = [];
+  const attributeNames = {};
+  const attributeValues = {};
+  const terminalIdList = userAttributes.attributes['custom:terminalId'];
+  let i = 0;
+  if (terminalIdList) {
+
+    terminalIdList.split(',').forEach((terminalId) => {
+      keyExpression.push(`#pk${i} = :pkValue${i}`)
+      attributeNames[`#pk${i}`] = "terminalId"
+      attributeValues[`:pkValue${i}`] = terminalId
+      i++;
+    })
+  } else {
+    return response(403, 'User is not associated with Terminal Id');
+  }
+
+
+  const params = {
+    TableName: TERMINAL_RESOURCES_TABLE,
+    KeyConditionExpression: keyExpression.join(' OR '),
+     FilterExpression: "#record.#entityType = :entityType",
+    ExpressionAttributeNames: {...attributeNames, "#record": "record",
+      "#entityType": "entityType"},
+    ExpressionAttributeValues: {...attributeValues, ":entityType": entityType}
+  };
+
+
+  try {
+    const command = new QueryCommand(params);
+    const result = await dynamo.send(command);
+
+    return response(200, result.Items);
+  } catch (error) {
+    console.error("Error querying DynamoDB:", error);
+    throw error;
+  }
+}
+
 
   async function saveTerminalResource(event, userAttributes) {
     const body = event.body
@@ -478,6 +600,18 @@ function isTerminalOperator(cognitoGroups){
           return await createTerminalResource(event, userAttributes);
         case "GET /getTerminalResource":
           return await getTerminalResource(event, userAttributes);
+        case "GET /listTerminalResource":
+          return await listTerminalResource(event, userAttributes);
+        case "GET /listEquipemnts":
+          return await listEquipemnts(event, userAttributes);
+        case "GET /listGangs":
+          return await listGangs(event, userAttributes);
+        case "GET /listUnits":
+          return await listUnits(event, userAttributes);
+        case "GET /listClosures":
+          return await listClosures(event, userAttributes);
+        case "GET /listOutages":
+          return await listOutages(event, userAttributes);   
         case "PUT /saveTerminalResource":
           return await saveTerminalResource(event, userAttributes);
         case "DELETE /deleteTerminalResource":
