@@ -88,6 +88,8 @@ Lambda function - to get data for charts
 Lambda function - to manage reservation, revervation moves and reservation events
     lambdas\reservations-manager
 
+Lambda function - to manage Terminal Resource/Equipments/Units/Gangs/Closures/Outages
+    lambdas\terminal-resource
 
 ## Instructions for Local Deployment
 **Step 1:**
