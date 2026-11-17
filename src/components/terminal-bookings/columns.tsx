@@ -7,7 +7,7 @@ import { TermOperatorCompletedBookings } from "../../routes/reservation.tsx"
 import { ApproveReservation } from "../reservations/approve-reservation.tsx";
 import { Badge } from "../ui/badge.tsx";
 import { saveCargoUnit } from "../cargo/cargo-units-client.tsx";
-import { OngoingStatusBadge } from "./status-badge.tsx";
+import { OngoingStatusBadge, RecordOutcomeCell } from "./status-badge.tsx";
 export const columns = (status: string): ColumnDef<any>[] => {
   const baseColumns: ColumnDef<any>[] = [
 
@@ -101,27 +101,27 @@ export const columns = (status: string): ColumnDef<any>[] => {
   }
 
   if (status === "Ongoing") {
-    baseColumns.push({
-      accessorKey: "reservationStatus",
-      header: () => <div className="text-center">Status</div>,
-     // Adjust width as needed
-      cell: ({ row }) => {
-        const status = row.original.reservationStatus; // Get status value
-        const isLate = status === "Late for Pick Up"; // Check if status is "Late"
-  
-        return (
-          <div className="min-w-[150px] text-center">
-            <Badge
-              className={`border-transparent rounded-full ${
-                isLate ? "bg-red-100 hover:bg-red-100/80 text-red-700" : "bg-blue-50 hover:bg-blue-50/80 text-blue-700"
-              } whitespace-normal break-words`}
-            >
-              {status}
-            </Badge>
-          </div>
-        );
+    baseColumns.push(
+      {
+        accessorKey: "reservationStatus",
+        header: () => <div className="text-center">Status</div>,
+        cell: ({ row }) => (
+          <OngoingStatusBadge
+            reservationDate={row.original.reservationDate}
+            reservationTime={row.original.reservationTime}
+            reservationStatus={row.original.reservationStatus}
+          />
+        ),
       },
-    },
+      {
+        id: "recordOutcome",
+        header: () => <div className="text-center">Record Outcome</div>,
+        cell: ({ row, table }) => (
+          <RecordOutcomeCell row={row} table={table} />
+        ),
+        enableSorting: false,
+        enableColumnFilter: false,
+      },
     {
       accessorKey: "twicEscortRequired",
       header: () => <div>
@@ -246,14 +246,26 @@ export const CompletedColumn = (): ColumnDef<any>[] => {
     },
     {
       accessorKey: "reservationStatus",
-      header: () => <div className="text-center">Status</div>,
-      cell: ({ row }) => (
-        <OngoingStatusBadge
-          reservationDate={row.original.reservationDate}
-          reservationTime={row.original.reservationTime}
-          reservationStatus={row.original.reservationStatus}
-        />
-      ),
+      header: () => <div className="text-center">Reservation Status</div>,
+      cell: ({ row }) => {
+        const status = row.original.reservationStatus;
+        const isNegative =
+          status === "Late for Pick Up" || status === "No Show";
+
+        return (
+          <div className="min-w-[112px] text-center">
+            <Badge
+              className={`border-transparent rounded-full ${
+                isNegative
+                  ? "bg-red-100 hover:bg-red-100/80 text-red-700"
+                  : "bg-secondary hover:bg-secondary/80 text-secondary-foreground"
+              } whitespace-normal break-words`}
+            >
+              {status}
+            </Badge>
+          </div>
+        );
+      },
       size: 200,
     },
     {

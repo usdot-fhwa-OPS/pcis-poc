@@ -6,20 +6,18 @@ import { addHours, format, isAfter, isValid, parse } from "date-fns";
 import {
   CalendarIcon,
   Clock,
-  Flag,
   Pencil,
-  ShieldHalf,
-  XIcon,
 } from "lucide-react";
-import { Calendar } from "../ui/calendar";
+import { Calendar } from "../ui/calendar.tsx";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "../ui/dialog";
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+} from "../ui/dialog.tsx";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover.tsx";
+import {TerminalOperatorDataTableMeta} from './data-table.tsx'
 import {
   Select,
   SelectContent,
@@ -169,7 +167,7 @@ export function OngoingStatusBadge({
   );
 }
 
-function RecordOutcomeCell({
+export function RecordOutcomeCell({
   row,
   table,
 }: {
@@ -229,7 +227,7 @@ function RecordOutcomeCell({
   return (
     <div className="text-center">
       <Dialog open={isDialogOpen} onOpenChange={handleOpenChange}>
-        <DialogTrigger asChild>
+        <DialogTrigger>
           <Button
             variant="ghost"
             className="p-2"
