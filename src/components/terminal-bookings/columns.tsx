@@ -8,9 +8,10 @@ import { ApproveReservation } from "../reservations/approve-reservation.tsx";
 import { Badge } from "../ui/badge.tsx";
 import { saveCargoUnit } from "../cargo/cargo-units-client.tsx";
 import { OngoingStatusBadge, RecordOutcomeCell } from "./status-badge.tsx";
+
+
 export const columns = (status: string): ColumnDef<any>[] => {
   const baseColumns: ColumnDef<any>[] = [
-
     { accessorKey: "vesselID", header: "Vessel ID" },
     { accessorKey: "cargoUnitID", header: "Cargo Unit ID" }, 
     { accessorKey: "origin", header: "Origin" },
@@ -20,8 +21,6 @@ export const columns = (status: string): ColumnDef<any>[] => {
     { accessorKey: "transopEmail", header: "Transportation Coordinator Email" },
     { accessorKey: "reservationDate", header: "Date Requested" },
     { accessorKey: "reservationTime", header: "Time Requested" },
-  
-
   ];
 
 
@@ -101,8 +100,7 @@ export const columns = (status: string): ColumnDef<any>[] => {
   }
 
   if (status === "Ongoing") {
-    baseColumns.push(
-      {
+    baseColumns.push({
         accessorKey: "reservationStatus",
         header: () => <div className="text-center">Status</div>,
         cell: ({ row }) => (
@@ -113,15 +111,15 @@ export const columns = (status: string): ColumnDef<any>[] => {
           />
         ),
       },
-      {
-        id: "recordOutcome",
-        header: () => <div className="text-center">Record Outcome</div>,
-        cell: ({ row, table }) => (
-          <RecordOutcomeCell row={row} table={table} />
-        ),
-        enableSorting: false,
-        enableColumnFilter: false,
-      },
+    {
+      id: "recordOutcome",
+      header: () => <div className="text-center">Record Outcome</div>,
+      cell: ({ row, table }) => (
+        <RecordOutcomeCell row={row} table={table} />
+      ),
+      enableSorting: false,
+      enableColumnFilter: false,
+    },
     {
       accessorKey: "twicEscortRequired",
       header: () => <div>
@@ -156,7 +154,6 @@ export const columns = (status: string): ColumnDef<any>[] => {
     });
   }
   
-
   baseColumns.push({
     accessorKey: "flag",
     header: () => <div className="text-center">Flag</div>,
