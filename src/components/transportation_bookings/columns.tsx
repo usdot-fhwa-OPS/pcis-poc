@@ -3,7 +3,6 @@ import { Badge } from "../ui/badge.tsx";
 import { Button } from "../ui/button.tsx";
 import { useState } from "react";
 import { Flag, CalendarIcon, Clock, Pencil, ShieldHalf } from "lucide-react";
-//import { Checkbox } from "../ui/checkbox.tsx"
 import { Calendar } from "../ui/calendar"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog"
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover"
@@ -22,7 +21,6 @@ import { TransOpUpcomingBookings, TransOpOngoingBookings } from "../../routes/re
 import { TransOpDataTableMeta } from "./data-table.tsx";
 
 import { TransOperatorCompletedBookings } from "../../routes/reservation.tsx"
-import { Checkbox } from "../ui/checkbox.tsx";
 import { toast } from "sonner";
 import { useAppDispatch } from "../../hooks.tsx";
 import { populate } from "../terminal-capacity/terminal-capacity-state.tsx";
