@@ -1,0 +1,351 @@
+import { useState } from "react";
+import { Badge } from "../ui/badge.tsx";
+import { Button } from "../ui/button.tsx"; 
+import { Row, Table } from "@tanstack/react-table";
+import { addHours, format, isAfter, isValid, parse } from "date-fns";
+import {
+  CalendarIcon,
+  Clock,
+  Flag,
+  Pencil,
+  ShieldHalf,
+  XIcon,
+} from "lucide-react";
+import { Calendar } from "../ui/calendar";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "../ui/dialog";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
+import { cn } from "../../lib/utils";
+
+type ReservationOutcome =
+  | "Picked Up"
+  | "Late for Pick Up"
+  | "No Show"
+  | "Modified";
+
+const OUTCOME_OPTIONS: { label: string; value: ReservationOutcome }[] = [
+  { label: "Mark Picked Up", value: "Picked Up" },
+  { label: "Mark Late", value: "Late for Pick Up" },
+  { label: "Mark No-show", value: "No Show" },
+  { label: "Modified", value: "Modified" },
+];
+
+const RECORDED_OUTCOMES = new Set<string>([
+  "Picked Up",
+  "Late for Pick Up",
+  "No Show",
+  "Modified",
+]);
+
+const TIME_OPTIONS = [
+  "12:00 AM",
+  "01:00 AM",
+  "02:00 AM",
+  "03:00 AM",
+  "04:00 AM",
+  "05:00 AM",
+  "06:00 AM",
+  "07:00 AM",
+  "08:00 AM",
+  "09:00 AM",
+  "10:00 AM",
+  "11:00 AM",
+  "12:00 PM",
+  "01:00 PM",
+  "02:00 PM",
+  "03:00 PM",
+  "04:00 PM",
+  "05:00 PM",
+  "06:00 PM",
+  "07:00 PM",
+  "08:00 PM",
+  "09:00 PM",
+  "10:00 PM",
+  "11:00 PM",
+];
+
+const RESERVATION_WINDOW_HOURS = 1;
+
+export function hasReservationWindowEnded(
+  reservationDate?: string,
+  reservationTime?: string,
+  reservationStatus?: string
+): boolean {
+  if (!reservationDate || !reservationTime) return false;
+  if (reservationStatus && RECORDED_OUTCOMES.has(reservationStatus)) {
+    return false;
+  }
+
+  const isRange = reservationTime.includes("-");
+  const timePart = isRange
+    ? reservationTime.split("-")[1].trim()
+    : reservationTime.trim();
+
+  const dateTimeStr = `${reservationDate.trim()} ${timePart}`;
+  const formats = [
+    "MM/dd/yyyy hh:mm a",
+    "MM/dd/yyyy h:mm a",
+    "M/d/yyyy h:mm a",
+    "yyyy-MM-dd hh:mm a",
+  ];
+
+  let parsed: Date | undefined;
+  for (const fmt of formats) {
+    const candidate = parse(dateTimeStr, fmt, new Date());
+    if (isValid(candidate)) {
+      parsed = candidate;
+      break;
+    }
+  }
+
+  if (!parsed) return false;
+
+  const windowEnd = isRange
+    ? parsed
+    : addHours(parsed, RESERVATION_WINDOW_HOURS);
+
+  return isAfter(new Date(), windowEnd);
+}
+
+export function OngoingStatusBadge({
+  reservationDate,
+  reservationTime,
+  reservationStatus,
+}: {
+  reservationDate?: string;
+  reservationTime?: string;
+  reservationStatus?: string;
+}) {
+  if (
+    hasReservationWindowEnded(
+      reservationDate,
+      reservationTime,
+      reservationStatus
+    )
+  ) {
+    return (
+      <div className="min-w-[150px] text-center">
+        <Badge className="gap-1 rounded-full border-amber-200 bg-amber-100 text-amber-700 hover:bg-amber-100/80">
+          <Clock className="inline-block h-4 w-4 text-amber-700" />
+          Needs Outcome
+        </Badge>
+      </div>
+    );
+  }
+
+  const isNegative =
+    reservationStatus === "Late for Pick Up" || reservationStatus === "No Show";
+  const isPickedUp = reservationStatus === "Picked Up";
+
+  const colorClass = isNegative
+    ? "bg-red-100 hover:bg-red-100/80 text-red-700"
+    : isPickedUp
+      ? "bg-green-50 hover:bg-green-50/80 text-green-600"
+      : "bg-blue-50 hover:bg-blue-50/80 text-blue-700";
+
+  return (
+    <div className="min-w-[150px] text-center">
+      <Badge
+        className={cn(
+          "whitespace-normal break-words rounded-full border-transparent",
+          colorClass
+        )}
+      >
+        {reservationStatus}
+      </Badge>
+    </div>
+  );
+}
+
+function RecordOutcomeCell({
+  row,
+  table,
+}: {
+  row: Row<any>;
+  table: Table<any>;
+}) {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [outcome, setOutcome] = useState<ReservationOutcome | undefined>();
+  const [date, setDate] = useState<Date | undefined>(new Date());
+  const [time, setTime] = useState<string | undefined>();
+  const [isCalendarOpen, setIsCalendarOpen] = useState(false);
+
+  const isModified = outcome === "Modified";
+  const canSubmit = !!outcome && (!isModified || (!!date && !!time));
+
+  const handleOpenChange = (open: boolean) => {
+    setIsDialogOpen(open);
+    if (!open) {
+      setOutcome(undefined);
+      setDate(new Date());
+      setTime(undefined);
+      setIsCalendarOpen(false);
+    }
+  };
+
+  const handleRecord = async () => {
+    if (!outcome) return;
+    const meta = table.options.meta as
+      | TerminalOperatorDataTableMeta
+      | undefined;
+
+    if (isModified) {
+      if (!date || !time) return;
+      await meta?.updateBooking(
+        row.original.cargoUnitID,
+        "Modified",
+        format(date, "MM/dd/yyyy"),
+        time
+      );
+    } else if (outcome === "Late for Pick Up" && meta?.markBookingLate) {
+      await meta.markBookingLate(row.original.cargoUnitID, "Late for Pick Up");
+    } else {
+      await meta?.updateBooking(row.original.cargoUnitID, outcome);
+    }
+
+    handleOpenChange(false);
+  };
+
+  const helpText = !outcome
+    ? "Please select an appropriate outcome for this reservation"
+    : isModified && (!date || !time)
+      ? "Please select both date and time"
+      : isModified
+        ? `Selected: ${format(date!, "MM/dd/yyyy")} ${time}`
+        : `Selected: ${outcome}`;
+
+  return (
+    <div className="text-center">
+      <Dialog open={isDialogOpen} onOpenChange={handleOpenChange}>
+        <DialogTrigger asChild>
+          <Button
+            variant="ghost"
+            className="p-2"
+            onClick={() => setIsDialogOpen(true)}
+          >
+            <Pencil />
+          </Button>
+        </DialogTrigger>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Record Reservation Outcome</DialogTitle>
+            <div className="text-sm">
+              Original Reservation: {row.original.reservationDate} at{" "}
+              {row.original.reservationTime}
+            </div>
+            <div className="text-sm text-muted-foreground">
+              Vessel ID: {row.original.vesselID} | Cargo Unit ID:{" "}
+              {row.original.cargoUnitID} | Origin: {row.original.origin} | BCO:{" "}
+              {row.original.bcoName} | BCO Email: {row.original.bcoEmail}
+            </div>
+          </DialogHeader>
+
+          <div className="grid gap-4 py-4">
+            <div className="grid grid-cols-4 items-center gap-4">
+              <span className="text-sm font-medium">Outcome</span>
+              <Select
+                value={outcome}
+                onValueChange={(val) => setOutcome(val as ReservationOutcome)}
+              >
+                <SelectTrigger className="w-[280px]">
+                  <SelectValue placeholder="Select outcome" />
+                </SelectTrigger>
+                <SelectContent>
+                  {OUTCOME_OPTIONS.map((opt) => (
+                    <SelectItem key={opt.value} value={opt.value}>
+                      {opt.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {isModified && (
+              <>
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <CalendarIcon className="h-4 w-4" />
+                  <Popover
+                    modal={true}
+                    open={isCalendarOpen}
+                    onOpenChange={setIsCalendarOpen}
+                  >
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className={cn(
+                          "w-[280px] justify-start text-left font-normal",
+                          !date && "text-muted-foreground"
+                        )}
+                        onClick={() => setIsCalendarOpen(true)}
+                      >
+                        <CalendarIcon className="mr-2 h-4 w-4" />
+                        {date ? (
+                          format(date, "MM/dd/yyyy")
+                        ) : (
+                          <span>Pick a date</span>
+                        )}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0">
+                      <Calendar
+                        mode="single"
+                        selected={date}
+                        disabled={{ before: new Date() }}
+                        onSelect={(selectedDate) => {
+                          if (!selectedDate) return;
+                          setDate(selectedDate);
+                          setIsCalendarOpen(true);
+                        }}
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
+                </div>
+
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Clock className="h-4 w-4" />
+                  <Select value={time} onValueChange={setTime}>
+                    <SelectTrigger className="w-[280px]">
+                      <SelectValue placeholder="Select time" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {TIME_OPTIONS.map((timeOption) => (
+                        <SelectItem key={timeOption} value={timeOption}>
+                          {timeOption}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </>
+            )}
+          </div>
+
+          <div className="flex items-center justify-between gap-4">
+            <div className="text-sm text-muted-foreground">{helpText}</div>
+            <Button
+              type="submit"
+              disabled={!canSubmit}
+              variant={!canSubmit ? "outline" : "default"}
+              onClick={handleRecord}
+            >
+              Record
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+}
