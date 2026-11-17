@@ -656,37 +656,6 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
     
     },
     {
-      id: "changepickupstatus",
-      header: () => <div className="text-center">Mark as Picked Up</div>,
-      cell: ({ row, table}) => {
-        const [isChecked, setIsChecked] = useState<boolean>(row.original.reservationStatus === "Picked Up");
-  
-        const handlePickUp = async () => {
-          const success = await (table.options.meta as TransOpDataTableMeta)?.updateTransOpBooking(
-            row.original.cargoUnitID, 
-            "Picked Up",
-            new Date().toLocaleDateString('en-US')
-          );
-          
-          if (success) {
-            setIsChecked((prev) => !prev);
-          } else {
-            console.error("Reservation update failed. State not updated.");
-          }
-        };
-
-        return (
-          <Checkbox
-            disabled={row.original.reservationStatus !== "Pending Pick Up" && row.original.reservationStatus !== "Late for Pick Up"}
-            checked={isChecked}
-            onCheckedChange={handlePickUp}
-          />
-        );
-      },
-      enableSorting: false,
-      enableColumnFilter: false,
-    },
-    {
       accessorKey: "modifyBooking",
       header:()=><div className="text-center">Modify Reservation</div>,
       cell: ({ row, table }) => {
