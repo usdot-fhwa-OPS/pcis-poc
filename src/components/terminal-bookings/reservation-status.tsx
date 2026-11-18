@@ -28,13 +28,6 @@ type ReservationOutcome = (typeof OUTCOMES)[number];
 
 const RECORDED_OUTCOMES = new Set<string>(OUTCOMES);
 
-const OUTCOME_OPTIONS: { label: string; value: ReservationOutcome }[] = [
-  { label: "Mark Picked Up", value: "Picked Up" },
-  { label: "Mark Late", value: "Late for Pick Up" },
-  { label: "Mark No-show", value: "No Show" },
-  { label: "Modified", value: "Modified" },
-];
-
 // Shortcut to generate times from 12:00 AM to 11:00 PM
 const TIME_OPTIONS = Array.from({ length: 24 }, (_, h) =>
   format(new Date(2000, 0, 1, h), "hh:mm a"),
@@ -141,7 +134,12 @@ export function RecordOutcomeCell({
     const meta = table.options.meta as TerminalOperatorDataTableMeta | undefined;
   
     if (isModified) {
-      await meta?.updateBooking(id, outcome, format(date!, "MM/dd/yyyy"), time);
+      await meta?.updateBooking(
+          id,
+          "Pending Pick Up",
+          format(date!, "MM/dd/yyyy"),
+          time,
+        );
     } else if (outcome === "Late for Pick Up" && meta?.markBookingLate) {
       await meta.markBookingLate(id, outcome);
     } else {
@@ -194,7 +192,7 @@ export function RecordOutcomeCell({
                   <SelectValue placeholder="Select outcome" />
                 </SelectTrigger>
                 <SelectContent>
-                  {OUTCOME_OPTIONS.map((opt) => (
+                  {OUTCOMES.map((opt) => (
                     <SelectItem key={opt.value} value={opt.value}>
                       {opt.label}
                     </SelectItem>
