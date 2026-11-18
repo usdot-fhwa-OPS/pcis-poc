@@ -135,11 +135,13 @@ export function RecordOutcomeCell({
   
     if (isModified) {
       await meta?.updateBooking(
-          id,
-          "Pending Pick Up",
-          format(date!, "MM/dd/yyyy"),
-          time,
-        );
+        id,
+        "Pending Pick Up",
+        format(date!, "MM/dd/yyyy"),
+        time,
+      );
+    } else if (outcome === "No Show") {
+      await meta?.updateBooking(id, "unassigned");
     } else if (outcome === "Late for Pick Up" && meta?.markBookingLate) {
       await meta.markBookingLate(id, outcome);
     } else {
@@ -192,7 +194,7 @@ export function RecordOutcomeCell({
                   <SelectValue placeholder="Select outcome" />
                 </SelectTrigger>
                 <SelectContent>
-                  {OUTCOMES.map((status) => (
+                  {OUTCOMES.filter((status) => status !== "Pending Pick Up").map((status) => (
                     <SelectItem key={status} value={status}>
                       {status}
                     </SelectItem>
