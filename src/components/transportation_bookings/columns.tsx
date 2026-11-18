@@ -260,7 +260,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
           {row.original.reservationStatus === "Pending Reservation" ? (
             <ReservePickupDialog
               cargoUnit={row.original}
-              onReserved={() => (table.options.meta as TransOpDataTableMeta)?.refreshBookings?.()}
+              onRequested={(details) => (table.options.meta as TransOpDataTableMeta)?.showReservationConfirmation?.(details)}
             />
           ) : (
             <Badge

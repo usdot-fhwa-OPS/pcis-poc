@@ -13,6 +13,8 @@ import {
   EquipmentTypeOption,
   listEquipmentTypesForCargoUnit,
 } from "./reservation-manager-client";
+import { ReservationConfirmationDetails } from "./reservation-confirmation-dialog";
+import { formatDuration, formatReservationTime } from "./reservation-format";
 
 export type ReservePickupCargoUnit = {
   cargoUnitID: string;
@@ -25,7 +27,8 @@ export type ReservePickupCargoUnit = {
 
 type ReservePickupDialogProps = {
   cargoUnit: ReservePickupCargoUnit;
-  onReserved?: () => void | Promise<void>;
+  // Called after a successful request; the parent shows the confirmation and refreshes the table.
+  onRequested?: (details: ReservationConfirmationDetails) => void;
 };
 
 const TIME_STEP_MINS = 30;
@@ -37,13 +40,7 @@ function slotLabel(minutes: number) {
   return format(addMinutes(startOfDay(new Date()), minutes), "h:mm a");
 }
 
-function formatDuration(minutes: number) {
-  if (minutes < 60) return `${minutes} Minutes`;
-  const hours = Number((minutes / 60).toFixed(2));
-  return `${hours} ${hours === 1 ? "Hour" : "Hours"}`;
-}
-
-export function ReservePickupDialog({ cargoUnit, onReserved }: ReservePickupDialogProps) {
+export function ReservePickupDialog({ cargoUnit, onRequested }: ReservePickupDialogProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isPickerOpen, setIsPickerOpen] = useState(false);
   const [date, setDate] = useState<Date | undefined>();
@@ -121,9 +118,14 @@ export function ReservePickupDialog({ cargoUnit, onReserved }: ReservePickupDial
         preferredStartAt: requestedStart.toISOString(),
         moves: [{ cargoUnitID: cargoUnit.cargoUnitID, equipmentType: selectedEquipment.equipmentType }],
       });
-      toast.success(`Pickup requested. Confirmation code: ${result.confirmationCode}`);
       handleOpenChange(false);
-      await onReserved?.();
+      onRequested?.({
+        confirmationCode: result.confirmationCode,
+        cargoUnitID: cargoUnit.cargoUnitID,
+        startAt: result.startAt,
+        durationMins: result.durationMins,
+        equipmentLabel: selectedEquipment.label,
+      });
     } catch (error) {
       toast.error((error as Error).message || "The reservation couldn't be requested. Please try again.");
     } finally {
@@ -172,7 +174,7 @@ export function ReservePickupDialog({ cargoUnit, onReserved }: ReservePickupDial
                   <Button variant="outline" className="justify-start font-normal">
                     <CalendarIcon className="mr-2 h-4 w-4" />
                     {requestedStart ? (
-                      format(requestedStart, "EEE, M/d/yyyy, h:mm a")
+                      formatReservationTime(requestedStart)
                     ) : (
                       <span className="text-muted-foreground">Select date and time</span>
                     )}

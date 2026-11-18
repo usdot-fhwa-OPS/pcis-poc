@@ -1,5 +1,6 @@
 "use client"
 import * as React from "react"
+import { ReservationConfirmationDetails } from "../reservation-cargo/reservation-confirmation-dialog.tsx"
 import { ChevronLeft, ChevronRight, Search } from "lucide-react"
 import { Input } from "../ui/input.tsx"
 import {
@@ -34,6 +35,7 @@ export interface TransOpDataTableMeta {
     reservationDate: string,
   ) => Promise<number>;
   refreshBookings?: () => Promise<void>;
+  showReservationConfirmation?: (details: ReservationConfirmationDetails) => void;
 }
 
 interface DataTableProps<TData, TValue> {
