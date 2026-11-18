@@ -29,6 +29,9 @@ import { terminalCapacityList } from "../terminal-capacity/terminal-capacity-cli
 import { saveCargoUnit } from "../cargo/cargo-units-client.tsx";
 import { matchDayAndOrder } from "../../lib/date-utils.tsx";
 
+const TIME_OPTIONS = Array.from({ length: 24 }, (_, h) =>
+  format(new Date(2000, 0, 1, h), "hh:mm a"),
+);
 
 export const columns = (): ColumnDef<any>[] => {
   const baseColumns: ColumnDef<TransOpUpcomingBookings>[] = [
@@ -519,33 +522,6 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
 
         }
 
-        const timeOptions = [
-          "12:00 AM",
-          "01:00 AM",
-          "02:00 AM",
-          "03:00 AM",
-          "04:00 AM",
-          "05:00 AM",
-          "06:00 AM",
-          "07:00 AM",
-          "08:00 AM",
-          "09:00 AM",
-          "10:00 AM",
-          "11:00 AM",
-          "12:00 PM",
-          "01:00 PM",
-          "02:00 PM",
-          "03:00 PM",
-          "04:00 PM",
-          "05:00 PM",
-          "06:00 PM",
-          "07:00 PM",
-          "08:00 PM",
-          "09:00 PM",
-          "10:00 PM",
-          "11:00 PM",
-        ]
-
         const handleDateSelect = (selectedDate: Date | undefined) => {
           if (!selectedDate) return;
           setDate(selectedDate)
@@ -613,7 +589,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
                         <SelectValue placeholder="Select time" />
                       </SelectTrigger>
                       <SelectContent>
-                        {timeOptions.map((timeOption) => (
+                        {TIME_OPTIONS.map((timeOption) => (
                         <SelectItem key={timeOption} value={timeOption}>
                           {timeOption}
                         </SelectItem>
@@ -677,33 +653,6 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
           }
         }
 
-        const timeOptions = [
-          "12:00 AM",
-          "01:00 AM",
-          "02:00 AM",
-          "03:00 AM",
-          "04:00 AM",
-          "05:00 AM",
-          "06:00 AM",
-          "07:00 AM",
-          "08:00 AM",
-          "09:00 AM",
-          "10:00 AM",
-          "11:00 AM",
-          "12:00 PM",
-          "01:00 PM",
-          "02:00 PM",
-          "03:00 PM",
-          "04:00 PM",
-          "05:00 PM",
-          "06:00 PM",
-          "07:00 PM",
-          "08:00 PM",
-          "09:00 PM",
-          "10:00 PM",
-          "11:00 PM",
-        ]
-
         const handleDateSelect = (selectedDate: Date | undefined) => {
           if (!selectedDate) return;
           setDate(selectedDate)
@@ -755,7 +704,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
                     <SelectValue placeholder="Select time" />
                   </SelectTrigger>
                   <SelectContent>
-                    {timeOptions.map((timeOption) => (
+                    {TIME_OPTIONS.map((timeOption) => (
                       <SelectItem key={timeOption} value={timeOption}>
                         {timeOption}
                       </SelectItem>

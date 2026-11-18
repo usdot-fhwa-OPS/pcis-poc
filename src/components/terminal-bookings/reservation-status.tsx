@@ -1,13 +1,9 @@
 import { useState } from "react";
 import { Badge } from "../ui/badge.tsx";
-import { Button } from "../ui/button.tsx"; 
+import { Button } from "../ui/button.tsx";
 import { Row, Table } from "@tanstack/react-table";
 import { addHours, format, isAfter, isValid, parse } from "date-fns";
-import {
-  CalendarIcon,
-  Clock,
-  Pencil,
-} from "lucide-react";
+import { CalendarIcon, Clock, Pencil } from "lucide-react";
 import { Calendar } from "../ui/calendar.tsx";
 import {
   Dialog,
@@ -17,105 +13,61 @@ import {
   DialogTrigger,
 } from "../ui/dialog.tsx";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover.tsx";
-import {TerminalOperatorDataTableMeta} from './data-table.tsx'
+import { TerminalOperatorDataTableMeta } from "./data-table.tsx";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "../ui/select";
-import { cn } from "../../lib/utils";
+} from "../ui/select.tsx";
+import { cn } from "../../lib/utils.ts";
 
-type ReservationOutcome =
-  | "Picked Up"
-  | "Late for Pick Up"
-  | "No Show"
-  | "Modified";
-
-const OUTCOME_OPTIONS: { label: string; value: ReservationOutcome }[] = [
+const OUTCOME_OPTIONS = [
   { label: "Mark Picked Up", value: "Picked Up" },
   { label: "Mark Late", value: "Late for Pick Up" },
   { label: "Mark No-show", value: "No Show" },
   { label: "Modified", value: "Modified" },
-];
+] as const;
 
-const RECORDED_OUTCOMES = new Set<string>([
-  "Picked Up",
-  "Late for Pick Up",
-  "No Show",
-  "Modified",
-]);
+type ReservationOutcome = (typeof OUTCOME_OPTIONS)[number]["value"];
+const RECORDED_OUTCOMES = new Set(OUTCOME_OPTIONS.map(o => o.value));
 
-const TIME_OPTIONS = [
-  "12:00 AM",
-  "01:00 AM",
-  "02:00 AM",
-  "03:00 AM",
-  "04:00 AM",
-  "05:00 AM",
-  "06:00 AM",
-  "07:00 AM",
-  "08:00 AM",
-  "09:00 AM",
-  "10:00 AM",
-  "11:00 AM",
-  "12:00 PM",
-  "01:00 PM",
-  "02:00 PM",
-  "03:00 PM",
-  "04:00 PM",
-  "05:00 PM",
-  "06:00 PM",
-  "07:00 PM",
-  "08:00 PM",
-  "09:00 PM",
-  "10:00 PM",
-  "11:00 PM",
-];
 
-const RESERVATION_WINDOW_HOURS = 1;
+const TIME_OPTIONS = Array.from({ length: 24 }, (_, h) =>
+  format(new Date(2000, 0, 1, h), "hh:mm a"),
+);
 
 export function hasReservationWindowEnded(
   reservationDate?: string,
   reservationTime?: string,
-  reservationStatus?: string
+  reservationStatus?: string,
 ): boolean {
   if (!reservationDate || !reservationTime) return false;
-  if (reservationStatus && RECORDED_OUTCOMES.has(reservationStatus)) {
-    return false;
-  }
+  if (reservationStatus && RECORDED_OUTCOMES.has(reservationStatus)) return false;
 
-  const isRange = reservationTime.includes("-");
-  const timePart = isRange
-    ? reservationTime.split("-")[1].trim()
-    : reservationTime.trim();
+  const parts = reservationTime.split("-");
+  const isRange = parts.length > 1;
+  const timePart = parts[parts.length - 1].trim();
 
-  const dateTimeStr = `${reservationDate.trim()} ${timePart}`;
-  const formats = [
+  const parsed = parse(
+    `${reservationDate.trim()} ${timePart}`,
     "MM/dd/yyyy hh:mm a",
-    "MM/dd/yyyy h:mm a",
-    "M/d/yyyy h:mm a",
-    "yyyy-MM-dd hh:mm a",
-  ];
+    new Date(),
+  );
+  if (!isValid(parsed)) return false;
 
-  let parsed: Date | undefined;
-  for (const fmt of formats) {
-    const candidate = parse(dateTimeStr, fmt, new Date());
-    if (isValid(candidate)) {
-      parsed = candidate;
-      break;
-    }
-  }
-
-  if (!parsed) return false;
-
-  const windowEnd = isRange
-    ? parsed
-    : addHours(parsed, RESERVATION_WINDOW_HOURS);
-
+  const windowEnd = isRange ? parsed : addHours(parsed, 1);
   return isAfter(new Date(), windowEnd);
 }
+
+
+const STATUS_COLORS: Record<string, string> = {
+  "Late for Pick Up": "bg-red-100 hover:bg-red-100/80 text-red-700",
+  "No Show": "bg-red-100 hover:bg-red-100/80 text-red-700",
+  "Picked Up": "bg-green-50 hover:bg-green-50/80 text-green-600",
+};
+const DEFAULT_COLOR = "bg-gray-50 hover:bg-gray-50/80 text-gray-700";
 
 export function OngoingStatusBadge({
   reservationDate,
@@ -126,43 +78,29 @@ export function OngoingStatusBadge({
   reservationTime?: string;
   reservationStatus?: string;
 }) {
-  if (
-    hasReservationWindowEnded(
-      reservationDate,
-      reservationTime,
-      reservationStatus
-    )
-  ) {
-    return (
-      <div className="min-w-[150px] text-center">
+  const needsOutcome = hasReservationWindowEnded(
+    reservationDate,
+    reservationTime,
+    reservationStatus,
+  );
+
+  return (
+    <div className="min-w-[150px] text-center">
+      {needsOutcome ? (
         <Badge className="gap-1 rounded-full border-amber-200 bg-amber-100 text-amber-700 hover:bg-amber-100/80">
           <Clock className="inline-block h-4 w-4 text-amber-700" />
           Needs Outcome
         </Badge>
-      </div>
-    );
-  }
-
-  const isNegative =
-    reservationStatus === "Late for Pick Up" || reservationStatus === "No Show";
-  const isPickedUp = reservationStatus === "Picked Up";
-
-  const colorClass = isNegative
-    ? "bg-red-100 hover:bg-red-100/80 text-red-700"
-    : isPickedUp
-      ? "bg-green-50 hover:bg-green-50/80 text-green-600"
-      : "bg-blue-50 hover:bg-blue-50/80 text-blue-700";
-
-  return (
-    <div className="min-w-[150px] text-center">
-      <Badge
-        className={cn(
-          "whitespace-normal break-words rounded-full border-transparent",
-          colorClass
-        )}
-      >
-        {reservationStatus}
-      </Badge>
+      ) : (
+        <Badge
+          className={cn(
+            "whitespace-normal break-words rounded-full border-transparent",
+            STATUS_COLORS[reservationStatus ?? ""] ?? DEFAULT_COLOR,
+          )}
+        >
+          {reservationStatus}
+        </Badge>
+      )}
     </div>
   );
 }
@@ -194,36 +132,28 @@ export function RecordOutcomeCell({
   };
 
   const handleRecord = async () => {
-    if (!outcome) return;
-    const meta = table.options.meta as
-      | TerminalOperatorDataTableMeta
-      | undefined;
-
+    if (!outcome || (isModified && (!date || !time))) return;
+    const id = row.original.cargoUnitID;
+    const meta = table.options.meta as TerminalOperatorDataTableMeta | undefined;
+  
     if (isModified) {
-      if (!date || !time) return;
-      await meta?.updateBooking(
-        row.original.cargoUnitID,
-        "Modified",
-        format(date, "MM/dd/yyyy"),
-        time
-      );
+      await meta?.updateBooking(id, outcome, format(date!, "MM/dd/yyyy"), time);
     } else if (outcome === "Late for Pick Up" && meta?.markBookingLate) {
-      await meta.markBookingLate(row.original.cargoUnitID, "Late for Pick Up");
+      await meta.markBookingLate(id, outcome);
     } else {
-      await meta?.updateBooking(row.original.cargoUnitID, outcome);
+      await meta?.updateBooking(id, outcome);
     }
-
     handleOpenChange(false);
   };
 
   const helpText = !outcome
     ? "Please select an appropriate outcome for this reservation"
-    : isModified && (!date || !time)
-      ? "Please select both date and time"
-      : isModified
-        ? `Selected: ${format(date!, "MM/dd/yyyy")} ${time}`
-        : `Selected: ${outcome}`;
-
+    : !isModified
+      ? `Selected: ${outcome}`
+      : date && time
+        ? `Selected: ${format(date, "MM/dd/yyyy")} ${time}`
+        : "Please select both date and time";
+  
   return (
     <div className="text-center">
       <Dialog open={isDialogOpen} onOpenChange={handleOpenChange}>
@@ -231,7 +161,6 @@ export function RecordOutcomeCell({
           <Button
             variant="ghost"
             className="p-2"
-            onClick={() => setIsDialogOpen(true)}
           >
             <Pencil />
           </Button>
@@ -284,9 +213,8 @@ export function RecordOutcomeCell({
                         variant="outline"
                         className={cn(
                           "w-[280px] justify-start text-left font-normal",
-                          !date && "text-muted-foreground"
+                          !date && "text-muted-foreground",
                         )}
-                        onClick={() => setIsCalendarOpen(true)}
                       >
                         <CalendarIcon className="mr-2 h-4 w-4" />
                         {date ? (
@@ -304,7 +232,7 @@ export function RecordOutcomeCell({
                         onSelect={(selectedDate) => {
                           if (!selectedDate) return;
                           setDate(selectedDate);
-                          setIsCalendarOpen(true);
+                          setIsCalendarOpen(false);
                         }}
                         initialFocus
                       />
@@ -334,7 +262,6 @@ export function RecordOutcomeCell({
           <div className="flex items-center justify-between gap-4">
             <div className="text-sm text-muted-foreground">{helpText}</div>
             <Button
-              type="submit"
               disabled={!canSubmit}
               variant={!canSubmit ? "outline" : "default"}
               onClick={handleRecord}

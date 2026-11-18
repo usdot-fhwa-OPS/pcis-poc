@@ -7,7 +7,7 @@ import { TermOperatorCompletedBookings } from "../../routes/reservation.tsx"
 import { ApproveReservation } from "../reservations/approve-reservation.tsx";
 import { Badge } from "../ui/badge.tsx";
 import { saveCargoUnit } from "../cargo/cargo-units-client.tsx";
-import { OngoingStatusBadge, RecordOutcomeCell } from "./status-badge.tsx";
+import { OngoingStatusBadge, RecordOutcomeCell } from "./reservation-status.tsx";
 
 
 export const columns = (status: string): ColumnDef<any>[] => {
