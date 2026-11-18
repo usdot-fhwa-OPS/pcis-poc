@@ -150,7 +150,10 @@ export function ReservePickupDialog({ cargoUnit, onReserved }: ReservePickupDial
         </Tooltip>
       </TooltipProvider>
 
-      <Dialog open={isOpen} onOpenChange={handleOpenChange}>
+      {/* The date/time and equipment pickers render their menus outside the dialog. Without
+          disablePointerDismissal, choosing an option counts as an "outside" click and closes the
+          dialog. Cancel, the X button and Escape still close it. */}
+      <Dialog open={isOpen} onOpenChange={handleOpenChange} disablePointerDismissal>
         <DialogContent className="sm:max-w-[440px] text-left">
           <DialogHeader>
             <DialogTitle className="text-lg font-semibold">Reserve Cargo Unit Pickup</DialogTitle>
