@@ -192,9 +192,9 @@ export function RecordOutcomeCell({
                   <SelectValue placeholder="Select outcome" />
                 </SelectTrigger>
                 <SelectContent>
-                  {OUTCOMES.map((opt) => (
-                    <SelectItem key={opt.value} value={opt.value}>
-                      {opt.label}
+                  {OUTCOMES.map((status) => (
+                    <SelectItem key={status} value={status}>
+                      {status}
                     </SelectItem>
                   ))}
                 </SelectContent>
