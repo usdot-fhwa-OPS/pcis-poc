@@ -610,13 +610,11 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
                 </DialogContent>
               </Dialog>
             ) : (
-              <Badge
-                className={`border-transparent rounded-full ${
-                  row.original.reservationStatus === "Late for Pick Up" ? "bg-red-100 hover:bg-red-100/80 text-red-700" : "bg-green-50 text-green-600 hover:bg-green-50/80"
-                } whitespace-normal break-words`}
-              >
-                {row.original.reservationStatus}
-              </Badge>
+              <OngoingStatusBadge
+                              reservationDate={row.original.reservationDate}
+                              reservationTime={row.original.reservationTime}
+                              reservationStatus={row.original.reservationStatus}
+              />
             )}
           </div>
         );
