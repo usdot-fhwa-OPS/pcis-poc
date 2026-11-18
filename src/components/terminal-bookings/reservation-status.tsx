@@ -73,7 +73,7 @@ const STATUS_COLORS: Record<string, string> = {
 
 const DEFAULT_STATUS_COLOR = "bg-gray-50 hover:bg-gray-50/80 text-gray-700";
 
-export function OngoingStatusBadge({
+export function ReservationStatusBadge({
   reservationDate,
   reservationTime,
   reservationStatus,

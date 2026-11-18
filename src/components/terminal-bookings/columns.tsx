@@ -7,7 +7,7 @@ import { TermOperatorCompletedBookings } from "../../routes/reservation.tsx"
 import { ApproveReservation } from "../reservations/approve-reservation.tsx";
 import { Badge } from "../ui/badge.tsx";
 import { saveCargoUnit } from "../cargo/cargo-units-client.tsx";
-import { OngoingStatusBadge, RecordOutcomeCell } from "./reservation-status.tsx";
+import { ReservationStatusBadge, RecordOutcomeCell } from "./reservation-status.tsx";
 
 
 export const columns = (status: string): ColumnDef<any>[] => {
@@ -104,7 +104,7 @@ export const columns = (status: string): ColumnDef<any>[] => {
         accessorKey: "reservationStatus",
         header: () => <div className="text-center">Status</div>,
         cell: ({ row }) => (
-          <OngoingStatusBadge
+          <ReservationStatusBadge
             reservationDate={row.original.reservationDate}
             reservationTime={row.original.reservationTime}
             reservationStatus={row.original.reservationStatus}
@@ -247,7 +247,7 @@ export const CompletedColumn = (): ColumnDef<any>[] => {
         <div className="min-w-[112px] text-center">Reservation Status</div>
       ),
       cell: ({ row }) => (
-        <OngoingStatusBadge
+        <ReservationStatusBadge
           reservationDate={row.original.reservationDate}
           reservationTime={row.original.reservationTime}
           reservationStatus={row.original.reservationStatus}

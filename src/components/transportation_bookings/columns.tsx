@@ -28,7 +28,7 @@ import { TerminalCapacityDomain } from "../terminal-capacity/terminal-capacity-d
 import { terminalCapacityList } from "../terminal-capacity/terminal-capacity-client.tsx";
 import { saveCargoUnit } from "../cargo/cargo-units-client.tsx";
 import { matchDayAndOrder } from "../../lib/date-utils.tsx";
-import { OngoingStatusBadge } from "../terminal-bookings/reservation-status.tsx";
+import { ReservationStatusBadge } from "../terminal-bookings/reservation-status.tsx";
 
 // Shortcut to generate times from 12:00 AM to 11:00 PM
 const TIME_OPTIONS = Array.from({ length: 24 }, (_, h) =>
@@ -197,7 +197,7 @@ export const CompletedColumn = (): ColumnDef<any>[] => {
         <div className="min-w-[112px] text-center">Reservation Status</div>
       ),
       cell: ({ row }) => (
-        <OngoingStatusBadge
+        <ReservationStatusBadge
           reservationDate={row.original.reservationDate}
           reservationTime={row.original.reservationTime}
           reservationStatus={row.original.reservationStatus}
@@ -610,7 +610,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
                 </DialogContent>
               </Dialog>
             ) : (
-              <OngoingStatusBadge
+              <ReservationStatusBadge
                               reservationDate={row.original.reservationDate}
                               reservationTime={row.original.reservationTime}
                               reservationStatus={row.original.reservationStatus}
