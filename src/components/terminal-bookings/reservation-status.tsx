@@ -23,7 +23,7 @@ import {
 } from "../ui/select";
 import { cn } from "../../lib/utils";
 
-const OUTCOMES = ["Picked Up", "Late for Pick Up", "No Show", "Modified"] as const;
+const OUTCOMES = ["Pending Pick Up", "Picked Up", "Late for Pick Up", "No Show", "Modified"] as const;
 type ReservationOutcome = (typeof OUTCOMES)[number];
 
 const RECORDED_OUTCOMES = new Set<string>(OUTCOMES);
@@ -35,6 +35,7 @@ const OUTCOME_OPTIONS: { label: string; value: ReservationOutcome }[] = [
   { label: "Modified", value: "Modified" },
 ];
 
+// Shortcut to generate times from 12:00 AM to 11:00 PM
 const TIME_OPTIONS = Array.from({ length: 24 }, (_, h) =>
   format(new Date(2000, 0, 1, h), "hh:mm a"),
 );
@@ -67,8 +68,8 @@ const STATUS_COLORS: Record<string, string> = {
   "Late for Pick Up": "bg-red-100 hover:bg-red-100/80 text-red-700",
   "No Show": "bg-red-100 hover:bg-red-100/80 text-red-700",
   "Picked Up": "bg-green-50 hover:bg-green-50/80 text-green-600",
+  "Pending Pick Up": "bg-blue-50 hover:bg-blue-50/80 text-blue-700"
 };
-const DEFAULT_COLOR = "bg-gray-50 hover:bg-gray-50/80 text-gray-700";
 
 export function OngoingStatusBadge({
   reservationDate,
@@ -96,7 +97,7 @@ export function OngoingStatusBadge({
         <Badge
           className={cn(
             "whitespace-normal break-words rounded-full border-transparent",
-            STATUS_COLORS[reservationStatus ?? ""] ?? DEFAULT_COLOR,
+            STATUS_COLORS[reservationStatus],
           )}
         >
           {reservationStatus}
