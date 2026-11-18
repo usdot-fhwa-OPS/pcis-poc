@@ -33,6 +33,7 @@ export interface TransOpDataTableMeta {
   getBookingsAmount: (
     reservationDate: string,
   ) => Promise<number>;
+  refreshBookings?: () => Promise<void>;
 }
 
 interface DataTableProps<TData, TValue> {
