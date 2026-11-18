@@ -196,13 +196,13 @@ export const CompletedColumn = (): ColumnDef<any>[] => {
       header: () => (
         <div className="min-w-[112px] text-center">Reservation Status</div>
       ),
-      cell: ({ row }) => {
+      cell: ({ row }) => (
         <OngoingStatusBadge
           reservationDate={row.original.reservationDate}
           reservationTime={row.original.reservationTime}
           reservationStatus={row.original.reservationStatus}
         />
-      },
+      ),
     },
     {
       accessorKey: "resPickupDate",

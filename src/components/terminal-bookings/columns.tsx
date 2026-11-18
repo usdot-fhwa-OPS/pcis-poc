@@ -243,27 +243,16 @@ export const CompletedColumn = (): ColumnDef<any>[] => {
     },
     {
       accessorKey: "reservationStatus",
-      header: () => <div className="text-center">Reservation Status</div>,
-      cell: ({ row }) => {
-        const status = row.original.reservationStatus;
-        const isNegative =
-          status === "Late for Pick Up" || status === "No Show";
-
-        return (
-          <div className="min-w-[112px] text-center">
-            <Badge
-              className={`border-transparent rounded-full ${
-                isNegative
-                  ? "bg-red-100 hover:bg-red-100/80 text-red-700"
-                  : "bg-secondary hover:bg-secondary/80 text-secondary-foreground"
-              } whitespace-normal break-words`}
-            >
-              {status}
-            </Badge>
-          </div>
-        );
-      },
-      size: 200,
+      header: () => (
+        <div className="min-w-[112px] text-center">Reservation Status</div>
+      ),
+      cell: ({ row }) => (
+        <OngoingStatusBadge
+          reservationDate={row.original.reservationDate}
+          reservationTime={row.original.reservationTime}
+          reservationStatus={row.original.reservationStatus}
+        />
+      ),
     },
     {
       accessorKey: "twicEscortRequired",
