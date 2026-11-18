@@ -71,6 +71,8 @@ const STATUS_COLORS: Record<string, string> = {
   "Pending Pick Up": "bg-blue-50 hover:bg-blue-50/80 text-blue-700"
 };
 
+const DEFAULT_STATUS_COLOR = "bg-gray-50 hover:bg-gray-50/80 text-gray-700";
+
 export function OngoingStatusBadge({
   reservationDate,
   reservationTime,
@@ -97,7 +99,7 @@ export function OngoingStatusBadge({
         <Badge
           className={cn(
             "whitespace-normal break-words rounded-full border-transparent",
-            STATUS_COLORS[reservationStatus],
+            STATUS_COLORS[reservationStatus] ?? DEFAULT_STATUS_COLOR, 
           )}
         >
           {reservationStatus}
