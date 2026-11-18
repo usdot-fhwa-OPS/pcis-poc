@@ -99,7 +99,7 @@ export function OngoingStatusBadge({
         <Badge
           className={cn(
             "whitespace-normal break-words rounded-full border-transparent",
-            STATUS_COLORS[reservationStatus] ?? DEFAULT_STATUS_COLOR, 
+            STATUS_COLORS[reservationStatus ?? ""] ?? DEFAULT_STATUS_COLOR, 
           )}
         >
           {reservationStatus}
