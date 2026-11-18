@@ -20,19 +20,20 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "../ui/select.tsx";
-import { cn } from "../../lib/utils.ts";
+} from "../ui/select";
+import { cn } from "../../lib/utils";
 
-const OUTCOME_OPTIONS = [
+const OUTCOMES = ["Picked Up", "Late for Pick Up", "No Show", "Modified"] as const;
+type ReservationOutcome = (typeof OUTCOMES)[number];
+
+const RECORDED_OUTCOMES = new Set<string>(OUTCOMES);
+
+const OUTCOME_OPTIONS: { label: string; value: ReservationOutcome }[] = [
   { label: "Mark Picked Up", value: "Picked Up" },
   { label: "Mark Late", value: "Late for Pick Up" },
   { label: "Mark No-show", value: "No Show" },
   { label: "Modified", value: "Modified" },
-] as const;
-
-type ReservationOutcome = (typeof OUTCOME_OPTIONS)[number]["value"];
-const RECORDED_OUTCOMES = new Set(OUTCOME_OPTIONS.map(o => o.value));
-
+];
 
 const TIME_OPTIONS = Array.from({ length: 24 }, (_, h) =>
   format(new Date(2000, 0, 1, h), "hh:mm a"),
