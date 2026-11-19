@@ -11,3 +11,7 @@ It should also include the following environment variable
 
 - Key: DYNAMODB_TABLE
 - Value: your_dynamodb_arn
+- Key: SECOND_DYNAMODB_TABLE
+- Value: the Amplify Container table name (each row is written to both tables)
+
+The deployed source is in `lambda_function.py`; `S3ToDynamoDB.zip` is built from it. Rows with no `reservationStatus` are written as `unassigned`, rows with no `containerStatus` as `On-Ship`.
