@@ -10,6 +10,7 @@
     QueryCommand,
     TransactWriteCommand,
   } from "@aws-sdk/lib-dynamodb";
+  import { createReservationTrackingRoutes } from "./reservation-tracking.mjs";
 
 
   const RESERVATIONS_TABLE = process.env.RESERVATIONS_TABLE || "Reservations";
@@ -217,94 +218,7 @@
   }
 
 
-  const getCargoUnit = async (cargoUnitID) => {
-      
-      const params = {
-          TableName: CARGO_UNITS_TABLE,
-          KeyConditionExpression: "cargoUnitID  = :cargoUnitIDValue",
-          ExpressionAttributeValues: {
-              ":cargoUnitIDValue": cargoUnitID,
-          },
-      };
 
-      try {
-          const command = new QueryCommand(params);
-          const response = await dynamo.send(command);
-          
-          return {
-              statusCode: 200,
-              body: JSON.stringify({
-                  message: "Query successful",
-                  items: response.Items, // Automatically unmarshalled plain JS objects
-                  count: response.Count
-              }),
-          };
-      } catch (error) {
-          console.error("DynamoDB Query Error: ", error);
-          return {
-              statusCode: 500,
-              body: JSON.stringify({
-                  message: "Failed to query table",
-                  error: error.message
-              }),
-          };
-      }
-  };
-
-
-  async function getReservationByConfirmationCode(event) {
-
-    const requestedLimit = Number(event.queryStringParameters?.limit || 25);
-    const limit = Number.isFinite(requestedLimit)
-      ? Math.max(1, Math.min(100, requestedLimit))
-      : 25;
-
-    const nextToken = event.queryStringParameters?.nextToken;
-    const exclusiveStartKey = decodeNextToken(nextToken);
-    if (nextToken && !exclusiveStartKey) {
-      return response(400, { message: "Invalid nextToken" });
-    }
-
-    const expressionNames = {};
-    const expressionValues = {};
-    const clauses = [];
-    const confirmationCode = event.queryStringParameters?.confirmationCode;
-    if (confirmationCode) {
-      expressionNames["#confirmationCode"] = "confirmationCode";
-      expressionValues[":confirmationCode"] = confirmationCode;
-      clauses.push("#confirmationCode = :confirmationCode");
-    }
-
-
-
-    const scanInput = {
-      TableName: RESERVATIONS_TABLE,
-      Limit: limit,
-      ExclusiveStartKey: exclusiveStartKey || undefined,
-      FilterExpression: clauses.length ? clauses.join(" AND ") : undefined,
-      ExpressionAttributeNames: Object.keys(expressionNames).length ? expressionNames : undefined,
-      ExpressionAttributeValues: Object.keys(expressionValues).length ? expressionValues : undefined,
-    };
-
-    const result = await dynamo.send(new ScanCommand(scanInput));
-    const items = (result.Items || []).sort((a, b) =>
-      (b.createdAt || "").localeCompare(a.createdAt || "")
-    );
-    const combinedList =  await Promise.all(items.map(async item => {
-      const reservationMoveList = await listReservationMoves({ 'reservationId': item.reservationId })
-      const body = JSON.parse(reservationMoveList.body)
-      const updatedItems = await Promise.all(body.items.map(async move => {
-        const cargoUnitList = await getCargoUnit(move.cargoUnitID)
-        return ({...item, 'cargoUnitList':JSON.parse(cargoUnitList.body).items})
-      }))
-      return (updatedItems)
-    }))
-    return response(200, {
-      combinedList,
-      count: combinedList.length,
-      nextToken: encodeNextToken(result.LastEvaluatedKey),
-    });
-  }
 
   async function listReservationMoves(event) {
     
@@ -779,6 +693,8 @@
     return response(200, result);
   }
 
+  const reservationTrackingRoutes = createReservationTrackingRoutes({ db: dynamo, response });
+
   export const handler = async (event) => {
     try {
       if (event.httpMethod === "OPTIONS") {
@@ -811,12 +727,13 @@
           return await deleteReservationEvent(event);
         case "DELETE /deleteReservation":
           return await deleteReservation(event);
-        case "GET /getReservationByConfirmationCode":
-          return await getReservationByConfirmationCode(event);
         case "POST /denyReservation":
           return await denyReservation(event);
 
         
+        case "POST /public/track":
+          return await reservationTrackingRoutes.trackReservation(event);
+
         default:
           return response(404, { message: `Unsupported route: ${routeKey}` });
       }
