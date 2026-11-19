@@ -13,14 +13,12 @@ type GangSelectProps = {
 export function GangSelect({ gangs, equipmentType, equipmentLabel, value, onChange }: GangSelectProps) {
   const qualified = gangs.filter((g) => g.equipmentTypes.includes(equipmentType));
   const others = gangs.filter((g) => !g.equipmentTypes.includes(equipmentType));
-  const selected = gangs.find((g) => g.gangId === value);
-
   return (
     <Select value={value} onValueChange={onChange} disabled={gangs.length === 0}>
       <SelectTrigger className="w-[260px]">
-        <SelectValue placeholder={gangs.length === 0 ? "No gangs set up for this terminal" : "Select gang"}>
-          {selected?.name}
-        </SelectValue>
+        {/* No children here: Radix shows the selected item's own text. Passing children that go from
+            undefined to a name on the first pick makes Radix switch display modes and render blank. */}
+        <SelectValue placeholder={gangs.length === 0 ? "No gangs set up for this terminal" : "Select gang"} />
       </SelectTrigger>
       <SelectContent>
         {qualified.length > 0 && (
