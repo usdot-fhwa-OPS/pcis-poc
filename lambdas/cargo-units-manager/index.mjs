@@ -770,17 +770,6 @@ async function listCargoUnits(event, cognitoGroups, userAttributes) {
   });
 }
 
-const CLEARABLE = [
-  "transopEmail",
-  "transopName",
-  "reservationDate",
-  "reservationTime",
-  "assignmentDate",
-  "resApprovalDate",
-  "resLatestUpdateDate",
-  "modifiedReservationDate",
-  "modifiedReservationTime",
-];
 
 async function saveCargoUnit(event) {
   const body = event.body
@@ -806,17 +795,6 @@ async function saveCargoUnit(event) {
     record.createdAt = nowIso;
 
   }
-
-  CLEARABLE.forEach((key) => {
-    if (
-      record[key] === null ||
-      record[key] === undefined ||
-      (typeof record[key] === "string" && record[key].trim() === "")
-    ) {
-      delete record[key];
-    }
-  });
-  
   const result = await dynamo.send(
     new PutCommand({
       TableName: CARGO_UNITS_TABLE,

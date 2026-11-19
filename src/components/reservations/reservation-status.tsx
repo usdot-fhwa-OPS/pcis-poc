@@ -13,15 +13,15 @@ import {
   DialogTrigger,
 } from "../ui/dialog.tsx";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover.tsx";
-import { TerminalOperatorDataTableMeta } from "./data-table.tsx";
+import { TerminalOperatorDataTableMeta } from "../terminal-bookings/data-table.tsx";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "../ui/select";
-import { cn } from "../../lib/utils";
+} from "../ui/select.tsx";
+import { cn } from "../../lib/utils.ts";
 
 const OUTCOMES = ["Pending Pick Up", "Picked Up", "Late for Pick Up", "No Show", "Modified"] as const;
 type ReservationOutcome = (typeof OUTCOMES)[number];
