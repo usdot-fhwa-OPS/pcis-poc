@@ -3,6 +3,7 @@ import { useAuthenticator } from '@aws-amplify/ui-react';
 import { fetchAuthSession, fetchUserAttributes } from 'aws-amplify/auth';
 import { useEffect, useState } from 'react';
 import {TerminalBookingsTable,TerminalBookingsCompleted} from "../components/terminal-bookings/terminal-bookings-table.tsx"
+import { ReservationReviewQueue } from "../components/reservation-cargo/reservation-review-queue.tsx"
 import {TransportationBookingsTableUpcoming,  TransportationBookingsTableCompleted,TransportationBookingsTableOngoing} from "../components/transportation_bookings/transportation-bookings-table.tsx"
 import {BcoBookingsTableUpcoming,  BcoBookingsTableCompleted,BcoBookingsTableOngoing} from "../components/bco_bookings/bco-bookings-table.tsx"
 
@@ -20,7 +21,7 @@ import type { Schema } from '../../amplify/data/resource';
 import { useAppDispatch, useAppSelector } from '../hooks.tsx';
 import { getTerminalCapacityList, populate } from '../components/terminal-capacity/terminal-capacity-state.tsx';
 import { getTerrminalCapacity, terminalCapacityList } from '../components/terminal-capacity/terminal-capacity-client.tsx';
-import { getCargoBookingsAmount, listBcoCompleted, listBcoOngoing, listBcoUpcoming, listTermOpCompleted, listTermOpModifiedRequestedCargoUnits, listTermOpOngoing, listTermOpOnGoingCargoUnits, listTermOpRequestedCargoUnits, listTransOpCompleted, listTransOpUpcoming,  saveCargoUnit } from '../components/cargo/cargo-units-client.tsx';
+import { getCargoBookingsAmount, listBcoCompleted, listBcoOngoing, listBcoUpcoming, listTermOpCompleted, listTermOpModifiedRequestedCargoUnits, listTermOpOngoing, listTermOpOnGoingCargoUnits, listTransOpCompleted, listTransOpUpcoming,  saveCargoUnit } from '../components/cargo/cargo-units-client.tsx';
 import { onCargoCreate, onCargoUpdate } from '../components/real-time-call.tsx';
 import { berthRequestListForVesselAgent, berthConfigList as fetchBerthConfigs } from '../components/berth-requests/berth-request-client.tsx';
 import { populate as populateBerthRequests } from '../components/berth-requests/berth-request-state.tsx';
@@ -325,7 +326,6 @@ function Index() {
       useEffect(() => {
         fetchContainers();
         fetch_bco_completed();
-        fetchterminal_operator_requested();
       }, [userAttributes.role, refresh]);
     
       const [transOpUpcomingBookings, setTransOpUpcomingBookings] = useState<TransOpUpcomingBookings[]>([]);
@@ -387,15 +387,7 @@ function Index() {
     
       // Separate return statements for each role
     
-      //getting Data
-      const [terminalopBookingsupcoming, setData] = useState<TerminalOPOngoingBookings[]>([])
-    
-      //Fetch the data from the database
-      const fetchterminal_operator_requested = async () => {
-        //Query the data from the database with selection set and auth mode (always apiKey)
-        const cargo = await listTermOpRequestedCargoUnits()
-        setData(cargo);
-      }
+      // The Requested tab now uses ReservationReviewQueue (new Reservations tables).
     
       const [terminalOpModifiedBookings, setTerminalOpModifiedBookings] = useState<TerminalOpModifiedBookings[]>([])
     
@@ -539,7 +531,6 @@ function Index() {
         toast.success("Booking status updated successfully");
     
         // Refresh relevant data after successful update
-        await fetchterminal_operator_requested();
         await fetchTerminalOperatorModified();
     
         return true;
@@ -597,7 +588,6 @@ function Index() {
       fetchContainers();
       //fetch_bco_completed();
       fetch_bco_ongoing();
-      fetchterminal_operator_requested();
       fetchTerminalOperatorModified();
     }, [userAttributes.role, refresh]);
 
@@ -682,7 +672,7 @@ function Index() {
               <TabsTrigger value="completed" className="data-[state=active]:sm:-mb-px pt-0 px-0 pb-2 data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-gray-900 rounded-none text-gray-500 hover:text-gray-700 data-[state=active]:text-gray-900 data-[state=active]:shadow-none">Completed</TabsTrigger>
             </TabsList>
             <TabsContent value="requested">
-              <TerminalBookingsTable data={terminalopBookingsupcoming} status="Requested" meta={{updateBooking}} />
+              <ReservationReviewQueue refreshKey={refresh} />
             </TabsContent>
             <TabsContent value="modification">
               <TerminalBookingsTable data={terminalOpModifiedBookings} status="Modified" meta={{updateBooking}} />
@@ -729,7 +719,7 @@ function Index() {
               <TransportationBookingsTableOngoing
                 data={transOpOngoingBookings}
                 status="Ongoing"
-                meta={{updateTransOpBooking, getTerminalCapacity, getBookingsAmount}} 
+                meta={{updateTransOpBooking, getTerminalCapacity, getBookingsAmount, refreshBookings: async () => { await fetchTransOpUpcoming(); await fetchTransOpOngoing(); }}} 
               />
             </TabsContent>
             <TabsContent value="completed">
