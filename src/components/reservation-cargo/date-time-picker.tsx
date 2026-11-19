@@ -20,6 +20,12 @@ function minutesIntoDay(value: Date) {
   return value.getHours() * 60 + value.getMinutes();
 }
 
+type Selection = { date?: Date; slot?: number };
+
+function toDate({ date, slot }: Selection) {
+  return date && slot !== undefined ? addMinutes(startOfDay(date), slot) : undefined;
+}
+
 type DateTimePickerProps = {
   // The starting value (e.g. the current reservation time when modifying). Read once on mount.
   initialValue?: Date;
@@ -27,64 +33,73 @@ type DateTimePickerProps = {
 };
 
 // A button showing "Fri, 4/24/2026, 12:00 PM" that opens a calendar plus 30-minute time slots.
+// Edits in the popover are a draft: only Done applies them. Cancel, Escape or clicking away leaves
+// the previous value untouched, so just looking at the calendar never changes the form.
 // Past dates and, on today's date, past times can't be picked.
 // When used in a dialog, the dialog needs disablePointerDismissal: these menus render outside it.
 export function DateTimePicker({ initialValue, onChange }: DateTimePickerProps) {
+  const initial: Selection = initialValue
+    ? { date: startOfDay(initialValue), slot: minutesIntoDay(initialValue) }
+    : {};
   const [isOpen, setIsOpen] = useState(false);
-  const [date, setDate] = useState<Date | undefined>(initialValue ? startOfDay(initialValue) : undefined);
-  const [timeSlot, setTimeSlot] = useState<number | undefined>(
-    initialValue ? minutesIntoDay(initialValue) : undefined
-  );
+  const [applied, setApplied] = useState<Selection>(initial);
+  const [draft, setDraft] = useState<Selection>(initial);
 
-  const value = useMemo(
-    () => (date && timeSlot !== undefined ? addMinutes(startOfDay(date), timeSlot) : undefined),
-    [date, timeSlot]
-  );
+  const appliedValue = toDate(applied);
+  const draftValue = toDate(draft);
 
   const availableSlots = useMemo(() => {
-    if (!date || !isSameDay(date, new Date())) return TIME_SLOTS;
+    if (!draft.date || !isSameDay(draft.date, new Date())) return TIME_SLOTS;
     const minutesNow = minutesIntoDay(new Date());
     return TIME_SLOTS.filter((slot) => slot > minutesNow);
-  }, [date]);
+  }, [draft.date]);
 
-  function update(nextDate: Date | undefined, nextSlot: number | undefined) {
-    setDate(nextDate);
-    setTimeSlot(nextSlot);
-    onChange(nextDate && nextSlot !== undefined ? addMinutes(startOfDay(nextDate), nextSlot) : undefined);
+  function handleOpenChange(open: boolean) {
+    // Every time the popover opens, the draft starts from the applied value; closing without Done discards it.
+    if (open) setDraft(applied);
+    setIsOpen(open);
   }
 
   function handleDateSelect(selected: Date | undefined) {
-    let slot = timeSlot;
-    if (selected && slot !== undefined && isSameDay(selected, new Date()) && slot <= minutesIntoDay(new Date())) {
-      slot = undefined;
-    }
-    update(selected, slot);
+    if (!selected) return; // clicking the selected day again keeps it selected
+    setDraft((prev) => {
+      const slotPassed =
+        prev.slot !== undefined && isSameDay(selected, new Date()) && prev.slot <= minutesIntoDay(new Date());
+      return { date: selected, slot: slotPassed ? undefined : prev.slot };
+    });
+  }
+
+  function apply() {
+    setApplied(draft);
+    onChange(draftValue);
+    setIsOpen(false);
   }
 
   return (
-    <Popover modal={true} open={isOpen} onOpenChange={setIsOpen}>
+    <Popover modal={true} open={isOpen} onOpenChange={handleOpenChange}>
       <PopoverTrigger asChild>
         <Button variant="outline" className="justify-start font-normal">
           <CalendarIcon className="mr-2 h-4 w-4" />
-          {value ? formatReservationTime(value) : <span className="text-muted-foreground">Select date and time</span>}
+          {appliedValue ? formatReservationTime(appliedValue) : <span className="text-muted-foreground">Select date and time</span>}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0" align="start">
         <Calendar
           mode="single"
-          selected={date}
+          required
+          selected={draft.date}
           onSelect={handleDateSelect}
           disabled={{ before: startOfDay(new Date()) }}
-          defaultMonth={date}
+          defaultMonth={draft.date}
           initialFocus
         />
         <div className="flex items-center gap-2 border-t p-3">
           <Select
-            value={timeSlot !== undefined ? String(timeSlot) : undefined}
-            onValueChange={(slot) => update(date, Number(slot))}
-            disabled={!date}
+            value={draft.slot !== undefined ? String(draft.slot) : undefined}
+            onValueChange={(slot) => setDraft((prev) => ({ ...prev, slot: Number(slot) }))}
+            disabled={!draft.date}
           >
-            <SelectTrigger className="w-[140px]">
+            <SelectTrigger className="w-[120px]">
               <SelectValue placeholder="Time" />
             </SelectTrigger>
             <SelectContent className="max-h-64">
@@ -95,7 +110,10 @@ export function DateTimePicker({ initialValue, onChange }: DateTimePickerProps) 
               ))}
             </SelectContent>
           </Select>
-          <Button size="sm" className="ml-auto" disabled={!value} onClick={() => setIsOpen(false)}>
+          <Button size="sm" variant="ghost" className="ml-auto" onClick={() => setIsOpen(false)}>
+            Cancel
+          </Button>
+          <Button size="sm" disabled={!draftValue} onClick={apply}>
             Done
           </Button>
         </div>
