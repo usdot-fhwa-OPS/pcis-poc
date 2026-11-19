@@ -541,6 +541,7 @@ function Index() {
         // Refresh relevant data after successful update
         await fetchterminal_operator_requested();
         await fetchTerminalOperatorModified();
+        await fetchterminal_operator_ongoing(); 
     
         return true;
       } catch (error) {
