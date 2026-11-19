@@ -110,9 +110,9 @@ export function RecordOutcomeCell({
   table: Table<any>;
 }) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [outcome, setOutcome] = useState<ReservationOutcome | undefined>();
+  const [outcome, setOutcome] = useState<ReservationOutcome | "">("");
   const [date, setDate] = useState<Date | undefined>(new Date());
-  const [time, setTime] = useState<string | undefined>();
+  const [time, setTime] = useState<string>("");
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
 
   const isModified = outcome === "Modified";
@@ -121,9 +121,9 @@ export function RecordOutcomeCell({
   const handleOpenChange = (open: boolean) => {
     setIsDialogOpen(open);
     if (!open) {
-      setOutcome(undefined);
+      setOutcome("");
       setDate(new Date());
-      setTime(undefined);
+      setTime("");
       setIsCalendarOpen(false);
     }
   };

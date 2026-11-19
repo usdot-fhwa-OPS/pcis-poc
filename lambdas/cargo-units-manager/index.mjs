@@ -808,7 +808,13 @@ async function saveCargoUnit(event) {
   }
 
   CLEARABLE.forEach((key) => {
-      if (record[key] === "" || record[key] === null) delete record[key];
+    if (
+      record[key] === null ||
+      record[key] === undefined ||
+      (typeof record[key] === "string" && record[key].trim() === "")
+    ) {
+      delete record[key];
+    }
   });
   
   const result = await dynamo.send(
