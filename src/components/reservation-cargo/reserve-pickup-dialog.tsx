@@ -1,11 +1,7 @@
-import { useEffect, useMemo, useState } from "react";
-import { addMinutes, format, isSameDay, startOfDay } from "date-fns";
-import { CalendarIcon } from "lucide-react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Button } from "../ui/button";
-import { Calendar } from "../ui/calendar";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "../ui/dialog";
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
 import {
@@ -14,7 +10,8 @@ import {
   listEquipmentTypesForCargoUnit,
 } from "./reservation-manager-client";
 import { ReservationConfirmationDetails } from "./reservation-confirmation-dialog";
-import { formatDuration, formatReservationTime } from "./reservation-format";
+import { formatDuration } from "./reservation-format";
+import { DateTimePicker } from "./date-time-picker";
 
 export type ReservePickupCargoUnit = {
   cargoUnitID: string;
@@ -31,20 +28,9 @@ type ReservePickupDialogProps = {
   onRequested?: (details: ReservationConfirmationDetails) => void;
 };
 
-const TIME_STEP_MINS = 30;
-
-// "12:00 AM" … "11:30 PM" as minutes after midnight.
-const TIME_SLOTS = Array.from({ length: (24 * 60) / TIME_STEP_MINS }, (_, i) => i * TIME_STEP_MINS);
-
-function slotLabel(minutes: number) {
-  return format(addMinutes(startOfDay(new Date()), minutes), "h:mm a");
-}
-
 export function ReservePickupDialog({ cargoUnit, onRequested }: ReservePickupDialogProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const [isPickerOpen, setIsPickerOpen] = useState(false);
-  const [date, setDate] = useState<Date | undefined>();
-  const [timeSlot, setTimeSlot] = useState<number | undefined>();
+  const [requestedStart, setRequestedStart] = useState<Date | undefined>();
   const [equipmentOptions, setEquipmentOptions] = useState<EquipmentTypeOption[]>([]);
   const [equipmentType, setEquipmentType] = useState<string | undefined>();
   const [isLoadingEquipment, setIsLoadingEquipment] = useState(false);
@@ -73,41 +59,18 @@ export function ReservePickupDialog({ cargoUnit, onRequested }: ReservePickupDia
     };
   }, [isOpen, cargoUnit.cargoUnitID]);
 
-  const requestedStart = useMemo(
-    () => (date && timeSlot !== undefined ? addMinutes(startOfDay(date), timeSlot) : undefined),
-    [date, timeSlot]
-  );
-
-  // On today's date, only times from now on can be picked.
-  const availableSlots = useMemo(() => {
-    if (!date || !isSameDay(date, new Date())) return TIME_SLOTS;
-    const now = new Date();
-    const minutesNow = now.getHours() * 60 + now.getMinutes();
-    return TIME_SLOTS.filter((slot) => slot > minutesNow);
-  }, [date]);
-
   const selectedEquipment = equipmentOptions.find((option) => option.equipmentType === equipmentType);
   const canSubmit = Boolean(requestedStart && selectedEquipment) && !isSubmitting;
 
   function reset() {
-    setDate(undefined);
-    setTimeSlot(undefined);
+    setRequestedStart(undefined);
     setEquipmentType(undefined);
     setEquipmentError(undefined);
-    setIsPickerOpen(false);
   }
 
   function handleOpenChange(open: boolean) {
     setIsOpen(open);
     if (!open) reset();
-  }
-
-  function handleDateSelect(selected: Date | undefined) {
-    setDate(selected);
-    if (selected && timeSlot !== undefined && isSameDay(selected, new Date())) {
-      const now = new Date();
-      if (timeSlot <= now.getHours() * 60 + now.getMinutes()) setTimeSlot(undefined);
-    }
   }
 
   async function handleSubmit() {
@@ -169,53 +132,7 @@ export function ReservePickupDialog({ cargoUnit, onRequested }: ReservePickupDia
           <div className="grid gap-5 py-2">
             <div className="flex items-center gap-3">
               <span className="text-sm font-medium">Requested Time</span>
-              <Popover modal={true} open={isPickerOpen} onOpenChange={setIsPickerOpen}>
-                <PopoverTrigger asChild>
-                  <Button variant="outline" className="justify-start font-normal">
-                    <CalendarIcon className="mr-2 h-4 w-4" />
-                    {requestedStart ? (
-                      formatReservationTime(requestedStart)
-                    ) : (
-                      <span className="text-muted-foreground">Select date and time</span>
-                    )}
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
-                  <Calendar
-                    mode="single"
-                    selected={date}
-                    onSelect={handleDateSelect}
-                    disabled={{ before: startOfDay(new Date()) }}
-                    initialFocus
-                  />
-                  <div className="flex items-center gap-2 border-t p-3">
-                    <Select
-                      value={timeSlot !== undefined ? String(timeSlot) : undefined}
-                      onValueChange={(value) => setTimeSlot(Number(value))}
-                      disabled={!date}
-                    >
-                      <SelectTrigger className="w-[140px]">
-                        <SelectValue placeholder="Time" />
-                      </SelectTrigger>
-                      <SelectContent className="max-h-64">
-                        {availableSlots.map((slot) => (
-                          <SelectItem key={slot} value={String(slot)}>
-                            {slotLabel(slot)}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <Button
-                      size="sm"
-                      className="ml-auto"
-                      disabled={!requestedStart}
-                      onClick={() => setIsPickerOpen(false)}
-                    >
-                      Done
-                    </Button>
-                  </div>
-                </PopoverContent>
-              </Popover>
+              <DateTimePicker onChange={setRequestedStart} />
             </div>
 
             <div className="grid gap-2">

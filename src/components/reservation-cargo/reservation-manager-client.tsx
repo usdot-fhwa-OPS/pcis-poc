@@ -240,22 +240,6 @@ export const createReservationEvent = async (reservationEvent:ReservationEventDo
     const result = (await response.json())
     return result;
 }
-export const denyReservation = async (reservationId:string): Promise<any> => {
-    const session = await fetchAuthSession();
-    let url = `https://ubw4jy0m7j.execute-api.us-east-1.amazonaws.com/dev/denyReservation?reservationId=${reservationId}`
-    
-    const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-            "Authorization": `Bearer ${session.tokens?.accessToken?.toString()}`,
-            "Content-Type": "application/json",
-            "Accept": "*/*"
-        }
-    });
-    const result = (await response.json())
-    return result;
-}
-
 export const getReservationByConfirmationCode = async (confirmationCode:string): Promise<any> => {
     const session = await fetchAuthSession();
     let url = `https://ubw4jy0m7j.execute-api.us-east-1.amazonaws.com/dev/getReservationByConfirmationCode?confirmationCode=${confirmationCode}`
@@ -333,4 +317,85 @@ export const createReservationRequest = async (request: ReservationRequestInput)
         body: JSON.stringify(request)
     });
     return (await readJsonOrThrow(response)) as ReservationRequestResult;
+}
+
+// I-4: terminal review. These routes are for Terminal Operators of the reservation's terminal.
+export type ReviewMove = {
+    moveId: string,
+    sequence: number,
+    cargoUnitID: string,
+    moveType: string,
+    equipmentType: string,
+    equipmentLabel: string,
+    durationMins: number,
+    vesselID?: string,
+    origin?: string,
+    bcoName?: string,
+    bcoEmail?: string,
+    transopName?: string,
+    transopEmail?: string
+}
+
+export type ReservationForReview = {
+    reservationId: string,
+    confirmationCode: string,
+    status: string,
+    terminalId: string,
+    preferredStartAt: string,
+    startAt: string,
+    endAt: string,
+    durationMins: number,
+    requestingUserEmail: string,
+    requestingUserName?: string,
+    createdAt: string,
+    moves: ReviewMove[]
+}
+
+export const listReservationRequests = async (): Promise<ReservationForReview[]> => {
+    const response = await fetch(`${RESERVATIONS_API}/listReservationRequests`, {
+        method: 'GET',
+        headers: await idTokenHeaders()
+    });
+    return (await readJsonOrThrow(response)).items as ReservationForReview[];
+}
+
+export const acceptReservation = async (reservationId: string, twicEscortRequired: boolean) => {
+    const response = await fetch(`${RESERVATIONS_API}/acceptReservation`, {
+        method: 'POST',
+        headers: await idTokenHeaders(),
+        body: JSON.stringify({ reservationId, twicEscortRequired })
+    });
+    return readJsonOrThrow(response);
+}
+
+export const modifyReservation = async (request: {
+    reservationId: string,
+    startAt: string,
+    moves: { moveId: string, equipmentType: string }[],
+    twicEscortRequired: boolean
+}) => {
+    const response = await fetch(`${RESERVATIONS_API}/modifyReservation`, {
+        method: 'POST',
+        headers: await idTokenHeaders(),
+        body: JSON.stringify(request)
+    });
+    return readJsonOrThrow(response);
+}
+
+// Marks the request DENIED with a reason and keeps its history (the old version deleted moves and events).
+export const denyReservation = async (reservationId: string, reason: string) => {
+    const response = await fetch(`${RESERVATIONS_API}/denyReservation`, {
+        method: 'POST',
+        headers: await idTokenHeaders(),
+        body: JSON.stringify({ reservationId, reason })
+    });
+    return readJsonOrThrow(response);
+}
+
+export const listEquipmentTypesForTerminal = async (terminalId: string): Promise<EquipmentTypeOption[]> => {
+    const response = await fetch(`${RESERVATIONS_API}/listEquipmentTypes?terminalId=${encodeURIComponent(terminalId)}`, {
+        method: 'GET',
+        headers: await idTokenHeaders()
+    });
+    return (await readJsonOrThrow(response)).items as EquipmentTypeOption[];
 }

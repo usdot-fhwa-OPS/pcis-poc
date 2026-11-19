@@ -1,11 +1,10 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "../ui/button.tsx";
 import { useState } from "react";
-import { Flag, XIcon, ShieldHalf } from "lucide-react";
+import { Flag, ShieldHalf } from "lucide-react";
 import {TerminalOperatorDataTableMeta} from './data-table.tsx'
 import { TermOperatorCompletedBookings } from "../../routes/reservation.tsx"
 import { Checkbox } from "../ui/checkbox.tsx";
-import { ApproveReservation } from "../reservations/approve-reservation.tsx";
 import { Badge } from "../ui/badge.tsx";
 import { saveCargoUnit } from "../cargo/cargo-units-client.tsx";
 export const columns = (status: string): ColumnDef<any>[] => {
@@ -25,40 +24,6 @@ export const columns = (status: string): ColumnDef<any>[] => {
   ];
 
 
-
-  if (status === "Requested") {
-    baseColumns.push({
-      accessorKey: "status",
-      header: () => <div className="text-center">Status</div>,
-      cell: ({ row,table }) => (
-        <div className="min-w-[200px] flex space-x-4 justify-center">
-
-          {/* Approve Button */}
-          <ApproveReservation
-            vesselId = {(row.original.vesselID)}
-            cargoId = {(row.original.cargoUnitID)}
-            origin = {(row.original.origin)}
-            bcoName = {(row.original.bcoName)}
-            bcoEmail = {(row.original.bcoEmail)}
-            transopName = {(row.original.transopName)}
-            transopEmail = {(row.original.transopEmail)}
-            reservationDate = {(row.original.reservationDate)}
-            reservationTime = {(row.original.reservationTime)}
-            dataTableMeta = {(table.options.meta)}
-          />
-
-          {/* Deny Button */}
-          <Button
-            variant="destructive"
-            size="sm"
-            onClick={() => (table.options.meta as TerminalOperatorDataTableMeta)?.updateBooking(row.original.cargoUnitID, "unassigned")} 
-          >
-            <XIcon className="inline-block h-4 w-4" />Deny
-          </Button>
-        </div>
-      ),
-    });
-  }
 
   if (status === "Modified") {
     baseColumns.push({
