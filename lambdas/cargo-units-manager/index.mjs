@@ -125,6 +125,28 @@ function decodeNextToken(token) {
 }
 
 
+// A DynamoDB Scan "Limit" caps the rows *read*, not the rows that match the filter, so a single
+// limited scan can return only some (or none) of the matches. This reads page by page instead.
+// Without ?limit= every match is returned. With ?limit=N (1-100) it stops once it has at least N
+// matches and returns a nextToken if rows remain.
+export async function scanAllMatching(scanInput, event, db = dynamo) {
+  const raw = event?.queryStringParameters?.limit;
+  const requested = Number(raw);
+  const maxItems = raw !== undefined && raw !== null && raw !== "" && Number.isFinite(requested)
+    ? Math.max(1, Math.min(100, requested))
+    : Infinity;
+  // eslint-disable-next-line no-unused-vars
+  const { Limit, ...input } = scanInput;
+  const items = [];
+  let lastKey = input.ExclusiveStartKey;
+  do {
+    const page = await db.send(new ScanCommand({ ...input, ExclusiveStartKey: lastKey }));
+    items.push(...(page.Items || []));
+    lastKey = page.LastEvaluatedKey;
+  } while (lastKey && items.length < maxItems);
+  return { Items: items, LastEvaluatedKey: lastKey };
+}
+
 async function getBookingsAmount(event) {
   
   const reservationDate = event.queryStringParameters?.reservationDate; 
@@ -150,7 +172,7 @@ async function getBookingsAmount(event) {
     ExpressionAttributeValues: Object.keys(expressionValues).length ? expressionValues : undefined,
   };
 
-  const result = await dynamo.send(new ScanCommand(scanInput));
+  const result = await scanAllMatching(scanInput, event);
   return response(200, {
     count: result?result.Items.length:0,
   });
@@ -198,7 +220,7 @@ async function fetchTransOpBookings(event) {
     ExpressionAttributeValues: Object.keys(expressionValues).length ? expressionValues : undefined,
   };
 
-  const result = await dynamo.send(new ScanCommand(scanInput));
+  const result = await scanAllMatching(scanInput, event);
   const items = (result.Items || []).sort((a, b) =>
     (b.createdAt || "").localeCompare(a.createdAt || "")
   );
@@ -248,7 +270,7 @@ addTerminalIdToClause(expressionNames, expressionValues, clauses, userAttributes
     ExpressionAttributeValues: Object.keys(expressionValues).length ? expressionValues : undefined,
   };
 
-  const result = await dynamo.send(new ScanCommand(scanInput));
+  const result = await scanAllMatching(scanInput, event);
   const items = (result.Items || []).sort((a, b) =>
     (b.createdAt || "").localeCompare(a.createdAt || "")
   );
@@ -304,7 +326,7 @@ async function fetchBcoUpcoming(event, userAttributes) {
     ExpressionAttributeValues: Object.keys(expressionValues).length ? expressionValues : undefined,
   };
 
-  const result = await dynamo.send(new ScanCommand(scanInput));
+  const result = await scanAllMatching(scanInput, event);
   const items = (result.Items || []).sort((a, b) =>
     (b.createdAt || "").localeCompare(a.createdAt || "")
   );
@@ -436,7 +458,7 @@ async function fetchBcoCompleted(event, userAttributes) {
     ExpressionAttributeValues: Object.keys(expressionValues).length ? expressionValues : undefined,
   };
 
-  const result = await dynamo.send(new ScanCommand(scanInput));
+  const result = await scanAllMatching(scanInput, event);
   const items = (result.Items || []).sort((a, b) =>
     (b.createdAt || "").localeCompare(a.createdAt || "")
   );
@@ -490,7 +512,7 @@ async function fetchTransOpUpcoming(event) {
     ExpressionAttributeValues: Object.keys(expressionValues).length ? expressionValues : undefined,
   };
 
-  const result = await dynamo.send(new ScanCommand(scanInput));
+  const result = await scanAllMatching(scanInput, event);
   const items = (result.Items || []).sort((a, b) =>
     (b.createdAt || "").localeCompare(a.createdAt || "")
   );
@@ -552,7 +574,7 @@ async function fetchTransOpOngoing(event) {
     ExpressionAttributeValues: Object.keys(expressionValues).length ? expressionValues : undefined,
   };
 
-  const result = await dynamo.send(new ScanCommand(scanInput));
+  const result = await scanAllMatching(scanInput, event);
   const items = (result.Items || []).sort((a, b) =>
     (b.createdAt || "").localeCompare(a.createdAt || "")
   );
@@ -698,7 +720,7 @@ async function fetchCargoUnits(event, selectionSet, expressionNames, expressionV
     ExpressionAttributeValues: Object.keys(expressionValues).length ? expressionValues : undefined,
   };
 
-  const result = await dynamo.send(new ScanCommand(scanInput));
+  const result = await scanAllMatching(scanInput, event);
   const items = (result.Items || []).sort((a, b) =>
     (b.createdAt || "").localeCompare(a.createdAt || "")
   );
@@ -758,7 +780,7 @@ async function listCargoUnits(event, cognitoGroups, userAttributes) {
     ExpressionAttributeValues: Object.keys(expressionValues).length ? expressionValues : undefined,
   };
 
-  const result = await dynamo.send(new ScanCommand(scanInput));
+  const result = await scanAllMatching(scanInput, event);
   const items = (result.Items || []).sort((a, b) =>
     (b.createdAt || "").localeCompare(a.createdAt || "")
   );

@@ -729,7 +729,7 @@ function Index() {
               <TransportationBookingsTableOngoing
                 data={transOpOngoingBookings}
                 status="Ongoing"
-                meta={{updateTransOpBooking, getTerminalCapacity, getBookingsAmount}} 
+                meta={{updateTransOpBooking, getTerminalCapacity, getBookingsAmount, refreshBookings: async () => { await fetchTransOpUpcoming(); await fetchTransOpOngoing(); }}} 
               />
             </TabsContent>
             <TabsContent value="completed">
