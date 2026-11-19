@@ -31,7 +31,7 @@ type ModifyReservationDialogProps = {
 export function ModifyReservationDialog({ reservation, gangs, onClose, onDone }: ModifyReservationDialogProps) {
   return (
     <Dialog open={reservation !== null} onOpenChange={(open) => !open && onClose()} disablePointerDismissal>
-      <DialogContent className="sm:max-w-[520px] text-left">
+      <DialogContent className="sm:max-w-[520px] text-left max-h-[calc(100dvh-2rem)] grid-rows-[auto_minmax(0,1fr)_auto]">
         {/* Keyed so the form starts fresh for each reservation. */}
         {reservation && (
           <ModifyForm key={reservation.reservationId} reservation={reservation} gangs={gangs} onClose={onClose} onDone={onDone} />
@@ -146,7 +146,7 @@ function ModifyForm({
         </DialogDescription>
       </DialogHeader>
 
-      <div className="grid gap-5 py-2">
+      <div className="grid gap-5 py-2 min-h-0 overflow-y-auto">
         <div className="flex items-center gap-3">
           <span className="text-sm font-medium">New Time</span>
           <DateTimePicker initialValue={originalStart} onChange={setStartAt} />

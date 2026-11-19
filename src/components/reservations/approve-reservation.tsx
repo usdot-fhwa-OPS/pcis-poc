@@ -62,12 +62,12 @@ export function AcceptReservationDialog({ reservation, gangs, onClose, onDone }:
 
   return (
     <Dialog open={reservation !== null} onOpenChange={(open) => !open && close()} disablePointerDismissal>
-      <DialogContent className="sm:max-w-md gap-6 p-0 text-left">
+      <DialogContent className="sm:max-w-md gap-6 p-0 text-left max-h-[calc(100dvh-2rem)] grid-rows-[auto_minmax(0,1fr)_auto]">
         <DialogHeader className="flex flex-row items-center gap-0 min-h-[53px] p-4 border-b">
           <DialogTitle className="text-lg">Accept Reservation</DialogTitle>
         </DialogHeader>
         {reservation && (
-          <div className="px-4">
+          <div className="px-4 min-h-0 overflow-y-auto">
             <div className="flex items-start gap-4 mb-6">
               <span className="inline-flex shrink-0 rounded-full p-3 bg-green-100">
                 <CircleCheckBig className="size-6 stroke-green-600" />

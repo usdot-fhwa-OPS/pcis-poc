@@ -84,23 +84,26 @@ export function DateTimePicker({ initialValue, onChange }: DateTimePickerProps) 
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0" align="start">
-        <Calendar
-          mode="single"
-          required
-          selected={draft.date}
-          onSelect={handleDateSelect}
-          disabled={{ before: startOfDay(new Date()) }}
-          defaultMonth={draft.date}
-          initialFocus
-        />
-        <div className="flex items-center gap-2 border-t p-3">
+        {/* The popover is as wide as the calendar; the time and buttons sit underneath on their own rows. */}
+        <div className="flex justify-center">
+          <Calendar
+            mode="single"
+            required
+            selected={draft.date}
+            onSelect={handleDateSelect}
+            disabled={{ before: startOfDay(new Date()) }}
+            defaultMonth={draft.date}
+            initialFocus
+          />
+        </div>
+        <div className="grid gap-2 border-t p-3">
           <Select
             value={draft.slot !== undefined ? String(draft.slot) : undefined}
             onValueChange={(slot) => setDraft((prev) => ({ ...prev, slot: Number(slot) }))}
             disabled={!draft.date}
           >
-            <SelectTrigger className="w-[120px]">
-              <SelectValue placeholder="Time" />
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder={draft.date ? "Select time" : "Pick a date first"} />
             </SelectTrigger>
             <SelectContent className="max-h-64">
               {availableSlots.map((slot) => (
@@ -110,12 +113,14 @@ export function DateTimePicker({ initialValue, onChange }: DateTimePickerProps) 
               ))}
             </SelectContent>
           </Select>
-          <Button size="sm" variant="ghost" className="ml-auto" onClick={() => setIsOpen(false)}>
-            Cancel
-          </Button>
-          <Button size="sm" disabled={!draftValue} onClick={apply}>
-            Done
-          </Button>
+          <div className="flex justify-end gap-2">
+            <Button size="sm" variant="ghost" onClick={() => setIsOpen(false)}>
+              Cancel
+            </Button>
+            <Button size="sm" disabled={!draftValue} onClick={apply}>
+              Done
+            </Button>
+          </div>
         </div>
       </PopoverContent>
     </Popover>

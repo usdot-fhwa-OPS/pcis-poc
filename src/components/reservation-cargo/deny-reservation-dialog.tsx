@@ -44,12 +44,12 @@ export function DenyReservationDialog({ reservation, onClose, onDone }: DenyRese
 
   return (
     <Dialog open={reservation !== null} onOpenChange={(open) => !open && close()} disablePointerDismissal>
-      <DialogContent className="sm:max-w-md gap-6 p-0 text-left">
+      <DialogContent className="sm:max-w-md gap-6 p-0 text-left max-h-[calc(100dvh-2rem)] grid-rows-[auto_minmax(0,1fr)_auto]">
         <DialogHeader className="flex flex-row items-center gap-0 min-h-[53px] p-4 border-b">
           <DialogTitle className="text-lg">Deny Reservation Request</DialogTitle>
         </DialogHeader>
         {reservation && (
-          <div className="px-4 grid gap-4">
+          <div className="px-4 grid gap-4 min-h-0 overflow-y-auto">
             <div className="flex items-start gap-4">
               <span className="inline-flex shrink-0 rounded-full p-3 bg-red-100">
                 <CircleX className="size-6 stroke-red-600" />
