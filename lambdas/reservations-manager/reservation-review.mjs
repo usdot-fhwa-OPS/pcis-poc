@@ -2,8 +2,12 @@
 //
 // Routes (wired in index.mjs):
 //   GET  /listReservationRequests   REQUESTED reservations for the caller's terminals
-//   POST /acceptReservation         { reservationId, twicEscortRequired }
-//   POST /modifyReservation         { reservationId, startAt, moves: [{ moveId, equipmentType }], twicEscortRequired }
+//   POST /acceptReservation         { reservationId, twicEscortRequired, gangAssignments: [{ moveId, gangId }] }
+//   POST /modifyReservation         { reservationId, startAt, twicEscortRequired, gangAssignments,
+//                                     moves: [{ moveId, equipmentType, durationMins? }] }
+//
+// A gang must be assigned to every move before it's confirmed. On Modify the TO may override a
+// move's duration (e.g. their gang does a forklift job in 30 minutes instead of the 60-minute default).
 //   POST /denyReservation           { reservationId, reason }
 //
 // Only Terminal Operators linked to the reservation's terminal (Cognito "custom:terminalId") may act.
@@ -34,6 +38,17 @@ export const LEGACY_CONFIRMED_STATUS = "Pending Pick Up";
 const RESERVATION_MOVES_GSI = process.env.RESERVATION_MOVES_GSI || "GSI_reservationId";
 const TERMINAL_TIME_ZONE = process.env.TERMINAL_TIME_ZONE || "America/New_York";
 const MAX_REASON_LENGTH = 500;
+const MAX_DURATION_MINS = 1440;
+
+// Gang records store their equipment list as "equipmentType" (array) in the data; the domain type says "equipmentTypes".
+export function toGangOption(record) {
+  const types = record.equipmentTypes ?? record.equipmentType ?? [];
+  return { gangId: record.gangId, name: record.name, equipmentTypes: Array.isArray(types) ? types : [types] };
+}
+
+function isUsableGang(record) {
+  return Boolean(record?.gangId && record?.name) && record.active !== false;
+}
 
 // "11/18/2026", matching the old resApprovalDate written by toLocaleDateString("en-US").
 export function legacyApprovalDate(date, timeZone = TERMINAL_TIME_ZONE) {
@@ -143,6 +158,39 @@ export function createReservationReviewRoutes({ db, response, verify, now = () =
     return labels;
   }
 
+  async function loadGangs(terminalId) {
+    const gangs = [];
+    let ExclusiveStartKey;
+    do {
+      const page = await db.send(
+        new QueryCommand({
+          TableName: TERMINAL_RESOURCES_TABLE,
+          KeyConditionExpression: "terminalId = :t AND begins_with(sk, :p)",
+          ExpressionAttributeValues: { ":t": terminalId, ":p": "GANG#" },
+          ExclusiveStartKey,
+        })
+      );
+      for (const item of page.Items || []) if (isUsableGang(item.record)) gangs.push(toGangOption(item.record));
+      ExclusiveStartKey = page.LastEvaluatedKey;
+    } while (ExclusiveStartKey);
+    return gangs.sort((a, b) => a.name.localeCompare(b.name));
+  }
+
+  // Every move needs one active gang from the reservation's terminal. Returns moveId -> gang.
+  async function resolveGangAssignments(body, moves, terminalId) {
+    const assignments = Array.isArray(body.gangAssignments) ? body.gangAssignments : [];
+    const gangs = await loadGangs(terminalId);
+    const result = {};
+    for (const move of moves) {
+      const gangId = assignments.find((a) => a?.moveId === move.moveId)?.gangId;
+      if (!gangId) throw new HttpError(400, `Assign a gang to cargo unit ${move.cargoUnitID}.`);
+      const gang = gangs.find((g) => g.gangId === gangId);
+      if (!gang) throw new HttpError(400, `That gang isn't available at terminal ${terminalId}.`);
+      result[move.moveId] = gang;
+    }
+    return result;
+  }
+
   // Bridge: keep the old CargoUnits fields in step so today's Ongoing tabs still work.
   function cargoUnitBridgeUpdate(cargoUnitID, reservationId, set, remove = []) {
     const values = { ":legacyRequested": LEGACY_REQUESTED_STATUS, ":rid": reservationId };
@@ -163,7 +211,7 @@ export function createReservationReviewRoutes({ db, response, verify, now = () =
 
   // The one place a reservation becomes CONFIRMED (Accept and Modify both use it).
   // C-5 and C-7 extend this to book and assign terminal resources in the same transaction.
-  function confirm({ reservation, moves, user, nowIso, twicEscortRequired, event, changes = null }) {
+  function confirm({ reservation, moves, user, nowIso, twicEscortRequired, gangs, event, changes = null }) {
     const reservationValues = {
       ":confirmed": "CONFIRMED",
       ":requested": "REQUESTED",
@@ -198,8 +246,18 @@ export function createReservationReviewRoutes({ db, response, verify, now = () =
 
     for (const move of moves) {
       const changed = changes?.moves.find((m) => m.moveId === move.moveId);
-      const values = { ":confirmed": "CONFIRMED", ":now": nowIso, ":rid": reservation.reservationId };
-      let set = "#s = :confirmed, updatedAt = :now";
+      const gang = gangs[move.moveId];
+      const values = {
+        ":confirmed": "CONFIRMED",
+        ":now": nowIso,
+        ":rid": reservation.reservationId,
+        ":labor": "GANG",
+        ":qty": 1,
+        ":gangId": gang.gangId,
+        ":gangName": gang.name,
+      };
+      let set =
+        "#s = :confirmed, updatedAt = :now, laborType = :labor, laborQuantity = :qty, gangId = :gangId, gangName = :gangName";
       if (changed) {
         set += ", equipmentType = :eq, durationMins = :mins";
         values[":eq"] = changed.equipmentType;
@@ -269,9 +327,10 @@ export function createReservationReviewRoutes({ db, response, verify, now = () =
       } while (ExclusiveStartKey);
 
       const labelsByTerminal = {};
+      const gangsByTerminal = {};
       await Promise.all(
-        [...new Set(reservations.map((r) => r.terminalId))].map(async (t) => {
-          labelsByTerminal[t] = await equipmentLabels(t);
+        user.terminalIds.map(async (t) => {
+          [labelsByTerminal[t], gangsByTerminal[t]] = await Promise.all([equipmentLabels(t), loadGangs(t)]);
         })
       );
 
@@ -316,7 +375,7 @@ export function createReservationReviewRoutes({ db, response, verify, now = () =
       );
 
       items.sort((a, b) => String(a.startAt).localeCompare(String(b.startAt)));
-      return { statusCode: 200, body: { items, count: items.length } };
+      return { statusCode: 200, body: { items, count: items.length, gangs: gangsByTerminal } };
     });
   }
 
@@ -327,15 +386,17 @@ export function createReservationReviewRoutes({ db, response, verify, now = () =
       const twicEscortRequired = requireTwicAnswer(body);
       const reservation = await loadReservationForReview(user, body.reservationId);
       const moves = await loadMoves(reservation.reservationId);
+      const gangs = await resolveGangAssignments(body, moves, reservation.terminalId);
       const nowIso = now().toISOString();
 
       const confirmedEvent = newEvent(reservation.reservationId, "CONFIRMED", user, nowIso, {
         status: "CONFIRMED",
         twicEscortRequired,
+        gangs: moves.map((m) => ({ moveId: m.moveId, cargoUnitID: m.cargoUnitID, gangId: gangs[m.moveId].gangId, gangName: gangs[m.moveId].name })),
       });
       await db.send(
         new TransactWriteCommand({
-          TransactItems: confirm({ reservation, moves, user, nowIso, twicEscortRequired, event: confirmedEvent }),
+          TransactItems: confirm({ reservation, moves, user, nowIso, twicEscortRequired, gangs, event: confirmedEvent }),
         })
       );
       return {
@@ -364,17 +425,27 @@ export function createReservationReviewRoutes({ db, response, verify, now = () =
         }
       }
 
-      // Durations always come from the terminal's equipment types.
+      // A duration the TO enters wins; otherwise it's the equipment type's default.
       const after = await Promise.all(
         moves.map(async (move) => {
-          const equipmentType = requested.find((m) => m.moveId === move.moveId)?.equipmentType || move.equipmentType;
+          const change = requested.find((m) => m.moveId === move.moveId) || {};
+          const equipmentType = change.equipmentType || move.equipmentType;
           const eq = await getEquipmentType(reservation.terminalId, equipmentType);
           if (!eq) {
             throw new HttpError(400, `Equipment type ${equipmentType} isn't available at terminal ${reservation.terminalId}.`);
           }
-          return { moveId: move.moveId, cargoUnitID: move.cargoUnitID, equipmentType, durationMins: eq.defaultDurationMins };
+          let durationMins = eq.defaultDurationMins;
+          if (change.durationMins !== undefined && change.durationMins !== null) {
+            const mins = Number(change.durationMins);
+            if (!Number.isInteger(mins) || mins < 1 || mins > MAX_DURATION_MINS) {
+              throw new HttpError(400, `Duration must be a whole number of minutes from 1 to ${MAX_DURATION_MINS}.`);
+            }
+            durationMins = mins;
+          }
+          return { moveId: move.moveId, cargoUnitID: move.cargoUnitID, equipmentType, durationMins };
         })
       );
+      const gangs = await resolveGangAssignments(body, moves, reservation.terminalId);
       const durationMins = after.reduce((sum, m) => sum + m.durationMins, 0);
       const startAt = start.toISOString();
       const endAt = new Date(start.getTime() + durationMins * 60 * 1000).toISOString();
@@ -386,7 +457,8 @@ export function createReservationReviewRoutes({ db, response, verify, now = () =
         moves: moves.map((m) => ({ moveId: m.moveId, cargoUnitID: m.cargoUnitID, equipmentType: m.equipmentType, durationMins: Number(m.durationMins) })),
       };
       const unchanged =
-        before.startAt === startAt && after.every((m, i) => m.equipmentType === before.moves[i].equipmentType);
+        before.startAt === startAt &&
+        after.every((m, i) => m.equipmentType === before.moves[i].equipmentType && m.durationMins === before.moves[i].durationMins);
       if (unchanged) throw new HttpError(400, "Nothing was changed. Use Accept to confirm the request as it is.");
 
       const nowIso = now().toISOString();
@@ -395,6 +467,7 @@ export function createReservationReviewRoutes({ db, response, verify, now = () =
         twicEscortRequired,
         before,
         after: { startAt, endAt, durationMins, moves: after },
+        gangs: moves.map((m) => ({ moveId: m.moveId, cargoUnitID: m.cargoUnitID, gangId: gangs[m.moveId].gangId, gangName: gangs[m.moveId].name })),
       });
       await db.send(
         new TransactWriteCommand({
@@ -404,6 +477,7 @@ export function createReservationReviewRoutes({ db, response, verify, now = () =
             user,
             nowIso,
             twicEscortRequired,
+            gangs,
             event: modifiedEvent,
             changes: { startAt, endAt, durationMins, moves: after },
           }),

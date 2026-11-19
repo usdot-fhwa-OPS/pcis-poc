@@ -4,36 +4,51 @@ import { ChevronDownIcon, CircleCheckBig } from "lucide-react";
 import { Button } from "../ui/button";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "../ui/collapsible";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "../ui/dialog";
-import { acceptReservation, ReservationForReview } from "../reservation-cargo/reservation-manager-client";
+import { acceptReservation, GangOption, ReservationForReview } from "../reservation-cargo/reservation-manager-client";
+import { GangSelect } from "../reservation-cargo/gang-select";
 import { formatDuration, formatReservationTime } from "../reservation-cargo/reservation-format";
 import { TwicQuestion } from "../reservation-cargo/twic-question";
 
 type AcceptReservationDialogProps = {
   reservation: ReservationForReview | null;
+  // Active gangs at the reservation's terminal.
+  gangs: GangOption[];
   onClose: () => void;
   onDone: () => void | Promise<void>;
 };
 
-// I-4 Accept: the TO confirms a requested reservation as it is, answering the TWIC escort question.
-export function AcceptReservationDialog({ reservation, onClose, onDone }: AcceptReservationDialogProps) {
+// I-4 Accept: the TO confirms a requested reservation as it is, assigns a gang to each cargo unit and
+// answers the TWIC escort question.
+export function AcceptReservationDialog({ reservation, gangs, onClose, onDone }: AcceptReservationDialogProps) {
   const [showDetails, setShowDetails] = useState(false);
   const [twicEscortRequired, setTwicEscortRequired] = useState<boolean | undefined>();
+  const [gangByMove, setGangByMove] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  function close() {
+  const allGangsAssigned = Boolean(reservation?.moves.every((m) => gangByMove[m.moveId]));
+
+  function reset() {
     setShowDetails(false);
     setTwicEscortRequired(undefined);
+    setGangByMove({});
+  }
+
+  function close() {
+    reset();
     onClose();
   }
 
   async function handleAccept() {
-    if (!reservation || twicEscortRequired === undefined) return;
+    if (!reservation || twicEscortRequired === undefined || !allGangsAssigned) return;
     setIsSubmitting(true);
     try {
-      await acceptReservation(reservation.reservationId, twicEscortRequired);
+      await acceptReservation(
+        reservation.reservationId,
+        twicEscortRequired,
+        reservation.moves.map((m) => ({ moveId: m.moveId, gangId: gangByMove[m.moveId] }))
+      );
       toast.success(`Reservation ${reservation.confirmationCode} confirmed`);
-      setShowDetails(false);
-      setTwicEscortRequired(undefined);
+      reset();
       await onDone();
     } catch (error) {
       toast.error((error as Error).message || "The reservation couldn't be confirmed. Please try again.");
@@ -101,6 +116,25 @@ export function AcceptReservationDialog({ reservation, onClose, onDone }: Accept
                 </div>
               </CollapsibleContent>
             </Collapsible>
+            <div className="grid gap-2 mb-6">
+              <p className="text-sm font-semibold">
+                Gang Assignment <span className="text-red-600">*</span>
+              </p>
+              {reservation.moves.map((m) => (
+                <div key={m.moveId} className="flex items-center gap-3">
+                  <span className="w-32 text-xs text-gray-600">
+                    {reservation.moves.length > 1 ? `${m.cargoUnitID} · ` : ""}{m.equipmentLabel}
+                  </span>
+                  <GangSelect
+                    gangs={gangs}
+                    equipmentType={m.equipmentType}
+                    equipmentLabel={m.equipmentLabel}
+                    value={gangByMove[m.moveId]}
+                    onChange={(gangId) => setGangByMove((prev) => ({ ...prev, [m.moveId]: gangId }))}
+                  />
+                </div>
+              ))}
+            </div>
             <TwicQuestion idPrefix="accept" value={twicEscortRequired} onChange={setTwicEscortRequired} />
           </div>
         )}
@@ -109,7 +143,7 @@ export function AcceptReservationDialog({ reservation, onClose, onDone }: Accept
           <Button
             className="bg-green-600 hover:bg-green-600/90"
             onClick={handleAccept}
-            disabled={twicEscortRequired === undefined || isSubmitting}
+            disabled={twicEscortRequired === undefined || !allGangsAssigned || isSubmitting}
           >
             {isSubmitting ? "Accepting…" : "Yes, Accept"}
           </Button>

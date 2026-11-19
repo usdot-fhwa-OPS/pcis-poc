@@ -3,10 +3,13 @@ import { format } from "date-fns";
 import { toast } from "sonner";
 import { Button } from "../ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "../ui/dialog";
+import { Input } from "../ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import { DateTimePicker } from "./date-time-picker";
+import { GangSelect } from "./gang-select";
 import {
   EquipmentTypeOption,
+  GangOption,
   listEquipmentTypesForTerminal,
   modifyReservation,
   ReservationForReview,
@@ -14,32 +17,51 @@ import {
 import { formatDuration, formatReservationTime } from "./reservation-format";
 import { TwicQuestion } from "./twic-question";
 
+const MAX_DURATION_MINS = 1440;
+
 type ModifyReservationDialogProps = {
   reservation: ReservationForReview | null;
+  // Active gangs at the reservation's terminal.
+  gangs: GangOption[];
   onClose: () => void;
   onDone: () => void | Promise<void>;
 };
 
-// I-4 Modify: the TO changes the time and/or equipment. Saving confirms the reservation automatically.
-export function ModifyReservationDialog({ reservation, onClose, onDone }: ModifyReservationDialogProps) {
+// I-4 Modify: the TO changes the time, equipment and/or duration, assigns a gang and accepts in one step.
+export function ModifyReservationDialog({ reservation, gangs, onClose, onDone }: ModifyReservationDialogProps) {
   return (
     <Dialog open={reservation !== null} onOpenChange={(open) => !open && onClose()} disablePointerDismissal>
-      <DialogContent className="sm:max-w-[480px] text-left">
+      <DialogContent className="sm:max-w-[520px] text-left">
         {/* Keyed so the form starts fresh for each reservation. */}
         {reservation && (
-          <ModifyForm key={reservation.reservationId} reservation={reservation} onClose={onClose} onDone={onDone} />
+          <ModifyForm key={reservation.reservationId} reservation={reservation} gangs={gangs} onClose={onClose} onDone={onDone} />
         )}
       </DialogContent>
     </Dialog>
   );
 }
 
-function ModifyForm({ reservation, onClose, onDone }: { reservation: ReservationForReview } & Omit<ModifyReservationDialogProps, "reservation">) {
+function isValidDuration(value: string) {
+  const mins = Number(value);
+  return value.trim() !== "" && Number.isInteger(mins) && mins >= 1 && mins <= MAX_DURATION_MINS;
+}
+
+function ModifyForm({
+  reservation,
+  gangs,
+  onClose,
+  onDone,
+}: { reservation: ReservationForReview } & Omit<ModifyReservationDialogProps, "reservation">) {
   const originalStart = useMemo(() => new Date(reservation.startAt), [reservation.startAt]);
   const [startAt, setStartAt] = useState<Date | undefined>(originalStart);
   const [equipmentByMove, setEquipmentByMove] = useState<Record<string, string>>(() =>
     Object.fromEntries(reservation.moves.map((m) => [m.moveId, m.equipmentType]))
   );
+  // Kept as text so the TO can clear and retype the field.
+  const [durationByMove, setDurationByMove] = useState<Record<string, string>>(() =>
+    Object.fromEntries(reservation.moves.map((m) => [m.moveId, String(m.durationMins)]))
+  );
+  const [gangByMove, setGangByMove] = useState<Record<string, string>>({});
   const [options, setOptions] = useState<EquipmentTypeOption[]>([]);
   const [optionsError, setOptionsError] = useState<string>();
   const [twicEscortRequired, setTwicEscortRequired] = useState<boolean | undefined>();
@@ -55,42 +77,56 @@ function ModifyForm({ reservation, onClose, onDone }: { reservation: Reservation
     };
   }, [reservation.terminalId]);
 
+  const optionFor = (type: string) => options.find((o) => o.equipmentType === type);
   const labelFor = (type: string) =>
-    options.find((o) => o.equipmentType === type)?.label ||
-    reservation.moves.find((m) => m.equipmentType === type)?.equipmentLabel ||
-    type;
+    optionFor(type)?.label || reservation.moves.find((m) => m.equipmentType === type)?.equipmentLabel || type;
 
-  const newDuration = reservation.moves.reduce((sum, m) => {
-    const option = options.find((o) => o.equipmentType === equipmentByMove[m.moveId]);
-    return sum + (option ? option.defaultDurationMins : m.durationMins);
-  }, 0);
+  function changeEquipment(moveId: string, equipmentType: string) {
+    setEquipmentByMove((prev) => ({ ...prev, [moveId]: equipmentType }));
+    // A new equipment type starts from its own default duration.
+    const option = optionFor(equipmentType);
+    if (option) setDurationByMove((prev) => ({ ...prev, [moveId]: String(option.defaultDurationMins) }));
+  }
+
+  const durationsValid = reservation.moves.every((m) => isValidDuration(durationByMove[m.moveId]));
+  const newTotal = durationsValid ? reservation.moves.reduce((sum, m) => sum + Number(durationByMove[m.moveId]), 0) : undefined;
 
   const timeChanged = Boolean(startAt) && startAt!.getTime() !== originalStart.getTime();
-  const equipmentChanged = reservation.moves.some((m) => equipmentByMove[m.moveId] !== m.equipmentType);
   const changes: string[] = [];
   if (timeChanged) changes.push(`Time: ${formatReservationTime(originalStart)} → ${formatReservationTime(startAt!)}`);
   for (const m of reservation.moves) {
+    const prefix = reservation.moves.length > 1 ? `${m.cargoUnitID} ` : "";
     if (equipmentByMove[m.moveId] !== m.equipmentType) {
-      changes.push(`${reservation.moves.length > 1 ? `${m.cargoUnitID} ` : ""}Equipment: ${m.equipmentLabel} → ${labelFor(equipmentByMove[m.moveId])}`);
+      changes.push(`${prefix}Equipment: ${m.equipmentLabel} → ${labelFor(equipmentByMove[m.moveId])}`);
+    }
+    if (isValidDuration(durationByMove[m.moveId]) && Number(durationByMove[m.moveId]) !== m.durationMins) {
+      changes.push(`${prefix}Duration: ${formatDuration(m.durationMins)} → ${formatDuration(Number(durationByMove[m.moveId]))}`);
     }
   }
-  if (equipmentChanged && newDuration !== reservation.durationMins) {
-    changes.push(`Duration: ${formatDuration(reservation.durationMins)} → ${formatDuration(newDuration)}`);
+  if (reservation.moves.length > 1 && newTotal !== undefined && newTotal !== reservation.durationMins) {
+    changes.push(`Total duration: ${formatDuration(reservation.durationMins)} → ${formatDuration(newTotal)}`);
   }
 
-  const canSave = Boolean(startAt) && (timeChanged || equipmentChanged) && twicEscortRequired !== undefined && !isSubmitting;
+  const allGangsAssigned = reservation.moves.every((m) => gangByMove[m.moveId]);
+  const canSave =
+    Boolean(startAt) && changes.length > 0 && durationsValid && allGangsAssigned && twicEscortRequired !== undefined && !isSubmitting;
 
   async function handleSave() {
-    if (!startAt || twicEscortRequired === undefined) return;
+    if (!startAt || twicEscortRequired === undefined || !durationsValid) return;
     setIsSubmitting(true);
     try {
       await modifyReservation({
         reservationId: reservation.reservationId,
         startAt: startAt.toISOString(),
-        moves: reservation.moves.map((m) => ({ moveId: m.moveId, equipmentType: equipmentByMove[m.moveId] })),
+        moves: reservation.moves.map((m) => ({
+          moveId: m.moveId,
+          equipmentType: equipmentByMove[m.moveId],
+          durationMins: Number(durationByMove[m.moveId]),
+        })),
         twicEscortRequired,
+        gangAssignments: reservation.moves.map((m) => ({ moveId: m.moveId, gangId: gangByMove[m.moveId] })),
       });
-      toast.success(`Reservation ${reservation.confirmationCode} changed and confirmed`);
+      toast.success(`Reservation ${reservation.confirmationCode} changed and accepted`);
       await onDone();
     } catch (error) {
       toast.error((error as Error).message || "The reservation couldn't be changed. Please try again.");
@@ -116,33 +152,70 @@ function ModifyForm({ reservation, onClose, onDone }: { reservation: Reservation
           <DateTimePicker initialValue={originalStart} onChange={setStartAt} />
         </div>
 
-        <div className="grid gap-2">
-          <span className="text-sm font-medium">Equipment</span>
-          {reservation.moves.map((m) => (
-            <div key={m.moveId} className="flex items-center gap-3">
-              {reservation.moves.length > 1 && <span className="w-28 text-xs text-muted-foreground">{m.cargoUnitID}</span>}
-              <Select
-                value={equipmentByMove[m.moveId]}
-                onValueChange={(value) => setEquipmentByMove((prev) => ({ ...prev, [m.moveId]: value }))}
-                disabled={options.length === 0}
-              >
-                <SelectTrigger className="w-[260px]">
-                  <SelectValue placeholder={optionsError ? "Equipment unavailable" : "Loading equipment…"}>
-                    {labelFor(equipmentByMove[m.moveId])}
-                  </SelectValue>
-                </SelectTrigger>
-                <SelectContent>
-                  {options.map((o) => (
-                    <SelectItem key={o.equipmentType} value={o.equipmentType}>
-                      {o.label} ({formatDuration(o.defaultDurationMins)})
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+        {reservation.moves.map((m) => {
+          const equipmentType = equipmentByMove[m.moveId];
+          const defaultMins = optionFor(equipmentType)?.defaultDurationMins;
+          const durationText = durationByMove[m.moveId];
+          return (
+            <div key={m.moveId} className="grid gap-3 rounded-lg border p-3">
+              {reservation.moves.length > 1 && <p className="text-xs font-semibold">{m.cargoUnitID}</p>}
+              <div className="grid grid-cols-[110px_1fr] items-center gap-x-3 gap-y-3">
+                <span className="text-sm font-medium">Equipment</span>
+                <Select value={equipmentType} onValueChange={(value) => changeEquipment(m.moveId, value)} disabled={options.length === 0}>
+                  <SelectTrigger className="w-[260px]">
+                    <SelectValue placeholder={optionsError ? "Equipment unavailable" : "Loading equipment…"}>
+                      {labelFor(equipmentType)}
+                    </SelectValue>
+                  </SelectTrigger>
+                  <SelectContent>
+                    {options.map((o) => (
+                      <SelectItem key={o.equipmentType} value={o.equipmentType}>
+                        {o.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+
+                <span className="text-sm font-medium">Duration</span>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <Input
+                      type="number"
+                      inputMode="numeric"
+                      min={1}
+                      max={MAX_DURATION_MINS}
+                      step={5}
+                      value={durationText}
+                      onChange={(e) => setDurationByMove((prev) => ({ ...prev, [m.moveId]: e.target.value }))}
+                      className="w-24"
+                      aria-label={`Duration in minutes for ${m.cargoUnitID}`}
+                    />
+                    <span className="text-sm text-muted-foreground">minutes</span>
+                  </div>
+                  <p className={`mt-1 text-xs ${isValidDuration(durationText) ? "text-muted-foreground" : "text-red-600"}`}>
+                    {isValidDuration(durationText)
+                      ? defaultMins !== undefined
+                        ? `Default for ${labelFor(equipmentType)}: ${formatDuration(defaultMins)}`
+                        : ""
+                      : `Enter whole minutes from 1 to ${MAX_DURATION_MINS}.`}
+                  </p>
+                </div>
+
+                <span className="text-sm font-medium">
+                  Gang <span className="text-red-600">*</span>
+                </span>
+                <GangSelect
+                  gangs={gangs}
+                  equipmentType={equipmentType}
+                  equipmentLabel={labelFor(equipmentType)}
+                  value={gangByMove[m.moveId]}
+                  onChange={(gangId) => setGangByMove((prev) => ({ ...prev, [m.moveId]: gangId }))}
+                />
+              </div>
             </div>
-          ))}
-          {optionsError && <p className="text-xs text-red-600">{optionsError}</p>}
-        </div>
+          );
+        })}
+        {optionsError && <p className="text-xs text-red-600">{optionsError}</p>}
 
         <TwicQuestion idPrefix="modify" value={twicEscortRequired} onChange={setTwicEscortRequired} />
 
@@ -156,11 +229,11 @@ function ModifyForm({ reservation, onClose, onDone }: { reservation: Reservation
                 ))}
               </ul>
               <p className="mt-2 text-muted-foreground">
-                Saving confirms the reservation with these changes. The Transportation Coordinator will see it was changed by the terminal.
+                Saving accepts the reservation with these changes. The Transportation Coordinator will see it was changed by the terminal.
               </p>
             </>
           ) : (
-            <p className="text-muted-foreground">Change the time or equipment. To confirm the request as it is, use Accept instead.</p>
+            <p className="text-muted-foreground">Change the time, equipment or duration. To accept the request as it is, use Accept instead.</p>
           )}
         </div>
       </div>
@@ -168,7 +241,7 @@ function ModifyForm({ reservation, onClose, onDone }: { reservation: Reservation
       <DialogFooter>
         <Button variant="outline" onClick={onClose} disabled={isSubmitting}>Cancel</Button>
         <Button onClick={handleSave} disabled={!canSave}>
-          {isSubmitting ? "Saving…" : "Save and Confirm"}
+          {isSubmitting ? "Saving…" : "Save and Accept"}
         </Button>
       </DialogFooter>
     </>

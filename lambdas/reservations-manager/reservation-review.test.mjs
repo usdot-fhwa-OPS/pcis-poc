@@ -101,6 +101,9 @@ function setup({ claims = TO } = {}) {
     reservationStatus: LEGACY_REQUESTED_STATUS, reservationId: "R1", reservationDate: "11/20/2026", reservationTime: "09:00 AM",
   });
   db.put("Reservations", { reservationId: "R2", status: "REQUESTED", terminalId: "PORTX", startAt: "2026-11-21T14:00:00.000Z" });
+  db.put("TerminalResources", { terminalId: "NNMT", sk: "GANG#G1", record: { entityType: "GANG", gangId: "G1", name: "GANG F", equipmentType: ["FORKLIFT"], active: true } });
+  db.put("TerminalResources", { terminalId: "NNMT", sk: "GANG#G2", record: { entityType: "GANG", gangId: "G2", name: "GANG OLD", equipmentType: ["CRANE"], active: false } });
+  db.put("TerminalResources", { terminalId: "PORTX", sk: "GANG#G9", record: { entityType: "GANG", gangId: "G9", name: "GANG X", equipmentTypes: ["CRANE"], active: true } });
   const verify = async (token) => {
     if (token !== "good") throw new Error("bad token");
     return claims;
@@ -109,6 +112,7 @@ function setup({ claims = TO } = {}) {
 }
 
 const post = (body) => ({ headers: { Authorization: "Bearer good" }, body: JSON.stringify(body) });
+const GANG = [{ moveId: "M1", gangId: "G1" }];
 const events = (db) => [...db.tables.ReservationEvents.values()];
 
 describe("listReservationRequests", () => {
@@ -121,6 +125,7 @@ describe("listReservationRequests", () => {
     assert.equal(move.equipmentLabel, "Forklift");
     assert.equal(move.vesselID, "1001");
     assert.equal(move.transopName, "TC");
+    assert.deepEqual(res.body.gangs.NNMT, [{ gangId: "G1", name: "GANG F", equipmentTypes: ["FORKLIFT"] }], "active gangs only");
   });
 
   test("refuses non-TOs and TOs without a terminal", async () => {
@@ -134,19 +139,31 @@ describe("listReservationRequests", () => {
 describe("acceptReservation", () => {
   test("confirms the reservation and moves, writes one CONFIRMED event and bridges the cargo unit", async () => {
     const { db, routes } = setup();
-    const res = await routes.acceptReservation(post({ reservationId: "R1", twicEscortRequired: true }));
+    const res = await routes.acceptReservation(post({ reservationId: "R1", twicEscortRequired: true, gangAssignments: GANG }));
     assert.equal(res.statusCode, 200, JSON.stringify(res.body));
     const r = db.tables.Reservations.get("R1");
     assert.equal(r.status, "CONFIRMED");
     assert.equal(r.twicEscortRequired, true);
     assert.equal(r.confirmedBy, "to@example.com");
-    assert.equal(db.tables.ReservationMoves.get("M1").status, "CONFIRMED");
+    const move = db.tables.ReservationMoves.get("M1");
+    assert.equal(move.status, "CONFIRMED");
+    assert.deepEqual([move.gangId, move.gangName, move.laborType, move.laborQuantity], ["G1", "GANG F", "GANG", 1]);
     assert.deepEqual(events(db).map((e) => e.type), ["CONFIRMED"]);
+    assert.equal(events(db)[0].data.gangs[0].gangName, "GANG F");
     const unit = db.tables.CargoUnits.get("CU-1");
     assert.equal(unit.reservationStatus, LEGACY_CONFIRMED_STATUS);
     assert.equal(unit.twicEscortRequired, true);
     assert.equal(unit.resApprovalDate, "11/18/2026");
     assert.equal(unit.reservationTime, "09:00 AM", "time unchanged on accept");
+  });
+
+  test("requires an active gang from the reservation's terminal for every move", async () => {
+    for (const gangAssignments of [undefined, [], [{ moveId: "M1", gangId: "G2" }], [{ moveId: "M1", gangId: "G9" }], [{ moveId: "M1", gangId: "NOPE" }]]) {
+      const { db, routes } = setup();
+      const res = await routes.acceptReservation(post({ reservationId: "R1", twicEscortRequired: false, gangAssignments }));
+      assert.equal(res.statusCode, 400, JSON.stringify(gangAssignments));
+      assert.equal(db.tables.Reservations.get("R1").status, "REQUESTED");
+    }
   });
 
   test("requires the TWIC answer", async () => {
@@ -156,19 +173,19 @@ describe("acceptReservation", () => {
 
   test("another terminal's reservation looks like it doesn't exist", async () => {
     const { routes } = setup();
-    assert.equal((await routes.acceptReservation(post({ reservationId: "R2", twicEscortRequired: false }))).statusCode, 404);
+    assert.equal((await routes.acceptReservation(post({ reservationId: "R2", twicEscortRequired: false, gangAssignments: GANG }))).statusCode, 404);
   });
 
   test("can't accept twice", async () => {
     const { routes } = setup();
-    await routes.acceptReservation(post({ reservationId: "R1", twicEscortRequired: false }));
-    assert.equal((await routes.acceptReservation(post({ reservationId: "R1", twicEscortRequired: false }))).statusCode, 409);
+    await routes.acceptReservation(post({ reservationId: "R1", twicEscortRequired: false, gangAssignments: GANG }));
+    assert.equal((await routes.acceptReservation(post({ reservationId: "R1", twicEscortRequired: false, gangAssignments: GANG }))).statusCode, 409);
   });
 
   test("returns 409 and writes nothing if the cargo unit no longer matches", async () => {
     const { db, routes } = setup();
     db.tables.CargoUnits.get("CU-1").reservationStatus = ACCEPTED_STATUS;
-    const res = await routes.acceptReservation(post({ reservationId: "R1", twicEscortRequired: false }));
+    const res = await routes.acceptReservation(post({ reservationId: "R1", twicEscortRequired: false, gangAssignments: GANG }));
     assert.equal(res.statusCode, 409);
     assert.equal(db.tables.Reservations.get("R1").status, "REQUESTED");
     assert.equal(events(db).length, 0);
@@ -179,7 +196,7 @@ describe("modifyReservation", () => {
   test("changes time and equipment, recomputes duration, confirms and records before/after", async () => {
     const { db, routes } = setup();
     const res = await routes.modifyReservation(
-      post({ reservationId: "R1", startAt: "2026-11-20T18:00:00.000Z", moves: [{ moveId: "M1", equipmentType: "CRANE" }], twicEscortRequired: false })
+      post({ reservationId: "R1", startAt: "2026-11-20T18:00:00.000Z", moves: [{ moveId: "M1", equipmentType: "CRANE" }], twicEscortRequired: false, gangAssignments: GANG })
     );
     assert.equal(res.statusCode, 200, JSON.stringify(res.body));
     const r = db.tables.Reservations.get("R1");
@@ -200,6 +217,34 @@ describe("modifyReservation", () => {
     assert.equal(unit.reservationTime, "01:00 PM");
   });
 
+  test("lets the TO override the duration (forklift in 30 minutes instead of 60)", async () => {
+    const { db, routes } = setup();
+    const res = await routes.modifyReservation(
+      post({ reservationId: "R1", startAt: "2026-11-20T14:00:00.000Z", moves: [{ moveId: "M1", equipmentType: "FORKLIFT", durationMins: 30 }], twicEscortRequired: false, gangAssignments: GANG })
+    );
+    assert.equal(res.statusCode, 200, JSON.stringify(res.body));
+    const r = db.tables.Reservations.get("R1");
+    assert.equal(r.durationMins, 30);
+    assert.equal(r.endAt, "2026-11-20T14:30:00.000Z");
+    assert.equal(db.tables.ReservationMoves.get("M1").durationMins, 30);
+    assert.equal(events(db)[0].data.after.moves[0].durationMins, 30);
+  });
+
+  test("rejects invalid durations and a missing gang", async () => {
+    const cases = [
+      { moves: [{ moveId: "M1", equipmentType: "FORKLIFT", durationMins: 0 }] },
+      { moves: [{ moveId: "M1", equipmentType: "FORKLIFT", durationMins: 1441 }] },
+      { moves: [{ moveId: "M1", equipmentType: "FORKLIFT", durationMins: 12.5 }] },
+      { moves: [{ moveId: "M1", equipmentType: "FORKLIFT", durationMins: 30 }], gangAssignments: [] },
+    ];
+    for (const extra of cases) {
+      const { db, routes } = setup();
+      const res = await routes.modifyReservation(post({ reservationId: "R1", startAt: "2026-11-20T14:00:00.000Z", twicEscortRequired: false, gangAssignments: GANG, ...extra }));
+      assert.equal(res.statusCode, 400, JSON.stringify(extra));
+      assert.equal(db.tables.Reservations.get("R1").status, "REQUESTED");
+    }
+  });
+
   test("rejects no-op changes, past times, unknown equipment and foreign moves", async () => {
     const cases = [
       [{ startAt: "2026-11-20T14:00:00.000Z", moves: [] }, 400],
@@ -209,7 +254,7 @@ describe("modifyReservation", () => {
     ];
     for (const [body, status] of cases) {
       const { db, routes } = setup();
-      const res = await routes.modifyReservation(post({ reservationId: "R1", twicEscortRequired: false, ...body }));
+      const res = await routes.modifyReservation(post({ reservationId: "R1", twicEscortRequired: false, gangAssignments: GANG, ...body }));
       assert.equal(res.statusCode, status, JSON.stringify(body));
       assert.equal(db.tables.Reservations.get("R1").status, "REQUESTED");
     }

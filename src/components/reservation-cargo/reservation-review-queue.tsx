@@ -6,7 +6,7 @@ import { DataTable } from "../terminal-bookings/data-table.tsx";
 import { AcceptReservationDialog } from "../reservations/approve-reservation";
 import { DenyReservationDialog } from "./deny-reservation-dialog";
 import { ModifyReservationDialog } from "./modify-reservation-dialog";
-import { listReservationRequests, ReservationForReview } from "./reservation-manager-client";
+import { GangOption, listReservationRequests, ReservationForReview } from "./reservation-manager-client";
 import { formatDuration, formatReservationTime } from "./reservation-format";
 
 type ReviewAction = { type: "accept" | "modify" | "deny"; reservation: ReservationForReview };
@@ -50,13 +50,16 @@ type ReservationReviewQueueProps = {
 // so a live refresh of the rows can't close a dialog the TO is working in.
 export function ReservationReviewQueue({ refreshKey }: ReservationReviewQueueProps) {
   const [reservations, setReservations] = useState<ReservationForReview[]>([]);
+  const [gangsByTerminal, setGangsByTerminal] = useState<Record<string, GangOption[]>>({});
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string>();
   const [action, setAction] = useState<ReviewAction | null>(null);
 
   const load = useCallback(async () => {
     try {
-      setReservations(await listReservationRequests());
+      const result = await listReservationRequests();
+      setReservations(result.items);
+      setGangsByTerminal(result.gangs);
       setError(undefined);
     } catch (e) {
       setError((e as Error).message);
@@ -127,6 +130,7 @@ export function ReservationReviewQueue({ refreshKey }: ReservationReviewQueuePro
   );
 
   const rows = useMemo(() => reservations.map(toRow), [reservations]);
+  const actionGangs = action ? gangsByTerminal[action.reservation.terminalId] ?? [] : [];
 
   return (
     <>
@@ -136,11 +140,13 @@ export function ReservationReviewQueue({ refreshKey }: ReservationReviewQueuePro
 
       <AcceptReservationDialog
         reservation={action?.type === "accept" ? action.reservation : null}
+        gangs={actionGangs}
         onClose={closeAction}
         onDone={finishAction}
       />
       <ModifyReservationDialog
         reservation={action?.type === "modify" ? action.reservation : null}
+        gangs={actionGangs}
         onClose={closeAction}
         onDone={finishAction}
       />

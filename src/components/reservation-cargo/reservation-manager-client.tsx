@@ -351,19 +351,34 @@ export type ReservationForReview = {
     moves: ReviewMove[]
 }
 
-export const listReservationRequests = async (): Promise<ReservationForReview[]> => {
+export type GangOption = {
+    gangId: string,
+    name: string,
+    equipmentTypes: string[]
+}
+
+export type GangAssignment = { moveId: string, gangId: string }
+
+export type ReservationRequestsResult = {
+    items: ReservationForReview[],
+    // Active gangs per terminal the TO belongs to.
+    gangs: Record<string, GangOption[]>
+}
+
+export const listReservationRequests = async (): Promise<ReservationRequestsResult> => {
     const response = await fetch(`${RESERVATIONS_API}/listReservationRequests`, {
         method: 'GET',
         headers: await idTokenHeaders()
     });
-    return (await readJsonOrThrow(response)).items as ReservationForReview[];
+    const body = await readJsonOrThrow(response);
+    return { items: body.items as ReservationForReview[], gangs: (body.gangs || {}) as Record<string, GangOption[]> };
 }
 
-export const acceptReservation = async (reservationId: string, twicEscortRequired: boolean) => {
+export const acceptReservation = async (reservationId: string, twicEscortRequired: boolean, gangAssignments: GangAssignment[]) => {
     const response = await fetch(`${RESERVATIONS_API}/acceptReservation`, {
         method: 'POST',
         headers: await idTokenHeaders(),
-        body: JSON.stringify({ reservationId, twicEscortRequired })
+        body: JSON.stringify({ reservationId, twicEscortRequired, gangAssignments })
     });
     return readJsonOrThrow(response);
 }
@@ -371,8 +386,10 @@ export const acceptReservation = async (reservationId: string, twicEscortRequire
 export const modifyReservation = async (request: {
     reservationId: string,
     startAt: string,
-    moves: { moveId: string, equipmentType: string }[],
-    twicEscortRequired: boolean
+    // durationMins overrides the equipment type's default for that move.
+    moves: { moveId: string, equipmentType: string, durationMins: number }[],
+    twicEscortRequired: boolean,
+    gangAssignments: GangAssignment[]
 }) => {
     const response = await fetch(`${RESERVATIONS_API}/modifyReservation`, {
         method: 'POST',
