@@ -4,8 +4,6 @@ import { DataTable } from "../components/cargo/cargo-table"
 import { useEffect, useState } from "react"
 
 //Three Imports needed for Amplify Data Queries and CRUD methods
-import { SelectionSet } from 'aws-amplify/data';
-import type { Schema } from '../../amplify/data/resource';
 import { listCargoUnits } from '../components/cargo/cargo-units-client';
 import { isCargoSelectable } from "../components/cargo/cargo-availability"
 
