@@ -14,7 +14,6 @@ interface ReserveButtonProps {
 function normalizeHolds(holds?: HoldsValue): string[] {
   if (!holds) return [];
 
-  // Handle AWSJSON if it arrives as a serialized JSON string
   let parsed: unknown = holds;
   if (typeof holds === "string") {
     const trimmed = holds.trim();
