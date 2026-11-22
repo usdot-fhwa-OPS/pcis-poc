@@ -14,9 +14,6 @@ export const Route = createFileRoute('/cargo')({
   component: Cargo,
 })
 
-//Define the selection of data that will be used for the table
-const selectionSet = ['vesselID', 'cargoUnitID', 'origin', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail', 'containerStatus', 'holds', 'flag'] as const; 
-
 //Create a type based on your selectionSet that will be later used for the columns.tsx file of the able
 export type CargoStatus = "On-Ship" | "Discharged" | "Released"
 
@@ -78,6 +75,11 @@ export default function Cargo() {
     <div className="w-full px-6 py-6 md:px-10 md:py-8">
       <h1 className="mb-2 text-2xl leading-none font-semibold text-gray-900">Upcoming Cargo</h1>
       <p className="mb-4 text-sm text-gray-700">Real-time status and readiness for this terminal.</p>
+      {selectedCargo.length > 0 && (
+        <p className="mb-3 text-sm font-medium text-emerald-700">
+        {selectedCargo.length} ready unit{selectedCargo.length === 1 ? "" : "s"} selected for pickup
+        </p>
+      )}
       <DataTable
         columns={columns}
         data={data}
