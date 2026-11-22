@@ -2,33 +2,105 @@
 
 import { ColumnDef } from "@tanstack/react-table"
 import { Flag } from "lucide-react"
-import { useState } from "react"
-import { Button } from "../ui/button"
-
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "../ui/dropdown-menu"
-//Four Imports needed for Amplify Data Queries and CRUD methods
-
+import { useEffect, useState } from "react"
 import { UpcomingCargo } from "../../routes/cargo"
+import { Button } from "../ui/button"
+import { Checkbox } from "../ui/checkbox"
+import {
+  getUnselectableReason,
+  isCargoSelectable,
+  normalizeHolds,
+} from "./cargo-availability"
+import { CargoStatusCell } from "./cargo-status-cell"
 import { saveCargoUnit } from "./cargo-units-client"
+import { CargoTableMeta } from "./cargo-table"
+import { HoldsBadges } from "./holds-badges"
 
+function FlagCell({
+  cargoUnitID,
+  initialFlag,
+}: {
+  cargoUnitID: string
+  initialFlag: boolean
+}) {
+  const [flagged, setFlagged] = useState<boolean>(initialFlag)
 
-//Define the selection of data that will be used for the table (type exported from cargo.tsx in this case)
+  useEffect(() => {
+    setFlagged(initialFlag)
+  }, [initialFlag])
+
+  const handleFlagToggle = async () => {
+    const newFlag = !flagged
+    setFlagged(newFlag)
+    try {
+      const updatedContainerStatus = await saveCargoUnit({
+        cargoUnitID,
+        flag: newFlag,
+      })
+      console.log("Updated flag:", updatedContainerStatus)
+    } catch (error) {
+      console.error("Error updating flag:", error)
+      setFlagged(!newFlag)
+    }
+  }
+
+  return (
+    <div className="text-center">
+      <Button variant="ghost" onClick={handleFlagToggle} className="p-2">
+        <Flag className={flagged ? "text-red-600" : "text-gray-500"} />
+      </Button>
+    </div>
+  )
+}
+
 export const columns: ColumnDef<UpcomingCargo>[] = [
-  // Define the columns for the table based on the database items (refer to resources.ts for schema names)
+  {
+    id: "select",
+    header: ({ table }) => {
+      const hasSelectableRows = table
+        .getRowModel()
+        .rows.some((row) => row.getCanSelect())
+
+      return (
+        <Checkbox
+          checked={
+            hasSelectableRows &&
+            (table.getIsAllPageRowsSelected() ||
+              (table.getIsSomePageRowsSelected() && "indeterminate"))
+          }
+          disabled={!hasSelectableRows}
+          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+          aria-label="Select all ready cargo"
+        />
+      )
+    },
+    cell: ({ row }) => {
+      const selectable = isCargoSelectable(row.original)
+      const disabledReason = getUnselectableReason(row.original)
+
+      return (
+        <div
+          title={disabledReason ?? "Ready for pickup"}
+          className="flex items-center"
+        >
+          <Checkbox
+            checked={row.getIsSelected()}
+            disabled={!selectable}
+            onCheckedChange={(value) => row.toggleSelected(!!value)}
+            aria-label={`Select cargo ${row.original.cargoUnitID}`}
+          />
+        </div>
+      )
+    },
+    enableSorting: false,
+    enableHiding: false,
+  },
   {
     accessorKey: "vesselID",
     header: "Vessel ID",
   },
   {
-    accessorKey: "cargoUnitID", 
+    accessorKey: "cargoUnitID",
     header: "Cargo Unit ID",
   },
   {
@@ -50,81 +122,42 @@ export const columns: ColumnDef<UpcomingCargo>[] = [
   {
     accessorKey: "transopEmail",
     header: "Transportation Coordinator Email",
-  }, 
+  },
   {
     accessorKey: "containerStatus",
     header: "Cargo Status",
-    cell: ({ row }) => {
-      // Initialize local state with the current containerStatus.
-      const [cargoStatus, setStatus] = useState<"On-Ship" | "On-Dock">(
-        row.original.containerStatus as "On-Ship" | "On-Dock"
-      )
+    cell: ({ row, table }) => {
+      const meta = table.options.meta as CargoTableMeta | undefined
 
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild disabled={cargoStatus === "On-Dock"}>
-            <Button variant="outline">{cargoStatus}</Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-56">
-            <DropdownMenuLabel>Cargo Status</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuRadioGroup
-              value={cargoStatus}
-              onValueChange={async (val: string) => {
-                // Update the UI immediately.
-                setStatus(val as "On-Ship" | "On-Dock")
-                try {
-                  // Call the Amplify update method (must always contain containerID)
-                  const updatedContainerStatus  = await saveCargoUnit({
-                    cargoUnitID: row.original.cargoUnitID, 
-                    containerStatus: val,
-                  })
-                  console.log("Updated container status:", updatedContainerStatus)
-                } catch (error) {
-                  console.error("Error updating container status:", error)
-                }
-              }}
-            >
-              <DropdownMenuRadioItem value="On-Ship">On-Ship</DropdownMenuRadioItem>
-              <DropdownMenuRadioItem value="On-Dock">On-Dock</DropdownMenuRadioItem>
-            </DropdownMenuRadioGroup>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <CargoStatusCell
+          cargoUnitID={row.original.cargoUnitID}
+          initialStatus={row.original.containerStatus}
+          onStatusChange={meta?.updateCargoStatus}
+        />
+      )
+    },
+  },
+  {
+    accessorKey: "holds",
+    header: "Holds",
+    cell: ({ row }) => <HoldsBadges holds={row.original.holds} />,
+    filterFn: (row, _columnId, filterValue: string) => {
+      const holds = normalizeHolds(row.original.holds)
+      if (!filterValue) return true
+      return holds.some((hold) =>
+        hold.toLowerCase().includes(filterValue.toLowerCase())
       )
     },
   },
   {
     accessorKey: "flag",
     header: () => <div className="text-center">Flag</div>,
-    cell: ({ row }) => {
-      // Initialize flagged state from the row data; fallback to false if undefined.
-      const [flagged, setFlagged] = useState<boolean>(row.original.flag || false)
-
-      // Function to handle flag toggling.
-      const handleFlagToggle = async () => {
-        const newFlag = !flagged
-        // Optimistically update the UI.
-        setFlagged(newFlag)
-        try {
-          // Call the Amplify update method for the flag (again must always contain containerID)
-              const updatedContainerStatus = await saveCargoUnit({
-                cargoUnitID: row.original.cargoUnitID,
-                flag: newFlag,
-              })              
-
-          console.log("Updated flag:", updatedContainerStatus)
-        } catch (error) {
-          console.error("Error updating flag:", error);
-        }
-      }
-
-      return (
-        <div className="text-center">
-          <Button variant="ghost" onClick={handleFlagToggle} className="p-2">
-            <Flag className={flagged ? "text-red-600" : "text-gray-500"} />
-          </Button>
-        </div>
-      )
-    },
+    cell: ({ row }) => (
+      <FlagCell
+        cargoUnitID={row.original.cargoUnitID}
+        initialFlag={Boolean(row.original.flag)}
+      />
+    ),
   },
 ]
