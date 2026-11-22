@@ -7,7 +7,7 @@ import {
 } from "../ui/tooltip";
 
 type HoldsValue =
-  | Record<string, boolean | string | null | undefined>
+  | Record<string, unknown>
   | (string | null)[]
   | string
   | null
@@ -22,7 +22,6 @@ interface ReserveButtonProps {
 function normalizeHolds(holds?: HoldsValue): string[] {
   if (!holds) return [];
 
-  // Handle AWSJSON if it arrives as a serialized JSON string
   let parsed: unknown = holds;
   if (typeof holds === "string") {
     const trimmed = holds.trim();
@@ -58,6 +57,9 @@ function normalizeHolds(holds?: HoldsValue): string[] {
   if (typeof parsed === "object" && parsed !== null) {
     return Object.entries(parsed as Record<string, unknown>)
       .filter(([, value]) => {
+        if (typeof value === "object" && value !== null && "BOOL" in value) {
+          return Boolean((value as { BOOL: unknown }).BOOL);
+        }
         if (typeof value === "boolean") return value;
         if (typeof value === "string") {
           const v = value.trim().toLowerCase();
@@ -77,6 +79,8 @@ export function ReserveButton({
   holds,
   onClick,
 }: ReserveButtonProps) {
+  console.log("ReserveButton props:", { containerStatus, holds });
+
   const status = containerStatus?.trim().toLowerCase() ?? "";
   const activeHolds = normalizeHolds(holds);
   const reasons: string[] = [];
