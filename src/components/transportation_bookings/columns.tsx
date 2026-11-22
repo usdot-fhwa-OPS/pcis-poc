@@ -29,7 +29,7 @@ import { terminalCapacityList } from "../terminal-capacity/terminal-capacity-cli
 import { saveCargoUnit } from "../cargo/cargo-units-client.tsx";
 import { matchDayAndOrder } from "../../lib/date-utils.tsx";
 import { ReservationStatusBadge } from "../reservations/reservation-status.tsx"
-import { ReserveButton } from "./reserve-button.tsx";}
+import { ReserveButton } from "./reserve-button.tsx";
 
 // Shortcut to generate times from 12:00 AM to 11:00 PM
 const TIME_OPTIONS = Array.from({ length: 24 }, (_, h) =>
