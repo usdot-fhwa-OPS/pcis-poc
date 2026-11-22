@@ -29,6 +29,7 @@ import { terminalCapacityList } from "../terminal-capacity/terminal-capacity-cli
 import { saveCargoUnit } from "../cargo/cargo-units-client.tsx";
 import { matchDayAndOrder } from "../../lib/date-utils.tsx";
 import { ReservationStatusBadge } from "../reservations/reservation-status.tsx"
+import { ReserveButton } from "./reserve-button.tsx";}
 
 // Shortcut to generate times from 12:00 AM to 11:00 PM
 const TIME_OPTIONS = Array.from({ length: 24 }, (_, h) =>
@@ -535,20 +536,11 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
                   }
                 }}
               >
-                <DialogTrigger>
-                <TooltipProvider>
-                  <Tooltip delayDuration={300}>
-                    <TooltipTrigger>
-                      <Button variant="outline" onClick={() => setIsDialogOpen(true)} disabled={row.original.containerStatus === "On-Ship"}>Reserve</Button>
-                    </TooltipTrigger>
-                    {row.original.containerStatus === "On-Ship" && (
-                      <TooltipContent>
-                        <p>Cargo Unit still on ship. Cannot reserve.</p>
-                      </TooltipContent>
-                    )}
-                  </Tooltip>
-                </TooltipProvider>
-                </DialogTrigger>
+                <ReserveButton
+                  containerStatus={row.original.containerStatus}
+                  holds={row.original.holds}
+                  onClick={() => setIsDialogOpen(true)}
+                />
                 <DialogContent className="sm:max-w-[425px]">
                   <DialogHeader>
                     <DialogTitle>Reserve Cargo Unit Pick-Up</DialogTitle>
