@@ -545,7 +545,7 @@ async function fetchTransOpOngoing(event) {
     TableName: CARGO_UNITS_TABLE,
     Limit: limit,
     ProjectionExpression: 'vesselID, cargoUnitID, origin, bcoName, bcoEmail, transopName, transopEmail, reservationDate, \
-                            reservationTime, reservationStatus, twicEscortRequired, flag, containerStatus',
+                            reservationTime, reservationStatus, twicEscortRequired, flag, containerStatus, holds',
     ExclusiveStartKey: exclusiveStartKey || undefined,
     FilterExpression: clauses.length ? clauses.join(" AND ") : undefined,
     ExpressionAttributeNames: Object.keys(expressionNames).length ? expressionNames : undefined,
