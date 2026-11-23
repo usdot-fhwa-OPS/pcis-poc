@@ -10,6 +10,7 @@
     QueryCommand,
     TransactWriteCommand,
   } from "@aws-sdk/lib-dynamodb";
+  import { createReservationRequestRoutes } from "./reservation-request.mjs";
   import { createReservationTrackingRoutes } from "./reservation-tracking.mjs";
 
 
@@ -693,6 +694,7 @@
     return response(200, result);
   }
 
+  const reservationRequestRoutes = createReservationRequestRoutes({ db: dynamo, response });
   const reservationTrackingRoutes = createReservationTrackingRoutes({ db: dynamo, response });
 
   export const handler = async (event) => {
@@ -729,6 +731,10 @@
           return await deleteReservation(event);
         case "POST /denyReservation":
           return await denyReservation(event);
+        case "GET /listEquipmentTypes":
+          return await reservationRequestRoutes.listEquipmentTypes(event);
+        case "PUT /createReservationRequest":
+          return await reservationRequestRoutes.createReservationRequest(event);
 
         
         case "POST /public/track":

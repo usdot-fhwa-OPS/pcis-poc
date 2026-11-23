@@ -258,3 +258,64 @@ export const denyReservation = async (reservationId:string): Promise<any> => {
 
 
 
+
+// I-3: equipment types and reservation requests.
+// These routes verify the caller's ID token, so they send it instead of the access token.
+const RESERVATIONS_API = 'https://ubw4jy0m7j.execute-api.us-east-1.amazonaws.com/dev'
+
+export type EquipmentTypeOption = {
+    equipmentType: string,
+    label: string,
+    defaultDurationMins: number,
+    gangsRequired: number
+}
+
+export type ReservationRequestInput = {
+    preferredStartAt: string,
+    moves: { cargoUnitID: string, equipmentType: string }[]
+}
+
+export type ReservationRequestResult = {
+    reservationId: string,
+    confirmationCode: string,
+    status: string,
+    terminalId: string,
+    startAt: string,
+    endAt: string,
+    durationMins: number
+}
+
+const idTokenHeaders = async () => {
+    const session = await fetchAuthSession();
+    return {
+        "Authorization": `Bearer ${session.tokens?.idToken?.toString()}`,
+        "Content-Type": "application/json",
+        "Accept": "*/*"
+    };
+}
+
+const readJsonOrThrow = async (response: Response) => {
+    const body = await response.json().catch(() => ({}));
+    if (!response.ok) {
+        throw new Error(body?.message || `Request failed (${response.status})`);
+    }
+    return body;
+}
+
+export const listEquipmentTypesForCargoUnit = async (cargoUnitID: string): Promise<EquipmentTypeOption[]> => {
+    const response = await fetch(`${RESERVATIONS_API}/listEquipmentTypes?cargoUnitID=${encodeURIComponent(cargoUnitID)}`, {
+        method: 'GET',
+        headers: await idTokenHeaders()
+    });
+    const body = await readJsonOrThrow(response);
+    return body.items as EquipmentTypeOption[];
+}
+
+export const createReservationRequest = async (request: ReservationRequestInput): Promise<ReservationRequestResult> => {
+    const response = await fetch(`${RESERVATIONS_API}/createReservationRequest`, {
+        method: 'PUT',
+        headers: await idTokenHeaders(),
+        body: JSON.stringify(request)
+    });
+    return (await readJsonOrThrow(response)) as ReservationRequestResult;
+}
