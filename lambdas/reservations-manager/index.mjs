@@ -11,6 +11,7 @@
     TransactWriteCommand,
   } from "@aws-sdk/lib-dynamodb";
   import { createReservationRequestRoutes } from "./reservation-request.mjs";
+  import { createReservationReviewRoutes } from "./reservation-review.mjs";
   import { createReservationTrackingRoutes } from "./reservation-tracking.mjs";
 
 
@@ -546,135 +547,8 @@
     return response(200, result);
   }
 
-  async function getAllReservationMoveByReservationId(reservationId) {
-
-    try {
-      const queryParams = {
-        TableName: RESERVATION_MOVES_TABLE,
-        IndexName: RESERVATION_MOVES_GSI,
-        KeyConditionExpression: "reservationId  = :val",
-        ExpressionAttributeValues: {
-          ":val": reservationId,
-        },
-      };
-
-      const queryResponse = await dynamo.send(new QueryCommand(queryParams));
-      const items = queryResponse.Items || [];
-
-      if (items.length === 0) {
-        return { statusCode: 200, body: "No items found matching the index value." };
-      }
-
-      return items;
-    } catch (error) {
-      console.error("Error executing deletion operation:", error);
-      return {
-        statusCode: 500,
-        body: JSON.stringify({ message: "Internal Server Error", error: error.message }),
-      };
-    }
-  }
-
-  async function getAllReservationEventByReservationId(reservationId) {
-
-    try {
-      const queryParams = {
-        TableName: RESERVATION_EVENTS_TABLE,
-        IndexName: RESERVATION_EVENTS_GSI,
-        KeyConditionExpression: "reservationId  = :val",
-        ExpressionAttributeValues: {
-          ":val": reservationId,
-        },
-      };
-
-      const queryResponse = await dynamo.send(new QueryCommand(queryParams));
-      const items = queryResponse.Items || [];
-
-      if (items.length === 0) {
-        return { statusCode: 200, body: "No items found matching the index value." };
-      }
-
-      return items;
-    } catch (error) {
-      console.error("Error executing deletion operation:", error);
-      return {
-        statusCode: 500,
-        body: JSON.stringify({ message: "Internal Server Error", error: error.message }),
-      };
-    }
-  }
-
-  async function denyReservation(event) {
-    const reservationId = event.queryStringParameters?.reservationId;
-    if (!reservationId) return response(400, { message: "Reservation ID is required" });
-    const nowIso = new Date().toISOString();
-    const txnItems = [
-      {
-        Update: {
-          TableName: RESERVATIONS_TABLE,
-          Key: {
-            reservationId: reservationId,
-          },
-          UpdateExpression:
-            "SET #s = :status, updatedAt = :updatedAt",
-          ExpressionAttributeNames: {
-            "#s": "status" // Map the placeholder to the actual keyword
-          },
-          ExpressionAttributeValues: {
-            ":status": 'DENIED',
-            ":updatedAt": nowIso,
-          },
-          // Optional: Return the item attributes as they appeared before deletion
-          ReturnValues: "ALL_OLD",
-        }
-      }
-    ]
-
-    const reservationMovesItems = await getAllReservationMoveByReservationId(reservationId);
-    if (reservationMovesItems.length > 0) {
-      reservationMovesItems.map(item => {
-        txnItems.push({
-          Delete: {
-            TableName: RESERVATION_MOVES_TABLE,
-            Key: {
-              moveId: item.moveId,
-            },
-            // Optional: Return the item attributes as they appeared before deletion
-            ReturnValues: "ALL_OLD",
-          }
-        })
-      })
-
-    }
-
-    const reservationEventItems = await getAllReservationEventByReservationId(reservationId);
-    if (reservationEventItems.length > 0) {
-      reservationEventItems.map(item => {
-        txnItems.push({
-          Delete: {
-            TableName: RESERVATION_EVENTS_TABLE,
-            Key: {
-              eventId: item.eventId,
-            },
-            // Optional: Return the item attributes as they appeared before deletion
-            ReturnValues: "ALL_OLD",
-          }
-        })
-      })
-
-    }
-
-
-    const command = new TransactWriteCommand({
-      TransactItems: txnItems
-    })
-
-    const result = await dynamo.send(command);
-
-
-    return response(200, result);
-  }
-
+  // The old denyReservation (which deleted the reservation's moves and events) was replaced by
+  // reservation-review.mjs, which marks the reservation DENIED and keeps its history.
 
   async function deleteReservationEvent(event) {
     const eventId = event.queryStringParameters?.eventId;
@@ -695,6 +569,7 @@
   }
 
   const reservationRequestRoutes = createReservationRequestRoutes({ db: dynamo, response });
+  const reservationReviewRoutes = createReservationReviewRoutes({ db: dynamo, response });
   const reservationTrackingRoutes = createReservationTrackingRoutes({ db: dynamo, response });
 
   export const handler = async (event) => {
@@ -730,7 +605,13 @@
         case "DELETE /deleteReservation":
           return await deleteReservation(event);
         case "POST /denyReservation":
-          return await denyReservation(event);
+          return await reservationReviewRoutes.denyReservation(event);
+        case "GET /listReservationRequests":
+          return await reservationReviewRoutes.listReservationRequests(event);
+        case "POST /acceptReservation":
+          return await reservationReviewRoutes.acceptReservation(event);
+        case "POST /modifyReservation":
+          return await reservationReviewRoutes.modifyReservation(event);
         case "GET /listEquipmentTypes":
           return await reservationRequestRoutes.listEquipmentTypes(event);
         case "PUT /createReservationRequest":

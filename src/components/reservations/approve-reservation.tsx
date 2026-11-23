@@ -1,130 +1,154 @@
 import { useState } from "react";
+import { toast } from "sonner";
+import { ChevronDownIcon, CircleCheckBig } from "lucide-react";
 import { Button } from "../ui/button";
-import { Check, ChevronDownIcon, CircleCheckBig } from "lucide-react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "../ui/collapsible";
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
-import { Label } from "../ui/label";
-import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
-import { TerminalOperatorDataTableMeta } from "../terminal-bookings/data-table.tsx";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "../ui/dialog";
+import { acceptReservation, GangOption, ReservationForReview } from "../reservation-cargo/reservation-manager-client";
+import { GangSelect } from "../reservation-cargo/gang-select";
+import { formatDuration, formatReservationTime } from "../reservation-cargo/reservation-format";
+import { TwicQuestion } from "../reservation-cargo/twic-question";
 
-interface ApproveButtonProps {
-    vesselId: string
-    cargoId: string
-    origin: string
-    bcoName: string
-    bcoEmail: string
-    transopName: string
-    transopEmail: string
-    reservationDate: string
-    reservationTime: string
-    dataTableMeta: any
-}
+type AcceptReservationDialogProps = {
+  reservation: ReservationForReview | null;
+  // Active gangs at the reservation's terminal.
+  gangs: GangOption[];
+  onClose: () => void;
+  onDone: () => void | Promise<void>;
+};
 
-export function ApproveReservation({vesselId, cargoId, origin, bcoName, bcoEmail, transopName, transopEmail, reservationDate, reservationTime, dataTableMeta}: ApproveButtonProps) {
+// I-4 Accept: the TO confirms a requested reservation as it is, assigns a gang to each cargo unit and
+// answers the TWIC escort question.
+export function AcceptReservationDialog({ reservation, gangs, onClose, onDone }: AcceptReservationDialogProps) {
+  const [showDetails, setShowDetails] = useState(false);
+  const [twicEscortRequired, setTwicEscortRequired] = useState<boolean | undefined>();
+  const [gangByMove, setGangByMove] = useState<Record<string, string>>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const [isDialogOpen, setIsDialogOpen] = useState(false)
-    const [isOpen, setIsOpen] = useState(false)
-    const [selectedValue, setSelectedValue] = useState(false)
+  const allGangsAssigned = Boolean(reservation?.moves.every((m) => gangByMove[m.moveId]));
 
-    const handleOpen = () => {
-        setIsDialogOpen(true);
+  function reset() {
+    setShowDetails(false);
+    setTwicEscortRequired(undefined);
+    setGangByMove({});
+  }
+
+  function close() {
+    reset();
+    onClose();
+  }
+
+  async function handleAccept() {
+    if (!reservation || twicEscortRequired === undefined || !allGangsAssigned) return;
+    setIsSubmitting(true);
+    try {
+      await acceptReservation(
+        reservation.reservationId,
+        twicEscortRequired,
+        reservation.moves.map((m) => ({ moveId: m.moveId, gangId: gangByMove[m.moveId] }))
+      );
+      toast.success(`Reservation ${reservation.confirmationCode} confirmed`);
+      reset();
+      await onDone();
+    } catch (error) {
+      toast.error((error as Error).message || "The reservation couldn't be confirmed. Please try again.");
+    } finally {
+      setIsSubmitting(false);
     }
+  }
 
-    const handleChange = (value: string) => {
-        setSelectedValue(value === "true");
-    }
+  const move = reservation?.moves[0];
+  const cargoUnits = reservation?.moves.map((m) => m.cargoUnitID).join(", ");
 
-    return (
-        <>
-        <Dialog
-            open={isDialogOpen}
-            onOpenChange={(open) => {
-                setIsDialogOpen(open)
-            }}
-        >
-            <DialogTrigger>
-                <Button
-                    size="sm"
-                    className="bg-green-600 hover:bg-green-600/90"
-                    onClick={handleOpen}
-                >
-                    <Check className="inline-block h-4 w-4" />Approve
+  return (
+    <Dialog open={reservation !== null} onOpenChange={(open) => !open && close()} disablePointerDismissal>
+      <DialogContent className="sm:max-w-md gap-6 p-0 text-left max-h-[calc(100dvh-2rem)] grid-rows-[auto_minmax(0,1fr)_auto]">
+        <DialogHeader className="flex flex-row items-center gap-0 min-h-[53px] p-4 border-b">
+          <DialogTitle className="text-lg">Accept Reservation</DialogTitle>
+        </DialogHeader>
+        {reservation && (
+          <div className="px-4 min-h-0 overflow-y-auto">
+            <div className="flex items-start gap-4 mb-6">
+              <span className="inline-flex shrink-0 rounded-full p-3 bg-green-100">
+                <CircleCheckBig className="size-6 stroke-green-600" />
+              </span>
+              <div>
+                <p className="text-base font-semibold mb-2">
+                  Accept reservation {reservation.confirmationCode} for cargo unit {cargoUnits}?
+                </p>
+                <p className="text-gray-600">
+                  It will be confirmed for {formatReservationTime(reservation.startAt)} and move to the Ongoing tab.
+                  The Transportation Coordinator will be notified.
+                </p>
+              </div>
+            </div>
+            <Collapsible open={showDetails} onOpenChange={setShowDetails} className="mb-6 pb-4 border-b">
+              <CollapsibleTrigger asChild>
+                <Button variant="ghost" className="group w-fit">
+                  {showDetails ? "Hide Details" : "Show Details"}
+                  <ChevronDownIcon className="ml-auto group-data-[state=open]:rotate-180" />
                 </Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-md gap-6 p-0">
-                <DialogHeader className="flex flex-row items-center gap-0 min-h-[53px] p-4 border-b">
-                    <DialogTitle className="text-lg">Approve Reservation</DialogTitle>
-                </DialogHeader>
-                <div className="px-4">
-                    <div className="flex items-start gap-4 mb-6">
-                        <span className="inline-flex shrink-0 rounded-full p-3 bg-green-100">
-                            <CircleCheckBig className="size-6 stroke-green-600" />
-                        </span>
-                        <div>
-                            <p className="text-base font-semibold mb-2">Are you sure you want to approve the reservation for container <span className="inline-block">{cargoId}</span>?</p>
-                            <p className="text-gray-600">This reservation will be moved to the Ongoing tab and the transportation operator will be notified.</p>
-                        </div>
-                    </div>
-                    <Collapsible 
-                        open={isOpen}
-                        onOpenChange={setIsOpen}
-                        className="mb-6 pb-4 border-b"
-                    >
-                        <CollapsibleTrigger asChild>
-                            <Button variant="ghost" className="group w-fit">
-                                {isOpen ? "Hide Details" : "Show Details"}
-                                <ChevronDownIcon className="ml-auto group-data-[state=open]:rotate-180" />
-                            </Button>
-                        </CollapsibleTrigger>
-                        <CollapsibleContent className="mt-4 pt-4 border-t">
-                            <div className="grid grid-cols-1 sm:grid-cols-[max-content_1fr] gap-y-2 sm:gap-x-8 sm:gap-y-4 items-start pb-3 sm:pb-0">
-                                <div className="font-semibold pt-4 sm:pt-0">Vessel ID:</div>
-                                <div>{vesselId}</div>
-                                <div className="font-semibold pt-4 sm:pt-0">Terminal Origin:</div>
-                                <div>{origin}</div>
-                                <div className="font-semibold pt-4 sm:pt-0">BCO:</div>
-                                <div>
-                                    <p>{bcoName}</p>
-                                    <p className="break-all"><a href={`mailto:${bcoEmail}`} className="text-blue-500 hover:underline">{bcoEmail}</a></p>
-                                </div>
-                                <div className="font-semibold pt-4 sm:pt-0">Transportation Operator:</div>
-                                <div>
-                                    <p>{transopName}</p>
-                                    <p className="break-all"><a href={`mailto:${transopEmail}`} className="text-blue-500 hover:underline">{transopEmail}</a></p>
-                                </div>
-                                <div className="font-semibold pt-4 sm:pt-0">Date and Time Requested:</div>
-                                <div className="flex gap-4 items-center">
-                                    <div>{reservationDate}</div>
-                                    <div>{reservationTime}</div>
-                                </div>
-                            </div>
-                        </CollapsibleContent>
-                    </Collapsible>
-                    <p className="text-base font-semibold mb-4">Is a <abbr className="decoration-[1px] decoration-dotted underline-offset-4" title="Transportation Worker Identification Credential">TWIC</abbr> escort required for this reservation?</p>
-                    <RadioGroup onValueChange={handleChange} className="grid-cols-2 grid-rows-1 gap-6 w-fit">
-                        <div className="flex items-center gap-2">
-                            <RadioGroupItem value="true" id="required"/>
-                            <Label className="text-base font-normal" htmlFor="required">Yes</Label>
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <RadioGroupItem value="false" id="not-required"/>
-                            <Label className="text-base font-normal" htmlFor="not-required">No</Label>
-                        </div>
-                    </RadioGroup>
+              </CollapsibleTrigger>
+              <CollapsibleContent className="mt-4 pt-4 border-t">
+                <div className="grid grid-cols-1 sm:grid-cols-[max-content_1fr] gap-y-2 sm:gap-x-8 sm:gap-y-4 items-start pb-3 sm:pb-0">
+                  <div className="font-semibold">Vessel ID:</div>
+                  <div>{move?.vesselID ?? "—"}</div>
+                  <div className="font-semibold">Origin:</div>
+                  <div>{move?.origin ?? "—"}</div>
+                  <div className="font-semibold">BCO:</div>
+                  <div>
+                    <p>{move?.bcoName ?? "—"}</p>
+                    {move?.bcoEmail && (
+                      <p className="break-all"><a href={`mailto:${move.bcoEmail}`} className="text-blue-500 hover:underline">{move.bcoEmail}</a></p>
+                    )}
+                  </div>
+                  <div className="font-semibold">Transportation Coordinator:</div>
+                  <div>
+                    <p>{move?.transopName || reservation.requestingUserName || "—"}</p>
+                    <p className="break-all"><a href={`mailto:${reservation.requestingUserEmail}`} className="text-blue-500 hover:underline">{reservation.requestingUserEmail}</a></p>
+                  </div>
+                  <div className="font-semibold">Requested Time:</div>
+                  <div>{formatReservationTime(reservation.startAt)}</div>
+                  <div className="font-semibold">Equipment:</div>
+                  <div>
+                    {reservation.moves.map((m) => `${m.equipmentLabel} (${formatDuration(m.durationMins)})`).join(", ")}
+                  </div>
                 </div>
-                <DialogFooter className="mx-0 mb-0">
-                    <Button variant="outline" onClick={() => setIsDialogOpen(false)}>Cancel</Button>
-                    <Button
-                        className="bg-green-600 hover:bg-green-600/90"
-                        onClick={() =>  {
-                            (dataTableMeta as TerminalOperatorDataTableMeta)?.updateBooking(cargoId, "Pending Pick Up", undefined, undefined, selectedValue); 
-                        }}
-                    >
-                        Yes, Approve
-                    </Button>
-                </DialogFooter>
-            </DialogContent>
-        </Dialog>
-        </>
-    )
+              </CollapsibleContent>
+            </Collapsible>
+            <div className="grid gap-2 mb-6">
+              <p className="text-sm font-semibold">
+                Gang Assignment <span className="text-red-600">*</span>
+              </p>
+              {reservation.moves.map((m) => (
+                <div key={m.moveId} className="flex items-center gap-3">
+                  <span className="w-32 text-xs text-gray-600">
+                    {reservation.moves.length > 1 ? `${m.cargoUnitID} · ` : ""}{m.equipmentLabel}
+                  </span>
+                  <GangSelect
+                    gangs={gangs}
+                    equipmentType={m.equipmentType}
+                    equipmentLabel={m.equipmentLabel}
+                    value={gangByMove[m.moveId]}
+                    onChange={(gangId) => setGangByMove((prev) => ({ ...prev, [m.moveId]: gangId }))}
+                  />
+                </div>
+              ))}
+            </div>
+            <TwicQuestion idPrefix="accept" value={twicEscortRequired} onChange={setTwicEscortRequired} />
+          </div>
+        )}
+        <DialogFooter className="mx-0 mb-0">
+          <Button variant="outline" onClick={close} disabled={isSubmitting}>Cancel</Button>
+          <Button
+            className="bg-green-600 hover:bg-green-600/90"
+            onClick={handleAccept}
+            disabled={twicEscortRequired === undefined || !allGangsAssigned || isSubmitting}
+          >
+            {isSubmitting ? "Accepting…" : "Yes, Accept"}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
 }

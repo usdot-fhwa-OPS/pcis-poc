@@ -12,11 +12,11 @@ import { v4 as uuidv4 } from "uuid";
 import { GetCommand, QueryCommand, TransactWriteCommand } from "@aws-sdk/lib-dynamodb";
 import { CognitoJwtVerifier } from "aws-jwt-verify";
 
-const RESERVATIONS_TABLE = process.env.RESERVATIONS_TABLE || "Reservations";
-const RESERVATION_EVENTS_TABLE = process.env.RESERVATION_EVENTS_TABLE || "ReservationEvents";
-const RESERVATION_MOVES_TABLE = process.env.RESERVATION_MOVES || "ReservationMoves";
-const CARGO_UNITS_TABLE = process.env.CARGO_UNITS_TABLE || "CargoUnits";
-const TERMINAL_RESOURCES_TABLE = process.env.TERMINAL_RESOURCES_TABLE || "TerminalResources";
+export const RESERVATIONS_TABLE = process.env.RESERVATIONS_TABLE || "Reservations";
+export const RESERVATION_EVENTS_TABLE = process.env.RESERVATION_EVENTS_TABLE || "ReservationEvents";
+export const RESERVATION_MOVES_TABLE = process.env.RESERVATION_MOVES || "ReservationMoves";
+export const CARGO_UNITS_TABLE = process.env.CARGO_UNITS_TABLE || "CargoUnits";
+export const TERMINAL_RESOURCES_TABLE = process.env.TERMINAL_RESOURCES_TABLE || "TerminalResources";
 
 const USER_POOL_ID = process.env.USER_POOL_ID || "us-east-1_ODcx7VXFP";
 const USER_POOL_CLIENT_IDS = (
@@ -38,7 +38,7 @@ export const LEGACY_REQUESTED_STATUS = "Pending Reservation Approval";
 
 const MAX_MOVES = 10;
 // Allow a little clock skew between the browser and the server.
-const PAST_TOLERANCE_MS = 5 * 60 * 1000;
+export const PAST_TOLERANCE_MS = 5 * 60 * 1000;
 
 export class HttpError extends Error {
   constructor(statusCode, message) {
@@ -74,6 +74,10 @@ export async function authenticate(event, verify = defaultVerify) {
     email: String(claims.email).toLowerCase(),
     role: String(claims["custom:role"] || ""),
     name: [claims.given_name, claims.family_name].filter(Boolean).join(" "),
+    terminalIds: String(claims["custom:terminalId"] || "")
+      .split(",")
+      .map((id) => id.trim())
+      .filter(Boolean),
   };
 }
 
@@ -120,11 +124,11 @@ export function legacyDateTime(date, timeZone = TERMINAL_TIME_ZONE) {
   return { reservationDate, reservationTime };
 }
 
-function sameEmail(a, b) {
+export function sameEmail(a, b) {
   return Boolean(a) && Boolean(b) && String(a).toLowerCase() === String(b).toLowerCase();
 }
 
-function toEquipmentOption(record) {
+export function toEquipmentOption(record) {
   return {
     equipmentType: record.equipmentType,
     label: record.label || record.equipmentType,
@@ -133,7 +137,7 @@ function toEquipmentOption(record) {
   };
 }
 
-function isUsableEquipment(record) {
+export function isUsableEquipment(record) {
   return (
     record &&
     record.active !== false &&
