@@ -515,6 +515,7 @@ async function updateBooking(id: string, status: string, reservationDate?: strin
 
     // Refresh relevant data after successful update
     await fetchTerminalOperatorModified();
+    await fetchterminal_operator_ongoing();
 
     return true;
   } catch (error) {

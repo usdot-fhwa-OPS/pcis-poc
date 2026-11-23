@@ -4,12 +4,13 @@ import { useState } from "react";
 import { Flag, ShieldHalf } from "lucide-react";
 import {TerminalOperatorDataTableMeta} from './data-table.tsx'
 import { TermOperatorCompletedBookings } from "../../routes/reservation.tsx"
-import { Checkbox } from "../ui/checkbox.tsx";
 import { Badge } from "../ui/badge.tsx";
 import { saveCargoUnit } from "../cargo/cargo-units-client.tsx";
+import { ReservationStatusBadge, RecordOutcomeCell } from "../reservations/reservation-status.tsx";
+
+
 export const columns = (status: string): ColumnDef<any>[] => {
   const baseColumns: ColumnDef<any>[] = [
-
     { accessorKey: "vesselID", header: "Vessel ID" },
     { accessorKey: "cargoUnitID", header: "Cargo Unit ID" }, 
     { accessorKey: "origin", header: "Origin" },
@@ -19,8 +20,6 @@ export const columns = (status: string): ColumnDef<any>[] => {
     { accessorKey: "transopEmail", header: "Transportation Coordinator Email" },
     { accessorKey: "reservationDate", header: "Date Requested" },
     { accessorKey: "reservationTime", header: "Time Requested" },
-  
-
   ];
 
 
@@ -67,53 +66,22 @@ export const columns = (status: string): ColumnDef<any>[] => {
 
   if (status === "Ongoing") {
     baseColumns.push({
-      accessorKey: "reservationStatus",
-      header: () => <div className="text-center">Status</div>,
-     // Adjust width as needed
-      cell: ({ row }) => {
-        const status = row.original.reservationStatus; // Get status value
-        const isLate = status === "Late for Pick Up"; // Check if status is "Late"
-  
-        return (
-          <div className="min-w-[150px] text-center">
-            <Badge
-              className={`border-transparent rounded-full ${
-                isLate ? "bg-red-100 hover:bg-red-100/80 text-red-700" : "bg-blue-50 hover:bg-blue-50/80 text-blue-700"
-              } whitespace-normal break-words`}
-            >
-              {status}
-            </Badge>
-          </div>
-        );
-      },
-    },
-    {
-      id: "changepickupstatus",
-      header: "Mark as Late for Pick Up",
-      cell: ({ row, table}) => {
-        const [isChecked, setIsChecked] = useState<boolean>(row.original.reservationStatus === "Late for Pick Up");
-  
-        const markLateforPickup = async () => {
-          const success = await (table.options.meta as TerminalOperatorDataTableMeta)?.markBookingLate(
-            row.original.cargoUnitID,  
-            "Late for Pick Up",
-          );
-          
-          if (success) {
-            setIsChecked((prev) => !prev);
-          } else {
-            console.error("Booking update failed. State not updated.");
-          }
-        };
-
-        return (
-          <Checkbox
-            disabled={row.original.reservationStatus == "Late for Pick Up"}
-            checked={isChecked}
-            onCheckedChange={markLateforPickup}
+        accessorKey: "reservationStatus",
+        header: () => <div className="text-center">Status</div>,
+        cell: ({ row }) => (
+          <ReservationStatusBadge
+            reservationDate={row.original.reservationDate}
+            reservationTime={row.original.reservationTime}
+            reservationStatus={row.original.reservationStatus}
           />
-        );
+        ),
       },
+    {
+      id: "recordOutcome",
+      header: () => <div className="text-center">Record Outcome</div>,
+      cell: ({ row, table }) => (
+        <RecordOutcomeCell row={row} table={table} />
+      ),
       enableSorting: false,
       enableColumnFilter: false,
     },
@@ -151,7 +119,6 @@ export const columns = (status: string): ColumnDef<any>[] => {
     });
   }
   
-
   baseColumns.push({
     accessorKey: "flag",
     header: () => <div className="text-center">Flag</div>,
@@ -241,24 +208,16 @@ export const CompletedColumn = (): ColumnDef<any>[] => {
     },
     {
       accessorKey: "reservationStatus",
-      header: () => <div className="text-center">Reservation Status</div>,
-      cell: ({ row }) => {
-        const status = row.original.reservationStatus; // Get status value
-        const isLate = status === "Late for Pick Up"; // Check if status is "Late"
-
-        return (
-          <div className="min-w-[112px] text-center">
-            <Badge
-              className={`border-transparent rounded-full ${
-                isLate ? "bg-red-100 hover:bg-red-100/80 text-red-700" : "bg-secondary hover:bg-secondary/80 text-secondary-foreground"
-              } whitespace-normal break-words`}
-            >
-              {status}
-            </Badge>
-          </div>
-        );
-      },
-      size: 200,
+      header: () => (
+        <div className="min-w-[112px] text-center">Reservation Status</div>
+      ),
+      cell: ({ row }) => (
+        <ReservationStatusBadge
+          reservationDate={row.original.reservationDate}
+          reservationTime={row.original.reservationTime}
+          reservationStatus={row.original.reservationStatus}
+        />
+      ),
     },
     {
       accessorKey: "twicEscortRequired",

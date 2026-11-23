@@ -64,7 +64,11 @@ export const saveCargoUnit = async (cargoUnit:any): Promise<string> => {
         },
         body: JSON.stringify(cargoUnit)
     });
-    const result = (await response.json());
+    const result = await response.json();
+    if (!response.ok) {
+        console.error("saveCargoUnit failed:", response.status, result);
+        throw new Error(`saveCargoUnit failed (${response.status})`);
+    }
     return result;
 }
 

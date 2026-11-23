@@ -532,7 +532,8 @@ function Index() {
     
         // Refresh relevant data after successful update
         await fetchTerminalOperatorModified();
-    
+        await fetchterminal_operator_ongoing();
+
         return true;
       } catch (error) {
         console.error("Error updating booking status:", error);
