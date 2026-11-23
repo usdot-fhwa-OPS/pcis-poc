@@ -3,10 +3,17 @@ import { Badge } from "../ui/badge.tsx";
 import { Button } from "../ui/button.tsx";
 import { useState } from "react";
 import { Flag, CalendarIcon, Clock, Pencil, ShieldHalf } from "lucide-react";
+//import { Checkbox } from "../ui/checkbox.tsx"
 import { Calendar } from "../ui/calendar"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog"
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "../ui/tooltip"
 import { differenceInDays, format, isWeekend } from "date-fns"
 import { cn } from "../../lib/utils"
 import { TransOpUpcomingBookings, TransOpOngoingBookings } from "../../routes/reservation.tsx";
@@ -15,6 +22,7 @@ import { TransOpUpcomingBookings, TransOpOngoingBookings } from "../../routes/re
 import { TransOpDataTableMeta } from "./data-table.tsx";
 
 import { TransOperatorCompletedBookings } from "../../routes/reservation.tsx"
+import { Checkbox } from "../ui/checkbox.tsx";
 import { toast } from "sonner";
 import { useAppDispatch } from "../../hooks.tsx";
 import { populate } from "../terminal-capacity/terminal-capacity-state.tsx";
@@ -22,13 +30,7 @@ import { TerminalCapacityDomain } from "../terminal-capacity/terminal-capacity-d
 import { terminalCapacityList } from "../terminal-capacity/terminal-capacity-client.tsx";
 import { saveCargoUnit } from "../cargo/cargo-units-client.tsx";
 import { matchDayAndOrder } from "../../lib/date-utils.tsx";
-import { ReservationStatusBadge } from "../reservations/reservation-status.tsx"
-import { ReserveButton } from "./reserve-button.tsx";
 
-// Shortcut to generate times from 12:00 AM to 11:00 PM
-const TIME_OPTIONS = Array.from({ length: 24 }, (_, h) =>
-  format(new Date(2000, 0, 1, h), "hh:mm a"),
-);
 
 export const columns = (): ColumnDef<any>[] => {
   const baseColumns: ColumnDef<TransOpUpcomingBookings>[] = [
@@ -191,13 +193,21 @@ export const CompletedColumn = (): ColumnDef<any>[] => {
       header: () => (
         <div className="min-w-[112px] text-center">Reservation Status</div>
       ),
-      cell: ({ row }) => (
-        <ReservationStatusBadge
-          reservationDate={row.original.reservationDate}
-          reservationTime={row.original.reservationTime}
-          reservationStatus={row.original.reservationStatus}
-        />
-      ),
+      cell: ({ row }) => {
+        const status = row.original.reservationStatus; // Get status value
+        const isLate = status === "Late for Pick Up"; // Check if status is "Late"
+        return (
+          <div className="min-w-[112px] text-center">
+            <Badge
+              className={`border-transparent rounded-full ${
+                isLate ? "bg-red-100 hover:bg-red-100/80 text-red-700" : "bg-secondary hover:bg-secondary/80 text-secondary-foreground"
+              } whitespace-normal break-words`}
+            >
+              {status}
+            </Badge>
+          </div>
+        );
+      },
     },
     {
       accessorKey: "resPickupDate",
@@ -511,6 +521,33 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
 
         }
 
+        const timeOptions = [
+          "12:00 AM",
+          "01:00 AM",
+          "02:00 AM",
+          "03:00 AM",
+          "04:00 AM",
+          "05:00 AM",
+          "06:00 AM",
+          "07:00 AM",
+          "08:00 AM",
+          "09:00 AM",
+          "10:00 AM",
+          "11:00 AM",
+          "12:00 PM",
+          "01:00 PM",
+          "02:00 PM",
+          "03:00 PM",
+          "04:00 PM",
+          "05:00 PM",
+          "06:00 PM",
+          "07:00 PM",
+          "08:00 PM",
+          "09:00 PM",
+          "10:00 PM",
+          "11:00 PM",
+        ]
+
         const handleDateSelect = (selectedDate: Date | undefined) => {
           if (!selectedDate) return;
           setDate(selectedDate)
@@ -530,11 +567,20 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
                   }
                 }}
               >
-                <ReserveButton
-                  containerStatus={row.original.containerStatus}
-                  holds={row.original.holds}
-                  onClick={() => setIsDialogOpen(true)}
-                />
+                <DialogTrigger>
+                <TooltipProvider>
+                  <Tooltip delayDuration={300}>
+                    <TooltipTrigger>
+                      <Button variant="outline" onClick={() => setIsDialogOpen(true)} disabled={row.original.containerStatus === "On-Ship"}>Reserve</Button>
+                    </TooltipTrigger>
+                    {row.original.containerStatus === "On-Ship" && (
+                      <TooltipContent>
+                        <p>Cargo Unit still on ship. Cannot reserve.</p>
+                      </TooltipContent>
+                    )}
+                  </Tooltip>
+                </TooltipProvider>
+                </DialogTrigger>
                 <DialogContent className="sm:max-w-[425px]">
                   <DialogHeader>
                     <DialogTitle>Reserve Cargo Unit Pick-Up</DialogTitle>
@@ -569,7 +615,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
                         <SelectValue placeholder="Select time" />
                       </SelectTrigger>
                       <SelectContent>
-                        {TIME_OPTIONS.map((timeOption) => (
+                        {timeOptions.map((timeOption) => (
                         <SelectItem key={timeOption} value={timeOption}>
                           {timeOption}
                         </SelectItem>
@@ -596,16 +642,49 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
                 </DialogContent>
               </Dialog>
             ) : (
-              <ReservationStatusBadge
-                              reservationDate={row.original.reservationDate}
-                              reservationTime={row.original.reservationTime}
-                              reservationStatus={row.original.reservationStatus}
-              />
+              <Badge
+                className={`border-transparent rounded-full ${
+                  row.original.reservationStatus === "Late for Pick Up" ? "bg-red-100 hover:bg-red-100/80 text-red-700" : "bg-green-50 text-green-600 hover:bg-green-50/80"
+                } whitespace-normal break-words`}
+              >
+                {row.original.reservationStatus}
+              </Badge>
             )}
           </div>
         );
       },
     
+    },
+    {
+      id: "changepickupstatus",
+      header: () => <div className="text-center">Mark as Picked Up</div>,
+      cell: ({ row, table}) => {
+        const [isChecked, setIsChecked] = useState<boolean>(row.original.reservationStatus === "Picked Up");
+  
+        const handlePickUp = async () => {
+          const success = await (table.options.meta as TransOpDataTableMeta)?.updateTransOpBooking(
+            row.original.cargoUnitID, 
+            "Picked Up",
+            new Date().toLocaleDateString('en-US')
+          );
+          
+          if (success) {
+            setIsChecked((prev) => !prev);
+          } else {
+            console.error("Reservation update failed. State not updated.");
+          }
+        };
+
+        return (
+          <Checkbox
+            disabled={row.original.reservationStatus !== "Pending Pick Up" && row.original.reservationStatus !== "Late for Pick Up"}
+            checked={isChecked}
+            onCheckedChange={handlePickUp}
+          />
+        );
+      },
+      enableSorting: false,
+      enableColumnFilter: false,
     },
     {
       accessorKey: "modifyBooking",
@@ -630,6 +709,33 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
             setIsDialogOpen(false)
           }
         }
+
+        const timeOptions = [
+          "12:00 AM",
+          "01:00 AM",
+          "02:00 AM",
+          "03:00 AM",
+          "04:00 AM",
+          "05:00 AM",
+          "06:00 AM",
+          "07:00 AM",
+          "08:00 AM",
+          "09:00 AM",
+          "10:00 AM",
+          "11:00 AM",
+          "12:00 PM",
+          "01:00 PM",
+          "02:00 PM",
+          "03:00 PM",
+          "04:00 PM",
+          "05:00 PM",
+          "06:00 PM",
+          "07:00 PM",
+          "08:00 PM",
+          "09:00 PM",
+          "10:00 PM",
+          "11:00 PM",
+        ]
 
         const handleDateSelect = (selectedDate: Date | undefined) => {
           if (!selectedDate) return;
@@ -682,7 +788,7 @@ export const OngoingColumn = (): ColumnDef<any>[] => {
                     <SelectValue placeholder="Select time" />
                   </SelectTrigger>
                   <SelectContent>
-                    {TIME_OPTIONS.map((timeOption) => (
+                    {timeOptions.map((timeOption) => (
                       <SelectItem key={timeOption} value={timeOption}>
                         {timeOption}
                       </SelectItem>

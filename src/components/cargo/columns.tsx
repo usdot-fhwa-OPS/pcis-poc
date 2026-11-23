@@ -5,12 +5,7 @@ import { Flag } from "lucide-react"
 import { useEffect, useState } from "react"
 import { UpcomingCargo } from "../../routes/cargo"
 import { Button } from "../ui/button"
-import { Checkbox } from "../ui/checkbox"
-import {
-  getUnselectableReason,
-  isCargoSelectable,
-  normalizeHolds,
-} from "./cargo-availability"
+import { normalizeHolds } from "./cargo-availability"
 import { CargoStatusCell } from "./cargo-status-cell"
 import { saveCargoUnit } from "./cargo-units-client"
 import { CargoTableMeta } from "./cargo-table"
@@ -54,47 +49,6 @@ function FlagCell({
 }
 
 export const columns: ColumnDef<UpcomingCargo>[] = [
-  {
-    id: "select",
-    header: ({ table }) => {
-      const hasSelectableRows = table
-        .getRowModel()
-        .rows.some((row) => row.getCanSelect())
-
-      return (
-        <Checkbox
-          checked={
-            hasSelectableRows &&
-            (table.getIsAllPageRowsSelected() ||
-              (table.getIsSomePageRowsSelected() && "indeterminate"))
-          }
-          disabled={!hasSelectableRows}
-          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-          aria-label="Select all ready cargo"
-        />
-      )
-    },
-    cell: ({ row }) => {
-      const selectable = isCargoSelectable(row.original)
-      const disabledReason = getUnselectableReason(row.original)
-
-      return (
-        <div
-          title={disabledReason ?? "Ready for pickup"}
-          className="flex items-center"
-        >
-          <Checkbox
-            checked={row.getIsSelected()}
-            disabled={!selectable}
-            onCheckedChange={(value) => row.toggleSelected(!!value)}
-            aria-label={`Select cargo ${row.original.cargoUnitID}`}
-          />
-        </div>
-      )
-    },
-    enableSorting: false,
-    enableHiding: false,
-  },
   {
     accessorKey: "vesselID",
     header: "Vessel ID",
