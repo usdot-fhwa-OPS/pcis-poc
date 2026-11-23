@@ -557,6 +557,8 @@ async function fetchTransOpOngoing(event) {
     (b.createdAt || "").localeCompare(a.createdAt || "")
   );
 
+  console.log(CARGO_UNITS_TABLE, JSON.stringify(result.Items));
+
   return response(200, {
     items,
     count: items.length,
