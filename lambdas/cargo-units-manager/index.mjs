@@ -772,6 +772,13 @@ async function listCargoUnits(event, cognitoGroups, userAttributes) {
   });
 }
 
+function normalizeHolds(holds) {
+  if (!holds) return [];
+  if (typeof holds === "string") {
+    return holds.split(",").map((h) => h.trim()).filter(Boolean);
+  }
+  return holds.filter((h) => h && String(h).trim());
+}
 
 async function saveCargoUnit(event) {
   const body = event.body
@@ -785,8 +792,28 @@ async function saveCargoUnit(event) {
       Key: { cargoUnitID: record.cargoUnitID },
     })
   );
-  let existingRecItem = existingRec.Item; 
+  let existingRecItem = existingRec.Item;
   if (existingRecItem) {
+    const storedHolds = normalizeHolds(existingRecItem.holds);
+    const storedStatus = existingRecItem.containerStatus || "On-Ship"; // missing = On-Ship
+  
+    const isAssigningTransop =
+      record.reservationStatus === "Pending Transportation Coordinator Approval" ||
+      (record.transopEmail && record.transopEmail !== existingRecItem.transopEmail);
+  
+    if (isAssigningTransop) {
+      if (storedStatus === "On-Ship") {
+        return response(409, {
+          message: "Cannot assign a Transportation Coordinator while cargo is still On-Ship.",
+        });
+      }
+      if (storedHolds.length > 0) {
+        return response(409, {
+          message: `Cannot assign a Transportation Coordinator while cargo has holds: ${storedHolds.join(", ")}`,
+        });
+      }
+    }
+  
     existingRecItem.updatedAt = nowIso;
     existingRecItem.createdAt = existingRec.Item.createdAt;
     Object.keys(record).forEach(key => {

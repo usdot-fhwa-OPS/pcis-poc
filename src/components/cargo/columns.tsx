@@ -114,4 +114,4 @@ export const columns: ColumnDef<UpcomingCargo>[] = [
       />
     ),
   },
-]
+  ]
