@@ -12,6 +12,8 @@ export type TerminalResourceDomian = {
     createdBy: string,            // Email of the user who created it
     updatedAt: string,            // ISO 8601 UTC
     updatedBy: string,            // Email of the user who last changed it
+    deletedAt?: string,           // ISO 8601 UTC; set when soft-deleted (lists hide these by default)
+    deletedBy?: string,           // Email of the user who deleted it
 
     record: EquipmentDomain | UnitDomain | GangDomain | UnitDomain | ClosureDomain | OutageDomain;
 }

@@ -7,4 +7,5 @@ export type UnitDomain = {
   inService: boolean,           // false = removed long-term; short breaks are OUTAGEs
   defaultDurationMins?: number, // Overrides the type's default for this unit only
   notes?: string,               // Up to 500 characters
+  active: boolean,              // false = deleted (soft delete)
 }
