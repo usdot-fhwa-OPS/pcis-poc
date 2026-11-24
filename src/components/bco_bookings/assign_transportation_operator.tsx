@@ -74,7 +74,7 @@ export default function TransportationCoordinator({ row, table }: { row: any, ta
 
                 }}
             >
-              <DialogTrigger asChild>
+              <DialogTrigger>
                   <span className="inline-block">
                       <TooltipProvider>
                           <Tooltip delayDuration={300}>
