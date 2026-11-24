@@ -775,14 +775,24 @@ async function listCargoUnits(event, cognitoGroups, userAttributes) {
   });
 }
 
-// Handles string ("A, B"), array, and DynamoDB Set shapes.
 function normalizeHolds(holds) {
   if (!holds) return [];
   if (typeof holds === "string") {
     return holds.split(",").map((h) => h.trim()).filter(Boolean);
   }
-  const list = holds instanceof Set ? Array.from(holds) : Array.isArray(holds) ? holds : [];
-  return list.filter((h) => h && String(h).trim());
+  if (Array.isArray(holds)) {
+    return holds.filter((h) => h && String(h).trim());
+  }
+  if (holds instanceof Set) {
+    return Array.from(holds).filter((h) => h && String(h).trim());
+  }
+  if (typeof holds === "object") {
+    // Map shape: { customs: true, line: false } -> ["customs"]
+    return Object.entries(holds)
+      .filter(([, active]) => Boolean(active))
+      .map(([name]) => name);
+  }
+  return [];
 }
 
 async function saveCargoUnit(event, cognitoGroups) {

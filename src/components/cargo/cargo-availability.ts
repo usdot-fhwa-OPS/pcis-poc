@@ -36,17 +36,24 @@ export function normalizeHolds(holds?: RawHolds): string[] {
       .filter(Boolean)
   }
 
-  let list: unknown[] = []
   if (Array.isArray(holds)) {
-    list = holds
-  } else if (holds instanceof Set) {
-    list = Array.from(holds)
+    return holds.filter(
+      (hold): hold is string => typeof hold === "string" && hold.trim() !== ""
+    )
   }
-  // Anything else (e.g. {}) is not a readable list of holds.
 
-  return list.filter(
-    (hold): hold is string => typeof hold === "string" && hold.trim() !== ""
-  )
+  if (holds instanceof Set) {
+    return Array.from(holds).filter((hold) => hold && hold.trim() !== "")
+  }
+
+  if (typeof holds === "object") {
+    // Map shape: { customs: true, line: false } -> ["customs"]
+    return Object.entries(holds)
+      .filter(([, active]) => Boolean(active))
+      .map(([name]) => name)
+  }
+
+  return []
 }
 
 export function isCargoSelectable(cargo: CargoAvailabilityItem): boolean {
