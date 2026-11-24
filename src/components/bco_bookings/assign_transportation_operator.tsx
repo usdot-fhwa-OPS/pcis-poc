@@ -14,6 +14,12 @@ import { normalizeHolds, toCargoStatus } from "../cargo/cargo-availability";
 
 export default function TransportationCoordinator({ row, table }: { row: any, table: any }) {
 
+    console.log("TC row", row.original.cargoUnitID, {
+      holds: row.original.holds,
+      status: row.original.containerStatus,
+      normalized: normalizeHolds(row.original.holds),
+    })
+
     const [data, setData] = useState<User[]>([])
     const [tempName, setTempName] = useState("")
     const [tempEmail, setTempEmail] = useState("")
