@@ -57,6 +57,8 @@ export function DataTable<TData, TValue>({
 
   const [rowSelection, setRowSelection] = React.useState({})
 
+  const isSelectionEnabled = Boolean(enableRowSelection)
+    
   const table = useReactTable({
     data,
     columns,

@@ -129,6 +129,28 @@ function decodeNextToken(token) {
 }
 
 
+// A DynamoDB Scan "Limit" caps the rows *read*, not the rows that match the filter, so a single
+// limited scan can return only some (or none) of the matches. This reads page by page instead.
+// Without ?limit= every match is returned. With ?limit=N (1-100) it stops once it has at least N
+// matches and returns a nextToken if rows remain.
+export async function scanAllMatching(scanInput, event, db = dynamo) {
+  const raw = event?.queryStringParameters?.limit;
+  const requested = Number(raw);
+  const maxItems = raw !== undefined && raw !== null && raw !== "" && Number.isFinite(requested)
+    ? Math.max(1, Math.min(100, requested))
+    : Infinity;
+  // eslint-disable-next-line no-unused-vars
+  const { Limit, ...input } = scanInput;
+  const items = [];
+  let lastKey = input.ExclusiveStartKey;
+  do {
+    const page = await db.send(new ScanCommand({ ...input, ExclusiveStartKey: lastKey }));
+    items.push(...(page.Items || []));
+    lastKey = page.LastEvaluatedKey;
+  } while (lastKey && items.length < maxItems);
+  return { Items: items, LastEvaluatedKey: lastKey };
+}
+
 async function getBookingsAmount(event) {
   
   const reservationDate = event.queryStringParameters?.reservationDate; 
@@ -154,7 +176,7 @@ async function getBookingsAmount(event) {
     ExpressionAttributeValues: Object.keys(expressionValues).length ? expressionValues : undefined,
   };
 
-  const result = await dynamo.send(new ScanCommand(scanInput));
+  const result = await scanAllMatching(scanInput, event);
   return response(200, {
     count: result?result.Items.length:0,
   });
@@ -195,14 +217,14 @@ async function fetchTransOpBookings(event) {
     TableName: CARGO_UNITS_TABLE,
     Limit: limit,
     ProjectionExpression: 'vesselID, cargoUnitID, origin, bcoName, bcoEmail, transopName, transopEmail, reservationDate, \
-                            resApprovalDate, reservationStatus, resPickupDate, reservationTime, twicEscortRequired',
+                            resApprovalDate, reservationStatus, resPickupDate, reservationTime, twicEscortRequired, holds',
     ExclusiveStartKey: exclusiveStartKey || undefined,
     FilterExpression: clauses.length ? clauses.join(" AND ") : undefined,
     ExpressionAttributeNames: Object.keys(expressionNames).length ? expressionNames : undefined,
     ExpressionAttributeValues: Object.keys(expressionValues).length ? expressionValues : undefined,
   };
 
-  const result = await dynamo.send(new ScanCommand(scanInput));
+  const result = await scanAllMatching(scanInput, event);
   const items = (result.Items || []).sort((a, b) =>
     (b.createdAt || "").localeCompare(a.createdAt || "")
   );
@@ -245,14 +267,14 @@ addTerminalIdToClause(expressionNames, expressionValues, clauses, userAttributes
     TableName: CARGO_UNITS_TABLE,
     Limit: limit,
     ProjectionExpression: 'vesselID, cargoUnitID, origin, bcoName, bcoEmail, transopName, transopEmail, reservationDate, \
-                            resApprovalDate, reservationStatus, resPickupDate, reservationTime, twicEscortRequired',
+                            resApprovalDate, reservationStatus, resPickupDate, reservationTime, twicEscortRequired, holds',
     ExclusiveStartKey: exclusiveStartKey || undefined,
     FilterExpression: clauses.length ? clauses.join(" AND ") : undefined,
     ExpressionAttributeNames: Object.keys(expressionNames).length ? expressionNames : undefined,
     ExpressionAttributeValues: Object.keys(expressionValues).length ? expressionValues : undefined,
   };
 
-  const result = await dynamo.send(new ScanCommand(scanInput));
+  const result = await scanAllMatching(scanInput, event);
   const items = (result.Items || []).sort((a, b) =>
     (b.createdAt || "").localeCompare(a.createdAt || "")
   );
@@ -308,7 +330,7 @@ async function fetchBcoUpcoming(event, userAttributes) {
     ExpressionAttributeValues: Object.keys(expressionValues).length ? expressionValues : undefined,
   };
 
-  const result = await dynamo.send(new ScanCommand(scanInput));
+  const result = await scanAllMatching(scanInput, event);
   const items = (result.Items || []).sort((a, b) =>
     (b.createdAt || "").localeCompare(a.createdAt || "")
   );
@@ -433,14 +455,14 @@ async function fetchBcoCompleted(event, userAttributes) {
     TableName: CARGO_UNITS_TABLE,
     Limit: limit,
     ProjectionExpression: 'vesselID, cargoUnitID, origin, bcoName, bcoEmail, transopName, transopEmail, \
-                          reservationDate, resApprovalDate, reservationStatus, destination, resPickupDate, flag',
+                          reservationDate, resApprovalDate, reservationStatus, destination, resPickupDate, flag, holds',
     ExclusiveStartKey: exclusiveStartKey || undefined,
     FilterExpression: clauses.length ? clauses.join(" AND ") : undefined,
     ExpressionAttributeNames: Object.keys(expressionNames).length ? expressionNames : undefined,
     ExpressionAttributeValues: Object.keys(expressionValues).length ? expressionValues : undefined,
   };
 
-  const result = await dynamo.send(new ScanCommand(scanInput));
+  const result = await scanAllMatching(scanInput, event);
   const items = (result.Items || []).sort((a, b) =>
     (b.createdAt || "").localeCompare(a.createdAt || "")
   );
@@ -487,14 +509,14 @@ async function fetchTransOpUpcoming(event) {
     TableName: CARGO_UNITS_TABLE,
     Limit: limit,
     ProjectionExpression: 'vesselID, cargoUnitID, origin, bcoName, bcoEmail, transopName, \
-                            transopEmail, assignmentDate, reservationStatus, flag',
+                            transopEmail, assignmentDate, reservationStatus, flag, holds',
     ExclusiveStartKey: exclusiveStartKey || undefined,
     FilterExpression: clauses.length ? clauses.join(" AND ") : undefined,
     ExpressionAttributeNames: Object.keys(expressionNames).length ? expressionNames : undefined,
     ExpressionAttributeValues: Object.keys(expressionValues).length ? expressionValues : undefined,
   };
 
-  const result = await dynamo.send(new ScanCommand(scanInput));
+  const result = await scanAllMatching(scanInput, event);
   const items = (result.Items || []).sort((a, b) =>
     (b.createdAt || "").localeCompare(a.createdAt || "")
   );
@@ -556,7 +578,7 @@ async function fetchTransOpOngoing(event) {
     ExpressionAttributeValues: Object.keys(expressionValues).length ? expressionValues : undefined,
   };
 
-  const result = await dynamo.send(new ScanCommand(scanInput));
+  const result = await scanAllMatching(scanInput, event);
   const items = (result.Items || []).sort((a, b) =>
     (b.createdAt || "").localeCompare(a.createdAt || "")
   );
@@ -573,7 +595,7 @@ async function fetchTransOpOngoing(event) {
 
 async function fetchTerminalOpRequested(event, userAttributes) {
 
-  const selectionSet = 'vesselID, cargoUnitID, origin, bcoName, bcoEmail, transopName, transopEmail,reservationDate,reservationTime,reservationStatus, flag';
+  const selectionSet = 'vesselID, cargoUnitID, origin, bcoName, bcoEmail, transopName, transopEmail,reservationDate,reservationTime,reservationStatus, flag, holds';
   const expressionNames = {};
   const expressionValues = {};
   const clauses = [];
@@ -590,7 +612,7 @@ async function fetchTerminalOpRequested(event, userAttributes) {
 
 async function fetchTerminalOpModifiedRequested(event, userAttributes) {
 
-  const selectionSet = ['vesselID', 'cargoUnitID', 'origin', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail','reservationDate','reservationTime', 'reservationStatus', 'modifiedReservationDate', 'modifiedReservationTime']; 
+  const selectionSet = ['vesselID', 'cargoUnitID', 'origin', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail','reservationDate','reservationTime', 'reservationStatus', 'modifiedReservationDate', 'modifiedReservationTime', 'holds']; 
 
   const expressionNames = {};
   const expressionValues = {};
@@ -634,7 +656,7 @@ async function fetchTerminalOpCompleted(event, userAttributes) {
     'reservationStatus',
     'resPickupDate',
     'reservationTime',
-    'twicEscortRequired'
+    'twicEscortRequired', 'holds'
   ] 
   const expressionNames = {};
   const expressionValues = {};
@@ -651,7 +673,7 @@ async function fetchTerminalOpCompleted(event, userAttributes) {
 
 
 async function fetchTerminalOpOnGoing(event, userAttributes) {
-  const selectionSet = 'vesselID, cargoUnitID, origin, bcoName, bcoEmail, transopName, transopEmail, reservationDate, reservationTime, reservationStatus, twicEscortRequired, flag';
+  const selectionSet = 'vesselID, cargoUnitID, origin, bcoName, bcoEmail, transopName, transopEmail, reservationDate, reservationTime, reservationStatus, twicEscortRequired, flag, holds';
   const expressionNames = {};
   const expressionValues = {};
 
@@ -703,7 +725,7 @@ async function fetchCargoUnits(event, selectionSet, expressionNames, expressionV
     ExpressionAttributeValues: Object.keys(expressionValues).length ? expressionValues : undefined,
   };
 
-  const result = await dynamo.send(new ScanCommand(scanInput));
+  const result = await scanAllMatching(scanInput, event);
   const items = (result.Items || []).sort((a, b) =>
     (b.createdAt || "").localeCompare(a.createdAt || "")
   );
@@ -756,14 +778,14 @@ async function listCargoUnits(event, cognitoGroups, userAttributes) {
   const scanInput = {
     TableName: CARGO_UNITS_TABLE,
     Limit: limit,
-    ProjectionExpression: 'vesselID, cargoUnitID, origin, bcoName, bcoEmail, transopName, transopEmail, containerStatus, flag',
+    ProjectionExpression: 'vesselID, cargoUnitID, origin, bcoName, bcoEmail, transopName, transopEmail, containerStatus, flag, holds',
     ExclusiveStartKey: exclusiveStartKey || undefined,
     FilterExpression: clauses.length ? clauses.join(" AND ") : undefined,
     ExpressionAttributeNames: Object.keys(expressionNames).length ? expressionNames : undefined,
     ExpressionAttributeValues: Object.keys(expressionValues).length ? expressionValues : undefined,
   };
 
-  const result = await dynamo.send(new ScanCommand(scanInput));
+  const result = await scanAllMatching(scanInput, event);
   const items = (result.Items || []).sort((a, b) =>
     (b.createdAt || "").localeCompare(a.createdAt || "")
   );
@@ -775,38 +797,49 @@ async function listCargoUnits(event, cognitoGroups, userAttributes) {
   });
 }
 
-function normalizeHolds(holds) {
-  if (!holds) return [];
-  if (typeof holds === "string") {
-    return holds.split(",").map((h) => h.trim()).filter(Boolean);
+// Reservation fields that can be cleared (e.g. a No Show sends the unit back to "unassigned").
+// An empty value is deleted rather than stored, because transopEmail is a GSI key and DynamoDB
+// rejects "" for index keys. Restored from cargo-units-manager v3 (2026-11-19).
+const CLEARABLE = [
+  "transopEmail",
+  "transopName",
+  "reservationDate",
+  "reservationTime",
+  "assignmentDate",
+  "resApprovalDate",
+  "resLatestUpdateDate",
+  "modifiedReservationDate",
+  "modifiedReservationTime",
+];
+
+const ALLOWED_CARGO_STATUSES = new Set(["On-Ship", "Discharged", "Released"])
+
+function getActiveHolds(holds) {
+  if (!holds || typeof holds !== "object" || Array.isArray(holds)) {
+    return []
   }
-  if (Array.isArray(holds)) {
-    return holds.filter((h) => h && String(h).trim());
-  }
-  if (holds instanceof Set) {
-    return Array.from(holds).filter((h) => h && String(h).trim());
-  }
-  if (typeof holds === "object") {
-    // Map shape: { customs: true, line: false } -> ["customs"]
-    return Object.entries(holds)
-      .filter(([, active]) => Boolean(active))
-      .map(([name]) => name);
-  }
-  return [];
+  return Object.entries(holds)
+    .filter(([, active]) => Boolean(active))
+    .map(([name]) => name)
 }
 
 async function saveCargoUnit(event, cognitoGroups) {
   const body = event.body
-  if (!body) return response(400, { message: "Cargo Unit is required" });
-  const nowIso = new Date().toISOString();
-  let record = JSON.parse(body);
+  if (!body) return response(400, { message: "Cargo Unit is required" })
+  const nowIso = new Date().toISOString()
+  let record = JSON.parse(body)
 
-  // Only terminal operators may change holds or containerStatus. Without this, a client
-  // that sends back a whole row (e.g. holds: {}) could overwrite stored holds, or change
-  // the status in order to get past the assignment check below.
+  // Only terminal operators may change holds or containerStatus.
   if (!isTerminalOperator(cognitoGroups)) {
-    delete record.holds;
-    delete record.containerStatus;
+    delete record.holds
+    delete record.containerStatus
+  } else if (
+    record.containerStatus !== undefined &&
+    !ALLOWED_CARGO_STATUSES.has(record.containerStatus)
+  ) {
+    return response(400, {
+      message: `Invalid containerStatus: "${record.containerStatus}"`,
+    })
   }
 
   const existingRec = await dynamo.send(
@@ -814,60 +847,59 @@ async function saveCargoUnit(event, cognitoGroups) {
       TableName: CARGO_UNITS_TABLE,
       Key: { cargoUnitID: record.cargoUnitID },
     })
-  );
-  let existingRecItem = existingRec.Item;
+  )
+  let existingRecItem = existingRec.Item
   if (existingRecItem) {
-    // Check against STORED values, before the incoming body is merged in.
-    const rawHolds = existingRecItem.holds;
-    const storedHolds = normalizeHolds(rawHolds);
-    // Fail closed: a non-empty holds value we can't read still blocks assignment.
-    const holdsUnreadable =
-      Boolean(rawHolds) &&
-      storedHolds.length === 0 &&
-      typeof rawHolds !== "string" &&
-      !(rawHolds instanceof Set) &&
-      !Array.isArray(rawHolds);
-    const storedStatus = existingRecItem.containerStatus || "On-Ship"; // missing = On-Ship
+    // Check against STORED values before merging the incoming body.
+    const storedHolds = getActiveHolds(existingRecItem.holds)
+    const storedStatus = existingRecItem.containerStatus || "On-Ship"
 
     const isAssigningTransop =
-      record.reservationStatus === "Pending Transportation Coordinator Approval" ||
-      (record.transopEmail && record.transopEmail !== existingRecItem.transopEmail);
+      record.reservationStatus ===
+        "Pending Transportation Coordinator Approval" ||
+      (record.transopEmail &&
+        record.transopEmail !== existingRecItem.transopEmail)
 
     if (isAssigningTransop) {
-      if (storedStatus === "On-Ship") {
+      if (storedStatus !== "Released") {
         return response(409, {
-          message: "Cannot assign a Transportation Coordinator while cargo is still On-Ship.",
-        });
+          message: `Cannot assign a Transportation Coordinator while cargo status is "${storedStatus}" (must be Released).`,
+        })
       }
       if (storedHolds.length > 0) {
         return response(409, {
           message: `Cannot assign a Transportation Coordinator while cargo has holds: ${storedHolds.join(", ")}`,
-        });
-      }
-      if (holdsUnreadable) {
-        return response(409, {
-          message: "Cannot assign a Transportation Coordinator: cargo holds could not be verified.",
-        });
+        })
       }
     }
 
-    existingRecItem.updatedAt = nowIso;
-    existingRecItem.createdAt = existingRec.Item.createdAt;
-    Object.keys(record).forEach(key => {
-      existingRecItem[key] = record[key];
-    });
-    record = existingRecItem;
+    existingRecItem.updatedAt = nowIso
+    existingRecItem.createdAt = existingRec.Item.createdAt
+    Object.keys(record).forEach((key) => {
+      existingRecItem[key] = record[key]
+    })
+    record = existingRecItem
   } else {
-    record.createdAt = nowIso;
-
+    record.createdAt = nowIso
   }
+
+  CLEARABLE.forEach((key) => {
+    if (
+      record[key] === null ||
+      record[key] === undefined ||
+      (typeof record[key] === "string" && record[key].trim() === "")
+    ) {
+      delete record[key]
+    }
+  })
+
   const result = await dynamo.send(
     new PutCommand({
       TableName: CARGO_UNITS_TABLE,
       Item: record,
     })
-  );
-  return response(200, result);
+  )
+  return response(200, result)
 }
 
 function decodeJwtPayload(token) {
