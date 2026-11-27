@@ -50,11 +50,15 @@ function getRouteKey(event) {
   return "";
 }
 
+// DynamoDB String Sets come back from the DocumentClient as JS Set objects.
+// JSON.stringify turns a Set into {}, so convert Sets to arrays on the way out.
 function response(statusCode, body) {
   return {
     statusCode,
     headers: CORS_HEADERS,
-    body: JSON.stringify(body),
+    body: JSON.stringify(body, (_key, value) =>
+      value instanceof Set ? Array.from(value) : value
+    ),
   };
 }
 
@@ -213,7 +217,7 @@ async function fetchTransOpBookings(event) {
     TableName: CARGO_UNITS_TABLE,
     Limit: limit,
     ProjectionExpression: 'vesselID, cargoUnitID, origin, bcoName, bcoEmail, transopName, transopEmail, reservationDate, \
-                            resApprovalDate, reservationStatus, resPickupDate, reservationTime, twicEscortRequired',
+                            resApprovalDate, reservationStatus, resPickupDate, reservationTime, twicEscortRequired, holds',
     ExclusiveStartKey: exclusiveStartKey || undefined,
     FilterExpression: clauses.length ? clauses.join(" AND ") : undefined,
     ExpressionAttributeNames: Object.keys(expressionNames).length ? expressionNames : undefined,
@@ -263,7 +267,7 @@ addTerminalIdToClause(expressionNames, expressionValues, clauses, userAttributes
     TableName: CARGO_UNITS_TABLE,
     Limit: limit,
     ProjectionExpression: 'vesselID, cargoUnitID, origin, bcoName, bcoEmail, transopName, transopEmail, reservationDate, \
-                            resApprovalDate, reservationStatus, resPickupDate, reservationTime, twicEscortRequired',
+                            resApprovalDate, reservationStatus, resPickupDate, reservationTime, twicEscortRequired, holds',
     ExclusiveStartKey: exclusiveStartKey || undefined,
     FilterExpression: clauses.length ? clauses.join(" AND ") : undefined,
     ExpressionAttributeNames: Object.keys(expressionNames).length ? expressionNames : undefined,
@@ -319,7 +323,7 @@ async function fetchBcoUpcoming(event, userAttributes) {
     TableName: CARGO_UNITS_TABLE,
     Limit: limit,
     ProjectionExpression: 'vesselID, cargoUnitID, origin, destination, bcoName, bcoEmail, \
-                            transopName, transopEmail, containerStatus, arrivalDate, flag',
+                            transopName, transopEmail, containerStatus, arrivalDate, flag, holds',
     ExclusiveStartKey: exclusiveStartKey || undefined,
     FilterExpression: clauses.length ? clauses.join(" AND ") : undefined,
     ExpressionAttributeNames: Object.keys(expressionNames).length ? expressionNames : undefined,
@@ -392,7 +396,7 @@ async function fetchTerminalNotifications(event) {
 
 async function fetchBcoOngoing(event, userAttributes) {
 
-  const selectionSet = ['vesselID', 'cargoUnitID', 'origin','destination', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail','reservationDate','resApprovalDate','reservationStatus', 'resPickupDate','flag', 'updatedAt'];
+  const selectionSet = ['vesselID', 'cargoUnitID', 'origin','destination', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail','reservationDate','resApprovalDate','reservationStatus', 'resPickupDate','flag', 'updatedAt', 'containerStatus', 'holds'];
   const expressionNames = {};
   const expressionValues = {};
   const clauses = [];
@@ -451,7 +455,7 @@ async function fetchBcoCompleted(event, userAttributes) {
     TableName: CARGO_UNITS_TABLE,
     Limit: limit,
     ProjectionExpression: 'vesselID, cargoUnitID, origin, bcoName, bcoEmail, transopName, transopEmail, \
-                          reservationDate, resApprovalDate, reservationStatus, destination, resPickupDate, flag',
+                          reservationDate, resApprovalDate, reservationStatus, destination, resPickupDate, flag, holds',
     ExclusiveStartKey: exclusiveStartKey || undefined,
     FilterExpression: clauses.length ? clauses.join(" AND ") : undefined,
     ExpressionAttributeNames: Object.keys(expressionNames).length ? expressionNames : undefined,
@@ -505,7 +509,7 @@ async function fetchTransOpUpcoming(event) {
     TableName: CARGO_UNITS_TABLE,
     Limit: limit,
     ProjectionExpression: 'vesselID, cargoUnitID, origin, bcoName, bcoEmail, transopName, \
-                            transopEmail, assignmentDate, reservationStatus, flag',
+                            transopEmail, assignmentDate, reservationStatus, flag, holds',
     ExclusiveStartKey: exclusiveStartKey || undefined,
     FilterExpression: clauses.length ? clauses.join(" AND ") : undefined,
     ExpressionAttributeNames: Object.keys(expressionNames).length ? expressionNames : undefined,
@@ -567,7 +571,7 @@ async function fetchTransOpOngoing(event) {
     TableName: CARGO_UNITS_TABLE,
     Limit: limit,
     ProjectionExpression: 'vesselID, cargoUnitID, origin, bcoName, bcoEmail, transopName, transopEmail, reservationDate, \
-                            reservationTime, reservationStatus, twicEscortRequired, flag, containerStatus',
+                            reservationTime, reservationStatus, twicEscortRequired, flag, containerStatus, holds',
     ExclusiveStartKey: exclusiveStartKey || undefined,
     FilterExpression: clauses.length ? clauses.join(" AND ") : undefined,
     ExpressionAttributeNames: Object.keys(expressionNames).length ? expressionNames : undefined,
@@ -579,6 +583,8 @@ async function fetchTransOpOngoing(event) {
     (b.createdAt || "").localeCompare(a.createdAt || "")
   );
 
+  console.log(CARGO_UNITS_TABLE, JSON.stringify(result.Items));
+
   return response(200, {
     items,
     count: items.length,
@@ -589,7 +595,7 @@ async function fetchTransOpOngoing(event) {
 
 async function fetchTerminalOpRequested(event, userAttributes) {
 
-  const selectionSet = 'vesselID, cargoUnitID, origin, bcoName, bcoEmail, transopName, transopEmail,reservationDate,reservationTime,reservationStatus, flag';
+  const selectionSet = 'vesselID, cargoUnitID, origin, bcoName, bcoEmail, transopName, transopEmail,reservationDate,reservationTime,reservationStatus, flag, holds';
   const expressionNames = {};
   const expressionValues = {};
   const clauses = [];
@@ -606,7 +612,7 @@ async function fetchTerminalOpRequested(event, userAttributes) {
 
 async function fetchTerminalOpModifiedRequested(event, userAttributes) {
 
-  const selectionSet = ['vesselID', 'cargoUnitID', 'origin', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail','reservationDate','reservationTime', 'reservationStatus', 'modifiedReservationDate', 'modifiedReservationTime']; 
+  const selectionSet = ['vesselID', 'cargoUnitID', 'origin', 'bcoName', 'bcoEmail', 'transopName', 'transopEmail','reservationDate','reservationTime', 'reservationStatus', 'modifiedReservationDate', 'modifiedReservationTime', 'holds']; 
 
   const expressionNames = {};
   const expressionValues = {};
@@ -650,7 +656,7 @@ async function fetchTerminalOpCompleted(event, userAttributes) {
     'reservationStatus',
     'resPickupDate',
     'reservationTime',
-    'twicEscortRequired'
+    'twicEscortRequired', 'holds'
   ] 
   const expressionNames = {};
   const expressionValues = {};
@@ -667,28 +673,27 @@ async function fetchTerminalOpCompleted(event, userAttributes) {
 
 
 async function fetchTerminalOpOnGoing(event, userAttributes) {
-
-  const selectionSet = 'vesselID, cargoUnitID, origin, bcoName, bcoEmail, transopName, transopEmail, reservationDate, reservationTime, reservationStatus, twicEscortRequired, flag';
+  const selectionSet = 'vesselID, cargoUnitID, origin, bcoName, bcoEmail, transopName, transopEmail, reservationDate, reservationTime, reservationStatus, twicEscortRequired, flag, holds';
   const expressionNames = {};
   const expressionValues = {};
-  const clauses = [];
-  expressionNames["#reservationStatus1"] = "reservationStatus";
-  expressionValues[":reservationStatus1"] = 'Pending Pick Up';
-  clauses.push("#reservationStatus1 = :reservationStatus1");
 
-  expressionNames["#reservationStatus2"] = "reservationStatus";
-  expressionValues[":reservationStatus2"] = 'Late for Pick Up';
-  clauses.push("#reservationStatus2 = :reservationStatus2");
+  expressionNames["#reservationStatus"] = "reservationStatus";
+  expressionValues[":status1"] = "Pending Pick Up";
+  expressionValues[":status2"] = "Late for Pick Up";
 
-  
-  const termanIdClause = [];
-  addTerminalIdToClause(expressionNames, expressionValues, termanIdClause, userAttributes);
-  const finalClause = []
-  finalClause.push('('+clauses.join(" OR ")+')')
-  finalClause.push(termanIdClause)
+  const finalClauses = [
+    "(#reservationStatus = :status1 OR #reservationStatus = :status2)",
+  ];
 
-  return fetchCargoUnits(event, selectionSet, expressionNames, expressionValues, finalClause.join(" AND "))
+  addTerminalIdToClause(expressionNames, expressionValues, finalClauses, userAttributes);
 
+  return fetchCargoUnits(
+    event,
+    selectionSet,
+    expressionNames,
+    expressionValues,
+    finalClauses.join(" AND ")
+  );
 }
 
 
@@ -773,7 +778,7 @@ async function listCargoUnits(event, cognitoGroups, userAttributes) {
   const scanInput = {
     TableName: CARGO_UNITS_TABLE,
     Limit: limit,
-    ProjectionExpression: 'vesselID, cargoUnitID, origin, bcoName, bcoEmail, transopName, transopEmail, containerStatus, flag',
+    ProjectionExpression: 'vesselID, cargoUnitID, origin, bcoName, bcoEmail, transopName, transopEmail, containerStatus, flag, holds',
     ExclusiveStartKey: exclusiveStartKey || undefined,
     FilterExpression: clauses.length ? clauses.join(" AND ") : undefined,
     ExpressionAttributeNames: Object.keys(expressionNames).length ? expressionNames : undefined,
@@ -792,38 +797,109 @@ async function listCargoUnits(event, cognitoGroups, userAttributes) {
   });
 }
 
+// Reservation fields that can be cleared (e.g. a No Show sends the unit back to "unassigned").
+// An empty value is deleted rather than stored, because transopEmail is a GSI key and DynamoDB
+// rejects "" for index keys. Restored from cargo-units-manager v3 (2026-11-19).
+const CLEARABLE = [
+  "transopEmail",
+  "transopName",
+  "reservationDate",
+  "reservationTime",
+  "assignmentDate",
+  "resApprovalDate",
+  "resLatestUpdateDate",
+  "modifiedReservationDate",
+  "modifiedReservationTime",
+];
 
-async function saveCargoUnit(event) {
+const ALLOWED_CARGO_STATUSES = new Set(["On-Ship", "Discharged", "Released"])
+
+function getActiveHolds(holds) {
+  if (!holds || typeof holds !== "object" || Array.isArray(holds)) {
+    return []
+  }
+  return Object.entries(holds)
+    .filter(([, active]) => Boolean(active))
+    .map(([name]) => name)
+}
+
+async function saveCargoUnit(event, cognitoGroups) {
   const body = event.body
-  if (!body) return response(400, { message: "Cargo Unit is required" });
-  const nowIso = new Date().toISOString();
-  let record = JSON.parse(body);
+  if (!body) return response(400, { message: "Cargo Unit is required" })
+  const nowIso = new Date().toISOString()
+  let record = JSON.parse(body)
+
+  // Only terminal operators may change holds or containerStatus.
+  if (!isTerminalOperator(cognitoGroups)) {
+    delete record.holds
+    delete record.containerStatus
+  } else if (
+    record.containerStatus !== undefined &&
+    !ALLOWED_CARGO_STATUSES.has(record.containerStatus)
+  ) {
+    return response(400, {
+      message: `Invalid containerStatus: "${record.containerStatus}"`,
+    })
+  }
 
   const existingRec = await dynamo.send(
     new GetCommand({
       TableName: CARGO_UNITS_TABLE,
       Key: { cargoUnitID: record.cargoUnitID },
     })
-  );
-  let existingRecItem = existingRec.Item; 
+  )
+  let existingRecItem = existingRec.Item
   if (existingRecItem) {
-    existingRecItem.updatedAt = nowIso;
-    existingRecItem.createdAt = existingRec.Item.createdAt;
-    Object.keys(record).forEach(key => {
-      existingRecItem[key] = record[key];
-    });
-    record = existingRecItem;
-  } else {
-    record.createdAt = nowIso;
+    // Check against STORED values before merging the incoming body.
+    const storedHolds = getActiveHolds(existingRecItem.holds)
+    const storedStatus = existingRecItem.containerStatus || "On-Ship"
 
+    const isAssigningTransop =
+      record.reservationStatus ===
+        "Pending Transportation Coordinator Approval" ||
+      (record.transopEmail &&
+        record.transopEmail !== existingRecItem.transopEmail)
+
+    if (isAssigningTransop) {
+      if (storedStatus !== "Released") {
+        return response(409, {
+          message: `Cannot assign a Transportation Coordinator while cargo status is "${storedStatus}" (must be Released).`,
+        })
+      }
+      if (storedHolds.length > 0) {
+        return response(409, {
+          message: `Cannot assign a Transportation Coordinator while cargo has holds: ${storedHolds.join(", ")}`,
+        })
+      }
+    }
+
+    existingRecItem.updatedAt = nowIso
+    existingRecItem.createdAt = existingRec.Item.createdAt
+    Object.keys(record).forEach((key) => {
+      existingRecItem[key] = record[key]
+    })
+    record = existingRecItem
+  } else {
+    record.createdAt = nowIso
   }
+
+  CLEARABLE.forEach((key) => {
+    if (
+      record[key] === null ||
+      record[key] === undefined ||
+      (typeof record[key] === "string" && record[key].trim() === "")
+    ) {
+      delete record[key]
+    }
+  })
+
   const result = await dynamo.send(
     new PutCommand({
       TableName: CARGO_UNITS_TABLE,
       Item: record,
     })
-  );
-  return response(200, result);
+  )
+  return response(200, result)
 }
 
 function decodeJwtPayload(token) {
@@ -862,7 +938,7 @@ async function getUserAttributes(username) {
 }
 
 function isTerminalOperator(cognitoGroups){
-  return(cognitoGroups.includes('pcis_Terminal_Operator'))
+  return Array.isArray(cognitoGroups) && cognitoGroups.includes('pcis_Terminal_Operator');
 }
 
 export const handler = async (event) => {
@@ -889,7 +965,7 @@ export const handler = async (event) => {
       case "GET /list":
         return await listCargoUnits(event, cognitoGroups, userAttributes);
       case "PUT /saveCargoUnit":
-        return await saveCargoUnit(event);
+        return await saveCargoUnit(event, cognitoGroups);
       case "GET /getBookingsAmount":
         return await getBookingsAmount(event);
       case "GET /fetchTransOpBookings":
@@ -923,7 +999,7 @@ export const handler = async (event) => {
       
         
       case "PUT /cargoUnits/{cargoUnitID}":
-        return await saveCargoUnit(event);
+        return await saveCargoUnit(event, cognitoGroups);
       default:
         return response(404, { message: `Unsupported route: ${routeKey}` });
     }

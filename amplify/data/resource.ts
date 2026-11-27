@@ -19,6 +19,7 @@ const schema = a.schema({
       transopName: a.string(),
       transopEmail: a.string(),
       containerStatus: a.string().default('On-Ship'),
+      holds: a.json(),
       assignmentDate: a.string(),
       reservationStatus: a.string().default('unassigned'),
       reservationDate: a.string(),
