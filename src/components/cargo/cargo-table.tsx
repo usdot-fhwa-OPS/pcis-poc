@@ -24,10 +24,11 @@ import {
 
 import { ChevronLeft, ChevronRight, Search } from "lucide-react"
 import { Input } from "../ui/input"
+import { CargoStatus } from "./cargo-availability"
 
 export interface CargoTableMeta {
   updateCargo: (cargoUnitID: string, newName: string, newEmail: string) => void
-  updateCargoStatus?: (cargoUnitID: string, newStatus: string) => void
+  updateCargoStatus?: (cargoUnitID: string, newStatus: CargoStatus) => void
 }
 
 interface DataTableProps<TData, TValue> {
@@ -59,7 +60,7 @@ export function DataTable<TData, TValue>({
   const table = useReactTable({
     data,
     columns,
-    meta: meta as CargoTableMeta,
+    meta,
     enableRowSelection,
     getCoreRowModel: getCoreRowModel(),
     onPaginationChange: setPagination,
@@ -81,7 +82,7 @@ export function DataTable<TData, TValue>({
       .rows.filter((row) => row.getCanSelect())
       .map((row) => row.original)
     onSelectedRowsChange(selected)
-  }, [rowSelection, data, onSelectedRowsChange, table])
+  }, [rowSelection, columnFilters, data, onSelectedRowsChange, table])
 
   const { pageIndex, pageSize } = table.getState().pagination
   const totalRows = table.getFilteredRowModel().rows.length
@@ -142,7 +143,9 @@ export function DataTable<TData, TValue>({
                     key={row.id}
                     data-state={row.getIsSelected() && "selected"}
                     className={`hover:bg-gray-50/50 data-[state=selected]:bg-gray-50/50 ${
-                      !row.getCanSelect() ? "opacity-65" : ""
+                      isSelectionEnabled && !row.getCanSelect()
+                        ? "opacity-65"
+                        : ""
                     }`}
                   >
                     {row.getVisibleCells().map((cell) => (

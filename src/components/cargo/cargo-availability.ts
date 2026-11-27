@@ -1,59 +1,35 @@
-export type CargoStatus = "On-Ship" | "Discharged" | "Released"
-
-export const CARGO_STATUS_STEPS: CargoStatus[] = [
+export const CARGO_STATUS_STEPS = [
   "On-Ship",
   "Discharged",
   "Released",
-]
+] as const
 
-// holds can arrive as a string ("A, B"), an array, a Set, or (from older API
-// responses) an empty object, so type it loosely and normalize defensively.
-export type RawHolds =
-  | (string | null)[]
-  | string
-  | Set<string>
-  | Record<string, unknown>
-  | null
+export type CargoStatus = (typeof CARGO_STATUS_STEPS)[number]
+
+export type CargoHolds = Record<string, boolean>
 
 export interface CargoAvailabilityItem {
   containerStatus?: string | null
-  holds?: RawHolds
+  holds?: CargoHolds | null
+}
+
+export function isCargoStatus(value: unknown): value is CargoStatus {
+  return (
+    typeof value === "string" &&
+    (CARGO_STATUS_STEPS as readonly string[]).includes(value)
+  )
 }
 
 export function toCargoStatus(value?: string | null): CargoStatus {
-  if (value === "Discharged" || value === "Released") {
-    return value
-  }
-  return "On-Ship"
+  return isCargoStatus(value) ? value : "On-Ship"
 }
 
-export function normalizeHolds(holds?: RawHolds): string[] {
+export function normalizeHolds(holds?: CargoHolds | null): string[] {
   if (!holds) return []
-  if (typeof holds === "string") {
-    return holds
-      .split(",")
-      .map((hold) => hold.trim())
-      .filter(Boolean)
-  }
 
-  if (Array.isArray(holds)) {
-    return holds.filter(
-      (hold): hold is string => typeof hold === "string" && hold.trim() !== ""
-    )
-  }
-
-  if (holds instanceof Set) {
-    return Array.from(holds).filter((hold) => hold && hold.trim() !== "")
-  }
-
-  if (typeof holds === "object") {
-    // Map shape: { customs: true, line: false } -> ["customs"]
-    return Object.entries(holds)
-      .filter(([, active]) => Boolean(active))
-      .map(([name]) => name)
-  }
-
-  return []
+  return Object.entries(holds)
+    .filter(([, active]) => active)
+    .map(([name]) => name)
 }
 
 export function isCargoSelectable(cargo: CargoAvailabilityItem): boolean {

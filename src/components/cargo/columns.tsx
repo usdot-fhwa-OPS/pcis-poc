@@ -96,11 +96,11 @@ export const columns: ColumnDef<UpcomingCargo>[] = [
     accessorKey: "holds",
     header: "Holds",
     cell: ({ row }) => <HoldsBadges holds={row.original.holds} />,
-    filterFn: (row, _columnId, filterValue: string) => {
-      const holds = normalizeHolds(row.original.holds)
-      if (!filterValue) return true
-      return holds.some((hold) =>
-        hold.toLowerCase().includes(filterValue.toLowerCase())
+    filterFn: (row, _columnId, filterValue: unknown) => {
+      const query = String(filterValue ?? "").trim().toLowerCase()
+      if (!query) return true
+      return normalizeHolds(row.original.holds).some((hold) =>
+        hold.toLowerCase().includes(query)
       )
     },
   },

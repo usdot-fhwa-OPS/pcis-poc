@@ -19,17 +19,24 @@ import {
 } from "./cargo-availability"
 import { saveCargoUnit } from "./cargo-units-client"
 
-const STATUS_STYLES: Record<CargoStatus, string> = {
-  "On-Ship": "border-slate-300 bg-slate-100 text-slate-800 hover:bg-slate-200",
-  Discharged: "border-amber-300 bg-amber-100 text-amber-900 hover:bg-amber-200",
-  Released:
-    "border-emerald-300 bg-emerald-100 text-emerald-900 hover:bg-emerald-200",
-}
-
-const DOT_STYLES: Record<CargoStatus, string> = {
-  "On-Ship": "bg-slate-500",
-  Discharged: "bg-amber-500",
-  Released: "bg-emerald-600",
+const STATUS_STYLES: Record<
+  CargoStatus,
+  { badge: string; interactive?: string; dot: string }
+> = {
+  "On-Ship": {
+    badge: "border-slate-300 bg-slate-100 text-slate-800",
+    interactive: "hover:bg-slate-200",
+    dot: "bg-slate-500",
+  },
+  Discharged: {
+    badge: "border-amber-300 bg-amber-100 text-amber-900",
+    interactive: "hover:bg-amber-200",
+    dot: "bg-amber-500",
+  },
+  Released: {
+    badge: "border-emerald-300 bg-emerald-100 text-emerald-900",
+    dot: "bg-emerald-600",
+  },
 }
 
 interface CargoStatusCellProps {
@@ -54,19 +61,21 @@ export function CargoStatusCell({
     setStatus(toCargoStatus(initialStatus))
   }, [initialStatus])
 
+  const isLocked = readOnly || status === "Released"
+
   const handleStatusChange = async (val: string) => {
     const nextStatus = toCargoStatus(val)
-    const previousStatus = status
+    if (isLocked || isSaving || nextStatus === status) return
 
+    const previousStatus = status
     setStatus(nextStatus)
     setIsSaving(true)
 
     try {
-      const updatedContainerStatus = await saveCargoUnit({
+      await saveCargoUnit({
         cargoUnitID,
         containerStatus: nextStatus,
       })
-      console.log("Updated container status:", updatedContainerStatus)
       onStatusChange?.(cargoUnitID, nextStatus)
     } catch (error) {
       console.error("Error updating container status:", error)
@@ -76,19 +85,19 @@ export function CargoStatusCell({
     }
   }
 
-  const isLocked = readOnly || status === "Released" || isSaving
+  const currentStyle = STATUS_STYLES[status]
 
   const statusPill = (
     <span className="inline-flex items-center gap-2">
-      <span className={`h-2 w-2 rounded-full ${DOT_STYLES[status]}`} />
+      <span className={`h-2 w-2 rounded-full ${currentStyle.dot}`} />
       <span>{status}</span>
     </span>
   )
 
-  if (readOnly) {
+  if (isLocked) {
     return (
       <span
-        className={`inline-flex items-center rounded-md border px-2.5 py-1 text-xs font-medium ${STATUS_STYLES[status]}`}
+        className={`inline-flex items-center rounded-md border px-2.5 py-1 text-xs font-medium ${currentStyle.badge}`}
       >
         {statusPill}
       </span>
@@ -97,14 +106,16 @@ export function CargoStatusCell({
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild disabled={isLocked}>
+      <DropdownMenuTrigger asChild disabled={isSaving}>
         <Button
           variant="outline"
           size="sm"
-          className={`gap-1.5 font-medium ${STATUS_STYLES[status]}`}
+          className={`gap-1.5 font-medium ${currentStyle.badge} ${
+            currentStyle.interactive ?? ""
+          }`}
         >
           {statusPill}
-          {!isLocked && <ChevronDown className="h-3.5 w-3.5 opacity-70" />}
+          <ChevronDown className="h-3.5 w-3.5 opacity-70" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-52">
@@ -117,7 +128,9 @@ export function CargoStatusCell({
           {CARGO_STATUS_STEPS.map((step) => (
             <DropdownMenuRadioItem key={step} value={step}>
               <span className="inline-flex items-center gap-2">
-                <span className={`h-2 w-2 rounded-full ${DOT_STYLES[step]}`} />
+                <span
+                  className={`h-2 w-2 rounded-full ${STATUS_STYLES[step].dot}`}
+                />
                 {step}
               </span>
             </DropdownMenuRadioItem>

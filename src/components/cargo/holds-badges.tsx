@@ -1,12 +1,12 @@
 "use client"
 
 import { Badge } from "../ui/badge"
-import { normalizeHolds } from "./cargo-availability"
+import { CargoHolds, normalizeHolds } from "./cargo-availability"
 
 const HOLD_STYLES: Record<string, string> = {
-  Customs: "border-amber-300 bg-amber-100 text-amber-900 hover:bg-amber-100",
-  Line: "border-blue-300 bg-blue-100 text-blue-900 hover:bg-blue-100",
-  "Customs Enforcement":
+  customs: "border-amber-300 bg-amber-100 text-amber-900 hover:bg-amber-100",
+  line: "border-blue-300 bg-blue-100 text-blue-900 hover:bg-blue-100",
+  "customs enforcement":
     "border-red-300 bg-red-100 text-red-900 hover:bg-red-100",
 }
 
@@ -14,7 +14,7 @@ const DEFAULT_HOLD_STYLE =
   "border-rose-300 bg-rose-100 text-rose-900 hover:bg-rose-100"
 
 interface HoldsBadgesProps {
-  holds?: (string | null)[] | string | null
+  holds?: CargoHolds | null
 }
 
 export function HoldsBadges({ holds }: HoldsBadgesProps) {
@@ -37,7 +37,9 @@ export function HoldsBadges({ holds }: HoldsBadgesProps) {
         <Badge
           key={hold}
           variant="outline"
-          className={HOLD_STYLES[hold] ?? DEFAULT_HOLD_STYLE}
+          className={`capitalize ${
+            HOLD_STYLES[hold.toLowerCase()] ?? DEFAULT_HOLD_STYLE
+          }`}
         >
           {hold}
         </Badge>
